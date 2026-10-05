@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- SEO, Privacy & PWA Meta (Protected Workspace) -->
+    <meta name="description" content="Track your active Sigma investment portfolios, live earnings, and exact payout countdowns.">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="theme-color" content="#0B132B">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sigma Active">
+    
+    <title>Sigma | Active Portfolios</title>
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/favicon.png">
+
+    <!-- Premium Fonts (English only as requested, plus JetBrains Mono for exact timers) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <!-- Fallback Firebase Initialization -->
+    <script>
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp({
+                apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
+                authDomain: "week-team.firebaseapp.com",
+                projectId: "week-team",
+                storageBucket: "week-team.firebasestorage.app",
+                messagingSenderId: "480334485782",
+                appId: "1:480334485782:web:c0c886ed710567b9e6d837"
+            });
+        }
+    </script>
+
+    <style>
+        /* ==========================================================================
+           1. SIGMA PREMIUM DESIGN TOKENS
+           ========================================================================== */
+        :root {
+            /* Core Brand Colors */
+            --sigma-primary: #0B132B;
+            --sigma-secondary: #1C2541;
+            --sigma-tertiary: #3A506B;
+            
+            /* Surfaces & Backgrounds */
+            --sigma-surface: #FFFFFF;
+            --sigma-surface-alt: #F8FAFC;
+            --sigma-subtle: #F1F5F9;
+            --sigma-backdrop: rgba(11, 19, 43, 0.7);
+            
+            /* Borders & Dividers */
+            --sigma-muted-border: #E2E8F0;
+            --sigma-input-border: #CBD5E1;
+
+            /* Financial Status Indicators */
+            --sigma-accent: #10B981;
+            --sigma-accent-dark: #059669;
+            --sigma-accent-light: #34D399;
+            --sigma-accent-soft: #ECFDF5;
+            
+            --sigma-gold: #F59E0B;
+            --sigma-gold-dark: #D97706;
+            --sigma-gold-soft: #FEF3C7;
+
+            --sigma-danger: #EF4444;
+            --sigma-danger-dark: #DC2626;
+
+            --sigma-info: #3B82F6;
+            --sigma-info-dark: #2563EB;
+            --sigma-info-soft: #EFF6FF;
+
+            /* Text Hierarchies */
+            --text-heading: #0F172A;
+            --text-body: #334155;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+
+            /* Geometry & Radii */
+            --radius-pill: 9999px;
+            --radius-2xl: 28px;
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+
+            /* Depth & Shadows */
+            --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+            --shadow-subtle: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+            --shadow-card: 0 16px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 16px -4px rgba(15, 23, 42, 0.04);
+            --shadow-float: 0 24px 48px -12px rgba(15, 23, 42, 0.15);
+            --shadow-glow: 0 8px 24px rgba(16, 185, 129, 0.3);
+
+            /* Z-Indices */
+            --z-dock: 1000;
+            --z-header: 900;
+            --z-overlay: 1900;
+            --z-modal: 2000;
+            --z-toast: 3000;
+
+            /* Transitions & Environment */
+            --transition-smooth: 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --safe-area-bottom: env(safe-area-inset-bottom, 16px);
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET & BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--sigma-surface-alt);
+            color: var(--text-body); line-height: 1.5; min-height: 100vh; overflow-x: hidden;
+            padding-bottom: calc(110px + var(--safe-area-bottom));
+            background-image: 
+                radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.04) 0%, transparent 45vw),
+                radial-gradient(circle at 15% 85%, rgba(59, 130, 246, 0.03) 0%, transparent 45vw);
+            background-attachment: fixed;
+        }
+        body.locked { overflow: hidden; touch-action: none; }
+        a { text-decoration: none; color: inherit; }
+        button { font-family: inherit; border: none; outline: none; background: none; cursor: pointer; user-select: none;}
+        img { max-width: 100%; display: block; }
+        ul { list-style: none; }
+
+        h1, h2, h3, h4, h5 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+        
+        .font-mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
+        .text-accent { color: var(--sigma-accent-dark); }
+        .text-primary { color: var(--sigma-primary); }
+
+        #networkOfflineBanner {
+            position: fixed; top: 0; left: 0; width: 100%; background: var(--sigma-danger);
+            color: white; font-size: 0.75rem; font-weight: 800; text-align: center; padding: 8px;
+            z-index: var(--z-toast); display: none; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* ==========================================================================
+           3. DYNAMIC ISLAND HEADER
+           ========================================================================== */
+        .app-container { width: 100%; max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; position: relative; }
+
+        .island-topbar {
+            position: sticky; top: 12px; margin: 0 16px 20px; height: 68px;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-pill); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 14px; z-index: var(--z-header);
+            border: 1px solid rgba(255, 255, 255, 0.95); transition: var(--transition-smooth);
+            box-shadow: var(--shadow-subtle);
+        }
+        .island-topbar.scrolled {
+            background: rgba(255, 255, 255, 0.98); box-shadow: var(--shadow-card); border-color: var(--sigma-muted-border);
+        }
+        
+        .btn-back {
+            width: 46px; height: 46px; border-radius: 50%; background: var(--sigma-surface);
+            color: var(--text-heading); display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .btn-back:active { transform: scale(0.92); background: var(--sigma-subtle); }
+        .btn-back svg { width: 22px; height: 22px; stroke-width: 2.5; stroke: currentColor; fill: none; }
+
+        .brand-cluster { display: flex; align-items: center; gap: 8px; }
+        .brand-logo-img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        
+        .header-title { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+        .header-title b { font-size: 1.05rem; font-weight: 900; color: var(--sigma-primary); letter-spacing: -0.3px; line-height: 1.2; }
+        .header-title small { font-size: 0.65rem; color: var(--sigma-accent-dark); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .header-actions { display: flex; gap: 8px; }
+        .btn-top-action {
+            width: 46px; height: 46px; border-radius: 50%; background: var(--sigma-subtle);
+            color: var(--text-heading); display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
+        }
+        .btn-top-action:active { transform: scale(0.92); }
+        .btn-top-action svg { width: 22px; height: 22px; stroke-width: 2.2; stroke: currentColor; fill: none; }
+
+        /* ==========================================================================
+           4. PAGE CONTENT & SUMMARY VAULT
+           ========================================================================== */
+        .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 24px; }
+
+        .vault-card {
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            border-radius: var(--radius-2xl); padding: 28px 24px; color: white;
+            box-shadow: var(--shadow-card); position: relative; overflow: hidden;
+            display: flex; align-items: center; gap: 20px; animation: fadeInDown 0.5s ease-out;
+        }
+        .vault-card::after {
+            content: ''; position: absolute; right: -40px; top: -40px; width: 140px; height: 140px;
+            border-radius: 50%; background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+        }
+        .vault-card::before {
+            content: ''; position: absolute; inset: 0; opacity: 0.1;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10%), radial-gradient(circle, #fff 10%, transparent 10%);
+            background-size: 6px 6px; background-position: 0 0, 3px 3px; pointer-events: none;
+        }
+
+        .vault-icon {
+            width: 68px; height: 68px; border-radius: 50%; background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center;
+            color: var(--sigma-accent-light); position: relative; z-index: 1; flex-shrink: 0;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+        }
+        .vault-icon svg { width: 32px; height: 32px; stroke-width: 1.8; stroke: currentColor; fill: none; }
+        .vault-icon::after {
+            content: ''; position: absolute; bottom: 0; right: 0; width: 18px; height: 18px;
+            background: var(--sigma-accent); border: 3px solid var(--sigma-primary); border-radius: 50%;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .vault-info { position: relative; z-index: 1; flex: 1; }
+        .vault-info small { font-size: 0.75rem; color: rgba(255, 255, 255, 0.75); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+        .vault-info h3 { font-size: 1.8rem; font-weight: 900; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 6px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .vault-info h3 span { font-size: 1.1rem; color: var(--sigma-accent-light); font-weight: 700; }
+        
+        .vault-sub-metric { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.15); }
+        .vault-sub-metric svg { width: 16px; height: 16px; stroke: var(--sigma-accent); fill: none; }
+        .vault-sub-metric span { font-size: 0.85rem; color: rgba(255,255,255,0.9); font-weight: 600; }
+
+        .section-header { margin: 10px 0 4px; display: flex; align-items: center; justify-content: space-between; animation: slideUp 0.5s ease-out 0.1s both; }
+        .section-header h2 { font-size: 1.25rem; font-weight: 900; color: var(--text-heading); display: flex; align-items: center; gap: 8px; }
+        .section-header h2 .count-badge { background: var(--sigma-primary); color: white; font-size: 0.8rem; padding: 2px 8px; border-radius: 12px; font-weight: 700; }
+
+        /* ==========================================================================
+           5. ACTIVE PLAN CARDS (WITH EXACT TIMERS & PREMIUM METALLIC THEMES)
+           ========================================================================== */
+        .plans-container { display: flex; flex-direction: column; gap: 20px; animation: slideUp 0.5s ease-out 0.2s both; min-height: 300px; }
+
+        .active-plan-card {
+            background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 24px;
+            box-shadow: var(--shadow-subtle); border: 1px solid var(--sigma-muted-border);
+            display: flex; flex-direction: column; gap: 18px; position: relative; overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+        .active-plan-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); border-color: var(--sigma-input-border); }
+
+        /* Background Watermark */
+        .active-plan-card::before {
+            content: ''; position: absolute; right: -30px; top: -30px; width: 140px; height: 140px;
+            background-image: url('assets/logo.png'); background-size: contain; background-repeat: no-repeat;
+            opacity: 0.03; transform: rotate(-15deg); filter: grayscale(100%); pointer-events: none;
+        }
+
+        /* Top Header of Plan */
+        .plan-top { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; }
+        .plan-title-block { display: flex; align-items: center; gap: 14px; }
+        
+        .plan-icon-wrap {
+            width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.15); position: relative; overflow: hidden;
+        }
+        .plan-icon-wrap svg { width: 26px; height: 26px; stroke-width: 1.8; stroke: white; fill: none; position: relative; z-index: 2;}
+        
+        /* Realistic Premium Gradients (Mapped from catalog) */
+        .theme-bronze { background: linear-gradient(135deg, #B07D62 0%, #804A31 100%); }
+        .theme-silver { background: linear-gradient(135deg, #A4B2C6 0%, #64748B 100%); }
+        .theme-gold { background: linear-gradient(135deg, #FBBF24 0%, #B45309 100%); }
+        .theme-platinum { background: linear-gradient(135deg, #475569 0%, #0F172A 100%); }
+        .theme-diamond { background: linear-gradient(135deg, #60A5FA 0%, #1E3A8A 100%); }
+        .theme-master { background: linear-gradient(135deg, #A78BFA 0%, #4C1D95 100%); }
+        .theme-grandmaster { background: linear-gradient(135deg, #18181B 0%, #000000 100%); border-bottom: 2px solid var(--sigma-gold); }
+
+        .plan-title-block h3 { font-size: 1.15rem; font-weight: 900; color: var(--text-heading); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;}
+        .plan-title-block small { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block;}
+
+        .status-badge {
+            display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 800;
+            color: var(--sigma-accent-dark); background: var(--sigma-accent-soft); padding: 6px 12px;
+            border-radius: var(--radius-pill); text-transform: uppercase; letter-spacing: 0.5px;
+            border: 1px solid var(--sigma-accent-border);
+        }
+        .status-badge::before {
+            content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--sigma-accent);
+            animation: pulse-green 2s infinite;
+        }
+
+        /* Metrics Grid */
+        .plan-metrics {
+            display: grid; grid-template-columns: repeat(3, 1fr); background: var(--sigma-surface-alt);
+            border-radius: var(--radius-xl); padding: 16px; border: 1px solid var(--sigma-muted-border);
+            position: relative; z-index: 2;
+        }
+        .metric { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; position: relative; }
+        .metric:not(:last-child)::after {
+            content: ''; position: absolute; right: 0; top: 15%; height: 70%; width: 1px; background: var(--sigma-input-border);
+        }
+        .metric small { font-size: 0.68rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
+        .metric strong { font-size: 0.95rem; font-weight: 900; color: var(--text-heading); font-family: 'JetBrains Mono', monospace;}
+        .metric strong.highlight { color: var(--sigma-primary); }
+
+        /* Timer & Progress Dashboard */
+        .timer-dashboard { border-top: 1px dashed var(--sigma-input-border); padding-top: 20px; position: relative; z-index: 2; }
+        
+        .timer-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; }
+        .timer-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .timer-label svg { width: 16px; height: 16px; stroke: var(--sigma-primary); fill: none; stroke-width: 2.5;}
+
+        /* Exact Digital Clock */
+        .digital-clock {
+            font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 800; color: var(--text-heading);
+            letter-spacing: -1px; background: white; padding: 6px 16px; border-radius: var(--radius-md);
+            border: 2px solid var(--sigma-muted-border); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); line-height: 1;
+        }
+
+        /* Sleek Progress Bar */
+        .progress-track {
+            width: 100%; height: 10px; background: var(--sigma-subtle); border-radius: 99px;
+            overflow: hidden; position: relative; border: 1px solid var(--sigma-input-border);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, var(--sigma-accent-dark), var(--sigma-accent));
+            border-radius: 99px; transition: width 0.5s linear; position: relative;
+        }
+        .progress-fill::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .progress-footer { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); }
+        .progress-footer .pct { color: var(--sigma-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 800;}
+        .progress-footer .days-info { color: var(--sigma-accent-dark); }
+
+        /* Skeletons & Empty State */
+        .skeleton { background: #E2E8F0; color: transparent !important; animation: pulseSkel 1.5s infinite ease-in-out; border-radius: 8px; }
+        .skel-card { height: 280px; width: 100%; border-radius: var(--radius-2xl); margin-bottom: 16px; border: 1px solid var(--sigma-muted-border); }
+        
+        .empty-state { text-align: center; padding: 40px 24px; background: var(--sigma-surface); border-radius: var(--radius-2xl); border: 1px dashed var(--sigma-input-border); box-shadow: var(--shadow-subtle); }
+        .empty-state svg { width: 56px; height: 56px; stroke: var(--sigma-input-border); fill: none; stroke-width: 1.5; margin-bottom: 16px; }
+        .empty-state h3 { font-size: 1.25rem; color: var(--text-heading); margin-bottom: 8px; }
+        .empty-state p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+        .btn-browse { padding: 14px 28px; background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary)); color: white; border-radius: var(--radius-pill); font-weight: 800; font-size: 1rem; box-shadow: 0 8px 20px rgba(11, 19, 43, 0.25); transition: var(--transition-bounce); display: inline-flex; align-items: center; gap: 8px; }
+        .btn-browse:active { transform: scale(0.95); box-shadow: 0 4px 10px rgba(11, 19, 43, 0.2); }
+        .btn-browse svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+        /* ==========================================================================
+           6. NATIVE MOBILE DOCK (Exactly 3 Buttons - Architecture Matching)
+           ========================================================================== */
+        .mobile-dock {
+            position: fixed; bottom: var(--safe-area-bottom); left: 50%; transform: translateX(-50%);
+            height: 78px; width: calc(100% - 32px); max-width: 440px;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-2xl); box-shadow: var(--shadow-float); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 24px; z-index: var(--z-dock); border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+        .dock-slot {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 6px; color: var(--text-muted); width: 64px; height: 100%; transition: var(--transition-bounce); text-decoration: none;
+        }
+        .dock-slot svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .dock-slot span { font-size: 0.72rem; font-weight: 800; }
+        .dock-slot.active { color: var(--sigma-primary); }
+        .dock-slot.active svg { stroke-width: 2.8; transform: translateY(-2px); color: var(--sigma-accent-dark); }
+        
+        .dock-crest-btn {
+            position: relative; top: -26px; width: 72px; height: 72px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 12px 26px rgba(11, 19, 43, 0.35); border: 6px solid var(--sigma-surface-alt);
+            transition: var(--transition-bounce); text-decoration: none;
+        }
+        .dock-crest-btn:active { transform: scale(0.9); }
+        .dock-crest-btn img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .dock-crest-btn::after {
+            content: 'MY PLANS'; position: absolute; bottom: -24px; font-size: 0.7rem; font-weight: 900; color: var(--text-heading); letter-spacing: 0.5px; white-space: nowrap;
+        }
+
+        @media (min-width: 860px) { .mobile-dock { display: none; } body { padding-bottom: 40px; } }
+
+        /* Animations */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); } 70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        @keyframes pulseSkel { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="networkOfflineBanner">Connection Lost. Operating in Offline Mode.</div>
+
+    <!-- SVG SPRITES (Strictly Sigma Architecture Icons) -->
+    <svg width="0" height="0" style="display:none;" aria-hidden="true">
+        <symbol id="icon-back" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></symbol>
+        <symbol id="icon-home" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></symbol>
+        <symbol id="icon-user" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-bell" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path stroke-linecap="round" stroke-linejoin="round" d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+        <symbol id="icon-wallet" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path stroke-linecap="round" stroke-linejoin="round" d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></symbol>
+        <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><polyline stroke-linecap="round" stroke-linejoin="round" points="12 6 12 12 16 14"/></symbol>
+        <symbol id="icon-layers" viewBox="0 0 24 24"><polygon stroke-linecap="round" stroke-linejoin="round" points="12 2 2 7 12 12 22 7 12 2"/><polyline stroke-linecap="round" stroke-linejoin="round" points="2 12 12 17 22 12"/><polyline stroke-linecap="round" stroke-linejoin="round" points="2 17 12 22 22 17"/></symbol>
+        <symbol id="icon-pie" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z"/></symbol>
+        <symbol id="icon-zap" viewBox="0 0 24 24"><polygon stroke-linecap="round" stroke-linejoin="round" points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    </svg>
+
+    <div class="app-container">
+        
+        <!-- HEADER -->
+        <header class="island-topbar" id="topHeader">
+            <a href="dash.html" class="btn-back" aria-label="Back to Dashboard">
+                <svg><use href="#icon-back" /></svg>
+            </a>
+            <div class="brand-cluster">
+                <div class="header-title">
+                    <b>My Portfolios</b>
+                    <small>Active Subscriptions</small>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-top-action" aria-label="Notifications" onclick="window.location.href='dash.html'">
+                    <svg><use href="#icon-bell" /></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="workspace">
+            
+            <!-- Summary Vault -->
+            <div class="vault-card">
+                <div class="vault-icon"><svg><use href="#icon-wallet" /></svg></div>
+                <div class="vault-info">
+                    <small>Total Active Investment</small>
+                    <h3><span>PKR</span> <span id="uiTotalInvestment" class="font-mono">...</span></h3>
+                    
+                    <div class="vault-sub-metric">
+                        <svg><use href="#icon-zap"/></svg>
+                        <span>Aggregate Daily Yield: <strong class="font-mono" id="uiTotalYield" style="color: var(--sigma-accent-light);">...</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Active Plans <span class="count-badge" id="uiPlanCount">0</span></h2>
+            </div>
+
+            <!-- Active Plans Container -->
+            <div class="plans-container" id="plansContainer">
+                <!-- Initial Skeletons -->
+                <div class="skel-card skeleton"></div>
+                <div class="skel-card skeleton"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- NATIVE 3-BUTTON DOCK (Exact Sigma Architecture) -->
+    <nav class="mobile-dock">
+        <a href="dash.html" class="dock-slot">
+            <svg><use href="#icon-home" /></svg>
+            <span>Home</span>
+        </a>
+
+        <!-- Central Crest Button (Active Page) -->
+        <a href="my-plans.html" class="dock-crest-btn" onclick="MyPlansController.logAction('dock_my_plans', 'Opened my active plans')">
+            <img src="assets/logo.png" alt="Sigma Crest" onerror="this.style.display='none'">
+        </a>
+
+        <a href="profile.html" class="dock-slot">
+            <div style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);" id="dockAvatarContainer">
+                <svg style="width: 20px; height: 20px;"><use href="#icon-user" /></svg>
+            </div>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- ==========================================================================
+         JAVASCRIPT APPLICATION CONTROLLER (Real-time Exact Timestamp Engine)
+         ========================================================================== -->
+    <script>
+        const MyPlansController = (() => {
+
+            let authUser = null;
+            let activePlansList = [];
+            let timerAnimationIds = {}; // Store requestAnimationFrame references to cleanly destroy
+
+            const dom = {
+                plansContainer: document.getElementById('plansContainer'),
+                uiTotalInvestment: document.getElementById('uiTotalInvestment'),
+                uiTotalYield: document.getElementById('uiTotalYield'),
+                uiPlanCount: document.getElementById('uiPlanCount'),
+                offlineBanner: document.getElementById('networkOfflineBanner')
+            };
+
+            // Mapping Plan IDs to Premium Themes dynamically
+            const themeMap = {
+                "plan_01": "theme-bronze",
+                "plan_02": "theme-silver",
+                "plan_03": "theme-gold",
+                "plan_04": "theme-platinum",
+                "plan_05": "theme-diamond",
+                "plan_06": "theme-master",
+                "plan_07": "theme-grandmaster"
+            };
+
+            // --- Utilities ---
+            const haptic = (ms = 15) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch(e){} };
+            const pad = num => String(Math.max(0, Math.floor(num))).padStart(2, '0');
+
+            const logAction = async (actionType, description) => {
+                if (!authUser || typeof firebase === 'undefined') return;
+                try {
+                    const db = firebase.firestore();
+                    await db.collection('users').doc(authUser.uid).collection('notifications').add({
+                        type: actionType, title: actionType.replace(/_/g, ' ').toUpperCase(),
+                        body: description, read: false,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        device: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
+                    });
+                } catch(e) {}
+            };
+
+            // --- Core Math for Exact Independent Timestamps ---
+            const calculateExactProgress = (activationTimestamp, durationDays) => {
+                const now = Date.now();
+                // If it's a Firestore Timestamp, convert to millis. Otherwise assume standard Date/ms.
+                const startMs = activationTimestamp.seconds ? (activationTimestamp.seconds * 1000) : new Date(activationTimestamp).getTime();
+                
+                const cycleMs = 24 * 60 * 60 * 1000; // Exact 24 Hours
+                const totalDurationMs = durationDays * cycleMs;
+                const elapsedTotalMs = now - startMs;
+
+                // If plan is completely finished
+                if (elapsedTotalMs >= totalDurationMs) {
+                    return { isFinished: true, h: 0, m: 0, s: 0, pct: 100, daysPassed: durationDays };
+                }
+
+                // If plan is pending (activated in future somehow)
+                if (elapsedTotalMs < 0) {
+                    return { isFinished: false, h: 24, m: 0, s: 0, pct: 0, daysPassed: 0 };
+                }
+
+                const currentCycleElapsedMs = elapsedTotalMs % cycleMs;
+                const timeLeftInCycleMs = cycleMs - currentCycleElapsedMs;
+
+                const daysPassed = Math.floor(elapsedTotalMs / cycleMs);
+                const pct = (currentCycleElapsedMs / cycleMs) * 100;
+
+                const h = Math.floor(timeLeftInCycleMs / (1000 * 60 * 60));
+                const m = Math.floor((timeLeftInCycleMs % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((timeLeftInCycleMs % (1000 * 60)) / 1000);
+
+                return { isFinished: false, h, m, s, pct, daysPassed };
+            };
+
+            // --- Rendering ---
+            const renderEmptyState = () => {
+                if (!dom.plansContainer) return;
+                dom.uiTotalInvestment.textContent = "0.00";
+                dom.uiTotalYield.textContent = "Rs. 0.00";
+                dom.uiPlanCount.textContent = "0";
+
+                dom.plansContainer.innerHTML = `
+                    <div class="empty-state">
+                        <svg><use href="#icon-pie"/></svg>
+                        <h3>No Active Portfolios</h3>
+                        <p>You currently do not have any active investments. Explore our premium catalogs to start earning daily yields.</p>
+                        <button class="btn-browse" onclick="window.location.href='plans.html'">
+                            <svg><use href="#icon-layers"/></svg> Browse Portfolios
+                        </button>
+                    </div>
+                `;
+            };
+
+            const renderPlans = () => {
+                if (!dom.plansContainer) return;
+                
+                // Clear existing render & animation loops to prevent memory leaks
+                Object.values(timerAnimationIds).forEach(id => cancelAnimationFrame(id));
+                timerAnimationIds = {};
+                dom.plansContainer.innerHTML = '';
+
+                let totalInv = 0;
+                let totalYield = 0;
+
+                activePlansList.forEach((plan, index) => {
+                    totalInv += Number(plan.price || 0);
+                    totalYield += Number(plan.dailyProfit || 0);
+
+                    const delay = index * 0.1;
+                    const card = document.createElement('article');
+                    card.className = 'active-plan-card';
+                    card.style.animationDelay = `${delay}s`;
+
+                    const themeClass = themeMap[plan.planId] || 'theme-platinum';
+                    const iconVisual = plan.price >= 14000 ? '#icon-shield' : '#icon-layers';
+
+                    card.innerHTML = `
+                        <div class="plan-top">
+                            <div class="plan-title-block">
+                                <div class="plan-icon-wrap ${themeClass}">
+                                    <svg><use href="${iconVisual}"/></svg>
+                                </div>
+                                <div>
+                                    <h3>${plan.name.split(' / ')[0]}</h3>
+                                    <small>Deposit: Rs. ${Number(plan.price).toLocaleString('en-PK')}</small>
+                                </div>
+                            </div>
+                            <div class="status-badge" id="statusBadge_${plan.docId}">Earning</div>
+                        </div>
+
+                        <div class="plan-metrics">
+                            <div class="metric">
+                                <small>Daily ROI</small>
+                                <strong class="highlight">Rs. ${Number(plan.dailyProfit).toLocaleString('en-PK')}</strong>
+                            </div>
+                            <div class="metric">
+                                <small>Total ROI</small>
+                                <strong>Rs. ${Number(plan.totalProfit).toLocaleString('en-PK')}</strong>
+                            </div>
+                            <div class="metric">
+                                <small>Duration</small>
+                                <strong>${plan.durationDays} Days</strong>
+                            </div>
+                        </div>
+
+                        <div class="timer-dashboard">
+                            <div class="timer-header">
+                                <span class="timer-label"><svg><use href="#icon-clock"/></svg> Next Payout In</span>
+                                <div class="digital-clock" id="clock_${plan.docId}">--:--:--</div>
+                            </div>
+
+                            <div class="progress-track">
+                                <div class="progress-fill" id="bar_${plan.docId}" style="width: 0%;"></div>
+                            </div>
+                            <div class="progress-footer">
+                                <span>Cycle Progress: <span class="pct" id="pct_${plan.docId}">0%</span></span>
+                                <span class="days-info" id="days_${plan.docId}">Day 0 of ${plan.durationDays}</span>
+                            </div>
+                        </div>
+                    `;
+                    dom.plansContainer.appendChild(card);
+
+                    // Initialize the exact timer loop for this specific plan
+                    startExactTimer(plan);
+                });
+
+                // Update Vault Metrics
+                dom.uiTotalInvestment.textContent = totalInv.toLocaleString('en-PK');
+                dom.uiTotalYield.textContent = "Rs. " + totalYield.toLocaleString('en-PK');
+                dom.uiPlanCount.textContent = activePlansList.length.toString();
+            };
+
+            const startExactTimer = (plan) => {
+                const clockEl = document.getElementById(`clock_${plan.docId}`);
+                const barEl = document.getElementById(`bar_${plan.docId}`);
+                const pctEl = document.getElementById(`pct_${plan.docId}`);
+                const daysEl = document.getElementById(`days_${plan.docId}`);
+                const badgeEl = document.getElementById(`statusBadge_${plan.docId}`);
+
+                if (!clockEl || !plan.activatedAt) return;
+
+                const tick = () => {
+                    const data = calculateExactProgress(plan.activatedAt, plan.durationDays);
+
+                    if (data.isFinished) {
+                        clockEl.textContent = "00:00:00";
+                        barEl.style.width = "100%";
+                        pctEl.textContent = "100%";
+                        daysEl.textContent = "Plan Completed";
+                        
+                        if (badgeEl) {
+                            badgeEl.textContent = "Completed";
+                            badgeEl.style.background = "var(--sigma-subtle)";
+                            badgeEl.style.color = "var(--text-muted)";
+                            badgeEl.style.border = "1px solid var(--sigma-muted-border)";
+                        }
+                        return; // Stop loop
+                    }
+
+                    // Update DOM (Using requestAnimationFrame for buttery smooth 60fps execution)
+                    clockEl.textContent = `${pad(data.h)}:${pad(data.m)}:${pad(data.s)}`;
+                    barEl.style.width = `${data.pct}%`;
+                    pctEl.textContent = `${Math.floor(data.pct)}%`;
+                    daysEl.textContent = `Day ${data.daysPassed + 1} of ${plan.durationDays}`;
+
+                    timerAnimationIds[plan.docId] = requestAnimationFrame(tick);
+                };
+
+                // Start loop
+                timerAnimationIds[plan.docId] = requestAnimationFrame(tick);
+            };
+
+            // --- Firebase Connectivity & Data ---
+
+            const loadDemoDataIfEmpty = () => {
+                // If the user literally has no plans in Firestore yet, we can show a robust realistic fallback 
+                // OR we just show the Empty State. For a production app, empty state is preferred over fake plans.
+                renderEmptyState();
+            };
+
+            const fetchActivePlans = (db, uid) => {
+                // Production Query: Listen to the authoritative active plans subcollection
+                db.collection('users').doc(uid).collection('active_plans')
+                  .where('status', '==', 'active')
+                  .onSnapshot(snapshot => {
+                      
+                      activePlansList = [];
+                      snapshot.forEach(doc => {
+                          const data = doc.data();
+                          activePlansList.push({
+                              docId: doc.id,
+                              planId: data.planId || "plan_01",
+                              name: data.name || "Sigma Portfolio",
+                              price: data.price || 0,
+                              dailyProfit: data.dailyProfit || 0,
+                              totalProfit: data.totalProfit || 0,
+                              durationDays: data.durationDays || 25,
+                              activatedAt: data.activatedAt || firebase.firestore.FieldValue.serverTimestamp() 
+                          });
+                      });
+
+                      // Also check for Demo logic if this is a fresh test account
+                      if (activePlansList.length === 0) {
+                          // Let's inject 2 mock plans ONLY if localStorage has a specific developer flag
+                          // Otherwise show real empty state.
+                          if (localStorage.getItem('sigma_dev_mock') === 'true') {
+                              activePlansList = [
+                                  { docId: "m1", planId: "plan_01", name: "Plan 01 / Sigma Bronze", price: 1000, dailyProfit: 450, totalProfit: 11250, durationDays: 25, activatedAt: new Date(Date.now() - (3 * 24 * 60 * 60 * 1000) - (5000000)) }, // Started 3 days ago
+                                  { docId: "m3", planId: "plan_03", name: "Plan 03 / Sigma Gold", price: 6000, dailyProfit: 2100, totalProfit: 52500, durationDays: 25, activatedAt: new Date(Date.now() - (120000)) } // Started 2 mins ago
+                              ];
+                              renderPlans();
+                          } else {
+                              renderEmptyState();
+                          }
+                      } else {
+                          renderPlans();
+                      }
+
+                  }, err => {
+                      console.error("Firestore Plans Error:", err);
+                      renderEmptyState();
+                  });
+            };
+
+            const initFirebase = () => {
+                if (typeof firebase === 'undefined' || !firebase.apps.length) return;
+                const auth = firebase.auth();
+                const db = firebase.firestore();
+
+                auth.onAuthStateChanged(user => {
+                    if (!user) { window.location.replace('login.html'); return; }
+                    authUser = user;
+
+                    // Identity Population for Dock
+                    if (user.photoURL) {
+                        const dockAvatar = document.getElementById('dockAvatarContainer');
+                        if (dockAvatar) dockAvatar.innerHTML = `<img src="${user.photoURL}" alt="User" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer">`;
+                    }
+
+                    // Fetch authoritative plans
+                    fetchActivePlans(db, user.uid);
+                });
+            };
+
+            const init = () => {
+                // Header scroll effect
+                const header = document.getElementById('topHeader');
+                if (header) {
+                    window.addEventListener('scroll', () => {
+                        if (window.scrollY > 20) header.classList.add('scrolled');
+                        else header.classList.remove('scrolled');
+                    }, { passive: true });
+                }
+
+                // Network listeners
+                window.addEventListener('offline', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'block'; });
+                window.addEventListener('online', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'none'; });
+
+                initFirebase();
+            };
+
+            return {
+                init, logAction
+            };
+
+        })();
+
+        // Boot
+        document.addEventListener('DOMContentLoaded', MyPlansController.init);
+    </script>
+</body>
+</html>
