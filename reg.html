@@ -1334,22 +1334,22 @@
                         if (doc.exists) {
                             const data = doc.data();
                             if (data.welcome_bonus_enabled === false) {
-                                if (bonusBanner) bonusBanner.style.display = 'none';
+                                bonusBanner.style.display = 'none';
                                 activeBonusAmount = 0;
                             } else if (typeof data.welcome_bonus !== 'undefined') {
                                 activeBonusAmount = Number(data.welcome_bonus) || 0;
-                                if (bonusAmountText) bonusAmountText.textContent = `Rs. ${activeBonusAmount}`;
-                                if (bonusBanner) bonusBanner.style.display = activeBonusAmount > 0 ? 'flex' : 'none';
+                                bonusAmountText.textContent = `Rs. ${activeBonusAmount}`;
+                                bonusBanner.style.display = activeBonusAmount > 0 ? 'flex' : 'none';
                             }
                         } else {
-                            if (bonusBanner) bonusBanner.style.display = 'flex';
+                            bonusBanner.style.display = 'flex';
                         }
                     } catch (e) {
                         console.warn("Using default welcome bonus config:", e);
-                        if (bonusBanner) bonusBanner.style.display = 'flex';
+                        bonusBanner.style.display = 'flex';
                     }
                 } else {
-                    if (bonusBanner) bonusBanner.style.display = 'flex';
+                    bonusBanner.style.display = 'flex';
                 }
             };
             syncWelcomeBonusConfig();
@@ -1480,6 +1480,30 @@
                 }
             };
 
+            // Handle Google Redirect Result
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                firebase.auth().getRedirectResult().then(async (result) => {
+                    if (result.user) {
+                        try {
+                            const db = firebase.firestore();
+                            const userDoc = await db.collection('users').doc(result.user.uid).get();
+                            if (!userDoc.exists) {
+                                await provisionAccountProfile(result.user, {
+                                    username: result.user.email.split('@')[0],
+                                    phone: ''
+                                });
+                            }
+                            window.location.href = 'dash.html';
+                        } catch(e) {
+                            console.error("Profile creation error:", e);
+                            window.location.href = 'dash.html';
+                        }
+                    }
+                }).catch(err => {
+                    console.error("Redirect auth error:", err);
+                });
+            }
+
             // 6. Registration Form Submission (Strict 4 Fields)
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -1579,18 +1603,7 @@
 
                     const auth = firebase.auth();
                     const provider = new firebase.auth.GoogleAuthProvider();
-                    const result = await auth.signInWithPopup(provider);
-
-                    // Auto-Provision Google User Profile
-                    await provisionAccountProfile(result.user, {
-                        username: result.user.email.split('@')[0],
-                        phone: ''
-                    });
-
-                    btnGoogle.innerHTML = `<svg style="width:20px;height:20px;stroke:var(--sigma-accent);fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Verified`;
-                    setTimeout(() => {
-                        window.location.href = 'dash.html';
-                    }, 600);
+                    await auth.signInWithRedirect(provider);
 
                 } catch (err) {
                     if (err.code !== 'auth/popup-closed-by-user') {
