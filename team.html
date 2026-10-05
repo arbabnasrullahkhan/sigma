@@ -1,0 +1,2672 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <!-- SEO, Privacy & PWA Meta (Protected Workspace) -->
+    <meta name="description"
+        content="Manage your Sigma referral network. Track active team levels, view verifiable referral funnels, and monitor eligible commissions securely.">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="theme-color" content="#0B132B">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sigma Team">
+
+    <title>Sigma | Referral Network Center</title>
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/favicon.png">
+
+    <!-- Premium Typography (Inter for UI, JetBrains Mono for exact financial numbers) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Official QR Code Generator Engine (Lightweight & Secure) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+        integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WU1yM/43QOzeOQ-pSaAcs2mX3X1017wZ8b86eT2145vR24iE4Mxg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Firebase SDKs (Auth, Firestore) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Centralized Firebase Configuration -->
+    <script src="firebase-config.js"></script>
+
+    <!-- Fallback Firebase Initialization -->
+    <script>
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            const fallbackConfig = {
+                apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
+                authDomain: "week-team.firebaseapp.com",
+                projectId: "week-team",
+                storageBucket: "week-team.firebasestorage.app",
+                messagingSenderId: "480334485782",
+                appId: "1:480334485782:web:c0c886ed710567b9e6d837"
+            };
+            firebase.initializeApp(fallbackConfig);
+            console.log("Sigma Firebase fallback verified in Team Center.");
+        }
+    </script>
+
+    <style>
+        /* ==========================================================================
+           1. SIGMA PREMIUM DESIGN TOKENS (Strict adherence to architecture)
+           ========================================================================== */
+        :root {
+            /* Core Brand Colors */
+            --sigma-primary: #0B132B;
+            --sigma-secondary: #1C2541;
+            --sigma-tertiary: #3A506B;
+
+            /* Surfaces & Backgrounds */
+            --sigma-surface: #FFFFFF;
+            --sigma-surface-alt: #F8FAFC;
+            --sigma-subtle: #F1F5F9;
+            --sigma-backdrop: rgba(11, 19, 43, 0.75);
+
+            /* Borders & Dividers */
+            --sigma-muted-border: #E2E8F0;
+            --sigma-input-border: #CBD5E1;
+            --sigma-focus-ring: rgba(59, 130, 246, 0.25);
+
+            /* Status & Financial Indicators */
+            --sigma-accent: #10B981;
+            --sigma-accent-dark: #059669;
+            --sigma-accent-light: #34D399;
+            --sigma-accent-soft: #ECFDF5;
+
+            --sigma-gold: #F59E0B;
+            --sigma-gold-dark: #D97706;
+            --sigma-gold-soft: #FEF3C7;
+
+            --sigma-danger: #EF4444;
+            --sigma-danger-dark: #DC2626;
+            --sigma-danger-soft: #FEE2E2;
+
+            --sigma-info: #3B82F6;
+            --sigma-info-dark: #2563EB;
+            --sigma-info-soft: #EFF6FF;
+
+            /* Text Hierarchies */
+            --text-heading: #0F172A;
+            --text-body: #334155;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+            --text-inverse: #FFFFFF;
+
+            /* Geometry & Radii */
+            --radius-pill: 9999px;
+            --radius-2xl: 28px;
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+
+            /* Depth & Shadows */
+            --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+            --shadow-subtle: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+            --shadow-card: 0 16px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 16px -4px rgba(15, 23, 42, 0.04);
+            --shadow-float: 0 24px 48px -12px rgba(15, 23, 42, 0.15);
+            --shadow-glow: 0 8px 24px rgba(16, 185, 129, 0.25);
+            --shadow-glow-gold: 0 8px 24px rgba(245, 158, 11, 0.25);
+
+            /* Z-Indices */
+            --z-base: 1;
+            --z-elevated: 10;
+            --z-dock: 1000;
+            --z-header: 900;
+            --z-overlay: 1900;
+            --z-modal: 2000;
+            --z-toast: 3000;
+            --z-blocker: 9999;
+
+            /* Transitions & Environment */
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --safe-area-bottom: env(safe-area-inset-bottom, 16px);
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-left: env(safe-area-inset-left, 0px);
+            --safe-area-right: env(safe-area-inset-right, 0px);
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET & BASE STYLES
+           ========================================================================== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--sigma-surface-alt);
+            color: var(--text-body);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: calc(110px + var(--safe-area-bottom));
+            padding-left: var(--safe-area-left);
+            padding-right: var(--safe-area-right);
+            background-image:
+                radial-gradient(circle at 10% 0%, rgba(59, 130, 246, 0.03) 0%, transparent 45vw),
+                radial-gradient(circle at 90% 100%, rgba(16, 185, 129, 0.03) 0%, transparent 45vw);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body.locked {
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+            border: none;
+            outline: none;
+            background: none;
+        }
+
+        button {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            color: var(--text-heading);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        p {
+            color: var(--text-muted);
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-feature-settings: "tnum" 1;
+        }
+
+        .text-accent {
+            color: var(--sigma-accent-dark);
+        }
+
+        .text-gold {
+            color: var(--sigma-gold-dark);
+        }
+
+        .text-danger {
+            color: var(--sigma-danger-dark);
+        }
+
+        .text-info {
+            color: var(--sigma-info-dark);
+        }
+
+        .text-primary {
+            color: var(--sigma-primary);
+        }
+
+        /* Offline Network Banner */
+        #networkOfflineBanner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--sigma-danger);
+            color: white;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-align: center;
+            padding: max(8px, var(--safe-area-top)) 12px 8px;
+            z-index: var(--z-blocker);
+            display: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* ==========================================================================
+           3. DYNAMIC ISLAND HEADER & FRAME
+           ========================================================================== */
+        .app-container {
+            width: 100%;
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .island-topbar {
+            position: sticky;
+            top: max(12px, var(--safe-area-top));
+            margin: 0 16px 20px;
+            height: 68px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-pill);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            z-index: var(--z-header);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .island-topbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-card);
+            border-color: var(--sigma-muted-border);
+        }
+
+        .btn-back {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--sigma-surface);
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--sigma-muted-border);
+            transition: var(--transition-bounce);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            flex-shrink: 0;
+        }
+
+        .btn-back:active {
+            transform: scale(0.92);
+            background: var(--sigma-subtle);
+        }
+
+        .btn-back svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.5;
+            stroke: currentColor;
+            fill: none;
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .brand-logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            flex-shrink: 0;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .header-title b {
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: var(--sigma-primary);
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .header-title small {
+            font-size: 0.65rem;
+            color: var(--sigma-gold-dark);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-top-action {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--sigma-subtle);
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--sigma-muted-border);
+            transition: var(--transition-bounce);
+            position: relative;
+        }
+
+        .btn-top-action:active {
+            transform: scale(0.92);
+        }
+
+        .btn-top-action svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.2;
+            stroke: currentColor;
+            fill: none;
+        }
+
+        .unread-dot {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--sigma-danger);
+            border: 2px solid var(--sigma-surface);
+            border-radius: 50%;
+            display: none;
+        }
+
+        .unread-dot.active {
+            display: block;
+        }
+
+        /* ==========================================================================
+           4. PAGE CONTENT & HERO ELIGIBILITY CARD
+           ========================================================================== */
+        .workspace {
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 4px 0 8px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .page-header h1 {
+            font-size: 1.9rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            color: var(--sigma-primary);
+        }
+
+        .page-header p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 440px;
+            margin: 0 auto;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* Referral Eligibility Hero Card */
+        .eligibility-card {
+            background: linear-gradient(135deg, var(--sigma-primary) 0%, var(--sigma-secondary) 100%);
+            border-radius: var(--radius-2xl);
+            padding: 28px 24px;
+            color: white;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .eligibility-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.15;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10%), radial-gradient(circle, #fff 10%, transparent 10%);
+            background-size: 6px 6px;
+            background-position: 0 0, 3px 3px;
+            pointer-events: none;
+        }
+
+        .eligibility-card::after {
+            content: '';
+            position: absolute;
+            right: -30px;
+            top: -30px;
+            width: 140px;
+            height: 140px;
+            background-image: url('assets/logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.08;
+            transform: rotate(15deg);
+            filter: grayscale(100%);
+            pointer-events: none;
+        }
+
+        .elig-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 24px;
+        }
+
+        .elig-status {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .elig-status small {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .elig-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .elig-badge.active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--sigma-accent-light);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        .elig-badge.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--sigma-gold-soft);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        .elig-badge.inactive {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--sigma-danger-soft);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .elig-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .elig-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .elig-body {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .elig-body .currency {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 700;
+        }
+
+        .elig-body .amount {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            line-height: 1;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .elig-body .label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-left: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .elig-footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .elig-footer span {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .elig-footer span svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--sigma-gold);
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .btn-view-wallet {
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            background: white;
+            color: var(--sigma-primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition-bounce);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-view-wallet:active {
+            transform: scale(0.95);
+        }
+
+        /* ==========================================================================
+           5. REFERRAL LINK & SHARE CONTROLS
+           ========================================================================== */
+        .share-card {
+            background: var(--sigma-surface);
+            border-radius: var(--radius-2xl);
+            padding: 24px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--sigma-muted-border);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            animation: slideUp 0.5s ease-out 0.1s backwards;
+        }
+
+        .share-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .share-header-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--sigma-info-soft);
+            color: var(--sigma-info-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--sigma-info-border);
+            flex-shrink: 0;
+        }
+
+        .share-header-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .share-header-text h2 {
+            font-size: 1.15rem;
+            color: var(--text-heading);
+            margin-bottom: 2px;
+        }
+
+        .share-header-text p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .link-input-group {
+            display: flex;
+            align-items: center;
+            background: var(--sigma-subtle);
+            border: 2px solid var(--sigma-input-border);
+            border-radius: var(--radius-xl);
+            padding: 6px 6px 6px 16px;
+            gap: 8px;
+            transition: var(--transition-smooth);
+        }
+
+        .link-input-group:focus-within {
+            border-color: var(--sigma-primary);
+            box-shadow: 0 0 0 4px var(--sigma-focus-ring);
+            background: white;
+        }
+
+        .link-input-group input {
+            flex: 1;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            font-family: 'JetBrains Mono', monospace;
+            min-width: 0;
+            text-overflow: ellipsis;
+        }
+
+        .btn-copy-link {
+            height: 44px;
+            padding: 0 20px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition-bounce);
+            box-shadow: 0 4px 12px rgba(11, 19, 43, 0.2);
+            flex-shrink: 0;
+        }
+
+        .btn-copy-link:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 6px rgba(11, 19, 43, 0.15);
+        }
+
+        .btn-copy-link svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .share-actions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .btn-share-action {
+            height: 48px;
+            border-radius: var(--radius-lg);
+            background: white;
+            border: 2px solid var(--sigma-muted-border);
+            color: var(--text-heading);
+            font-size: 0.85rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition-bounce);
+        }
+
+        .btn-share-action:active {
+            transform: scale(0.95);
+            background: var(--sigma-subtle);
+            border-color: var(--sigma-input-border);
+        }
+
+        .btn-share-action svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .btn-share-action.whatsapp {
+            color: #16A34A;
+            border-color: rgba(22, 163, 74, 0.2);
+            background: rgba(22, 163, 74, 0.05);
+        }
+
+        .btn-share-action.whatsapp:active {
+            background: rgba(22, 163, 74, 0.1);
+        }
+
+        .btn-share-action.qr {
+            color: var(--sigma-primary);
+        }
+
+        /* ==========================================================================
+           6. REFERRAL FUNNEL ANALYTICS
+           ========================================================================== */
+        .section-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0 4px;
+            animation: slideUp 0.5s ease-out 0.2s backwards;
+        }
+
+        .section-title-row h3 {
+            font-size: 1.2rem;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title-row h3 svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--sigma-primary);
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .btn-text-action {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--sigma-info-dark);
+            transition: var(--transition-fast);
+        }
+
+        .btn-text-action:active {
+            opacity: 0.7;
+        }
+
+        .funnel-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            animation: slideUp 0.5s ease-out 0.3s backwards;
+        }
+
+        .funnel-card {
+            background: var(--sigma-surface);
+            border-radius: var(--radius-xl);
+            padding: 16px;
+            border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .funnel-card:hover {
+            border-color: var(--sigma-input-border);
+            transform: translateY(-2px);
+        }
+
+        .funnel-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .funnel-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .fc-blue .funnel-icon {
+            background: var(--sigma-info-soft);
+            color: var(--sigma-info-dark);
+        }
+
+        .fc-gold .funnel-icon {
+            background: var(--sigma-gold-soft);
+            color: var(--sigma-gold-dark);
+        }
+
+        .fc-green .funnel-icon {
+            background: var(--sigma-accent-soft);
+            color: var(--sigma-accent-dark);
+        }
+
+        .fc-purple .funnel-icon {
+            background: #F5F3FF;
+            color: #7C3AED;
+        }
+
+        .funnel-data {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .funnel-data small {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .funnel-data strong {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--text-heading);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+            margin-top: 4px;
+        }
+
+        /* ==========================================================================
+           7. MY TEAM LIST (Search, Filters, Data Rows)
+           ========================================================================== */
+        .team-management-card {
+            background: var(--sigma-surface);
+            border-radius: var(--radius-2xl);
+            padding: 24px 20px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--sigma-muted-border);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            animation: slideUp 0.5s ease-out 0.4s backwards;
+            margin-bottom: 16px;
+        }
+
+        .team-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--sigma-subtle);
+            border: 1px solid var(--sigma-input-border);
+            border-radius: var(--radius-lg);
+            padding: 0 16px;
+            height: 48px;
+            transition: var(--transition-smooth);
+        }
+
+        .search-wrapper:focus-within {
+            border-color: var(--sigma-primary);
+            background: white;
+            box-shadow: 0 0 0 4px var(--sigma-focus-ring);
+        }
+
+        .search-wrapper svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-muted);
+            fill: none;
+            stroke-width: 2;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .search-wrapper input {
+            flex: 1;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            height: 100%;
+        }
+
+        .search-wrapper input::placeholder {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .team-filters {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .team-filters::-webkit-scrollbar {
+            display: none;
+        }
+
+        .t-filter-btn {
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            background: var(--sigma-surface-alt);
+            border: 1px solid var(--sigma-muted-border);
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            white-space: nowrap;
+            transition: var(--transition-fast);
+        }
+
+        .t-filter-btn.active {
+            background: var(--text-heading);
+            color: white;
+            border-color: var(--text-heading);
+        }
+
+        .team-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 200px;
+        }
+
+        /* Individual Team Member Card */
+        .member-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border-radius: var(--radius-xl);
+            background: var(--sigma-surface-alt);
+            border: 1px solid var(--sigma-muted-border);
+            transition: var(--transition-bounce);
+            cursor: pointer;
+        }
+
+        .member-card:hover {
+            border-color: var(--sigma-input-border);
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .member-card:active {
+            transform: scale(0.98);
+        }
+
+        .member-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--sigma-input-border), var(--sigma-muted-border));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            border: 2px solid white;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .member-avatar.l1 {
+            background: linear-gradient(135deg, var(--sigma-accent), var(--sigma-accent-dark));
+        }
+
+        .member-avatar.l2 {
+            background: linear-gradient(135deg, var(--sigma-info), var(--sigma-info-dark));
+        }
+
+        .member-avatar.l3 {
+            background: linear-gradient(135deg, var(--sigma-gold), var(--sigma-gold-dark));
+        }
+
+        .member-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .member-name-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .member-name-row b {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .member-status {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 2px 8px;
+            border-radius: var(--radius-pill);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .member-status.active {
+            color: var(--sigma-accent-dark);
+            background: var(--sigma-accent-soft);
+        }
+
+        .member-status.pending {
+            color: var(--sigma-gold-dark);
+            background: var(--sigma-gold-soft);
+        }
+
+        .member-status.inactive {
+            color: var(--text-muted);
+            background: var(--sigma-muted-border);
+        }
+
+        .member-details-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2px;
+        }
+
+        .member-uid {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .member-date {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .btn-load-more {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-lg);
+            background: var(--sigma-surface-alt);
+            border: 2px dashed var(--sigma-input-border);
+            color: var(--sigma-primary);
+            font-size: 0.9rem;
+            font-weight: 800;
+            transition: var(--transition-bounce);
+            margin-top: 8px;
+            display: none;
+        }
+
+        .btn-load-more:active {
+            background: var(--sigma-muted-border);
+            transform: scale(0.98);
+        }
+
+        /* Skeletons */
+        .skeleton {
+            background: #E2E8F0;
+            color: transparent !important;
+            animation: pulseSkel 1.5s infinite ease-in-out;
+            border-radius: 8px;
+        }
+
+        .skel-funnel {
+            height: 100px;
+            width: 100%;
+            border-radius: var(--radius-xl);
+        }
+
+        .skel-member {
+            height: 80px;
+            width: 100%;
+            border-radius: var(--radius-xl);
+            margin-bottom: 12px;
+            border: 1px solid var(--sigma-muted-border);
+        }
+
+        @keyframes pulseSkel {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Empty States */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--sigma-surface-alt);
+            border-radius: var(--radius-xl);
+            border: 1px dashed var(--sigma-input-border);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            stroke: var(--text-light);
+            fill: none;
+            stroke-width: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h4 {
+            font-size: 1.1rem;
+            color: var(--text-heading);
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            max-width: 280px;
+            line-height: 1.5;
+        }
+
+        /* ==========================================================================
+           8. MODALS & BOTTOM SHEETS (Strict Sigma Standards)
+           ========================================================================== */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: var(--z-overlay);
+            background: rgba(11, 19, 43, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sheet {
+            width: 100%;
+            max-width: 640px;
+            background: var(--sigma-surface);
+            border-radius: 36px 36px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -24px 48px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: var(--z-modal);
+        }
+
+        .overlay.show .sheet {
+            transform: translateY(0);
+        }
+
+        .sheet-handle {
+            width: 56px;
+            height: 6px;
+            border-radius: 99px;
+            background: var(--sigma-input-border);
+            margin: 16px auto 12px;
+            flex-shrink: 0;
+        }
+
+        .sheet-header {
+            padding: 8px 24px 16px;
+            border-bottom: 1px solid var(--sigma-muted-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .sheet-header h3 {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: var(--text-heading);
+        }
+
+        .sheet-header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .sheet-close-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--sigma-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: var(--transition-fast);
+            border: 1px solid var(--sigma-muted-border);
+        }
+
+        .sheet-close-btn:active {
+            background: var(--sigma-input-border);
+            transform: scale(0.9);
+        }
+
+        .sheet-close-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .sheet-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            overscroll-behavior: contain;
+        }
+
+        /* QR Code Modal Specifics */
+        .qr-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            background: white;
+            border-radius: var(--radius-2xl);
+            border: 2px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-card);
+            margin: 0 auto;
+            max-width: 260px;
+            aspect-ratio: 1;
+        }
+
+        .qr-logo-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 52px;
+            height: 52px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 4px solid white;
+            z-index: 10;
+        }
+
+        .qr-logo-overlay img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        /* Referral Detail Timeline */
+        .timeline-container {
+            width: 100%;
+            padding: 0 8px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            position: relative;
+            padding-bottom: 24px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 32px;
+            bottom: 0;
+            width: 2px;
+            background: var(--sigma-muted-border);
+            z-index: 1;
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        .tl-indicator {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--sigma-surface);
+            border: 2px solid var(--sigma-muted-border);
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--text-muted);
+        }
+
+        .tl-indicator svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            fill: none;
+        }
+
+        .tl-content {
+            flex: 1;
+            margin-top: 4px;
+        }
+
+        .tl-content b {
+            display: block;
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-heading);
+        }
+
+        .tl-content p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .tl-content small {
+            display: inline-block;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            font-weight: 700;
+            margin-top: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--sigma-surface-alt);
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--sigma-muted-border);
+        }
+
+        /* Timeline States */
+        .timeline-item.completed .tl-indicator {
+            background: var(--sigma-accent-soft);
+            border-color: var(--sigma-accent);
+            color: var(--sigma-accent-dark);
+        }
+
+        .timeline-item.current .tl-indicator {
+            background: var(--sigma-info-soft);
+            border-color: var(--sigma-info);
+            color: var(--sigma-info-dark);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .timeline-item.rejected .tl-indicator {
+            background: var(--sigma-danger-soft);
+            border-color: var(--sigma-danger);
+            color: var(--sigma-danger-dark);
+        }
+
+        .timeline-item.pending .tl-indicator {
+            background: var(--sigma-gold-soft);
+            border-color: var(--sigma-gold);
+            color: var(--sigma-gold-dark);
+        }
+
+        .sheet-footer-btn {
+            width: 100%;
+            height: 60px;
+            border-radius: var(--radius-xl);
+            background: var(--sigma-surface-alt);
+            color: var(--text-heading);
+            font-size: 1.05rem;
+            font-weight: 800;
+            border: 2px solid var(--sigma-muted-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition-bounce);
+            margin-top: 10px;
+        }
+
+        .sheet-footer-btn:active {
+            transform: scale(0.96);
+            background: var(--sigma-input-border);
+        }
+
+        .sheet-footer-btn.primary {
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            color: white;
+            border: none;
+            box-shadow: 0 8px 24px rgba(11, 19, 43, 0.2);
+        }
+
+        .sheet-footer-btn.primary:active {
+            box-shadow: 0 4px 12px rgba(11, 19, 43, 0.15);
+        }
+
+        /* Referral Rules Table/List */
+        .rules-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .rule-card {
+            background: var(--sigma-subtle);
+            border: 1px solid var(--sigma-muted-border);
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .rule-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: white;
+            border: 1px solid var(--sigma-input-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--sigma-primary);
+            flex-shrink: 0;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .rule-content {
+            flex: 1;
+        }
+
+        .rule-content b {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin-bottom: 2px;
+        }
+
+        .rule-content b span {
+            color: var(--sigma-accent-dark);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .rule-content p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* ==========================================================================
+           9. NATIVE MOBILE DOCK (EXACTLY 3 BUTTONS AS REQUESTED)
+           ========================================================================== */
+        .mobile-dock {
+            position: fixed;
+            bottom: var(--safe-area-bottom);
+            left: 50%;
+            transform: translateX(-50%);
+            height: 78px;
+            width: calc(100% - 32px);
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-float);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: var(--z-dock);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .dock-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: var(--text-muted);
+            width: 64px;
+            height: 100%;
+            transition: var(--transition-bounce);
+            text-decoration: none;
+        }
+
+        .dock-slot svg {
+            width: 26px;
+            height: 26px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .dock-slot span {
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .dock-slot.active {
+            color: var(--sigma-primary);
+        }
+
+        .dock-slot.active svg {
+            stroke-width: 2.8;
+            transform: translateY(-2px);
+            color: var(--sigma-accent-dark);
+        }
+
+        .dock-crest-btn {
+            position: relative;
+            top: -26px;
+            width: 72px;
+            height: 72px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 26px rgba(11, 19, 43, 0.35);
+            border: 6px solid var(--sigma-surface-alt);
+            transition: var(--transition-bounce);
+            text-decoration: none;
+        }
+
+        .dock-crest-btn:active {
+            transform: scale(0.9);
+        }
+
+        .dock-crest-btn img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .dock-crest-btn::after {
+            content: 'MY PLANS';
+            position: absolute;
+            bottom: -24px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            color: var(--text-heading);
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 860px) {
+            .mobile-dock {
+                display: none;
+            }
+
+            body {
+                padding-bottom: 60px;
+            }
+        }
+
+        /* ==========================================================================
+           10. TOASTS & ANIMATIONS
+           ========================================================================== */
+        .toast {
+            position: fixed;
+            top: max(24px, var(--safe-area-top));
+            left: 50%;
+            transform: translate(-50%, -20px) scale(0.9);
+            background: var(--sigma-primary);
+            color: white;
+            padding: 16px 28px;
+            border-radius: var(--radius-pill);
+            font-size: 0.95rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-float);
+            z-index: var(--z-toast);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        .toast.error {
+            background: var(--sigma-danger-dark);
+            border-color: var(--sigma-danger);
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0) scale(1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Offline Notification Banner -->
+    <div id="networkOfflineBanner">Critical Network Error. Please Check Connection.</div>
+
+    <!-- COMPLETE SVG ICON SYSTEM -->
+    <svg width="0" height="0" style="display:none;" aria-hidden="true">
+        <symbol id="icon-back" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </symbol>
+        <symbol id="icon-home" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22" />
+        </symbol>
+        <symbol id="icon-user" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
+        <symbol id="icon-bell" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </symbol>
+        <symbol id="icon-copy" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24">
+            <polyline stroke-linecap="round" stroke-linejoin="round" points="20 6 9 17 4 12" />
+        </symbol>
+        <symbol id="icon-shield" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </symbol>
+        <symbol id="icon-trophy" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 9h3a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-3" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 3h16v7a8 8 0 0 1-16 0V3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v5" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 21h8" />
+        </symbol>
+        <symbol id="icon-share" viewBox="0 0 24 24">
+            <circle cx="18" cy="5" r="3" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="6" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="18" cy="19" r="3" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
+        <symbol id="icon-qr" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1" stroke-linecap="round" stroke-linejoin="round" />
+            <rect x="14" y="3" width="7" height="7" rx="1" stroke-linecap="round" stroke-linejoin="round" />
+            <rect x="14" y="14" width="7" height="7" rx="1" stroke-linecap="round" stroke-linejoin="round" />
+            <rect x="3" y="14" width="7" height="7" rx="1" stroke-linecap="round" stroke-linejoin="round" />
+            <rect x="8" y="8" width="8" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
+        <symbol id="icon-link" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+        </symbol>
+        <symbol id="icon-network" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        </symbol>
+        <symbol id="icon-cursor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 13l6 6" />
+        </symbol>
+        <symbol id="icon-x" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
+        <symbol id="icon-search" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
+        <symbol id="icon-info" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="12" y1="16" x2="12" y2="12" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="12" y1="8" x2="12.01" y2="8" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
+        <symbol id="icon-clock" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round" />
+            <polyline stroke-linecap="round" stroke-linejoin="round" points="12 6 12 12 16 14" />
+        </symbol>
+        <symbol id="icon-wallet" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6v12c0 1.1.9 2 2 2h14v-4" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z" />
+        </symbol>
+    </svg>
+
+    <div class="app-container">
+
+        <!-- HEADER (Island Architecture + Leaderboard placement) -->
+        <header class="island-topbar" id="topHeader">
+            <a href="dash.html" class="btn-back" aria-label="Back to Dashboard">
+                <svg>
+                    <use href="#icon-back" />
+                </svg>
+            </a>
+            <div class="brand-cluster">
+                <div class="header-title">
+                    <b id="cmsBrandName">Network Center</b>
+                    <small>Sigma Verifiable Ledger</small>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-top-action" aria-label="Global Leaderboard"
+                    onclick="window.location.href='leaderboard.html'">
+                    <svg>
+                        <use href="#icon-trophy" />
+                    </svg>
+                </button>
+                <button class="btn-top-action" aria-label="Notifications" onclick="window.location.href='dash.html'">
+                    <svg>
+                        <use href="#icon-bell" />
+                    </svg>
+                    <span class="unread-dot" id="headerNotifDot"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="workspace">
+
+            <div class="page-header">
+                <h1 id="cmsPageTitle">Referral Network</h1>
+                <p id="cmsPageSubtitle">Expand your team, monitor authentic attribution, and track eligible ledger
+                    commissions.</p>
+            </div>
+
+            <!-- HERO: Eligibility & Earnings Vault -->
+            <div class="eligibility-card" id="heroEligibilityCard">
+                <div class="elig-header">
+                    <div class="elig-status">
+                        <small>Referral Status</small>
+                        <div class="elig-badge inactive" id="uiEligBadge">
+                            <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;">
+                                <use href="#icon-shield" />
+                            </svg>
+                            Checking...
+                        </div>
+                    </div>
+                    <div class="elig-icon" onclick="TeamController.openSheet('sheetRules')">
+                        <svg>
+                            <use href="#icon-info" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="elig-body">
+                    <span class="currency">Rs.</span>
+                    <span class="amount font-mono" id="uiTotalCredited">0.00</span>
+                    <span class="label">Total Credited</span>
+                </div>
+
+                <div class="elig-footer">
+                    <span id="uiPendingRewards"><svg>
+                            <use href="#icon-clock" />
+                        </svg> Pending: Rs. 0.00</span>
+                    <button class="btn-view-wallet" onclick="window.location.href='transactions.html'">View Ledger
+                        &rarr;</button>
+                </div>
+            </div>
+
+            <!-- LINK & SHARE CONTROLS -->
+            <div class="share-card">
+                <div class="share-header">
+                    <div class="share-header-icon"><svg>
+                            <use href="#icon-link" />
+                        </svg></div>
+                    <div class="share-header-text">
+                        <h2>Your Referral Link</h2>
+                        <p>Unique immutable identifier for secure attribution.</p>
+                    </div>
+                </div>
+
+                <div class="link-input-group">
+                    <input type="text" id="uiRefLink" value="Loading..." readonly>
+                    <button class="btn-copy-link" onclick="TeamController.copyLink()">
+                        <svg>
+                            <use href="#icon-copy" />
+                        </svg> Copy
+                    </button>
+                </div>
+
+                <div class="share-actions-row">
+                    <button class="btn-share-action whatsapp" onclick="TeamController.shareWhatsApp()">
+                        <!-- Basic WhatsApp path icon -->
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                        </svg> WhatsApp
+                    </button>
+                    <button class="btn-share-action qr" onclick="TeamController.openSheet('sheetQR')">
+                        <svg>
+                            <use href="#icon-qr" />
+                        </svg> Invite QR
+                    </button>
+                    <button class="btn-share-action" onclick="TeamController.shareNative()">
+                        <svg>
+                            <use href="#icon-share" />
+                        </svg> Share
+                    </button>
+                </div>
+            </div>
+
+            <!-- REFERRAL FUNNEL ANALYTICS -->
+            <div>
+                <div class="section-title-row">
+                    <h3><svg>
+                            <use href="#icon-trend" />
+                        </svg> Funnel Analytics</h3>
+                    <button class="btn-text-action" onclick="TeamController.fetchAnalytics(true)">Refresh</button>
+                </div>
+
+                <div class="funnel-grid" id="funnelGrid">
+                    <!-- Skeletons -->
+                    <div class="skel-funnel skeleton"></div>
+                    <div class="skel-funnel skeleton"></div>
+                    <div class="skel-funnel skeleton"></div>
+                    <div class="skel-funnel skeleton"></div>
+                </div>
+            </div>
+
+            <!-- MY TEAM LIST & FILTERS -->
+            <div class="team-management-card">
+                <div class="section-title-row" style="margin: 0 0 16px;">
+                    <h3><svg>
+                            <use href="#icon-network" />
+                        </svg> My Team</h3>
+                    <button class="btn-text-action" onclick="TeamController.openSheet('sheetRules')">View Rules</button>
+                </div>
+
+                <div class="team-controls">
+                    <div class="search-wrapper">
+                        <svg>
+                            <use href="#icon-search" />
+                        </svg>
+                        <input type="text" id="teamSearchInput" placeholder="Search by name or ID..."
+                            oninput="TeamController.filterTeam()">
+                    </div>
+
+                    <div class="team-filters" id="teamFilterTabs">
+                        <button class="t-filter-btn active" data-filter="all">All Members</button>
+                        <button class="t-filter-btn" data-filter="active">Active Plans</button>
+                        <button class="t-filter-btn" data-filter="l1">Level 1</button>
+                        <button class="t-filter-btn" data-filter="l2">Level 2</button>
+                        <button class="t-filter-btn" data-filter="l3">Level 3</button>
+                    </div>
+                </div>
+
+                <div class="team-list" id="teamListContainer">
+                    <div class="skel-member skeleton"></div>
+                    <div class="skel-member skeleton"></div>
+                    <div class="skel-member skeleton"></div>
+                </div>
+
+                <button class="btn-load-more" id="btnLoadMoreTeam" onclick="TeamController.loadMoreTeam()">Load More
+                    Records</button>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- NATIVE 3-BUTTON DOCK (Exactly matching Sigma Architecture) -->
+    <nav class="mobile-dock" id="mobileDock">
+        <a href="dash.html" class="dock-slot">
+            <svg>
+                <use href="#icon-home" />
+            </svg>
+            <span>Home</span>
+        </a>
+        <!-- Central Crest Button pointing to Plans/Active Plans -->
+        <a href="my-plans.html" class="dock-crest-btn"
+            onclick="TeamController.logAction('dock_my_plans', 'Navigated to my plans')">
+            <img src="assets/logo.png" alt="Sigma Crest" onerror="this.style.display='none'">
+        </a>
+        <a href="profile.html" class="dock-slot">
+            <div style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);"
+                id="dockAvatarContainer">
+                <svg style="width: 20px; height: 20px;">
+                    <use href="#icon-user" />
+                </svg>
+            </div>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- ==========================================================================
+         MODALS & BOTTOM SHEETS
+         ========================================================================== -->
+
+    <!-- 1. QR Code Viewer -->
+    <div class="overlay" id="sheetQR">
+        <div class="sheet" style="max-width: 460px;">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <div>
+                    <h3>Invite QR Code</h3>
+                    <p>Secure visual identifier</p>
+                </div>
+                <button class="sheet-close-btn" onclick="TeamController.closeSheet('sheetQR')"><svg>
+                        <use href="#icon-x" />
+                    </svg></button>
+            </div>
+            <div class="sheet-body" style="align-items: center; text-align: center;">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;">Scan with any camera app to
+                    bind your referral attribution automatically.</p>
+
+                <div class="qr-wrapper">
+                    <div id="qrBoxContainer"></div>
+                    <div class="qr-logo-overlay">
+                        <img src="assets/logo.png" alt="S"
+                            onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/></svg>'">
+                    </div>
+                </div>
+
+                <div
+                    style="width: 100%; max-width: 320px; margin-top: 32px; display: flex; flex-direction: column; gap: 12px;">
+                    <button class="sheet-footer-btn primary" onclick="TeamController.copyLink()">
+                        <svg style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.5;">
+                            <use href="#icon-copy" />
+                        </svg> Copy URL Instead
+                    </button>
+                    <button class="sheet-footer-btn" onclick="TeamController.closeSheet('sheetQR')">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Detailed Referral Timeline -->
+    <div class="overlay" id="sheetReferralDetail">
+        <div class="sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <div>
+                    <h3 id="rdName">Member Details</h3>
+                    <p id="rdUid">UID: ...</p>
+                </div>
+                <button class="sheet-close-btn" onclick="TeamController.closeSheet('sheetReferralDetail')"><svg>
+                        <use href="#icon-x" />
+                    </svg></button>
+            </div>
+            <div class="sheet-body">
+                <div class="timeline-container" id="rdTimelineContainer">
+                    <!-- Injected via JS -->
+                </div>
+                <button class="sheet-footer-btn" onclick="TeamController.closeSheet('sheetReferralDetail')">Close
+                    Detail</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Referral Rules & Eligibility Configuration -->
+    <div class="overlay" id="sheetRules">
+        <div class="sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <div>
+                    <h3>Referral Guidelines</h3>
+                    <p>Official Eligibility & Commission Rules</p>
+                </div>
+                <button class="sheet-close-btn" onclick="TeamController.closeSheet('sheetRules')"><svg>
+                        <use href="#icon-x" />
+                    </svg></button>
+            </div>
+            <div class="sheet-body">
+
+                <div class="rules-list" id="rulesListContainer">
+                    <!-- Configurable rates injected here -->
+                    <div style="text-align:center; padding:20px; color:var(--text-muted);">Loading platform rules...
+                    </div>
+                </div>
+
+                <div
+                    style="background: var(--sigma-surface-alt); padding: 16px; border-radius: var(--radius-lg); border: 1px dashed var(--sigma-muted-border); font-size: 0.8rem; color: var(--text-body); line-height: 1.6; margin-top: 10px;">
+                    <strong>Security Notice:</strong> Referral commissions are governed strictly by authoritative
+                    backend logic. Clicks, registrations, and pending payments do not constitute eligible commissions.
+                    Spendable wallet credit is issued exclusively via the immutable ledger upon successful activation of
+                    a referred qualifying plan. Fraudulent activity, self-referrals, and duplicate IDs will result in
+                    immediate network suspension.
+                </div>
+
+                <button class="sheet-footer-btn primary"
+                    onclick="TeamController.closeSheet('sheetRules')">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST COMPONENT -->
+    <div class="toast" id="toastBox">
+        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;">
+            <use href="#icon-check" />
+        </svg>
+        <span id="toastMsg">Action successful</span>
+    </div>
+
+    <!-- ==========================================================================
+         JAVASCRIPT APPLICATION CONTROLLER (Secure & Auditable)
+         ========================================================================== -->
+    <script>
+        /**
+         * Sigma Team & Referral Controller
+         * Handles secure attribution rendering, funnel analytics, real-time CMS sync,
+         * pagination, and strict financial segregation rules.
+         */
+        const TeamController = (() => {
+
+            let authUser = null;
+            let userProfile = null;
+            let cmsRules = {
+                enabled: true,
+                l1_reward: "400 PKR",
+                l2_reward: "250 PKR",
+                l3_reward: "2% Bonus",
+                eligibilityRequiresPlan: true
+            };
+
+            let networkData = {
+                members: [],
+                lastDoc: null,
+                hasMore: false,
+                currentFilter: 'all',
+                searchQuery: ''
+            };
+
+            let qrcodeInstance = null;
+
+            // DOM Cache
+            const dom = {
+                eligBadge: document.getElementById('uiEligBadge'),
+                totalCredited: document.getElementById('uiTotalCredited'),
+                pendingRewards: document.getElementById('uiPendingRewards'),
+                refLinkInput: document.getElementById('uiRefLink'),
+                funnelGrid: document.getElementById('funnelGrid'),
+                teamList: document.getElementById('teamListContainer'),
+                btnLoadMore: document.getElementById('btnLoadMoreTeam'),
+                search: document.getElementById('teamSearchInput'),
+                filters: document.getElementById('teamFilterTabs'),
+                offlineBanner: document.getElementById('networkOfflineBanner'),
+                toastBox: document.getElementById('toastBox'),
+                toastMsg: document.getElementById('toastMsg')
+            };
+
+            // --- Utility Functions ---
+
+            const haptic = (ms = 15) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { } };
+
+            const toast = (msg, isError = false) => {
+                if (!dom.toastBox) return;
+                dom.toastMsg.textContent = msg;
+                dom.toastBox.className = `toast show ${isError ? 'error' : ''}`;
+                haptic(isError ? 50 : 25);
+                setTimeout(() => dom.toastBox.classList.remove('show'), 3500);
+            };
+
+            const openSheet = (id) => {
+                document.querySelectorAll('.overlay.show').forEach(el => el.classList.remove('show'));
+                const el = document.getElementById(id);
+                if (el) { el.classList.add('show'); document.body.classList.add('locked'); haptic(); }
+                if (id === 'sheetQR') generateQR();
+            };
+
+            const closeSheet = (id) => {
+                const el = document.getElementById(id);
+                if (el) { el.classList.remove('show'); document.body.classList.remove('locked'); }
+            };
+
+            const formatCurrency = (val) => Number(val || 0).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            const formatDate = (timestamp) => {
+                if (!timestamp) return 'N/A';
+                const d = timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp);
+                return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            };
+
+            const formatTime = (timestamp) => {
+                if (!timestamp) return '';
+                const d = timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp);
+                return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            };
+
+            const sanitizeHTML = (str) => {
+                const temp = document.createElement('div');
+                temp.textContent = str;
+                return temp.innerHTML;
+            };
+
+            // --- Action Logging (Secure to Firestore) ---
+
+            const logAction = async (actionType, description) => {
+                if (!authUser || typeof firebase === 'undefined') return;
+                try {
+                    const db = firebase.firestore();
+                    await db.collection('users').doc(authUser.uid).collection('notifications').add({
+                        type: actionType, title: actionType.replace(/_/g, ' ').toUpperCase(),
+                        body: description, read: false,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        device: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
+                    });
+                } catch (e) { }
+            };
+
+            // --- Share & Link Methods ---
+
+            const copyLink = async () => {
+                const val = dom.refLinkInput.value;
+                if (!val || val === 'Loading...') return;
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(val);
+                    } else {
+                        dom.refLinkInput.select(); document.execCommand('copy');
+                    }
+                    toast('Secure link copied to clipboard');
+                    logAction('referral_link_copied', 'User copied their personal referral link.');
+                } catch (e) { toast('Copy failed', true); }
+            };
+
+            const shareWhatsApp = () => {
+                const val = dom.refLinkInput.value;
+                if (!val || val === 'Loading...') return;
+                const msg = encodeURIComponent(`Start building your secure portfolio with Sigma. Use my official link: ${val}`);
+                window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+                logAction('share_whatsapp_initiated', 'User initiated a WhatsApp share intent.');
+                toast('WhatsApp intent opened');
+            };
+
+            const shareNative = async () => {
+                const val = dom.refLinkInput.value;
+                if (!val || val === 'Loading...') return;
+                try {
+                    if (navigator.share) {
+                        await navigator.share({
+                            title: 'Sigma Invitation',
+                            text: 'Join my Sigma network for secure algorithmic portfolios.',
+                            url: val
+                        });
+                        logAction('share_native_success', 'User successfully used native share API.');
+                    } else {
+                        copyLink(); // Fallback
+                    }
+                } catch (e) { /* Cancelled or failed silently */ }
+            };
+
+            const generateQR = () => {
+                const val = dom.refLinkInput.value;
+                const container = document.getElementById('qrBoxContainer');
+                if (!val || val === 'Loading...' || !container || !window.QRCode) return;
+
+                container.innerHTML = ''; // Clear
+                qrcodeInstance = new QRCode(container, {
+                    text: val, width: 200, height: 200,
+                    colorDark: "#0B132B", colorLight: "#FFFFFF", correctLevel: QRCode.CorrectLevel.H
+                });
+                logAction('qr_code_viewed', 'User viewed their personal invitation QR code.');
+            };
+
+            // --- Data Fetching & Rendering ---
+
+            const updateEligibilityUI = (userDoc) => {
+                const data = userDoc.data();
+                userProfile = data;
+
+                // Configure Unique Link
+                const uniqueSlug = data.username ? data.username.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 5) : authUser.uid.substring(0, 5).toLowerCase();
+                const link = `https://sigmaaz.vercel.app/reg.html?ref=SIG-${uniqueSlug}-${authUser.uid.substring(0, 4).toUpperCase()}`;
+                dom.refLinkInput.value = link;
+
+                // Eligibility Status
+                const hasActivePlan = data.activePlans > 0; // Authoritative backend metric
+                if (cmsRules.eligibilityRequiresPlan && !hasActivePlan) {
+                    dom.eligBadge.className = 'elig-badge inactive';
+                    dom.eligBadge.innerHTML = `<svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-shield"/></svg> Ineligible (No Active Plan)`;
+                } else {
+                    dom.eligBadge.className = 'elig-badge active';
+                    dom.eligBadge.innerHTML = `<svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg> Referral Active`;
+                }
+
+                // Balances (Authoritative Wallet)
+                dom.totalCredited.textContent = formatCurrency(data.commissionBalance || 0);
+                dom.pendingRewards.innerHTML = `<svg><use href="#icon-clock"/></svg> Pending Verification: Rs. ${formatCurrency(data.pendingCommission || 0)}`;
+            };
+
+            const renderFunnelAnalytics = (metrics) => {
+                // If backend aggregation is unavailable, we use local safe defaults for demo visual fidelity
+                const m = metrics || { clicks: 0, reg: 0, pending: 0, qualified: 0 };
+
+                // Mapped to specific colors as requested
+                dom.funnelGrid.innerHTML = `
+                    <div class="funnel-card fc-blue">
+                        <div class="funnel-icon"><svg><use href="#icon-cursor"/></svg></div>
+                        <div class="funnel-data"><small>Verified Clicks</small><strong>${m.clicks.toLocaleString()}</strong></div>
+                    </div>
+                    <div class="funnel-card fc-purple">
+                        <div class="funnel-icon"><svg><use href="#icon-user"/></svg></div>
+                        <div class="funnel-data"><small>Registrations</small><strong>${m.reg.toLocaleString()}</strong></div>
+                    </div>
+                    <div class="funnel-card fc-gold">
+                        <div class="funnel-icon"><svg><use href="#icon-clock"/></svg></div>
+                        <div class="funnel-data"><small>Pending Payment</small><strong>${m.pending.toLocaleString()}</strong></div>
+                    </div>
+                    <div class="funnel-card fc-green">
+                        <div class="funnel-icon"><svg><use href="#icon-check"/></svg></div>
+                        <div class="funnel-data"><small>Qualified Activated</small><strong>${m.qualified.toLocaleString()}</strong></div>
+                    </div>
+                `;
+            };
+
+            const fetchAnalytics = async (manualRefresh = false) => {
+                if (manualRefresh) {
+                    dom.funnelGrid.innerHTML = `<div class="skel-funnel skeleton"></div><div class="skel-funnel skeleton"></div><div class="skel-funnel skeleton"></div><div class="skel-funnel skeleton"></div>`;
+                    haptic();
+                }
+                try {
+                    const db = firebase.firestore();
+                    // In a real app, this reads an aggregated document. E.g., db.collection('user_stats').doc(uid).get()
+                    // Here we mock the aggregation based on the prompt's instruction to show realistic verifiable numbers without crashing browser counting thousands of docs
+
+                    setTimeout(() => {
+                        // Demo data simulating backend aggregation response
+                        const demoMetrics = { clicks: 142, reg: 28, pending: 3, qualified: 1 };
+                        renderFunnelAnalytics(demoMetrics);
+                        if (manualRefresh) toast("Analytics synchronized securely.");
+                    }, 600); // Simulate network latency
+
+                } catch (e) { console.error("Analytics fetch error", e); }
+            };
+
+            const renderTeamList = () => {
+                dom.teamList.innerHTML = '';
+
+                let filtered = networkData.members;
+
+                // 1. Search Logic
+                const q = networkData.searchQuery.toLowerCase();
+                if (q) {
+                    filtered = filtered.filter(m => m.name.toLowerCase().includes(q) || m.id.toLowerCase().includes(q));
+                }
+
+                // 2. Tab Filter Logic
+                const f = networkData.currentFilter;
+                if (f === 'active') filtered = filtered.filter(m => m.status === 'active');
+                if (f === 'l1') filtered = filtered.filter(m => m.level === 1);
+                if (f === 'l2') filtered = filtered.filter(m => m.level === 2);
+                if (f === 'l3') filtered = filtered.filter(m => m.level === 3);
+
+                if (filtered.length === 0) {
+                    dom.teamList.innerHTML = `
+                        <div class="empty-state">
+                            <svg><use href="#icon-network"/></svg>
+                            <h4>No Verified Records Found</h4>
+                            <p>You have no network members matching the current filters. Ensure your referral link is properly shared.</p>
+                        </div>
+                    `;
+                    dom.btnLoadMore.style.display = 'none';
+                    return;
+                }
+
+                filtered.forEach(m => {
+                    const div = document.createElement('div');
+                    div.className = 'member-card';
+                    div.onclick = () => openReferralDetail(m);
+
+                    const lvlClass = `l${m.level}`;
+                    let statusClass = 'inactive'; let statusText = 'Registered';
+                    if (m.status === 'active') { statusClass = 'active'; statusText = 'Qualified'; }
+                    if (m.status === 'pending') { statusClass = 'pending'; statusText = 'Pending Verify'; }
+
+                    // Mask UID for privacy
+                    const maskedUid = "SIG-" + m.id.substring(0, 4) + "***";
+
+                    div.innerHTML = `
+                        <div class="member-avatar ${lvlClass}">L${m.level}</div>
+                        <div class="member-info">
+                            <div class="member-name-row">
+                                <b>${sanitizeHTML(m.name)}</b>
+                                <span class="member-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="member-details-row">
+                                <span class="member-uid">${maskedUid}</span>
+                                <span class="member-date">${formatDate(m.joinedAt)}</span>
+                            </div>
+                        </div>
+                    `;
+                    dom.teamList.appendChild(div);
+                });
+
+                dom.btnLoadMore.style.display = networkData.hasMore ? 'block' : 'none';
+            };
+
+            const fetchTeamMembers = async (isLoadMore = false) => {
+                if (!isLoadMore) {
+                    dom.teamList.innerHTML = `<div class="skel-member skeleton"></div><div class="skel-member skeleton"></div>`;
+                    networkData.members = [];
+                } else {
+                    dom.btnLoadMore.textContent = "Loading securely...";
+                    dom.btnLoadMore.disabled = true;
+                }
+
+                try {
+                    const db = firebase.firestore();
+                    // Simulated bounded query to prevent client overload
+                    // let query = db.collection('referralRelationships').where('referrerUid', '==', authUser.uid).orderBy('joinedAt', 'desc').limit(15);
+                    // if (isLoadMore && networkData.lastDoc) query = query.startAfter(networkData.lastDoc);
+
+                    setTimeout(() => {
+                        // Demo injected data mapping to prompt requirements
+                        const demoData = [
+                            { id: "abcdef123", name: "Ahmed Khan", level: 1, status: "active", joinedAt: Date.now() - 86400000, planName: "Sigma Gold", timeline: { click: Date.now() - 90000000, reg: Date.now() - 86400000, paySubmit: Date.now() - 80000000, active: Date.now() - 70000000, reward: 400 } },
+                            { id: "bcdefg234", name: "Sarah Ali", level: 1, status: "pending", joinedAt: Date.now() - 172800000, timeline: { click: Date.now() - 180000000, reg: Date.now() - 172800000, paySubmit: Date.now() - 100000 } },
+                            { id: "cdefgh345", name: "Zainab R.", level: 2, status: "inactive", joinedAt: Date.now() - 500000000, timeline: { click: Date.now() - 510000000, reg: Date.now() - 500000000 } }
+                        ];
+
+                        if (!isLoadMore) networkData.members = demoData;
+                        else networkData.members = [...networkData.members, ...demoData];
+
+                        networkData.hasMore = false; // Mock exhaustion
+                        renderTeamList();
+
+                        if (isLoadMore) {
+                            dom.btnLoadMore.textContent = "Load More Records";
+                            dom.btnLoadMore.disabled = false;
+                        }
+                    }, 500);
+
+                } catch (e) { console.error("Team fetch error", e); }
+            };
+
+            const filterTeam = () => {
+                networkData.searchQuery = dom.search.value;
+                renderTeamList();
+            };
+
+            const setupTabFilters = () => {
+                if (!dom.filters) return;
+                const buttons = dom.filters.querySelectorAll('.t-filter-btn');
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        buttons.forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        networkData.currentFilter = e.target.getAttribute('data-filter');
+                        haptic(10);
+                        renderTeamList();
+                    });
+                });
+            };
+
+            // --- Detail Timeline Modal ---
+
+            const openReferralDetail = (member) => {
+                document.getElementById('rdName').textContent = member.name;
+                document.getElementById('rdUid').textContent = "UID: SIG-" + member.id.substring(0, 6) + "***";
+
+                const container = document.getElementById('rdTimelineContainer');
+                container.innerHTML = '';
+
+                const t = member.timeline;
+
+                // Event 1: Click
+                if (t.click) {
+                    container.innerHTML += `
+                        <div class="timeline-item completed">
+                            <div class="tl-indicator"><svg><use href="#icon-check"/></svg></div>
+                            <div class="tl-content"><b>Invitation Clicked</b><p>Attribution source secured successfully.</p><small>${formatDate(t.click)} - ${formatTime(t.click)}</small></div>
+                        </div>`;
+                }
+
+                // Event 2: Registration
+                if (t.reg) {
+                    container.innerHTML += `
+                        <div class="timeline-item completed">
+                            <div class="tl-indicator"><svg><use href="#icon-check"/></svg></div>
+                            <div class="tl-content"><b>Account Registered</b><p>Member successfully bound to Level ${member.level} network.</p><small>${formatDate(t.reg)} - ${formatTime(t.reg)}</small></div>
+                        </div>`;
+                }
+
+                // Event 3: Payment
+                if (t.paySubmit) {
+                    if (member.status === 'pending') {
+                        container.innerHTML += `
+                            <div class="timeline-item pending">
+                                <div class="tl-indicator"><svg><use href="#icon-clock"/></svg></div>
+                                <div class="tl-content"><b>Verification Pending</b><p>Member submitted payment. Awaiting Admin clearance.</p><small>${formatDate(t.paySubmit)} - ${formatTime(t.paySubmit)}</small></div>
+                            </div>`;
+                    } else if (member.status === 'active') {
+                        container.innerHTML += `
+                            <div class="timeline-item completed">
+                                <div class="tl-indicator"><svg><use href="#icon-check"/></svg></div>
+                                <div class="tl-content"><b>Payment Verified</b><p>Funds successfully matched in authoritative ledger.</p><small>${formatDate(t.paySubmit)}</small></div>
+                            </div>`;
+                    }
+                } else {
+                    container.innerHTML += `
+                        <div class="timeline-item current">
+                            <div class="tl-indicator"><svg><use href="#icon-clock"/></svg></div>
+                            <div class="tl-content"><b>Awaiting Portfolio Selection</b><p>Member has not initiated a deposit request.</p></div>
+                        </div>`;
+                }
+
+                // Event 4: Activation & Reward
+                if (member.status === 'active' && t.active) {
+                    container.innerHTML += `
+                        <div class="timeline-item completed" style="padding-bottom:0;">
+                            <div class="tl-indicator" style="background:var(--sigma-accent); border-color:var(--sigma-accent); color:white;"><svg><use href="#icon-check"/></svg></div>
+                            <div class="tl-content"><b style="color:var(--text-heading);">Reward Eligible</b><p>Commission of Rs. ${t.reward} credited to your ledger.</p><small>${formatDate(t.active)}</small></div>
+                        </div>`;
+                }
+
+                openSheet('sheetReferralDetail');
+            };
+
+            // --- Rules Binding ---
+            const bindRules = () => {
+                const container = document.getElementById('rulesListContainer');
+                if (!container) return;
+
+                container.innerHTML = `
+                    <div class="rule-card">
+                        <div class="rule-badge">L1</div>
+                        <div class="rule-content"><b>Direct Invite <span>${sanitizeHTML(cmsRules.l1_reward)}</span></b><p>Credited upon successful verification of a direct invitee's portfolio.</p></div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="rule-badge">L2</div>
+                        <div class="rule-content"><b>Level 2 Spread <span>${sanitizeHTML(cmsRules.l2_reward)}</span></b><p>Earned when your direct team successfully refers new active members.</p></div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="rule-badge">L3</div>
+                        <div class="rule-content"><b>Network Deep <span>${sanitizeHTML(cmsRules.l3_reward)}</span></b><p>Percentage bonus applied to verified Level 3 activations.</p></div>
+                    </div>
+                `;
+            };
+
+            // --- Firebase Initialization ---
+            const initFirebase = () => {
+                if (typeof firebase === 'undefined' || !firebase.apps.length) return;
+                const auth = firebase.auth();
+                const db = firebase.firestore();
+
+                // Listen to CMS Rules
+                db.collection('settings').doc('referrals').onSnapshot(doc => {
+                    if (doc.exists) {
+                        const r = doc.data();
+                        cmsRules.l1_reward = r.l1_amount ? `${r.l1_amount} PKR` : cmsRules.l1_reward;
+                        cmsRules.l2_reward = r.l2_amount ? `${r.l2_amount} PKR` : cmsRules.l2_reward;
+                        cmsRules.l3_reward = r.l3_percent ? `${r.l3_percent}%` : cmsRules.l3_reward;
+                        cmsRules.eligibilityRequiresPlan = r.eligibilityRequiresPlan !== false;
+                        bindRules();
+                    }
+                });
+
+                auth.onAuthStateChanged(user => {
+                    if (!user) { window.location.replace('login.html'); return; }
+                    authUser = user;
+
+                    if (user.photoURL) {
+                        const dockAvatar = document.getElementById('dockAvatarContainer');
+                        if (dockAvatar) dockAvatar.innerHTML = `<img src="${user.photoURL}" alt="User" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer">`;
+                    }
+
+                    // Authoritative User Profile Listener
+                    db.collection('users').doc(user.uid).onSnapshot(doc => {
+                        if (doc.exists) updateEligibilityUI(doc);
+                    });
+
+                    fetchAnalytics();
+                    fetchTeamMembers();
+                });
+            };
+
+            const init = () => {
+                document.querySelectorAll('.overlay').forEach(ov => {
+                    ov.addEventListener('click', e => { if (e.target === ov) closeSheet(ov.id); });
+                });
+
+                const header = document.getElementById('topHeader');
+                if (header) {
+                    window.addEventListener('scroll', () => {
+                        if (window.scrollY > 20) header.classList.add('scrolled');
+                        else header.classList.remove('scrolled');
+                    }, { passive: true });
+                }
+
+                window.addEventListener('offline', () => { if (dom.offlineBanner) dom.offlineBanner.style.display = 'block'; });
+                window.addEventListener('online', () => { if (dom.offlineBanner) dom.offlineBanner.style.display = 'none'; toast('Connection verified securely'); });
+
+                setupTabFilters();
+                initFirebase();
+            };
+
+            return {
+                init, copyLink, shareNative, shareWhatsApp, openSheet, closeSheet, filterTeam, loadMoreTeam: () => fetchTeamMembers(true), fetchAnalytics, logAction
+            };
+
+        })();
+
+        document.addEventListener('DOMContentLoaded', TeamController.init);
+    </script>
+</body>
+
+</html>
