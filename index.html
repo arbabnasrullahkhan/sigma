@@ -3,21 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SIGMA | Premium Investment & Trading Platform in Pakistan</title>
 
     <!-- =======================================================================
-         SEO, META TAGS & OPEN GRAPH (Optimized for sigmaaz.vercel.app)
+         SEO, META TAGS & OPEN GRAPH (Optimized for Vercel Deployment)
          ======================================================================= -->
-    <meta name="description"
-        content="SIGMA is Pakistan's leading smart investment platform. Earn daily profits in PKR, utilize automated trading, and enjoy a massive 3-level referral bonus system.">
-    <meta name="keywords"
-        content="SIGMA, Trading Pakistan, Earn PKR, Investment Platform, Crypto, Stocks, Wealth Management, Easypaisa, JazzCash, Passive Income">
+    <meta name="description" content="SIGMA is Pakistan's leading smart investment platform. Earn daily profits in PKR, utilize automated trading, and enjoy a massive 3-level referral bonus system.">
+    <meta name="keywords" content="SIGMA, Trading Pakistan, Earn PKR, Investment Platform, Crypto, Stocks, Wealth Management, Easypaisa, JazzCash, Passive Income">
     <meta name="author" content="SIGMA Technologies">
     <meta name="theme-color" content="#ffffff">
 
-    <!-- Mobile App Settings (Fixed Deprecation) -->
+    <!-- Mobile App Settings & PWA Capabilities -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -25,7 +22,7 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://sigmaaz.vercel.app/">
 
-    <!-- Favicon & App Icons -->
+    <!-- Favicon & Touch Icons -->
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="assets/favicon.png">
 
@@ -34,8 +31,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sigmaaz.vercel.app/">
     <meta property="og:title" content="SIGMA | Smart Investment Platform Pakistan">
-    <meta property="og:description"
-        content="Experience professional trading and wealth growth with SIGMA's state-of-the-art platform. Fast withdrawals via Easypaisa & JazzCash.">
+    <meta property="og:description" content="Experience professional trading and wealth growth with SIGMA's state-of-the-art platform. Fast withdrawals via Easypaisa & JazzCash.">
     <meta property="og:site_name" content="SIGMA">
     <meta property="og:image" content="https://sigmaaz.vercel.app/assets/preview.png">
     <meta property="og:image:width" content="1200">
@@ -50,16 +46,14 @@
     <!-- Preconnect & Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 
     <!-- Firebase SDKs (Compat Libraries for Vanilla JS / A to Z Connection) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
 
-    <!-- Connect your Firebase Configuration File Here -->
+    <!-- Connect Centralized Firebase Configuration -->
     <script src="firebase-config.js" defer></script>
 
     <!-- Schema.org JSON-LD for Maximum SEO -->
@@ -121,29 +115,19 @@
         :root {
             /* SIGMA Brand Palette */
             --sigma-primary: #0F172A;
-            /* Deep Slate / Black */
             --sigma-secondary: #1E293B;
-            /* Lighter Slate */
             --sigma-accent: #10B981;
-            /* Profit Emerald */
             --sigma-accent-hover: #059669;
-            /* Dark Emerald */
             --sigma-accent-light: #D1FAE5;
-            /* Soft Emerald */
             --sigma-gold: #F59E0B;
-            /* Trust Gold */
             --sigma-gold-light: #FEF3C7;
             --sigma-danger: #EF4444;
-            /* Error / Blocked */
             --sigma-danger-light: #FEE2E2;
 
             /* Surfaces */
             --bg-body: #F8FAFC;
-            /* Ultra-light gray */
             --bg-surface: #FFFFFF;
-            /* Pure white */
             --bg-subtle: #F1F5F9;
-            /* Off white */
             --bg-glass: rgba(255, 255, 255, 0.85);
 
             /* Typography Colors */
@@ -179,8 +163,8 @@
             --z-blocker: 9999;
 
             /* Transitions */
-            --transition-fast: 0.2s ease;
-            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.32, 0.72, 0, 1);
             --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -208,16 +192,15 @@
             line-height: 1.6;
             overflow-x: hidden;
             padding-bottom: 100px;
-            /* Space for Mobile Dock */
             background-image:
                 radial-gradient(circle at 10% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 50vw),
                 radial-gradient(circle at 90% 100%, rgba(15, 23, 42, 0.03) 0%, transparent 50vw);
             background-attachment: fixed;
         }
 
-        /* Prevent scrolling when modals/blockers are active */
         body.locked {
             overflow: hidden;
+            touch-action: none;
         }
 
         a {
@@ -247,11 +230,7 @@
             list-style: none;
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5 {
+        h1, h2, h3, h4, h5 {
             color: var(--text-main);
             font-weight: 800;
             line-height: 1.15;
@@ -269,7 +248,6 @@
             padding: 0 20px;
         }
 
-        /* Utility Classes */
         .text-accent {
             color: var(--sigma-accent);
         }
@@ -306,7 +284,6 @@
             border: 1px solid rgba(255, 255, 255, 0.8);
             transition: var(--transition-smooth);
             flex-wrap: nowrap;
-            /* GUARANTEES 1 ROW */
         }
 
         .island-header.scrolled {
@@ -323,7 +300,6 @@
             text-decoration: none;
         }
 
-        /* Enlarged Logos as requested */
         .brand-logo-img {
             width: 42px;
             height: 42px;
@@ -380,7 +356,6 @@
             flex-shrink: 0;
         }
 
-        /* Header Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -423,13 +398,10 @@
             transform: translateY(-2px);
         }
 
-        /* Responsive Header Adjustments to enforce single row */
         @media (max-width: 1024px) {
             .nav-desktop {
                 display: none;
             }
-
-            /* Hide links on tablet to save space */
         }
 
         @media (max-width: 480px) {
@@ -473,7 +445,6 @@
                 display: none;
             }
 
-            /* Hide text, show icon on small mobile */
             .btn-ghost svg {
                 display: block !important;
                 width: 18px;
@@ -495,7 +466,7 @@
             height: 76px;
             width: calc(100% - 40px);
             max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border-radius: var(--radius-island);
@@ -546,7 +517,6 @@
             stroke-width: 2.5;
         }
 
-        /* Center Dock Logo Button */
         .dock-center {
             position: relative;
             top: -24px;
@@ -732,7 +702,6 @@
             justify-content: center;
         }
 
-        /* Rotating Text Logic */
         .rotating-wrapper {
             display: inline-block;
             position: relative;
@@ -784,7 +753,6 @@
             animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
         }
 
-        /* Image / Fallback Container */
         .hero-preview-wrapper {
             margin: 60px auto 0;
             max-width: 1000px;
@@ -812,7 +780,6 @@
             position: relative;
         }
 
-        /* Advanced CSS Fallback if Image is missing */
         .preview-fallback {
             position: absolute;
             inset: 0;
@@ -904,16 +871,10 @@
         }
 
         @keyframes pulseDot {
-            70% {
-                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-            }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
-        /* Ticker Animation Container */
         .ticker-wrap {
             width: 100%;
             overflow: hidden;
@@ -934,9 +895,7 @@
         }
 
         @keyframes tickerAnim {
-            100% {
-                transform: translateX(-50%);
-            }
+            100% { transform: translateX(-50%); }
         }
 
         .market-card {
@@ -983,13 +942,8 @@
             gap: 4px;
         }
 
-        .market-card .change.up {
-            color: var(--sigma-accent);
-        }
-
-        .market-card .change.down {
-            color: var(--sigma-danger);
-        }
+        .market-card .change.up { color: var(--sigma-accent); }
+        .market-card .change.down { color: var(--sigma-danger); }
 
         .market-card .change svg {
             width: 18px;
@@ -1000,7 +954,7 @@
         }
 
         /* ==========================================================================
-           8. FEATURES SECTION (Detailed)
+           8. FEATURES SECTION
            ========================================================================== */
         .features-section {
             padding: 120px 0;
@@ -1094,7 +1048,7 @@
         }
 
         /* ==========================================================================
-           9. HOW IT WORKS (Step-by-step)
+           9. HOW IT WORKS
            ========================================================================== */
         .hiw-section {
             padding: 100px 0;
@@ -1159,7 +1113,6 @@
                 height: 48px;
                 font-size: 1.2rem;
             }
-
             .step-row {
                 gap: 16px;
             }
@@ -1185,7 +1138,7 @@
         }
 
         /* ==========================================================================
-           10. MASSIVE REFERRAL PROGRAM SECTION (400, 250, 2%)
+           10. REFERRAL PROGRAM SECTION
            ========================================================================== */
         .referral-section {
             padding: 120px 0;
@@ -1297,20 +1250,18 @@
                 max-width: 450px;
                 gap: 40px;
             }
-
             .referral-section {
                 border-radius: 24px;
                 padding: 80px 20px;
                 margin: 20px;
             }
-
             .ref-amount {
                 font-size: 3.5rem;
             }
         }
 
         /* ==========================================================================
-           11. TRUST & REVIEWS (Pakistani Context)
+           11. TRUST & REVIEWS
            ========================================================================== */
         .reviews-section {
             padding: 120px 0;
@@ -1538,7 +1489,6 @@
                 grid-template-columns: 1fr;
                 gap: 50px;
             }
-
             .sec-visual-box {
                 order: -1;
                 padding: 40px 20px;
@@ -1776,7 +1726,6 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 50px;
             }
-
             .footer-brand {
                 grid-column: 1 / -1;
             }
@@ -1787,7 +1736,6 @@
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
-
             .cta-island {
                 padding: 60px 20px;
                 border-radius: 30px;
@@ -1847,63 +1795,30 @@
             font-size: 1.15rem;
         }
 
-        /* Hide specific elements dynamically for empty states/icons */
         .hidden-icon {
             display: none !important;
         }
 
         /* Animations */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes slideUpFloat {
-            0% {
-                opacity: 0;
-                transform: translateY(60px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(60px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.1);
-                opacity: 0.7;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .reveal {
@@ -1966,8 +1881,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0 1 10 0v4" />
         </symbol>
         <symbol id="icon-whatsapp" viewBox="0 0 24 24">
-            <path
-                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
         </symbol>
         <symbol id="icon-plus" viewBox="0 0 24 24">
             <line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round" stroke-linejoin="round" />
@@ -1981,15 +1895,12 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 8 12 2l9.5 6H2.5Z" />
         </symbol>
         <symbol id="icon-alert-triangle" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
             <line x1="12" y1="9" x2="12" y2="13" stroke-linecap="round" stroke-linejoin="round" />
             <line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-linejoin="round" />
         </symbol>
-        <!-- Auth Icons for Header -->
         <symbol id="icon-login" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" />
         </symbol>
     </svg>
 
@@ -1997,14 +1908,10 @@
          FIREBASE ADMIN BLOCKER / MAINTENANCE SCREEN
          ======================================================================= -->
     <div id="blockerScreen">
-        <svg>
-            <use href="#icon-alert-triangle"></use>
-        </svg>
+        <svg><use href="#icon-alert-triangle"></use></svg>
         <h1 id="blockerTitle">Access Restricted</h1>
-        <p id="blockerMsg">Your account has been suspended or the platform is currently under maintenance. Please
-            contact support for more information.</p>
-        <a href="https://whatsapp.com/channel/sigma_official" class="btn"
-            style="background: var(--sigma-danger); color: white;">Contact Support</a>
+        <p id="blockerMsg">Your account has been suspended or the platform is currently under maintenance. Please contact support for more information.</p>
+        <a href="https://whatsapp.com/channel/sigma_official" class="btn" style="background: var(--sigma-danger); color: white;">Contact Support</a>
     </div>
 
     <!-- =======================================================================
@@ -2012,9 +1919,7 @@
          ======================================================================= -->
     <header class="island-header" id="mainHeader">
         <a href="index.html" class="brand-cluster">
-            <!-- Ensure src links are correct, use fallback if not found -->
-            <img src="assets/logo.png" alt="SIGMA Logo" class="brand-logo-img"
-                onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+            <img src="assets/logo.png" alt="SIGMA Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
             <img src="assets/textlogo.png" alt="SIGMA" class="brand-text-img" onerror="this.style.display='none'">
         </a>
 
@@ -2027,14 +1932,12 @@
         </nav>
 
         <div class="header-actions">
-            <!-- On mobile, 'Login' text is hidden, icon is shown via CSS -->
+            <!-- Uses config cleanUrls equivalent or fallback HTML -->
             <a href="login.html" class="btn btn-ghost">
-                <svg class="hidden-icon">
-                    <use href="#icon-login"></use>
-                </svg>
+                <svg class="hidden-icon"><use href="#icon-login"></use></svg>
                 <span>Login</span>
             </a>
-            <a href="reg.html" class="btn btn-primary">Create Account</a>
+            <a href="reg.html" class="btn btn-primary" id="headerRegBtn">Create Account</a>
         </div>
     </header>
 
@@ -2046,55 +1949,33 @@
             <div class="container">
                 <div class="trust-badge">
                     <div class="stars">
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                        </svg>
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                        </svg>
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                        </svg>
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                        </svg>
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                        </svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                     </div>
                     <span>#1 Rated Trading Platform in Pakistan</span>
                 </div>
 
-                <h1>
+                <h1 id="cmsHeroTitle">
                     Trade Smart. Scale
                     <span class="rotating-wrapper">
-                        <!-- JS Handles rotation -->
                         <span class="rotating-text active" data-index="0">Wealth.</span>
                         <span class="rotating-text" data-index="1">Portfolios.</span>
                         <span class="rotating-text" data-index="2">Profits.</span>
                     </span>
                 </h1>
 
-                <p>Join thousands of Pakistanis earning daily profits. Experience institutional-grade trading, automated
-                    portfolios, and frictionless <b>Easypaisa & JazzCash</b> withdrawals.</p>
+                <p id="cmsHeroDesc">Join thousands of Pakistanis earning daily profits. Experience institutional-grade trading, automated portfolios, and frictionless <b>Easypaisa & JazzCash</b> withdrawals.</p>
 
                 <div class="hero-actions">
-                    <a href="reg.html" class="btn btn-primary">Start Earning Today</a>
-                    <a href="login.html" class="btn btn-ghost"
-                        style="border: 2px solid var(--border-light); padding: 14px 28px;">Member Login</a>
+                    <a href="reg.html" class="btn btn-primary" id="heroRegBtn">Start Earning Today</a>
+                    <a href="login.html" class="btn btn-ghost" style="border: 2px solid var(--border-light); padding: 14px 28px;">Member Login</a>
                 </div>
 
-                <!-- Dashboard Preview Mockup (With Advanced CSS Fallback) -->
                 <div class="hero-preview-wrapper">
-                    <img src="assets/preview.png" alt="SIGMA Dashboard Interface" class="hero-preview-img"
-                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-
-                    <!-- Fallback UI if image fails to load -->
+                    <img src="assets/preview.png" alt="SIGMA Dashboard Interface" class="hero-preview-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div class="preview-fallback" style="display: none;">
                         <div class="fb-header"></div>
                         <div class="fb-body">
@@ -2125,64 +2006,46 @@
 
             <div class="ticker-wrap">
                 <div class="ticker">
-                    <!-- Duplicated items for smooth infinite loop -->
                     <div class="market-card">
                         <div class="pair">SIGMA Blue-Chip <span>SBC/PKR</span></div>
                         <div class="price">Rs <span class="dyn-price">14,285.40</span></div>
-                        <div class="change up"><svg>
-                                <use href="#icon-arrow-up"></use>
-                            </svg> +3.24%</div>
+                        <div class="change up"><svg><use href="#icon-arrow-up"></use></svg> +3.24%</div>
                     </div>
                     <div class="market-card">
                         <div class="pair">Tech Growth Fund <span>TGF/PKR</span></div>
                         <div class="price">Rs <span class="dyn-price">8,824.10</span></div>
-                        <div class="change up"><svg>
-                                <use href="#icon-arrow-up"></use>
-                            </svg> +1.80%</div>
+                        <div class="change up"><svg><use href="#icon-arrow-up"></use></svg> +1.80%</div>
                     </div>
                     <div class="market-card">
                         <div class="pair">Islamic Yield <span>IYD/PKR</span></div>
                         <div class="price">Rs <span class="dyn-price">2,145.60</span></div>
-                        <div class="change down" style="color: var(--sigma-danger);"><svg>
-                                <use href="#icon-arrow-down"></use>
-                            </svg> -0.45%</div>
+                        <div class="change down" style="color: var(--sigma-danger);"><svg><use href="#icon-arrow-down"></use></svg> -0.45%</div>
                     </div>
                     <div class="market-card">
                         <div class="pair">Global Defi <span>GDF/PKR</span></div>
                         <div class="price">Rs <span class="dyn-price">1,024.30</span></div>
-                        <div class="change up"><svg>
-                                <use href="#icon-arrow-up"></use>
-                            </svg> +5.12%</div>
+                        <div class="change up"><svg><use href="#icon-arrow-up"></use></svg> +5.12%</div>
                     </div>
 
-                    <!-- Duplicates -->
                     <div class="market-card">
                         <div class="pair">SIGMA Blue-Chip <span>SBC/PKR</span></div>
                         <div class="price">Rs <span class="dyn-price">14,285.40</span></div>
-                        <div class="change up"><svg>
-                                <use href="#icon-arrow-up"></use>
-                            </svg> +3.24%</div>
+                        <div class="change up"><svg><use href="#icon-arrow-up"></use></svg> +3.24%</div>
                     </div>
                     <div class="market-card">
                         <div class="pair">Tech Growth Fund <span>TGF/PKR</span></div>
                         <div class="price">Rs <span class="dyn-price">8,824.10</span></div>
-                        <div class="change up"><svg>
-                                <use href="#icon-arrow-up"></use>
-                            </svg> +1.80%</div>
+                        <div class="change up"><svg><use href="#icon-arrow-up"></use></svg> +1.80%</div>
                     </div>
                     <div class="market-card">
                         <div class="pair">Islamic Yield <span>IYD/PKR</span></div>
                         <div class="price">Rs <span class="dyn-price">2,145.60</span></div>
-                        <div class="change down" style="color: var(--sigma-danger);"><svg>
-                                <use href="#icon-arrow-down"></use>
-                            </svg> -0.45%</div>
+                        <div class="change down" style="color: var(--sigma-danger);"><svg><use href="#icon-arrow-down"></use></svg> -0.45%</div>
                     </div>
                     <div class="market-card">
                         <div class="pair">Global Defi <span>GDF/PKR</span></div>
                         <div class="price">Rs <span class="dyn-price">1,024.30</span></div>
-                        <div class="change up"><svg>
-                                <use href="#icon-arrow-up"></use>
-                            </svg> +5.12%</div>
+                        <div class="change up"><svg><use href="#icon-arrow-up"></use></svg> +5.12%</div>
                     </div>
                 </div>
             </div>
@@ -2203,24 +2066,21 @@
                         <div class="step-number">1</div>
                         <div class="step-content">
                             <h3>Create Your Account</h3>
-                            <p>Sign up securely in less than 60 seconds. Verify your identity to unlock full platform
-                                features and bank-grade security protocols.</p>
+                            <p>Sign up securely in less than 60 seconds. Verify your identity to unlock full platform features and bank-grade security protocols.</p>
                         </div>
                     </div>
                     <div class="step-row reveal" style="transition-delay: 0.1s;">
                         <div class="step-number">2</div>
                         <div class="step-content">
                             <h3>Fund & Select Plan</h3>
-                            <p>Deposit PKR instantly via Easypaisa, JazzCash, or local bank transfer. Browse our
-                                automated investment portfolios and select one that fits your goals.</p>
+                            <p>Deposit PKR instantly via Easypaisa, JazzCash, or local bank transfer. Browse our automated investment portfolios and select one that fits your goals.</p>
                         </div>
                     </div>
                     <div class="step-row reveal" style="transition-delay: 0.2s;">
                         <div class="step-number">3</div>
                         <div class="step-content">
                             <h3>Earn & Withdraw</h3>
-                            <p>Watch your profits compound daily. Request lightning-fast withdrawals to your local
-                                wallet or bank account anytime, 24/7.</p>
+                            <p>Watch your profits compound daily. Request lightning-fast withdrawals to your local wallet or bank account anytime, 24/7.</p>
                         </div>
                     </div>
                 </div>
@@ -2234,71 +2094,56 @@
             <div class="container">
                 <div class="section-heading reveal">
                     <h2>Engineered for Performance</h2>
-                    <p>Access premium financial tools packaged in a beautiful, mobile-first interface designed for every
-                        investor in Pakistan.</p>
+                    <p>Access premium financial tools packaged in a beautiful, mobile-first interface designed for every investor in Pakistan.</p>
                 </div>
 
                 <div class="features-grid">
                     <div class="feature-card reveal">
-                        <div class="feature-icon"><svg>
-                                <use href="#icon-mobile"></use>
-                            </svg></div>
+                        <div class="feature-icon"><svg><use href="#icon-mobile"></use></svg></div>
                         <h3>Mobile-First Design</h3>
-                        <p>Execute trades, monitor active plans, and request payouts instantly from your smartphone with
-                            native-app speed and fluidity.</p>
+                        <p>Execute trades, monitor active plans, and request payouts instantly from your smartphone with native-app speed and fluidity.</p>
                     </div>
 
                     <div class="feature-card reveal" style="transition-delay: 0.1s;">
-                        <div class="feature-icon"><svg>
-                                <use href="#icon-chart"></use>
-                            </svg></div>
+                        <div class="feature-icon"><svg><use href="#icon-chart"></use></svg></div>
                         <h3>Automated Portfolios</h3>
-                        <p>Select from expertly curated investment plans that auto-compound your wealth using advanced
-                            market algorithms. Sit back and earn.</p>
+                        <p>Select from expertly curated investment plans that auto-compound your wealth using advanced market algorithms. Sit back and earn.</p>
                     </div>
 
                     <div class="feature-card reveal" style="transition-delay: 0.2s;">
-                        <div class="feature-icon"><svg>
-                                <use href="#icon-bank"></use>
-                            </svg></div>
+                        <div class="feature-icon"><svg><use href="#icon-bank"></use></svg></div>
                         <h3>Local Payouts</h3>
-                        <p>Enjoy frictionless, lightning-fast withdrawals directly to your <b>Bank Account, Easypaisa,
-                                or JazzCash</b>. Your liquidity is our priority.</p>
+                        <p>Enjoy frictionless, lightning-fast withdrawals directly to your <b>Bank Account, Easypaisa, or JazzCash</b>. Your liquidity is our priority.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- =======================================================================
-             REFERRAL PROGRAM SECTION (Strictly: 400, 250, 2%)
+             REFERRAL PROGRAM SECTION
              ======================================================================= -->
         <section class="referral-section reveal" id="referrals">
             <div class="container">
                 <div class="section-heading">
                     <h2>Massive Team Bonus</h2>
-                    <p>Build your network and earn substantial passive income. SIGMA offers the most rewarding 3-Tier
-                        referral system in the industry.</p>
+                    <p>Build your network and earn substantial passive income. SIGMA offers the most rewarding 3-Tier referral system in the industry.</p>
                 </div>
 
                 <div class="ref-grid">
-                    <!-- Level 1 -->
                     <div class="ref-card">
                         <div class="ref-level">Level 1</div>
                         <div class="ref-amount">400 <span>Rs</span></div>
                         <p>Direct Invite Bonus. Earn instantly when your direct referral joins and activates a plan.</p>
                     </div>
 
-                    <!-- Level 2 -->
                     <div class="ref-card" style="transition-delay: 0.1s;">
                         <div class="ref-level" style="background: var(--sigma-secondary);">Level 2</div>
                         <div class="ref-amount">250 <span>Rs</span></div>
                         <p>Indirect Invite Bonus. Earn when your Level 1 members invite new investors.</p>
                     </div>
 
-                    <!-- Level 3 -->
                     <div class="ref-card" style="transition-delay: 0.2s;">
-                        <div class="ref-level"
-                            style="background: var(--sigma-gold); color: black; border-color: white;">Level 3</div>
+                        <div class="ref-level" style="background: var(--sigma-gold); color: black; border-color: white;">Level 3</div>
                         <div class="ref-amount">2 <span>%</span></div>
                         <p>Extended Network Bonus. Earn a 2% lifetime commission on all Level 3 investments.</p>
                     </div>
@@ -2307,7 +2152,7 @@
         </section>
 
         <!-- =======================================================================
-             TRUST & REVIEWS (Pakistani Context)
+             TRUST & REVIEWS
              ======================================================================= -->
         <section class="reviews-section" id="reviews">
             <div class="container">
@@ -2319,110 +2164,54 @@
                 <div class="reviews-grid">
                     <div class="review-card reveal">
                         <div class="review-stars">
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                         </div>
-                        <p class="review-text">"I've used many platforms, but SIGMA's interface is unmatched. The daily
-                            ROI is consistent, and my Easypaisa withdrawal hit my account in just 10 minutes."</p>
+                        <p class="review-text">"I've used many platforms, but SIGMA's interface is unmatched. The daily ROI is consistent, and my Easypaisa withdrawal hit my account in just 10 minutes."</p>
                         <div class="reviewer">
                             <div class="reviewer-avatar">U</div>
                             <div class="reviewer-info">
                                 <b>Usman Tariq</b>
-                                <small><svg class="verified-icon">
-                                        <use href="#icon-check-circle"></use>
-                                    </svg> Verified Investor</small>
+                                <small><svg class="verified-icon"><use href="#icon-check-circle"></use></svg> Verified Investor</small>
                             </div>
                         </div>
                     </div>
 
                     <div class="review-card reveal" style="transition-delay: 0.1s;">
                         <div class="review-stars">
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                         </div>
-                        <p class="review-text">"The referral program is insane! Getting 400 Rs instantly for a direct
-                            invite allowed me to build a massive team and passive income stream seamlessly."</p>
+                        <p class="review-text">"The referral program is insane! Getting 400 Rs instantly for a direct invite allowed me to build a massive team and passive income stream seamlessly."</p>
                         <div class="reviewer">
-                            <div class="reviewer-avatar" style="color: #8B5CF6; background: rgba(139, 92, 246, 0.1);">F
-                            </div>
+                            <div class="reviewer-avatar" style="color: #8B5CF6; background: rgba(139, 92, 246, 0.1);">F</div>
                             <div class="reviewer-info">
                                 <b>Fatima Noor</b>
-                                <small><svg class="verified-icon">
-                                        <use href="#icon-check-circle"></use>
-                                    </svg> Verified Investor</small>
+                                <small><svg class="verified-icon"><use href="#icon-check-circle"></use></svg> Verified Investor</small>
                             </div>
                         </div>
                     </div>
 
                     <div class="review-card reveal" style="transition-delay: 0.2s;">
                         <div class="review-stars">
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                         </div>
-                        <p class="review-text">"Highly secure and professional. The 256-bit encryption gives me peace of
-                            mind. Best investment platform currently operating in Pakistan."</p>
+                        <p class="review-text">"Highly secure and professional. The 256-bit encryption gives me peace of mind. Best investment platform currently operating in Pakistan."</p>
                         <div class="reviewer">
-                            <div class="reviewer-avatar" style="color: #F59E0B; background: rgba(245, 158, 11, 0.1);">A
-                            </div>
+                            <div class="reviewer-avatar" style="color: #F59E0B; background: rgba(245, 158, 11, 0.1);">A</div>
                             <div class="reviewer-info">
                                 <b>Ali Raza</b>
-                                <small><svg class="verified-icon">
-                                        <use href="#icon-check-circle"></use>
-                                    </svg> Verified Investor</small>
+                                <small><svg class="verified-icon"><use href="#icon-check-circle"></use></svg> Verified Investor</small>
                             </div>
                         </div>
                     </div>
@@ -2438,24 +2227,18 @@
                 <div class="split-layout">
                     <div class="sec-content reveal">
                         <h2 style="font-size: 2.5rem; margin-bottom: 16px;">Bank-Grade Security</h2>
-                        <p style="font-size: 1.1rem; color: var(--text-muted);">Your capital is safeguarded by
-                            enterprise-level security architecture, ensuring absolute privacy and instant liquidity.</p>
+                        <p style="font-size: 1.1rem; color: var(--text-muted);">Your capital is safeguarded by enterprise-level security architecture, ensuring absolute privacy and instant liquidity.</p>
 
                         <div class="sec-list">
                             <div class="sec-item">
-                                <div class="sec-icon"><svg>
-                                        <use href="#icon-lock"></use>
-                                    </svg></div>
+                                <div class="sec-icon"><svg><use href="#icon-lock"></use></svg></div>
                                 <div class="sec-text">
                                     <b>AES-256 Encryption</b>
-                                    <p>All user data and transactions are encrypted with the highest global standard.
-                                    </p>
+                                    <p>All user data and transactions are encrypted with the highest global standard.</p>
                                 </div>
                             </div>
                             <div class="sec-item">
-                                <div class="sec-icon"><svg>
-                                        <use href="#icon-shield"></use>
-                                    </svg></div>
+                                <div class="sec-icon"><svg><use href="#icon-shield"></use></svg></div>
                                 <div class="sec-text">
                                     <b>DDoS Protection</b>
                                     <p>Advanced cloud infrastructure guarantees 99.9% uptime against attacks.</p>
@@ -2468,27 +2251,21 @@
                         <h4>Supported Withdrawal Methods</h4>
                         <div class="payment-methods">
                             <div class="pm-card">
-                                <div class="icon"><svg>
-                                        <use href="#icon-mobile"></use>
-                                    </svg></div>
+                                <div class="icon"><svg><use href="#icon-mobile"></use></svg></div>
                                 <div>
                                     <b>Easypaisa</b>
                                     <small>Instant Processing</small>
                                 </div>
                             </div>
                             <div class="pm-card">
-                                <div class="icon"><svg>
-                                        <use href="#icon-mobile"></use>
-                                    </svg></div>
+                                <div class="icon"><svg><use href="#icon-mobile"></use></svg></div>
                                 <div>
                                     <b>JazzCash</b>
                                     <small>Instant Processing</small>
                                 </div>
                             </div>
                             <div class="pm-card">
-                                <div class="icon"><svg>
-                                        <use href="#icon-bank"></use>
-                                    </svg></div>
+                                <div class="icon"><svg><use href="#icon-bank"></use></svg></div>
                                 <div>
                                     <b>Local Bank Transfer</b>
                                     <small>Meezan, HBL, Allied, etc.</small>
@@ -2501,7 +2278,7 @@
         </section>
 
         <!-- =======================================================================
-             FAQ SECTION (Structured Data Integrated via JSON-LD)
+             FAQ SECTION
              ======================================================================= -->
         <section class="faq-section" id="faq">
             <div class="container">
@@ -2513,40 +2290,30 @@
                 <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         How do I start investing?
-                        <div class="faq-icon"><svg>
-                                <use href="#icon-plus"></use>
-                            </svg></div>
+                        <div class="faq-icon"><svg><use href="#icon-plus"></use></svg></div>
                     </div>
                     <div class="faq-answer">
-                        <p>Simply create an account, deposit funds via Easypaisa, JazzCash or Bank transfer, and select
-                            an automated portfolio from the "Plans" section. Your profits will start generating daily.
-                        </p>
+                        <p>Simply create an account, deposit funds via Easypaisa, JazzCash or Bank transfer, and select an automated portfolio from the "Plans" section. Your profits will start generating daily.</p>
                     </div>
                 </div>
 
                 <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         What is the minimum withdrawal amount?
-                        <div class="faq-icon"><svg>
-                                <use href="#icon-plus"></use>
-                            </svg></div>
+                        <div class="faq-icon"><svg><use href="#icon-plus"></use></svg></div>
                     </div>
                     <div class="faq-answer">
-                        <p>The minimum withdrawal limit varies by method but generally starts as low as 500 PKR.
-                            Withdrawals are processed quickly and securely.</p>
+                        <p>The minimum withdrawal limit varies by method but generally starts as low as 500 PKR. Withdrawals are processed quickly and securely.</p>
                     </div>
                 </div>
 
                 <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         How does the Referral Program work?
-                        <div class="faq-icon"><svg>
-                                <use href="#icon-plus"></use>
-                            </svg></div>
+                        <div class="faq-icon"><svg><use href="#icon-plus"></use></svg></div>
                     </div>
                     <div class="faq-answer">
-                        <p>When someone joins using your link and activates a plan, you earn 400 Rs for Level 1, 250 Rs
-                            for Level 2, and 2% lifetime commission on Level 3 investments.</p>
+                        <p>When someone joins using your link and activates a plan, you earn 400 Rs for Level 1, 250 Rs for Level 2, and 2% lifetime commission on Level 3 investments.</p>
                     </div>
                 </div>
             </div>
@@ -2573,10 +2340,8 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <img src="assets/logo.png" alt="SIGMA Logo" class="brand-logo-img"
-                        onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
-                    <img src="assets/textlogo.png" alt="SIGMA" class="brand-text-img"
-                        onerror="this.style.display='none'">
+                    <img src="assets/logo.png" alt="SIGMA Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+                    <img src="assets/textlogo.png" alt="SIGMA" class="brand-text-img" onerror="this.style.display='none'">
                     <p>Building the next generation of financial trading tools for ambitious investors in Pakistan.</p>
                 </div>
 
@@ -2603,20 +2368,16 @@
 
             <div class="footer-bottom">
                 <p>&copy; 2026 SIGMA Technologies. All rights reserved.</p>
-                <small>Disclaimer: All investments carry risk. Please ensure you understand the risks involved before
-                    committing capital. Past performance is not indicative of future results.</small>
+                <small>Disclaimer: All investments carry risk. Please ensure you understand the risks involved before committing capital. Past performance is not indicative of future results.</small>
             </div>
         </div>
     </footer>
 
     <!-- =======================================================================
-         FLOATING WHATSAPP BUTTON (Links to Channel/Support)
+         FLOATING WHATSAPP BUTTON
          ======================================================================= -->
-    <a href="https://whatsapp.com/channel/sigma_official" target="_blank" class="whatsapp-float"
-        aria-label="Join our WhatsApp Channel">
-        <svg>
-            <use href="#icon-whatsapp"></use>
-        </svg>
+    <a href="https://whatsapp.com/channel/sigma_official" target="_blank" class="whatsapp-float" aria-label="Join our WhatsApp Channel" id="btnFloatingWhatsApp">
+        <svg><use href="#icon-whatsapp"></use></svg>
     </a>
 
     <!-- =======================================================================
@@ -2625,23 +2386,18 @@
     <nav class="mobile-dock">
         <!-- Button 1: Home -->
         <a href="#home" class="dock-btn active">
-            <svg>
-                <use href="#icon-home"></use>
-            </svg>
+            <svg><use href="#icon-home"></use></svg>
             <span>Home</span>
         </a>
 
         <!-- Button 2: Center Logo (Links to Dashboard/Plans) -->
         <a href="login.html" class="dock-center" aria-label="SIGMA Dashboard">
-            <img src="assets/logo.png" alt="SIGMA"
-                onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+            <img src="assets/logo.png" alt="SIGMA" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
         </a>
 
         <!-- Button 3: Account/Login -->
         <a href="login.html" class="dock-btn">
-            <svg>
-                <use href="#icon-user"></use>
-            </svg>
+            <svg><use href="#icon-user"></use></svg>
             <span>Account</span>
         </a>
     </nav>
@@ -2660,24 +2416,22 @@
                 } else {
                     header.classList.remove('scrolled');
                 }
-            });
+            }, { passive: true });
 
             // --- 2. Mobile Dock Active State Tracking ---
             const dockItems = document.querySelectorAll('.mobile-dock .dock-btn');
             dockItems.forEach(item => {
-                item.addEventListener('click', function () {
+                item.addEventListener('click', function() {
                     dockItems.forEach(d => d.classList.remove('active'));
                     this.classList.add('active');
                 });
             });
 
             // --- 3. Dynamic Market Ticker Simulation ---
-            // Gently randomizes the PKR prices to make the site look alive.
             const priceElements = document.querySelectorAll('.dyn-price');
             setInterval(() => {
                 priceElements.forEach(el => {
                     let currentPrice = parseFloat(el.innerText.replace(/,/g, ''));
-                    // Random fluctuation between -0.1% and +0.1%
                     let fluctuation = currentPrice * (Math.random() * 0.002 - 0.001);
                     let newPrice = currentPrice + fluctuation;
                     el.innerText = newPrice.toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -2688,43 +2442,39 @@
             const rotatingTexts = document.querySelectorAll('.rotating-text');
             let currentIndex = 0;
 
-            setInterval(() => {
-                const nextIndex = (currentIndex + 1) % rotatingTexts.length;
+            if (rotatingTexts.length > 0) {
+                setInterval(() => {
+                    const nextIndex = (currentIndex + 1) % rotatingTexts.length;
+                    rotatingTexts[currentIndex].classList.remove('active');
+                    rotatingTexts[currentIndex].classList.add('exit');
+                    rotatingTexts[nextIndex].classList.remove('exit');
+                    rotatingTexts[nextIndex].classList.add('active');
+                    currentIndex = nextIndex;
+                }, 2500);
+            }
 
-                rotatingTexts[currentIndex].classList.remove('active');
-                rotatingTexts[currentIndex].classList.add('exit');
-
-                rotatingTexts[nextIndex].classList.remove('exit');
-                rotatingTexts[nextIndex].classList.add('active');
-
-                currentIndex = nextIndex;
-            }, 2500);
-
-            // --- 5. Scroll Reveal Animations (Intersection Observer) ---
+            // --- 5. Scroll Reveal Animations ---
             const observerOptions = {
                 threshold: 0.15,
                 rootMargin: "0px 0px -50px 0px"
             };
 
-            const observer = new IntersectionObserver((entries) => {
+            const observer = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        observer.unobserve(entry.target);
+                        obs.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
 
-            document.querySelectorAll('.reveal').forEach(el => {
-                observer.observe(el);
-            });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
             // --- 6. FAQ Accordion Logic ---
-            window.toggleFaq = function (element) {
+            window.toggleFaq = function(element) {
                 const item = element.parentElement;
                 const answer = item.querySelector('.faq-answer');
 
-                // Close others
                 document.querySelectorAll('.faq-item').forEach(faq => {
                     if (faq !== item) {
                         faq.classList.remove('active');
@@ -2732,7 +2482,6 @@
                     }
                 });
 
-                // Toggle current
                 item.classList.toggle('active');
                 if (item.classList.contains('active')) {
                     answer.style.maxHeight = answer.scrollHeight + "px";
@@ -2741,64 +2490,93 @@
                 }
             };
 
-            // --- 7. Firebase Admin Blocker Logic (A to Z Architecture Prep) ---
-            /* 
-               This section listens to `firebase-config.js`.
-               If the admin sets `maintenance: true` in Firestore, or if the current user
-               is marked as `status: blocked`, the #blockerScreen will cover the page.
-            */
-            const blockerScreen = document.getElementById('blockerScreen');
+            // --- 7. Firebase Integration & CMS Sync ---
+            const initFirebaseChecks = () => {
+                if (typeof firebase === 'undefined' || !firebase.apps.length) {
+                    console.warn("Firebase not initialized.");
+                    return;
+                }
 
-            function checkAdminControls() {
-                try {
-                    // Check if firebase is initialized
-                    if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-                        const db = firebase.firestore();
-                        const auth = firebase.auth();
+                const db = firebase.firestore();
+                const auth = firebase.auth();
+                const blockerScreen = document.getElementById('blockerScreen');
 
-                        // 1. Check Global Maintenance Mode
-                        db.collection('settings').doc('system').onSnapshot((doc) => {
-                            if (doc.exists && doc.data().maintenance === true) {
+                // 1. Sync Landing Page CMS Config
+                db.collection('config').doc('frontend_index').onSnapshot(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        
+                        // Update Hero Content
+                        if (data.heroTitle) document.getElementById('cmsHeroTitle').innerHTML = data.heroTitle;
+                        if (data.heroDesc) document.getElementById('cmsHeroDesc').textContent = data.heroDesc;
+                        
+                        // Register buttons visibility
+                        if (data.showRegister === false) {
+                            const heroBtn = document.getElementById('heroRegBtn');
+                            const headBtn = document.getElementById('headerRegBtn');
+                            if (heroBtn) heroBtn.style.display = 'none';
+                            if (headBtn) headBtn.style.display = 'none';
+                        }
+                    }
+                }, err => console.error("CMS Sync Error", err));
+
+                // 2. Sync Global Settings (Support URL)
+                db.collection('config').doc('global').onSnapshot(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        const waBtn = document.getElementById('btnFloatingWhatsApp');
+                        if (data.supportUrl && waBtn) {
+                            waBtn.href = data.supportUrl;
+                        }
+                    }
+                });
+
+                // 3. Maintenance Blocker Check
+                db.collection('settings').doc('system').onSnapshot((doc) => {
+                    if (doc.exists && doc.data().maintenance === true) {
+                        document.body.classList.add('locked');
+                        blockerScreen.classList.add('active');
+                    } else {
+                        checkUserStatus(auth.currentUser, db);
+                    }
+                });
+
+                // 4. User Block Check
+                auth.onAuthStateChanged((user) => {
+                    checkUserStatus(user, db);
+                });
+
+                function checkUserStatus(user, db) {
+                    if (user) {
+                        db.collection('users').doc(user.uid).onSnapshot((doc) => {
+                            if (doc.exists && doc.data().status === 'suspended') {
                                 document.body.classList.add('locked');
                                 blockerScreen.classList.add('active');
+                                const msg = blockerScreen.querySelector('p');
+                                if (msg) msg.textContent = "Your account has been suspended for violating SIGMA terms of service. Contact support.";
                             } else {
-                                // Remove lock if user is not blocked
-                                checkUserStatus(auth.currentUser, db);
+                                db.collection('settings').doc('system').get().then((sysDoc) => {
+                                    if (!sysDoc.exists || sysDoc.data().maintenance !== true) {
+                                        document.body.classList.remove('locked');
+                                        blockerScreen.classList.remove('active');
+                                    }
+                                });
                             }
                         });
-
-                        // 2. Check Specific User Block Status
-                        auth.onAuthStateChanged((user) => {
-                            checkUserStatus(user, db);
+                    } else {
+                        // Unauthenticated - just check maintenance
+                        db.collection('settings').doc('system').get().then((sysDoc) => {
+                            if (!sysDoc.exists || sysDoc.data().maintenance !== true) {
+                                document.body.classList.remove('locked');
+                                blockerScreen.classList.remove('active');
+                            }
                         });
                     }
-                } catch (error) {
-                    console.error("Firebase Admin Check Error:", error);
                 }
-            }
+            };
 
-            function checkUserStatus(user, db) {
-                if (user) {
-                    db.collection('users').doc(user.uid).onSnapshot((doc) => {
-                        if (doc.exists && doc.data().status === 'blocked') {
-                            document.body.classList.add('locked');
-                            blockerScreen.classList.add('active');
-                            blockerScreen.querySelector('p').textContent = "Your account has been suspended for violating SIGMA terms of service. Contact support.";
-                        } else {
-                            // Verify maintenance isn't active before unlocking
-                            db.collection('settings').doc('system').get().then((sysDoc) => {
-                                if (!sysDoc.exists || sysDoc.data().maintenance !== true) {
-                                    document.body.classList.remove('locked');
-                                    blockerScreen.classList.remove('active');
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-
-            // Run the checker (Requires firebase-config.js properly loaded in production)
-            setTimeout(checkAdminControls, 1000); // Slight delay to ensure Firebase initializes
+            // Run Firebase checks after a short delay to ensure defer scripts loaded completely
+            setTimeout(initFirebaseChecks, 500);
         });
     </script>
 </body>
