@@ -10,11 +10,11 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Sigma Plans">
+    <meta name="apple-mobile-web-app-title" content="Sigma Portfolios">
     
     <title>Sigma | Premium Portfolios</title>
 
-    <!-- Favicon -->
+    <!-- Favicons -->
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="assets/favicon.png">
 
@@ -29,8 +29,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
+    <!-- Fallback Firebase Initialization -->
     <script>
-        // Fallback Firebase Initialization
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             firebase.initializeApp({
                 apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
@@ -48,64 +48,69 @@
            1. PREMIUM DESIGN TOKENS
            ========================================================================== */
         :root {
-            --sigma-primary: #0A0F24;
-            --sigma-secondary: #162044;
+            /* Core Brand Colors */
+            --sigma-primary: #0B132B;
+            --sigma-secondary: #1C2541;
+            
+            /* Surfaces */
             --sigma-surface: #FFFFFF;
             --sigma-surface-alt: #F8FAFC;
             --sigma-subtle: #F1F5F9;
+            
+            /* Borders */
             --sigma-muted-border: #E2E8F0;
             --sigma-input-border: #CBD5E1;
 
+            /* Accents */
             --sigma-accent: #10B981;
             --sigma-accent-dark: #059669;
-            
             --sigma-gold: #F59E0B;
-            --sigma-gold-dark: #D97706;
-
             --sigma-danger: #EF4444;
-            --sigma-danger-dark: #DC2626;
 
+            /* Text */
             --text-heading: #0F172A;
             --text-body: #334155;
             --text-muted: #64748B;
             --text-light: #94A3B8;
 
+            /* Geometry */
             --radius-pill: 9999px;
             --radius-2xl: 28px;
             --radius-xl: 20px;
             --radius-lg: 16px;
             --radius-md: 12px;
 
+            /* Shadows & Depth */
             --shadow-subtle: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
             --shadow-card: 0 16px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 16px -4px rgba(15, 23, 42, 0.04);
             --shadow-float: 0 24px 48px -12px rgba(15, 23, 42, 0.15);
             --shadow-glow: 0 8px 24px rgba(16, 185, 129, 0.3);
+            --shadow-glow-gold: 0 8px 24px rgba(245, 158, 11, 0.3);
 
+            /* System Metrics */
             --z-dock: 1000;
             --z-header: 900;
             --z-overlay: 1900;
             --z-modal: 2000;
             --z-toast: 3000;
-
             --transition-smooth: 0.35s cubic-bezier(0.32, 0.72, 0, 1);
             --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             --safe-area-bottom: env(safe-area-inset-bottom, 16px);
         }
 
         /* ==========================================================================
-           2. GLOBAL RESET & BASE
+           2. GLOBAL BASE & RESET
            ========================================================================== */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { font-size: 16px; scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--sigma-surface-alt);
+            font-family: 'Inter', sans-serif; background-color: var(--sigma-surface-alt);
             color: var(--text-body); line-height: 1.5; min-height: 100vh; overflow-x: hidden;
             padding-bottom: calc(110px + var(--safe-area-bottom));
         }
         body.locked { overflow: hidden; touch-action: none; }
         a { text-decoration: none; color: inherit; }
-        button, input { font-family: inherit; border: none; outline: none; background: none; cursor: pointer; user-select: none; }
+        button, input { font-family: inherit; border: none; outline: none; background: none; cursor: pointer; }
         img { max-width: 100%; display: block; }
         
         h1, h2, h3, h4 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.02em; }
@@ -115,22 +120,22 @@
         .text-accent { color: var(--sigma-accent-dark); }
 
         #networkOfflineBanner {
-            position: fixed; top: 0; left: 0; width: 100%; background: #EF4444;
+            position: fixed; top: 0; left: 0; width: 100%; background: var(--sigma-danger);
             color: white; font-size: 0.75rem; font-weight: 700; text-align: center; padding: 8px; z-index: var(--z-toast);
             display: none; text-transform: uppercase; letter-spacing: 1px;
         }
 
         /* ==========================================================================
-           3. DYNAMIC HEADER
+           3. DYNAMIC ISLAND HEADER
            ========================================================================== */
         .app-container { width: 100%; max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; position: relative; }
 
         .island-topbar {
-            position: sticky; top: 12px; margin: 0 16px 20px; height: 64px;
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: sticky; top: 12px; margin: 0 16px 20px; height: 68px;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border-radius: var(--radius-pill); display: flex; align-items: center;
-            justify-content: space-between; padding: 0 12px; z-index: var(--z-header);
-            border: 1px solid rgba(255, 255, 255, 0.9); transition: var(--transition-smooth);
+            justify-content: space-between; padding: 0 14px; z-index: var(--z-header);
+            border: 1px solid rgba(255, 255, 255, 0.95); transition: var(--transition-smooth);
             box-shadow: var(--shadow-subtle);
         }
         .island-topbar.scrolled {
@@ -138,17 +143,26 @@
         }
         
         .btn-back {
-            width: 44px; height: 44px; border-radius: 50%; background: var(--sigma-surface);
+            width: 46px; height: 46px; border-radius: 50%; background: var(--sigma-surface);
             color: var(--text-heading); display: flex; align-items: center; justify-content: center;
             border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
         .btn-back:active { transform: scale(0.92); background: var(--sigma-subtle); }
         .btn-back svg { width: 22px; height: 22px; stroke-width: 2.5; stroke: currentColor; fill: none; }
 
-        /* Brand Logo + Text Logo in Header */
         .brand-cluster { display: flex; align-items: center; gap: 8px; }
         .brand-logo-img { width: 34px; height: 34px; object-fit: contain; }
         .brand-text-img { height: 18px; object-fit: contain; margin-top: 2px; }
+
+        .header-actions { display: flex; gap: 8px; }
+        .btn-top-action {
+            width: 46px; height: 46px; border-radius: 50%; background: var(--sigma-subtle);
+            color: var(--text-heading); display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
+        }
+        .btn-top-action:active { transform: scale(0.92); }
+        .btn-top-action svg { width: 22px; height: 22px; stroke-width: 2.2; stroke: currentColor; fill: none; }
 
         /* ==========================================================================
            4. PAGE HEADER & FILTERS
@@ -156,7 +170,7 @@
         .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 24px; }
 
         .page-header { text-align: center; padding: 4px 0 8px; animation: fadeInDown 0.6s ease-out; }
-        .page-header h1 { font-size: 2rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 8px; background: linear-gradient(135deg, #0A0F24, #3A506B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .page-header h1 { font-size: 2rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 8px; background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .page-header p { font-size: 0.95rem; color: var(--text-muted); max-width: 400px; margin: 0 auto; line-height: 1.5; font-weight: 500; }
 
         .filter-scroll {
@@ -165,222 +179,232 @@
         }
         .filter-scroll::-webkit-scrollbar { display: none; }
         .filter-pill {
-            padding: 10px 22px; border-radius: var(--radius-pill); background: var(--sigma-surface);
+            padding: 10px 24px; border-radius: var(--radius-pill); background: var(--sigma-surface);
             border: 1px solid var(--sigma-muted-border); font-size: 0.85rem; font-weight: 700;
             color: var(--text-muted); white-space: nowrap; transition: var(--transition-bounce);
             box-shadow: var(--shadow-subtle); cursor: pointer;
         }
         .filter-pill:active { transform: scale(0.95); }
-        .filter-pill.active { background: var(--sigma-primary); color: white; border-color: var(--sigma-primary); box-shadow: 0 6px 16px rgba(10, 15, 36, 0.2); }
+        .filter-pill.active { background: var(--sigma-primary); color: white; border-color: var(--sigma-primary); box-shadow: 0 6px 16px rgba(11, 19, 43, 0.2); }
 
         /* ==========================================================================
-           5. HYPER-REALISTIC PLAN CARDS (WITH TEXT LOGO & EASY LANGUAGE)
+           5. HYPER-REALISTIC PLAN CARDS (Next Level Design)
            ========================================================================== */
-        .plan-list-container { display: flex; flex-direction: column; gap: 24px; min-height: 400px; }
+        .plan-list-container { display: flex; flex-direction: column; gap: 28px; min-height: 400px; perspective: 1000px;}
         
         .plan-card {
             background: var(--sigma-surface); border-radius: var(--radius-2xl);
             border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-subtle);
             position: relative; overflow: hidden; transition: var(--transition-bounce);
             animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-            cursor: pointer; display: flex; flex-direction: column;
+            display: flex; flex-direction: column; cursor: pointer;
         }
-        .plan-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: #CBD5E1; }
+        .plan-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: var(--shadow-card); border-color: var(--sigma-input-border); }
         .plan-card:active { transform: translateY(0) scale(0.98); }
 
-        /* Hero Section (The Credit Card Look) */
+        /* HERO: The Realistic Credit/Investment Card Interface */
         .plan-card-hero {
-            position: relative; width: 100%; height: 160px; padding: 24px;
+            position: relative; width: 100%; height: 170px; padding: 24px;
             display: flex; flex-direction: column; justify-content: space-between;
             color: white; overflow: hidden;
         }
         
-        /* Realistic Premium Gradients */
+        /* Ultra Premium Gradients matching physical card tiers */
         .theme-bronze { background: linear-gradient(135deg, #B07D62 0%, #804A31 100%); }
         .theme-silver { background: linear-gradient(135deg, #A4B2C6 0%, #64748B 100%); }
         .theme-gold { background: linear-gradient(135deg, #FBBF24 0%, #B45309 100%); }
         .theme-platinum { background: linear-gradient(135deg, #475569 0%, #0F172A 100%); }
         .theme-diamond { background: linear-gradient(135deg, #60A5FA 0%, #1E3A8A 100%); }
         .theme-master { background: linear-gradient(135deg, #A78BFA 0%, #4C1D95 100%); }
-        .theme-grandmaster { background: linear-gradient(135deg, #18181B 0%, #000000 100%); border-bottom: 3px solid #F59E0B; }
+        .theme-grandmaster { background: linear-gradient(135deg, #18181B 0%, #000000 100%); border-bottom: 4px solid var(--sigma-gold); }
 
-        /* Text Logo inside Card */
-        .card-inner-textlogo {
-            position: absolute; top: 24px; right: 24px; width: 70px; height: auto;
-            opacity: 0.9; z-index: 5; filter: brightness(0) invert(1); /* Makes it white */
+        /* Noise Texture for physical metal/plastic realism */
+        .plan-card-hero::before {
+            content: ''; position: absolute; inset: 0; opacity: 0.2;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10%), radial-gradient(circle, #fff 10%, transparent 10%);
+            background-size: 6px 6px; background-position: 0 0, 3px 3px; pointer-events: none;
+            mix-blend-mode: overlay;
         }
 
-        /* Large Brand Watermark */
+        /* Large Background Logo Watermark */
         .plan-card-hero::after {
-            content: ''; position: absolute; right: -20px; bottom: -20px; width: 140px; height: 140px;
+            content: ''; position: absolute; right: -30px; bottom: -30px; width: 160px; height: 160px;
             background-image: url('assets/logo.png'); background-size: contain; background-repeat: no-repeat;
-            opacity: 0.1; transform: rotate(-20deg); filter: grayscale(100%) contrast(200%); pointer-events: none;
+            opacity: 0.1; transform: rotate(-15deg); filter: grayscale(100%) contrast(200%); pointer-events: none;
         }
 
-        /* Ultra Realistic EMV Chip & NFC */
-        .chip-nfc-row { display: flex; justify-content: flex-start; align-items: center; position: relative; z-index: 2; width: 100%; gap: 12px; }
+        /* Top Right Text Logo */
+        .card-inner-textlogo {
+            position: absolute; top: 24px; right: 24px; width: 80px; height: auto;
+            opacity: 0.9; z-index: 5; filter: brightness(0) invert(1); /* Pure White */
+        }
+
+        /* Chip & NFC */
+        .chip-nfc-row { display: flex; align-items: center; gap: 14px; position: relative; z-index: 2; width: 100%; }
         
         .sim-chip {
-            width: 44px; height: 32px; border-radius: 6px;
+            width: 48px; height: 34px; border-radius: 8px;
             background: linear-gradient(135deg, #FDE68A 0%, #D97706 100%);
             position: relative; overflow: hidden; opacity: 0.95;
-            box-shadow: inset 0 0 2px rgba(255,255,255,0.6), 0 2px 6px rgba(0,0,0,0.2);
+            box-shadow: inset 0 0 2px rgba(255,255,255,0.7), 0 2px 6px rgba(0,0,0,0.25);
         }
         .sim-chip::before {
-            content: ''; position: absolute; top: 0; bottom: 0; left: 14px; right: 14px;
+            content: ''; position: absolute; top: 0; bottom: 0; left: 16px; right: 16px;
             border-left: 1px solid rgba(0,0,0,0.15); border-right: 1px solid rgba(0,0,0,0.15);
         }
         .sim-chip::after {
-            content: ''; position: absolute; left: 0; right: 0; top: 10px; bottom: 10px;
+            content: ''; position: absolute; left: 0; right: 0; top: 12px; bottom: 12px;
             border-top: 1px solid rgba(0,0,0,0.15); border-bottom: 1px solid rgba(0,0,0,0.15);
         }
         
-        .nfc-icon { width: 24px; height: 24px; opacity: 0.7; }
+        .nfc-icon { width: 26px; height: 26px; opacity: 0.8; display: flex; align-items: center; justify-content: center; }
         .nfc-icon svg { width: 100%; height: 100%; fill: white; }
 
-        .plan-hero-content { display: flex; flex-direction: column; position: relative; z-index: 2; width: 100%; margin-top: 10px; }
-        .plan-hero-content h2 { font-size: 1.35rem; font-weight: 900; color: white; letter-spacing: 0.5px; margin-bottom: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.4); text-transform: uppercase; }
+        /* Plan Title and Price */
+        .plan-hero-content { display: flex; flex-direction: column; position: relative; z-index: 2; width: 100%; margin-top: auto; }
+        .plan-hero-content h2 { font-size: 1.25rem; font-weight: 900; color: white; letter-spacing: 0.5px; margin-bottom: 2px; text-shadow: 0 2px 6px rgba(0,0,0,0.4); text-transform: uppercase; }
         
         .plan-price-display { display: flex; align-items: baseline; gap: 4px; }
-        .plan-price-display .currency { font-size: 1.1rem; opacity: 0.9; font-weight: 700; }
-        .plan-price-display .amount { font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; line-height: 1; text-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .plan-price-display .currency { font-size: 1.15rem; opacity: 0.9; font-weight: 700; }
+        .plan-price-display .amount { font-size: 2.6rem; font-weight: 900; letter-spacing: -1px; line-height: 1; text-shadow: 0 4px 14px rgba(0,0,0,0.35); }
         
-        /* Recommended Badge */
-        .plan-card.featured { border-color: rgba(16, 185, 129, 0.5); box-shadow: var(--shadow-card), var(--shadow-glow); }
+        /* Featured Badge */
+        .plan-card.featured { border-color: rgba(245, 158, 11, 0.5); box-shadow: var(--shadow-card), var(--shadow-glow-gold); }
         .featured-badge {
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--sigma-accent), var(--sigma-accent-dark));
-            color: white; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; z-index: 5;
-            padding: 4px 16px; border-radius: 0 0 12px 12px; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, var(--sigma-gold), var(--sigma-gold-dark));
+            color: white; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; z-index: 5;
+            padding: 5px 18px; border-radius: 0 0 14px 14px; letter-spacing: 1.5px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
         }
 
-        /* Card Body */
-        .plan-card-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+        /* Card Details Body */
+        .plan-card-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; background: var(--sigma-surface); }
         
+        /* Grid with English & Urdu */
         .plan-metrics-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-            background: var(--sigma-subtle); padding: 16px 12px; border-radius: var(--radius-xl);
+            background: var(--sigma-surface-alt); padding: 18px 12px; border-radius: var(--radius-xl);
             border: 1px solid var(--sigma-muted-border); text-align: center;
         }
         .metric-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
-        .metric-item small { 
-            font-size: 0.7rem; color: var(--text-muted); font-weight: 700; 
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .metric-item strong { font-size: 1.05rem; font-weight: 900; color: var(--text-heading); margin-top: 2px;}
-        .metric-urdu-label { font-family: 'Noto Nastaliq Urdu', serif; font-size: 0.85rem; color: var(--text-muted); line-height: 1.2; margin-top: 4px; }
+        .metric-item small { font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric-item strong { font-size: 1.1rem; font-weight: 900; color: var(--text-heading); margin-top: 2px;}
+        .metric-urdu-label { font-family: 'Noto Nastaliq Urdu', serif; font-size: 0.9rem; color: var(--text-muted); line-height: 1.2; margin-top: 4px; }
 
-        /* The Simplified 'Buy Plan' Button */
+        /* The 'Buy Plan' CTA Button */
         .btn-buy-plan {
-            width: 100%; height: 56px; border-radius: var(--radius-xl);
-            background: white; color: var(--text-heading);
-            font-size: 1.1rem; font-weight: 800; border: 2px solid var(--sigma-primary);
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: var(--transition-bounce); box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            width: 100%; height: 60px; border-radius: var(--radius-xl);
+            background: white; color: var(--sigma-primary);
+            font-size: 1.15rem; font-weight: 900; border: 2px solid var(--sigma-primary);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: var(--transition-bounce); box-shadow: 0 4px 12px rgba(0,0,0,0.02); text-transform: uppercase; letter-spacing: 0.5px;
         }
         .plan-card:hover .btn-buy-plan { background: var(--sigma-subtle); }
         .plan-card.featured .btn-buy-plan {
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white; border: none; box-shadow: 0 8px 24px rgba(11, 19, 43, 0.25);
+            color: white; border: none; box-shadow: 0 10px 24px rgba(11, 19, 43, 0.25);
         }
         .btn-buy-plan svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2.5; fill: none; }
 
-        /* Perfect Skeleton to prevent layout shift */
-        .skeleton-card { height: 400px; border-radius: var(--radius-2xl); border: 1px solid var(--sigma-muted-border); display: flex; flex-direction: column; overflow: hidden; }
+        /* Perfect Skeleton Loaders */
+        .skeleton-card { height: 420px; border-radius: var(--radius-2xl); border: 1px solid var(--sigma-muted-border); display: flex; flex-direction: column; overflow: hidden; }
         .skeleton { background: #E2E8F0; color: transparent !important; animation: pulseSkel 1.5s infinite ease-in-out; }
-        .skel-hero { height: 160px; width: 100%; background: #CBD5E1; }
+        .skel-hero { height: 170px; width: 100%; background: #CBD5E1; }
         .skel-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
-        .skel-grid { height: 90px; width: 100%; border-radius: var(--radius-xl); }
-        .skel-btn { height: 56px; width: 100%; border-radius: var(--radius-xl); }
+        .skel-grid { height: 95px; width: 100%; border-radius: var(--radius-xl); }
+        .skel-btn { height: 60px; width: 100%; border-radius: var(--radius-xl); }
         @keyframes pulseSkel { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
         /* ==========================================================================
-           6. COMBINED CHECKOUT SHEET (Details + Payment Methods)
+           6. UNIFIED SECURE CHECKOUT SHEET (Details + Gateways)
            ========================================================================== */
         .overlay {
             position: fixed; inset: 0; z-index: var(--z-overlay);
-            background: rgba(11, 19, 43, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            background: rgba(11, 19, 43, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             opacity: 0; visibility: hidden; transition: var(--transition-smooth);
             display: flex; align-items: flex-end; justify-content: center;
         }
         .overlay.show { opacity: 1; visibility: visible; }
         
         .sheet {
-            width: 100%; max-width: 600px; background: var(--sigma-surface);
-            border-radius: 32px 32px 0 0; transform: translateY(100%);
+            width: 100%; max-width: 640px; background: var(--sigma-surface);
+            border-radius: 36px 36px 0 0; transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
             max-height: 95vh; display: flex; flex-direction: column;
-            box-shadow: 0 -24px 48px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 -30px 60px rgba(0, 0, 0, 0.25);
         }
         .overlay.show .sheet { transform: translateY(0); }
 
-        .sheet-handle { width: 50px; height: 5px; border-radius: 99px; background: var(--sigma-input-border); margin: 16px auto 12px; flex-shrink: 0;}
+        .sheet-handle { width: 56px; height: 6px; border-radius: 99px; background: var(--sigma-input-border); margin: 16px auto 12px; flex-shrink: 0;}
         
         .sheet-header {
             padding: 8px 24px 16px; border-bottom: 1px solid var(--sigma-muted-border);
             display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
         }
-        .sheet-header h3 { font-size: 1.35rem; font-weight: 900; color: var(--text-heading); }
-        .sheet-header p { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+        .sheet-header h3 { font-size: 1.4rem; font-weight: 900; color: var(--text-heading); }
+        .sheet-header p { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
         
         .sheet-close-btn {
-            width: 40px; height: 40px; border-radius: 50%; background: var(--sigma-subtle);
+            width: 44px; height: 44px; border-radius: 50%; background: var(--sigma-subtle);
             display: flex; align-items: center; justify-content: center; color: var(--text-muted);
             transition: var(--transition-fast); border: 1px solid var(--sigma-muted-border);
         }
         .sheet-close-btn:active { background: var(--sigma-input-border); transform: scale(0.9); }
         .sheet-close-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.5; }
         
-        /* The scrollable area holding summary AND payment methods */
-        .sheet-body { padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 24px; overscroll-behavior: contain;}
+        /* Scrollable body holding summary + gateways */
+        .sheet-body { padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 24px; overscroll-behavior: contain; }
 
-        /* Receipt Style Detail Card */
+        /* Receipt Style Summary Card */
         .detail-summary-card {
             background: var(--sigma-surface-alt); border: 1px solid var(--sigma-muted-border); 
-            padding: 20px; border-radius: var(--radius-2xl);
-            display: flex; flex-direction: column; gap: 12px; position: relative;
+            padding: 24px; border-radius: var(--radius-2xl);
+            display: flex; flex-direction: column; gap: 14px; position: relative;
         }
         .detail-row { display: flex; justify-content: space-between; align-items: center; }
-        .detail-row span { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 6px; }
-        .detail-row strong { font-size: 1.05rem; color: var(--text-heading); font-weight: 800; text-align: right;}
+        .detail-row span { font-size: 0.95rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .detail-row strong { font-size: 1.1rem; color: var(--text-heading); font-weight: 900; text-align: right;}
         
-        .detail-divider { height: 1px; background: var(--sigma-muted-border); border-radius: 1px; margin: 2px 0; }
+        .detail-divider { height: 1px; background: var(--sigma-muted-border); margin: 2px 0; }
         
         .detail-row.total { margin-top: 8px; padding-top: 16px; border-top: 2px dashed var(--sigma-input-border); }
-        .detail-row.total span { font-weight: 800; color: var(--text-heading); font-size: 1rem; }
-        .detail-row.total strong { font-size: 1.6rem; color: var(--sigma-accent-dark); font-weight: 900; }
+        .detail-row.total span { font-weight: 800; color: var(--text-heading); font-size: 1.05rem; }
+        .detail-row.total strong { font-size: 1.7rem; color: var(--sigma-accent-dark); font-weight: 900; }
 
-        /* Payment Methods Grid (Dynamic Layout: 1 col, or 2 cols) */
-        .gateway-section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: -12px; color: var(--text-heading); }
+        /* Payment Methods Dynamic Grid */
+        .gateway-section-title { font-size: 1.15rem; font-weight: 900; margin-bottom: -12px; color: var(--text-heading); display: flex; align-items: center; gap: 8px;}
+        .gateway-section-title svg { width: 20px; height: 20px; stroke: var(--sigma-primary); fill: none; stroke-width: 2.5; }
         
         .gateway-grid { 
-            display: grid; gap: 12px; 
-            /* Grid template is handled via JS based on item count */
+            display: grid; gap: 16px; 
+            /* The template columns are manipulated in JS to perfectly match the 1 col vs 2 col rules */
         }
         
         .gateway-card {
             display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; 
-            padding: 16px 12px; border-radius: var(--radius-xl); border: 2px solid var(--sigma-muted-border);
+            padding: 20px 16px; border-radius: var(--radius-xl); border: 2px solid var(--sigma-muted-border);
             background: var(--sigma-surface); cursor: pointer; transition: var(--transition-bounce);
-            position: relative;
+            position: relative; overflow: hidden;
         }
         .gateway-card:active { transform: scale(0.96); }
-        .gateway-card.selected { border-color: var(--sigma-primary); background: var(--sigma-subtle); box-shadow: 0 4px 12px rgba(10, 15, 36, 0.05); }
+        .gateway-card.selected { border-color: var(--sigma-primary); background: var(--sigma-subtle); box-shadow: 0 6px 16px rgba(11, 19, 43, 0.08); }
         
+        /* Exact Image/Icon Wrapper for EasyPaisa etc. */
         .gw-icon-box {
-            width: 50px; height: 50px; border-radius: 12px; background: white;
+            width: 56px; height: 56px; border-radius: 14px; background: white;
             display: flex; align-items: center; justify-content: center; overflow: hidden; 
-            border: 1px solid var(--sigma-muted-border); padding: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--sigma-input-border); padding: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.06);
         }
-        .gw-icon-box img { width: 100%; height: 100%; object-fit: contain; }
+        .gw-icon-box img { width: 100%; height: 100%; object-fit: contain; } /* Ensures image stays proportional */
+        .gw-icon-box svg { width: 28px; height: 28px; stroke: var(--text-heading); fill: none; stroke-width: 1.8; }
         
         .gw-info { flex: 1; }
-        .gw-info b { display: block; font-size: 0.95rem; font-weight: 800; color: var(--text-heading); margin-bottom: 2px;}
+        .gw-info b { display: block; font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 2px;}
         
-        /* Custom Animated Checkmark (Top Right Corner) */
+        /* Animated Checkmark Top Right */
         .gw-check {
             position: absolute; top: 12px; right: 12px;
-            width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--sigma-input-border);
+            width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--sigma-input-border);
             display: flex; align-items: center; justify-content: center; transition: 0.2s; background: white;
         }
         .gw-check svg { width: 14px; height: 14px; stroke: white; stroke-width: 3; fill: none; transform: scale(0); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -388,56 +412,57 @@
         .gateway-card.selected .gw-check { border-color: var(--sigma-primary); background: var(--sigma-primary); }
         .gateway-card.selected .gw-check svg { transform: scale(1); }
 
-        /* Sheet Footer containing Buy Button */
+        /* Action Footer */
         .sheet-footer { padding: 16px 24px 24px; border-top: 1px solid var(--sigma-muted-border); background: var(--sigma-surface); flex-shrink: 0; }
         
         .btn-sheet-submit {
-            width: 100%; height: 60px; border-radius: var(--radius-xl);
+            width: 100%; height: 64px; border-radius: var(--radius-xl);
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white; font-size: 1.15rem; font-weight: 800; display: flex;
+            color: white; font-size: 1.2rem; font-weight: 900; display: flex;
             align-items: center; justify-content: center; gap: 12px; 
-            box-shadow: 0 12px 28px rgba(11, 19, 43, 0.25); transition: var(--transition-bounce);
+            box-shadow: 0 12px 30px rgba(11, 19, 43, 0.3); transition: var(--transition-bounce);
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
         .btn-sheet-submit:active { transform: scale(0.96); box-shadow: 0 6px 16px rgba(11, 19, 43, 0.2); }
-        .btn-sheet-submit:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+        .btn-sheet-submit:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
         
         .spinner {
-            width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3);
+            width: 26px; height: 26px; border: 3px solid rgba(255,255,255,0.3);
             border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none;
         }
         .btn-sheet-submit.loading .spinner { display: block; }
         .btn-sheet-submit.loading span, .btn-sheet-submit.loading svg { display: none; }
 
         /* ==========================================================================
-           7. NATIVE MOBILE DOCK (Exactly 3 Buttons)
+           7. NATIVE MOBILE DOCK (Center points to my-plans.html)
            ========================================================================== */
         .mobile-dock {
             position: fixed; bottom: var(--safe-area-bottom); left: 50%; transform: translateX(-50%);
-            height: 76px; width: calc(100% - 32px); max-width: 440px;
+            height: 78px; width: calc(100% - 32px); max-width: 440px;
             background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border-radius: var(--radius-2xl); box-shadow: var(--shadow-float); display: flex; align-items: center;
             justify-content: space-between; padding: 0 24px; z-index: var(--z-dock); border: 1px solid rgba(255, 255, 255, 0.9);
         }
         .dock-slot {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 6px; color: var(--text-muted); width: 64px; height: 100%; transition: var(--transition-bounce);
+            gap: 6px; color: var(--text-muted); width: 64px; height: 100%; transition: var(--transition-bounce); text-decoration: none;
         }
-        .dock-slot svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-        .dock-slot span { font-size: 0.7rem; font-weight: 800; }
+        .dock-slot svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .dock-slot span { font-size: 0.72rem; font-weight: 800; }
         .dock-slot.active { color: var(--sigma-primary); }
         .dock-slot.active svg { stroke-width: 2.8; transform: translateY(-2px); color: var(--sigma-accent-dark); }
         
         .dock-crest-btn {
-            position: relative; top: -24px; width: 68px; height: 68px; flex-shrink: 0;
+            position: relative; top: -26px; width: 72px; height: 72px; flex-shrink: 0;
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 12px 24px rgba(11, 19, 43, 0.35); border: 6px solid var(--sigma-surface-alt);
-            transition: var(--transition-bounce);
+            box-shadow: 0 12px 26px rgba(11, 19, 43, 0.35); border: 6px solid var(--sigma-surface-alt);
+            transition: var(--transition-bounce); text-decoration: none;
         }
         .dock-crest-btn:active { transform: scale(0.9); }
-        .dock-crest-btn img { width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .dock-crest-btn img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
         .dock-crest-btn::after {
-            content: 'PLANS'; position: absolute; bottom: -24px; font-size: 0.7rem; font-weight: 900; color: var(--text-heading); letter-spacing: 0.5px;
+            content: 'MY PLANS'; position: absolute; bottom: -24px; font-size: 0.7rem; font-weight: 900; color: var(--text-heading); letter-spacing: 0.5px; white-space: nowrap;
         }
 
         @media (min-width: 860px) { .mobile-dock { display: none; } body { padding-bottom: 60px; } }
@@ -463,7 +488,7 @@
 
     <div id="networkOfflineBanner">Connection Lost. Retrying...</div>
 
-    <!-- SVG SPRITES -->
+    <!-- SVG SPRITES (Accurate alignment & sizing) -->
     <svg width="0" height="0" style="display:none;" aria-hidden="true">
         <symbol id="icon-back" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></symbol>
         <symbol id="icon-home" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></symbol>
@@ -473,6 +498,7 @@
         <symbol id="icon-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round" stroke-linejoin="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round" stroke-linejoin="round"/></symbol>
         <symbol id="icon-check" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="20 6 9 17 4 12"/></symbol>
         <symbol id="icon-zap" viewBox="0 0 24 24"><polygon stroke-linecap="round" stroke-linejoin="round" points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+        <symbol id="icon-shield" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
     </svg>
 
     <div class="app-container">
@@ -511,7 +537,7 @@
 
             <!-- Plans Render Container -->
             <div class="plan-list-container" id="plansContainer">
-                <!-- Initial Perfect Skeletons -->
+                <!-- Initial Skeletons -->
                 <div class="skeleton-card">
                     <div class="skel-hero skeleton"></div>
                     <div class="skel-body">
@@ -524,28 +550,28 @@
         </main>
     </div>
 
-    <!-- NATIVE 3-BUTTON DOCK -->
+    <!-- NATIVE 3-BUTTON DOCK (Center points to my-plans.html as requested) -->
     <nav class="mobile-dock">
         <a href="dash.html" class="dock-slot">
             <svg><use href="#icon-home" /></svg>
             <span>Home</span>
         </a>
 
-        <!-- Central Crest Button -->
-        <a href="plans.html" class="dock-crest-btn" onclick="appController.logAction('dock_plans', 'Opened plans')">
+        <!-- Central Crest Button pointing to my-plans.html -->
+        <a href="my-plans.html" class="dock-crest-btn" onclick="appController.logAction('dock_my_plans', 'Opened my plans')">
             <img src="assets/logo.png" alt="Sigma Crest" onerror="this.style.display='none'">
         </a>
 
         <a href="profile.html" class="dock-slot">
-            <div style="width: 26px; height: 26px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);" id="dockAvatarContainer">
-                <svg style="width: 18px; height: 18px;"><use href="#icon-user" /></svg>
+            <div style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);" id="dockAvatarContainer">
+                <svg style="width: 20px; height: 20px;"><use href="#icon-user" /></svg>
             </div>
             <span>Profile</span>
         </a>
     </nav>
 
     <!-- ==========================================================================
-         COMBINED CHECKOUT SHEET (Details + Payment Methods)
+         COMBINED CHECKOUT SHEET (Details + Payment Grid)
          ========================================================================== -->
     <div class="overlay" id="sheetPlanDetails">
         <div class="sheet">
@@ -559,6 +585,7 @@
                 <button class="sheet-close-btn" onclick="appController.closeSheet('sheetPlanDetails')"><svg><use href="#icon-x"/></svg></button>
             </div>
             
+            <!-- Body contains the summary and dynamic payment grid -->
             <div class="sheet-body">
                 
                 <!-- Summary Card -->
@@ -575,7 +602,7 @@
                     <div class="detail-divider"></div>
                     <div class="detail-row">
                         <span>Term Duration</span>
-                        <strong id="uiDetailDuration">0 Days</strong>
+                        <strong class="font-mono" id="uiDetailDuration">0 Days</strong>
                     </div>
                     
                     <div class="detail-row total">
@@ -584,8 +611,8 @@
                     </div>
                 </div>
 
-                <!-- Gateway Selection Grid -->
-                <div class="gateway-section-title">Select Payment Method</div>
+                <!-- Gateway Selection Grid (Layout handled dynamically in JS based on array length) -->
+                <div class="gateway-section-title"><svg><use href="#icon-shield"/></svg> Select Payment Method</div>
                 <div class="gateway-grid" id="gatewayListContainer">
                     <div style="padding: 20px; text-align: center; color: var(--text-light); font-size: 0.95rem; grid-column: 1 / -1;">
                         Securely loading gateways...
@@ -594,9 +621,10 @@
 
             </div>
 
+            <!-- Persistent Footer for Button -->
             <div class="sheet-footer">
                 <button class="btn-sheet-submit" id="btnConfirmPayment" onclick="appController.initiateManualPayment()" disabled>
-                    <span id="buyBtnText">Buy Plan</span> <svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-zap"/></svg>
+                    <span id="buyBtnText">Buy Plan</span> <svg style="width:24px;height:24px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-zap"/></svg>
                     <div class="spinner"></div>
                 </button>
             </div>
@@ -604,7 +632,7 @@
     </div>
 
     <div class="toast" id="toastBox">
-        <svg style="width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg>
+        <svg style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg>
         <span id="toastMsg">Action successful</span>
     </div>
 
@@ -620,7 +648,8 @@
             let currentSelectedPlan = null;
             let currentSelectedMethodId = null;
 
-            // --- Updated Blueprint Plans (Plan 01, 03, 05 Featured) ---
+            // --- Updated Blueprint Plans (Tiers: 1000, 2300, 6000, 14000, 28000, 46000, 60000) ---
+            // Plan 01, 03, and 05 are highlighted/featured.
             const defaultBlueprintPlans = [
                 { id: "plan_01", order: 1, name: "Plan 01 / Sigma Bronze", price: 1000, daily: 450, total: 11250, duration: 25, isFeatured: true, theme: "theme-bronze" },
                 { id: "plan_02", order: 2, name: "Plan 02 / Sigma Silver", price: 2300, daily: 1035, total: 25875, duration: 25, isFeatured: false, theme: "theme-silver" },
@@ -631,11 +660,11 @@
                 { id: "plan_07", order: 7, name: "Plan 07 / Sigma Grandmaster", price: 60000, daily: 21000, total: 525000, duration: 25, isFeatured: false, theme: "theme-grandmaster" }
             ];
 
-            // --- Updated Payment Methods ---
+            // --- Updated Payment Methods with Assets ---
             const defaultPaymentMethods = [
-                { id: "pm_easypaisa", name: "EasyPaisa", iconType: "img", iconUrl: "assets/pay/easypaisa.png", desc: "Instant transfer" },
-                { id: "pm_jazzcash", name: "JazzCash", iconType: "img", iconUrl: "assets/pay/jazzcash.png", desc: "Secure transfer" },
-                { id: "pm_bank", name: "Bank Transfer", iconType: "img", iconUrl: "assets/pay/bank.png", desc: "Direct IBFT" }
+                { id: "pm_easypaisa", name: "EasyPaisa", iconUrl: "assets/pay/easypaisa.png" },
+                { id: "pm_jazzcash", name: "JazzCash", iconUrl: "assets/pay/jazzcash.png" },
+                { id: "pm_bank", name: "Bank Transfer", iconUrl: "assets/pay/bank.png" }
             ];
 
             const dom = {
@@ -681,7 +710,7 @@
                 } catch(e) {}
             };
 
-            // Render Plans
+            // Render Hyper-Realistic Plans
             const renderPlans = (plansArray) => {
                 if (!dom.plansContainer) return;
                 dom.plansContainer.innerHTML = ''; 
@@ -699,18 +728,20 @@
                     
                     const featuredHtml = plan.isFeatured ? `<div class="featured-badge">Recommended</div>` : '';
                     const themeClass = plan.theme || 'theme-platinum';
-                    const shortName = plan.name.split(' / ')[0]; // Extract "Plan 01"
+                    const shortName = plan.name.split(' / ')[0]; // Gets "Plan 01"
 
                     card.innerHTML = `
                         <div class="plan-card-hero ${themeClass}">
                             ${featuredHtml}
                             <img src="assets/textlogo.png" alt="Sigma" class="card-inner-textlogo" onerror="this.style.display='none'">
+                            
                             <div class="chip-nfc-row">
                                 <div class="sim-chip"></div>
                                 <div class="nfc-icon">
                                     <svg viewBox="0 0 24 24"><path d="M9 12h.01M12 12h.01M15 12h.01M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
                                 </div>
                             </div>
+                            
                             <div class="plan-hero-content">
                                 <h2>${plan.name}</h2>
                                 <div class="plan-price-display">
@@ -739,7 +770,7 @@
                                 </div>
                             </div>
 
-                            <!-- Simplified Buy Button -->
+                            <!-- "Buy Plan 01" Button -->
                             <button class="btn-buy-plan" onclick="appController.openPlanDetails('${plan.id}')">
                                 Buy ${shortName} <svg><use href="#icon-zap"/></svg>
                             </button>
@@ -749,7 +780,7 @@
                 });
             };
 
-            // Render Payment Methods dynamically in Grid
+            // Render Payment Methods Layout dynamically based on logic requested
             const renderPaymentMethods = (methodsArray) => {
                 if (!dom.gatewayListContainer) return;
                 const grid = dom.gatewayListContainer;
@@ -760,24 +791,36 @@
                     return;
                 }
 
-                // Dynamic CSS Grid Layout Logic
+                // Grid layout logic based on count
                 if (methodsArray.length === 1) {
+                    // 1 item -> 1 full row column
                     grid.style.gridTemplateColumns = '1fr';
+                } else if (methodsArray.length === 2) {
+                    // 2 items -> 1 row with 2 columns
+                    grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
                 } else {
+                    // 3 or more -> 2 columns, last item spans full if odd length
                     grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
                 }
 
-                methodsArray.forEach(method => {
+                methodsArray.forEach((method, index) => {
                     const card = document.createElement('div');
                     card.className = 'gateway-card';
-                    card.onclick = () => selectPaymentMethod(method.id, card);
-
-                    let iconVisual = `<svg><use href="#icon-wallet"/></svg>`;
-                    if (method.iconType === 'img' && method.iconUrl) {
-                        iconVisual = `<img src="${method.iconUrl}" alt="${method.name}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' viewBox=\\\'0 0 24 24\\\'><path d=\\\'M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4M4 6v12c0 1.1.9 2 2 2h14v-4M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z\\\' stroke=\\\'%230F172A\\\' fill=\\\'none\\\' stroke-width=\\\'2\\\'/></svg>'">`;
+                    
+                    // If it's the 3rd element (index 2) in an odd-sized array, span full width
+                    if (methodsArray.length % 2 !== 0 && index === methodsArray.length - 1) {
+                        card.style.gridColumn = '1 / -1';
                     }
 
-                    // Compact layout for grid items
+                    card.onclick = () => selectPaymentMethod(method.id, card);
+
+                    // Image parsing
+                    let iconVisual = `<svg><use href="#icon-wallet"/></svg>`;
+                    if (method.iconUrl) {
+                        iconVisual = `<img src="${method.iconUrl}" alt="${method.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                      <svg style="display:none;"><use href="#icon-wallet"/></svg>`;
+                    }
+
                     card.innerHTML = `
                         <div class="gw-check"><svg><use href="#icon-check"/></svg></div>
                         <div class="gw-icon-box">${iconVisual}</div>
@@ -789,14 +832,14 @@
                 });
             };
 
-            // Combined Sheet Logic
+            // Checkout Logic
             const openPlanDetails = (planId) => {
                 currentSelectedPlan = loadedPlans.find(p => p.id === planId);
                 if (!currentSelectedPlan) return;
 
                 const shortName = currentSelectedPlan.name.split(' / ')[0];
 
-                // Populate Summary
+                // Populate Receipt Info
                 document.getElementById('uiDetailName').textContent = currentSelectedPlan.name;
                 document.getElementById('uiDetailPrice').textContent = "Rs. " + Number(currentSelectedPlan.price).toLocaleString('en-PK');
                 document.getElementById('uiDetailDaily').textContent = "Rs. " + Number(currentSelectedPlan.daily).toLocaleString('en-PK');
@@ -805,7 +848,7 @@
                 
                 document.getElementById('buyBtnText').textContent = `Buy ${shortName}`;
 
-                // Reset Payment Selection State
+                // Reset Gateway Selection
                 currentSelectedMethodId = null;
                 if(dom.btnConfirmPayment) dom.btnConfirmPayment.disabled = true;
                 document.querySelectorAll('.gateway-card').forEach(c => c.classList.remove('selected'));
@@ -823,6 +866,7 @@
                 haptic(15);
             };
 
+            // Handoff to manual-payment.html
             const initiateManualPayment = () => {
                 if (!currentSelectedPlan || !currentSelectedMethodId) {
                     toast("Please select a payment method.", true);
@@ -839,7 +883,6 @@
 
                 logAction('proceed_to_payment', `Proceeding to manual payment via ${selectedMethod.name}`);
 
-                // Secure Hand-off via SessionStorage Enclave
                 const paymentContract = {
                     planId: currentSelectedPlan.id,
                     planName: currentSelectedPlan.name,
@@ -852,9 +895,8 @@
 
                 sessionStorage.setItem('sigma_pending_payment_contract', JSON.stringify(paymentContract));
 
-                setTimeout(() => {
-                    window.location.href = 'manual-payment.html';
-                }, 800);
+                // Smooth redirect
+                setTimeout(() => { window.location.href = 'manual-payment.html'; }, 800);
             };
 
             const loadDynamicData = (db) => {
@@ -896,10 +938,12 @@
             };
 
             const init = () => {
+                // Modals
                 document.querySelectorAll('.overlay').forEach(ov => {
                     ov.addEventListener('click', e => { if (e.target === ov) closeSheet(ov.id); });
                 });
 
+                // Scroll blur
                 const header = document.getElementById('topHeader');
                 if (header) {
                     window.addEventListener('scroll', () => {
@@ -908,6 +952,7 @@
                     }, { passive: true });
                 }
 
+                // Network listeners
                 window.addEventListener('offline', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'block'; });
                 window.addEventListener('online', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'none'; toast('Connection verified'); });
 
