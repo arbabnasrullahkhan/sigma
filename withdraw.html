@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="description" content="Securely withdraw your profits from Sigma directly to your bank, mobile wallet, or crypto wallet.">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="theme-color" content="#0B132B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Sigma | Withdraw Funds</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <!-- Fallback Firebase Initialization -->
+    <script>
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp({
+                apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
+                authDomain: "week-team.firebaseapp.com",
+                projectId: "week-team",
+                storageBucket: "week-team.firebasestorage.app",
+                messagingSenderId: "480334485782",
+                appId: "1:480334485782:web:c0c886ed710567b9e6d837"
+            });
+        }
+    </script>
+
+    <style>
+        /* ==========================================================================
+           1. SIGMA PREMIUM TOKENS
+           ========================================================================== */
+        :root {
+            --sigma-primary: #0B132B;
+            --sigma-secondary: #1C2541;
+            --sigma-surface: #FFFFFF;
+            --sigma-surface-alt: #F8FAFC;
+            --sigma-subtle: #F1F5F9;
+            --sigma-muted-border: #E2E8F0;
+            --sigma-input-border: #CBD5E1;
+
+            --sigma-accent: #10B981;
+            --sigma-accent-dark: #059669;
+            --sigma-gold: #F59E0B;
+            --sigma-gold-dark: #D97706;
+            --sigma-danger: #EF4444;
+            --sigma-danger-dark: #DC2626;
+            --sigma-info: #3B82F6;
+
+            --text-heading: #0F172A;
+            --text-body: #334155;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+
+            --radius-pill: 9999px;
+            --radius-2xl: 28px;
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+
+            --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.03);
+            --shadow-card: 0 16px 32px -8px rgba(15, 23, 42, 0.08);
+            --shadow-float: 0 24px 48px -12px rgba(15, 23, 42, 0.15);
+
+            --z-dock: 1000;
+            --z-header: 900;
+            --z-overlay: 3000;
+
+            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-smooth: 0.3s ease;
+            --safe-area-bottom: env(safe-area-inset-bottom, 16px);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--sigma-surface-alt);
+            color: var(--text-body); line-height: 1.5; min-height: 100vh; overflow-x: hidden;
+            padding-bottom: calc(110px + var(--safe-area-bottom));
+        }
+        body.locked { overflow: hidden; }
+        a { text-decoration: none; color: inherit; }
+        button, input, select { font-family: inherit; border: none; outline: none; background: none; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ==========================================================================
+           2. DYNAMIC HEADER
+           ========================================================================== */
+        .app-container { width: 100%; max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; }
+
+        .island-topbar {
+            position: sticky; top: 12px; margin: 0 16px 20px; height: 68px;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(24px);
+            border-radius: var(--radius-pill); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 14px; z-index: var(--z-header);
+            border: 1px solid rgba(255, 255, 255, 0.95); box-shadow: var(--shadow-sm);
+        }
+        .btn-back {
+            width: 46px; height: 46px; border-radius: 50%; background: var(--sigma-surface);
+            display: flex; align-items: center; justify-content: center; color: var(--text-heading);
+            border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
+        }
+        .btn-back:active { transform: scale(0.92); background: var(--sigma-subtle); }
+        .btn-back svg { width: 22px; height: 22px; stroke-width: 2.5; stroke: currentColor; fill: none; }
+        .brand-cluster { display: flex; align-items: center; gap: 8px; }
+        .brand-cluster b { font-size: 1.1rem; font-weight: 900; color: var(--sigma-primary); }
+        .brand-cluster small { font-size: 0.65rem; color: var(--sigma-danger); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: block;}
+
+        /* ==========================================================================
+           3. BALANCE VAULT & LOCKOUT SCREEN
+           ========================================================================== */
+        .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 24px; }
+
+        .balance-card {
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            border-radius: var(--radius-2xl); padding: 28px 24px; color: white;
+            box-shadow: var(--shadow-card); position: relative; overflow: hidden;
+        }
+        .balance-card::after {
+            content: ''; position: absolute; bottom: -40px; right: -40px; width: 140px; height: 140px;
+            border-radius: 50%; background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+        }
+        .balance-card small { font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .balance-card h3 { font-size: 2.5rem; font-weight: 900; letter-spacing: -1px; display: flex; align-items: baseline; gap: 6px; position: relative; z-index: 2;}
+        .balance-card h3 span { font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.8); }
+
+        /* Lockout / Pending Screen */
+        .lockout-card {
+            background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 40px 24px;
+            text-align: center; border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-sm);
+            display: none; flex-direction: column; align-items: center; gap: 16px;
+        }
+        .lockout-card.active { display: flex; }
+        .lockout-card .icon-wrap {
+            width: 72px; height: 72px; border-radius: 50%; background: var(--sigma-gold-soft);
+            color: var(--sigma-gold-dark); display: flex; align-items: center; justify-content: center;
+        }
+        .lockout-card .icon-wrap svg { width: 36px; height: 36px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .lockout-card h2 { font-size: 1.4rem; color: var(--text-heading); }
+        .lockout-card p { font-size: 0.95rem; color: var(--text-body); max-width: 320px; font-weight: 500;}
+        .lockout-amount { background: var(--sigma-subtle); padding: 8px 16px; border-radius: var(--radius-pill); font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 800; color: var(--sigma-primary); border: 1px dashed var(--sigma-muted-border); margin-top: 8px;}
+
+        /* Main Form Area (Hidden if locked out) */
+        #withdrawMainArea { display: flex; flex-direction: column; gap: 24px; }
+
+        .section-title { font-size: 1.2rem; font-weight: 900; color: var(--text-heading); }
+
+        /* ==========================================================================
+           4. 3-COLUMN PAYMENT GRID WITH BLUR EFFECT
+           ========================================================================== */
+        .methods-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+            transition: var(--transition-smooth);
+        }
+        .method-card {
+            background: var(--sigma-surface); border: 2px solid var(--sigma-muted-border);
+            border-radius: var(--radius-xl); padding: 16px 8px; display: flex; flex-direction: column;
+            align-items: center; text-align: center; gap: 12px; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: var(--shadow-sm);
+        }
+        
+        .method-icon {
+            width: 50px; height: 50px; border-radius: 14px; background: white;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--sigma-muted-border); overflow: hidden; padding: 6px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .method-icon img { width: 100%; height: 100%; object-fit: contain; }
+        
+        .method-card b { font-size: 0.85rem; font-weight: 800; color: var(--text-heading); line-height: 1.2;}
+
+        /* Selection and Blur Logic */
+        .methods-grid.has-selection .method-card:not(.selected) {
+            opacity: 0.5; filter: blur(2px); transform: scale(0.95); pointer-events: none;
+        }
+        .method-card.selected {
+            border-color: var(--sigma-primary); background: var(--sigma-subtle);
+            box-shadow: 0 8px 24px rgba(11, 19, 43, 0.1); transform: scale(1.02);
+        }
+        .method-card.selected .method-icon { border-color: var(--sigma-primary); }
+
+        .btn-clear-selection {
+            display: none; align-self: flex-end; font-size: 0.8rem; font-weight: 800;
+            color: var(--sigma-danger); background: var(--sigma-danger-soft); padding: 6px 12px;
+            border-radius: var(--radius-pill); transition: var(--transition-fast); margin-top: -10px;
+        }
+        .methods-grid.has-selection + .btn-clear-selection { display: inline-flex; }
+        .btn-clear-selection:active { transform: scale(0.95); }
+
+        /* ==========================================================================
+           5. DYNAMIC FORM FIELDS
+           ========================================================================== */
+        .form-section {
+            background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 24px;
+            box-shadow: var(--shadow-card); border: 1px solid var(--sigma-muted-border);
+            display: none; flex-direction: column; gap: 20px; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .form-section.active { display: flex; }
+
+        .input-group { position: relative; }
+        .input-wrapper {
+            display: flex; align-items: center; background: var(--sigma-subtle);
+            border-radius: var(--radius-xl); border: 2px solid var(--sigma-input-border);
+            transition: var(--transition-smooth); overflow: hidden; height: 64px;
+        }
+        .input-wrapper:focus-within { border-color: var(--sigma-primary); background: white; }
+        
+        .currency-prefix { padding: 0 16px; font-weight: 900; color: var(--sigma-primary); font-size: 1.1rem; border-right: 2px solid var(--sigma-input-border); }
+        .input-field { flex: 1; height: 100%; padding: 0 16px; font-size: 1.1rem; color: var(--text-heading); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+        .input-field.text-input { font-family: 'Inter', sans-serif; font-weight: 700; }
+        .input-field:focus { outline: none; }
+        .input-field::placeholder { color: var(--text-light); font-weight: 600; font-size: 0.95rem; font-family: 'Inter', sans-serif;}
+
+        select.input-field { appearance: none; background: transparent; cursor: pointer; }
+
+        /* Limits & Fee Grid */
+        .limits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: var(--sigma-surface-alt); padding: 12px; border-radius: var(--radius-lg); border: 1px dashed var(--sigma-muted-border);}
+        .limit-box { text-align: center; }
+        .limit-box small { display: block; font-size: 0.65rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 2px; }
+        .limit-box b { display: block; font-size: 0.85rem; font-weight: 900; color: var(--text-heading); font-family: 'JetBrains Mono', monospace;}
+        
+        .calculation-preview { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--sigma-accent-dark); background: var(--sigma-accent-soft); padding: 10px; border-radius: var(--radius-md); display: none;}
+
+        .form-error {
+            display: none; background: var(--sigma-danger-soft); color: var(--sigma-danger-dark);
+            padding: 14px; border-radius: var(--radius-lg); font-size: 0.85rem; font-weight: 700;
+            text-align: center; border: 1px solid var(--sigma-danger-border); animation: shake 0.4s ease;
+        }
+
+        .btn-submit {
+            width: 100%; height: 64px; border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            color: white; font-size: 1.15rem; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 12px 28px rgba(11, 19, 43, 0.25); transition: var(--transition-bounce); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-submit:active { transform: scale(0.96); box-shadow: 0 6px 16px rgba(11, 19, 43, 0.2); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; background: var(--sigma-muted-border); color: var(--text-muted);}
+        
+        .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+        .btn-submit.loading .spinner { display: block; }
+        .btn-submit.loading span { display: none; }
+        .btn-submit.loading { background: var(--sigma-primary); opacity: 1; }
+
+        /* ==========================================================================
+           6. FULL SCREEN SUCCESS ANIMATION
+           ========================================================================== */
+        .success-overlay {
+            position: fixed; inset: 0; background: var(--sigma-surface); z-index: var(--z-overlay);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 24px;
+        }
+        .success-overlay.active { display: flex; animation: fadeScreenIn 0.3s ease forwards; }
+        
+        .success-circle {
+            width: 100px; height: 100px; border-radius: 50%; background: var(--sigma-accent);
+            display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
+            box-shadow: 0 0 0 20px var(--sigma-accent-soft); animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transform: scale(0);
+        }
+        .success-circle svg { width: 50px; height: 50px; stroke: white; stroke-width: 3; fill: none; stroke-dasharray: 100; stroke-dashoffset: 100; animation: drawCheck 0.5s ease 0.4s forwards; }
+        
+        .success-overlay h1 { font-size: 2rem; color: var(--sigma-primary); margin-bottom: 8px; opacity: 0; animation: slideUp 0.5s ease 0.6s forwards; }
+        .success-overlay p { font-size: 1rem; color: var(--text-muted); font-weight: 500; opacity: 0; animation: slideUp 0.5s ease 0.7s forwards; }
+
+        @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+        @keyframes popIn { to { transform: scale(1); } }
+        @keyframes fadeScreenIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ==========================================================================
+           7. NATIVE MOBILE DOCK (Exactly 3 Buttons)
+           ========================================================================== */
+        .mobile-dock {
+            position: fixed; bottom: var(--safe-area-bottom); left: 50%; transform: translateX(-50%);
+            height: 76px; width: calc(100% - 32px); max-width: 440px;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-float); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; z-index: var(--z-dock); border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+        .dock-slot {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+            color: var(--text-muted); width: 64px; height: 100%; transition: var(--transition-bounce); text-decoration: none;
+        }
+        .dock-slot svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .dock-slot span { font-size: 0.7rem; font-weight: 800; }
+        .dock-slot.active { color: var(--sigma-primary); }
+        .dock-slot.active svg { stroke-width: 2.8; transform: translateY(-2px); color: var(--sigma-accent-dark); }
+        
+        .dock-crest-btn {
+            position: relative; top: -26px; width: 72px; height: 72px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 12px 26px rgba(11, 19, 43, 0.35); border: 6px solid var(--sigma-surface-alt);
+            transition: var(--transition-bounce); text-decoration: none;
+        }
+        .dock-crest-btn:active { transform: scale(0.9); }
+        .dock-crest-btn img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .dock-crest-btn::after {
+            content: 'MY PLANS'; position: absolute; bottom: -24px; font-size: 0.7rem; font-weight: 900; color: var(--text-heading); letter-spacing: 0.5px; white-space: nowrap;
+        }
+        @media (min-width: 860px) { .mobile-dock { display: none; } body { padding-bottom: 40px; } }
+
+        /* Skeletons */
+        .skeleton { background: #E2E8F0; color: transparent !important; animation: pulseSkel 1.5s infinite ease-in-out; border-radius: 8px; }
+        @keyframes pulseSkel { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <!-- SVG SPRITES -->
+    <svg width="0" height="0" style="display:none;" aria-hidden="true">
+        <symbol id="icon-back" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></symbol>
+        <symbol id="icon-home" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></symbol>
+        <symbol id="icon-user" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="20 6 9 17 4 12"/></symbol>
+        <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><polyline stroke-linecap="round" stroke-linejoin="round" points="12 6 12 12 16 14"/></symbol>
+    </svg>
+
+    <!-- FULL SCREEN SUCCESS OVERLAY -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-circle">
+            <svg><use href="#icon-check"/></svg>
+        </div>
+        <h1>Request Submitted!</h1>
+        <p>Your withdrawal is being processed securely.<br>Please wait for administration approval.</p>
+    </div>
+
+    <div class="app-container">
+        
+        <!-- HEADER -->
+        <header class="island-topbar">
+            <a href="dash.html" class="btn-back" aria-label="Back">
+                <svg><use href="#icon-back"/></svg>
+            </a>
+            <div class="brand-cluster">
+                <img src="assets/logo.png" alt="Sigma" class="brand-logo-img" onerror="this.style.display='none'">
+                <div>
+                    <b>Withdraw Funds</b>
+                    <small>Sigma Secure Ledger</small>
+                </div>
+            </div>
+            <div style="width: 46px;"></div> <!-- Spacer -->
+        </header>
+
+        <main class="workspace">
+
+            <!-- BALANCE CARD -->
+            <div class="balance-card">
+                <small>Available Profit Balance</small>
+                <h3><span>PKR</span> <span id="uiAvailableBalance" class="font-mono skeleton">0.00</span></h3>
+            </div>
+
+            <!-- LOCKOUT CARD (Shown if pending withdrawal exists) -->
+            <div class="lockout-card" id="lockoutCard">
+                <div class="icon-wrap"><svg><use href="#icon-clock"/></svg></div>
+                <h2>Withdrawal Under Review</h2>
+                <p>You currently have a pending withdrawal request in the system. Please wait until it is processed by the administration before initiating a new one.</p>
+                <div class="lockout-amount" id="lockoutAmount">PKR 0.00</div>
+                <button class="btn-back" style="width: 100%; border-radius: var(--radius-pill); height: 56px; margin-top: 10px;" onclick="window.location.href='dash.html'">Return to Dashboard</button>
+            </div>
+
+            <!-- MAIN WITHDRAWAL AREA -->
+            <div id="withdrawMainArea">
+                <h2 class="section-title">1. Select Destination</h2>
+                
+                <!-- 3 COLUMN GRID -->
+                <div class="methods-grid" id="methodsGridContainer">
+                    <!-- Javascript populates this -->
+                    <div class="skeleton" style="height: 100px; border-radius: var(--radius-xl);"></div>
+                    <div class="skeleton" style="height: 100px; border-radius: var(--radius-xl);"></div>
+                    <div class="skeleton" style="height: 100px; border-radius: var(--radius-xl);"></div>
+                </div>
+                <button class="btn-clear-selection" id="btnClearSelection" onclick="WithdrawController.clearSelection()">Change Method</button>
+
+                <!-- DYNAMIC FORM SECTION -->
+                <form id="withdrawForm" class="form-section">
+                    <h2 class="section-title" style="font-size: 1.1rem; margin-bottom: -10px;">2. Enter Details</h2>
+                    
+                    <div class="input-wrapper">
+                        <span class="currency-prefix">PKR</span>
+                        <input type="number" id="inputAmount" class="input-field" step="any" placeholder=" " required>
+                        <label class="floating-label">Withdrawal Amount</label>
+                    </div>
+
+                    <div class="calculation-preview" id="calcPreview">You will receive: PKR 0.00</div>
+
+                    <div class="limits-grid">
+                        <div class="limit-box"><small>Minimum</small><b id="txtMin">PKR 0</b></div>
+                        <div class="limit-box"><small>Fee</small><b id="txtFee">0%</b></div>
+                        <div class="limit-box"><small>Maximum</small><b id="txtMax">PKR 0</b></div>
+                    </div>
+
+                    <!-- DYNAMIC FIELDS CONTAINER -->
+                    <div id="dynamicFieldsContainer" style="display: flex; flex-direction: column; gap: 16px; margin-top: 8px;">
+                        <!-- Injected via JS based on selected method type -->
+                    </div>
+
+                    <div class="form-error" id="formError"></div>
+
+                    <button type="submit" class="btn-submit" id="btnSubmit">
+                        <span id="btnSubmitText">Confirm Withdrawal</span>
+                        <div class="spinner"></div>
+                    </button>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- NATIVE 3-BUTTON DOCK -->
+    <nav class="mobile-dock">
+        <a href="dash.html" class="dock-slot">
+            <svg><use href="#icon-home" /></svg>
+            <span>Home</span>
+        </a>
+        <a href="my-plans.html" class="dock-crest-btn">
+            <img src="assets/logo.png" alt="Sigma Crest" onerror="this.style.display='none'">
+        </a>
+        <a href="profile.html" class="dock-slot">
+            <div style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);" id="dockAvatarContainer">
+                <svg style="width: 20px; height: 20px;"><use href="#icon-user" /></svg>
+            </div>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- ==========================================================================
+         JAVASCRIPT CONTROLLER (Strict Firebase Logic & Validation)
+         ========================================================================== -->
+    <script>
+        const WithdrawController = (() => {
+
+            let authUser = null;
+            let profitBalance = 0;
+            let loadedMethods = [];
+            let currentSelectedMethod = null;
+            
+            // Blueprint Methods (Will be overridden by Firebase if configured)
+            const blueprintMethods = [
+                { id: "wd_easypaisa", name: "EasyPaisa", type: "wallet", iconUrl: "assets/pay/easypaisa.png", min: 500, max: 50000, feeFixed: 0, feePercent: 0, isActive: true },
+                { id: "wd_jazzcash", name: "JazzCash", type: "wallet", iconUrl: "assets/pay/jazzcash.png", min: 500, max: 50000, feeFixed: 0, feePercent: 0, isActive: true },
+                { id: "wd_sadapay", name: "SadaPay", type: "wallet", iconUrl: "assets/pay/sadapay.png", min: 1000, max: 100000, feeFixed: 0, feePercent: 0, isActive: true },
+                { id: "wd_nayapay", name: "NayaPay", type: "wallet", iconUrl: "assets/pay/nayapay.png", min: 1000, max: 100000, feeFixed: 0, feePercent: 0, isActive: true },
+                { id: "wd_bank", name: "Local Bank", type: "bank", iconUrl: "assets/pay/bank.png", min: 2000, max: 500000, feeFixed: 50, feePercent: 1.5, isActive: true },
+                { id: "wd_usdt", name: "USDT Crypto", type: "crypto", iconUrl: "assets/pay/usdt.png", min: 5000, max: 1000000, feeFixed: 0, feePercent: 2, isActive: true }
+            ];
+
+            const dom = {
+                balance: document.getElementById('uiAvailableBalance'),
+                lockoutCard: document.getElementById('lockoutCard'),
+                lockoutAmount: document.getElementById('lockoutAmount'),
+                mainArea: document.getElementById('withdrawMainArea'),
+                grid: document.getElementById('methodsGridContainer'),
+                btnClear: document.getElementById('btnClearSelection'),
+                formSection: document.getElementById('withdrawForm'),
+                inputAmount: document.getElementById('inputAmount'),
+                calcPreview: document.getElementById('calcPreview'),
+                txtMin: document.getElementById('txtMin'),
+                txtMax: document.getElementById('txtMax'),
+                txtFee: document.getElementById('txtFee'),
+                dynamicFields: document.getElementById('dynamicFieldsContainer'),
+                errorBox: document.getElementById('formError'),
+                btnSubmit: document.getElementById('btnSubmit'),
+                successOverlay: document.getElementById('successOverlay')
+            };
+
+            const showError = (msg) => {
+                dom.errorBox.textContent = msg; dom.errorBox.classList.add('show');
+                dom.errorBox.style.animation = 'none'; void dom.errorBox.offsetWidth; dom.errorBox.style.animation = 'shake 0.4s ease';
+            };
+            const hideError = () => { dom.errorBox.classList.remove('show'); };
+
+            // --- Real-time Balance & Lockout Check ---
+            const loadUserData = (db, uid) => {
+                // 1. Listen for Profit Balance
+                db.collection('users').doc(uid).onSnapshot(doc => {
+                    if (doc.exists) {
+                        profitBalance = Number(doc.data().profitBalance || 0);
+                        dom.balance.textContent = profitBalance.toLocaleString('en-PK', {minimumFractionDigits: 2});
+                        dom.balance.classList.remove('skeleton');
+                    }
+                });
+
+                // 2. Check for Pending Withdrawals (Crucial Security Rule)
+                db.collection('users').doc(uid).collection('withdrawals')
+                  .where('status', '==', 'pending')
+                  .limit(1)
+                  .onSnapshot(snap => {
+                      if (!snap.empty) {
+                          const pendingDoc = snap.docs[0].data();
+                          dom.mainArea.style.display = 'none';
+                          dom.lockoutAmount.textContent = "PKR " + Number(pendingDoc.amount).toLocaleString('en-PK');
+                          dom.lockoutCard.classList.add('active');
+                      } else {
+                          dom.mainArea.style.display = 'flex';
+                          dom.lockoutCard.classList.remove('active');
+                      }
+                  });
+            };
+
+            const loadMethods = (db) => {
+                db.collection('settings').doc('withdraw_methods').onSnapshot(doc => {
+                    if (doc.exists && doc.data().methods && Array.isArray(doc.data().methods)) {
+                        loadedMethods = doc.data().methods.filter(m => m.isActive !== false);
+                        if(loadedMethods.length === 0) loadedMethods = blueprintMethods;
+                    } else { loadedMethods = blueprintMethods; }
+                    renderMethods();
+                }, err => { loadedMethods = blueprintMethods; renderMethods(); });
+            };
+
+            const renderMethods = () => {
+                dom.grid.innerHTML = '';
+                
+                // Keep strictly to 3 columns max
+                dom.grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+
+                loadedMethods.forEach(method => {
+                    const card = document.createElement('div');
+                    card.className = 'method-card';
+                    card.id = `card_${method.id}`;
+                    card.onclick = () => selectMethod(method.id);
+
+                    // Image loading with fallback
+                    let iconHtml = `<svg><use href="#icon-bank"/></svg>`;
+                    if (method.iconUrl) {
+                        iconHtml = `<img src="${method.iconUrl}" alt="${method.name}" onerror="this.style.display='none';">`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="method-icon">${iconHtml}</div>
+                        <b>${method.name}</b>
+                    `;
+                    dom.grid.appendChild(card);
+                });
+            };
+
+            const clearSelection = () => {
+                currentSelectedMethod = null;
+                dom.grid.classList.remove('has-selection');
+                document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
+                dom.formSection.classList.remove('active');
+                hideError();
+                dom.inputAmount.value = '';
+                dom.calcPreview.style.display = 'none';
+            };
+
+            const selectMethod = (id) => {
+                currentSelectedMethod = loadedMethods.find(m => m.id === id);
+                if (!currentSelectedMethod) return;
+
+                // UI Updates for Grid (Blur effect applied via CSS .has-selection)
+                dom.grid.classList.add('has-selection');
+                document.querySelectorAll('.method-card').forEach(c => {
+                    if (c.id === `card_${id}`) c.classList.add('selected');
+                    else c.classList.remove('selected');
+                });
+
+                // Populate Limits
+                dom.txtMin.textContent = `PKR ${currentSelectedMethod.min.toLocaleString()}`;
+                dom.txtMax.textContent = `PKR ${currentSelectedMethod.max.toLocaleString()}`;
+                
+                let feeTxt = [];
+                if (currentSelectedMethod.feeFixed > 0) feeTxt.push(`PKR ${currentSelectedMethod.feeFixed}`);
+                if (currentSelectedMethod.feePercent > 0) feeTxt.push(`${currentSelectedMethod.feePercent}%`);
+                dom.txtFee.textContent = feeTxt.length > 0 ? feeTxt.join(' + ') : 'Free';
+
+                // Build Dynamic Fields based on Type
+                buildDynamicFields(currentSelectedMethod.type);
+
+                // Show Form
+                dom.formSection.classList.add('active');
+                hideError();
+                
+                // Scroll slightly
+                setTimeout(() => dom.formSection.scrollIntoView({behavior: "smooth", block: "nearest"}), 100);
+            };
+
+            const buildDynamicFields = (type) => {
+                let html = '';
+                if (type === 'bank') {
+                    html = `
+                        <div class="input-wrapper"><input type="text" id="inpBankName" class="input-field text-input" placeholder=" " required><label class="floating-label">Bank Name</label></div>
+                        <div class="input-wrapper"><input type="text" id="inpAccNum" class="input-field text-input" placeholder=" " required><label class="floating-label">Account Number / IBAN</label></div>
+                        <div class="input-wrapper"><input type="text" id="inpAccTitle" class="input-field text-input" placeholder=" " required><label class="floating-label">Account Holder Name</label></div>
+                    `;
+                } else if (type === 'crypto') {
+                    html = `
+                        <div class="input-wrapper" style="padding-right: 16px;">
+                            <select id="inpNetwork" class="input-field text-input" required>
+                                <option value="" disabled selected>Select Network</option>
+                                <option value="TRC20">TRON (TRC20)</option>
+                                <option value="ERC20">Ethereum (ERC20)</option>
+                                <option value="BEP20">Binance Smart Chain (BEP20)</option>
+                            </select>
+                            <label class="floating-label" style="top: 8px; font-size: 0.75rem; color: var(--sigma-primary);">Network</label>
+                        </div>
+                        <div class="input-wrapper"><input type="text" id="inpAppName" class="input-field text-input" placeholder=" " required><label class="floating-label">Exchange / App Name (e.g., Binance)</label></div>
+                        <div class="input-wrapper"><input type="text" id="inpAccNum" class="input-field text-input" placeholder=" " required><label class="floating-label">Wallet Address</label></div>
+                        <div class="input-wrapper"><input type="text" id="inpAccTitle" class="input-field text-input" placeholder=" " required><label class="floating-label">Account Holder Name</label></div>
+                    `;
+                } else {
+                    // Wallet (EasyPaisa / JazzCash etc)
+                    html = `
+                        <div class="input-wrapper"><input type="text" id="inpAccNum" class="input-field text-input" placeholder=" " required><label class="floating-label">Mobile Account Number</label></div>
+                        <div class="input-wrapper"><input type="text" id="inpAccTitle" class="input-field text-input" placeholder=" " required><label class="floating-label">Account Title / Receiver Name</label></div>
+                    `;
+                }
+                dom.dynamicFields.innerHTML = html;
+            };
+
+            // Live Calculation of net amount
+            dom.inputAmount.addEventListener('input', () => {
+                hideError();
+                if(!currentSelectedMethod) return;
+                let amt = Number(dom.inputAmount.value);
+                if (amt > 0) {
+                    let fee = currentSelectedMethod.feeFixed + (amt * currentSelectedMethod.feePercent / 100);
+                    let net = amt - fee;
+                    dom.calcPreview.textContent = `You will receive: PKR ${Math.max(0, net).toLocaleString('en-PK', {maximumFractionDigits: 2})}`;
+                    dom.calcPreview.style.display = 'block';
+                } else {
+                    dom.calcPreview.style.display = 'none';
+                }
+            });
+
+            // --- Form Submission & Firestore Transaction ---
+            dom.formSection.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideError();
+
+                if (!currentSelectedMethod) return;
+
+                const amount = Number(dom.inputAmount.value);
+
+                // Validation
+                if (!amount || amount <= 0) { showError("Enter a valid amount."); return; }
+                if (amount < currentSelectedMethod.min) { showError(`Minimum withdrawal is PKR ${currentSelectedMethod.min}`); return; }
+                if (amount > currentSelectedMethod.max) { showError(`Maximum withdrawal is PKR ${currentSelectedMethod.max}`); return; }
+                if (amount > profitBalance) { showError("Insufficient Profit Balance."); return; }
+
+                // Gather Dynamic Fields
+                const details = {};
+                try {
+                    if (currentSelectedMethod.type === 'bank') {
+                        details.bankName = document.getElementById('inpBankName').value.trim();
+                        details.accountNumber = document.getElementById('inpAccNum').value.trim();
+                        details.accountTitle = document.getElementById('inpAccTitle').value.trim();
+                        if(!details.bankName || !details.accountNumber || !details.accountTitle) throw new Error("Fill all bank details.");
+                    } else if (currentSelectedMethod.type === 'crypto') {
+                        details.network = document.getElementById('inpNetwork').value;
+                        details.appName = document.getElementById('inpAppName').value.trim();
+                        details.walletAddress = document.getElementById('inpAccNum').value.trim();
+                        details.accountTitle = document.getElementById('inpAccTitle').value.trim();
+                        if(!details.network || !details.appName || !details.walletAddress || !details.accountTitle) throw new Error("Fill all crypto details.");
+                    } else {
+                        details.accountNumber = document.getElementById('inpAccNum').value.trim();
+                        details.accountTitle = document.getElementById('inpAccTitle').value.trim();
+                        if(!details.accountNumber || !details.accountTitle) throw new Error("Fill all account details.");
+                    }
+                } catch(err) {
+                    showError(err.message); return;
+                }
+
+                // Calculate Net
+                const fee = currentSelectedMethod.feeFixed + (amount * currentSelectedMethod.feePercent / 100);
+                const netAmount = amount - fee;
+
+                // Start Backend Transaction
+                dom.btnSubmit.disabled = true;
+                dom.btnSubmit.classList.add('loading');
+                
+                try {
+                    const db = firebase.firestore();
+                    const userRef = db.collection('users').doc(authUser.uid);
+                    const withdrawRef = userRef.collection('withdrawals').doc(); // New ID
+                    const ledgerRef = userRef.collection('transactions').doc(); // New Ledger ID
+
+                    await db.runTransaction(async (transaction) => {
+                        const userDoc = await transaction.get(userRef);
+                        if (!userDoc.exists) throw new Error("User record missing.");
+                        
+                        const currentProfit = Number(userDoc.data().profitBalance || 0);
+                        if (amount > currentProfit) throw new Error("Balance changed. Insufficient funds.");
+
+                        // 1. Deduct Balance
+                        transaction.update(userRef, {
+                            profitBalance: currentProfit - amount
+                        });
+
+                        // 2. Create Pending Withdrawal Record
+                        transaction.set(withdrawRef, {
+                            amount: amount,
+                            fee: fee,
+                            netAmount: netAmount,
+                            methodId: currentSelectedMethod.id,
+                            methodName: currentSelectedMethod.name,
+                            methodType: currentSelectedMethod.type,
+                            accountDetails: details,
+                            status: 'pending',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+
+                        // 3. Create Ledger Entry
+                        transaction.set(ledgerRef, {
+                            type: 'withdraw',
+                            amount: amount,
+                            description: `Withdrawal via ${currentSelectedMethod.name}`,
+                            referenceId: withdrawRef.id.substring(0, 8).toUpperCase(),
+                            status: 'pending',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    });
+
+                    // Success! Show 3-second full-screen animation
+                    dom.successOverlay.classList.add('active');
+                    setTimeout(() => {
+                        window.location.replace('dash.html');
+                    }, 3000);
+
+                } catch (err) {
+                    console.error("Transaction Error:", err);
+                    dom.btnSubmit.disabled = false;
+                    dom.btnSubmit.classList.remove('loading');
+                    showError(err.message === "Balance changed. Insufficient funds." ? err.message : "System execution failed. Please try again.");
+                }
+            });
+
+            // --- Initialization ---
+            const initFirebase = () => {
+                if (typeof firebase === 'undefined') return;
+                const auth = firebase.auth();
+                const db = firebase.firestore();
+
+                auth.onAuthStateChanged(user => {
+                    if (!user) { window.location.replace('login.html'); return; }
+                    authUser = user;
+                    
+                    if (user.photoURL) {
+                        const dockAvatar = document.getElementById('dockAvatarContainer');
+                        if (dockAvatar) dockAvatar.innerHTML = `<img src="${user.photoURL}" alt="User" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer">`;
+                    }
+
+                    loadUserData(db, user.uid);
+                    loadMethods(db);
+                });
+            };
+
+            const init = () => {
+                initFirebase();
+            };
+
+            return { init, clearSelection };
+        })();
+
+        document.addEventListener('DOMContentLoaded', WithdrawController.init);
+    </script>
+</body>
+</html>
