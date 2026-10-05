@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sigma Ops | Secure Admin Login</title>
+    <title>Sigma Ops | Admin Secure Login</title>
     
-    <!-- SEO & Security Meta -->
-    <meta name="robots" content="noindex, nofollow, noarchive">
+    <!-- SEO & Indexing (Blocked for Admin Panel) -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#0B132B">
 
+    <!-- Favicon -->
     <link rel="shortcut icon" href="../assets/favicon.png" type="image/png">
     
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
-    <!-- Centralized Firebase Config (Assumes this file is in a subfolder like /admin/ or /x/) -->
+    <!-- Firebase Configuration -->
     <script src="../firebase-config.js"></script>
 
     <style>
         /* ==========================================================================
-           1. SIGMA ADMIN DESIGN TOKENS
+           SIGMA ADMIN DESIGN TOKENS
            ========================================================================== */
         :root {
             --sigma-primary: #0B132B;
@@ -35,275 +35,263 @@
             --sigma-accent: #10B981;
             --sigma-accent-dark: #059669;
             --sigma-danger: #EF4444;
-            --sigma-danger-soft: #FEE2E2;
+            --sigma-danger-bg: #FEF2F2;
+            --sigma-surface: #FFFFFF;
+            --sigma-input-bg: #F8FAFC;
             
-            --bg-body: #050914; /* Deep secure dark background for admin login */
-            --bg-surface: #FFFFFF;
-            --bg-input: #F8FAFC;
-            
-            --text-main: #0F172A;
+            --text-heading: #0F172A;
+            --text-body: #334155;
             --text-muted: #64748B;
             
-            --border-light: #E2E8F0;
+            --border-color: #CBD5E1;
             --border-focus: #10B981;
             
-            --radius-island: 28px;
-            --radius-input: 16px;
-            --radius-btn: 14px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
             
-            --shadow-float: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            --shadow-glow: 0 0 40px rgba(16, 185, 129, 0.15);
-            
-            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ==========================================================================
-           2. GLOBAL RESET & BASE
-           ========================================================================== */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
-            background-color: var(--bg-body);
+            background-color: var(--sigma-primary);
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 60vw),
-                radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.05) 0%, transparent 60vw);
-            color: var(--text-main);
+                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            position: relative;
+            color: var(--text-body);
             overflow: hidden;
         }
 
-        /* Background Security Watermark */
-        body::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg opacity="0.02" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M0 10l10-10 10 10L10 20zM20 30l10-10 10 10-10 10z" fill="white"/></svg>');
-            pointer-events: none;
-            z-index: 0;
-        }
-
         /* ==========================================================================
-           3. LOGIN CARD
+           MAIN LOGIN CARD (MOBILE OPTIMIZED)
            ========================================================================== */
         .login-card {
             width: 100%;
             max-width: 440px;
-            background: var(--bg-surface);
-            border-radius: var(--radius-island);
+            background: var(--sigma-surface);
+            border-radius: var(--radius-xl);
             padding: 40px 32px;
-            box-shadow: var(--shadow-float), var(--shadow-glow);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 10;
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: slideUp 0.6s ease-out;
         }
 
-        /* Security Top Bar on Card */
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 6px;
-            background: linear-gradient(90deg, var(--sigma-primary), var(--sigma-accent));
-            border-radius: var(--radius-island) var(--radius-island) 0 0;
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 32px 24px;
+                border-radius: var(--radius-lg);
+            }
         }
 
-        .header-wrap {
+        /* Branding Header */
+        .login-header {
             text-align: center;
             margin-bottom: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .ops-logo {
-            width: 64px; height: 64px;
-            margin: 0 auto 16px;
-            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            border-radius: 18px;
-            display: flex; align-items: center; justify-content: center;
-            color: white;
-            box-shadow: 0 10px 20px rgba(11, 19, 43, 0.3);
-            border: 2px solid rgba(255,255,255,0.1);
+        .brand-logos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            background: var(--sigma-input-bg);
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
         }
 
-        .ops-logo svg {
-            width: 32px; height: 32px;
-            stroke: var(--sigma-accent);
-            fill: none; stroke-width: 2;
+        .brand-logos img.logo-icon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
         }
 
-        .header-wrap h1 {
+        .brand-logos img.logo-text {
+            height: 22px;
+            object-fit: contain;
+        }
+
+        .login-header h1 {
+            color: var(--text-heading);
             font-size: 1.6rem;
             font-weight: 900;
             letter-spacing: -0.5px;
-            margin-bottom: 4px;
-            color: var(--sigma-primary);
+            margin-bottom: 6px;
         }
 
-        .header-wrap p {
-            font-size: 0.85rem;
+        .login-header p {
             color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* ==========================================================================
-           4. FORM CONTROLS (Floating Labels)
-           ========================================================================== */
-        .form-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            background: var(--bg-input);
-            border-radius: var(--radius-input);
-            border: 1.5px solid var(--border-light);
-            transition: var(--transition-smooth);
-            overflow: hidden;
-        }
-
-        .input-wrapper:focus-within {
-            background: var(--bg-surface);
-            border-color: var(--sigma-accent);
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
-        }
-
-        .input-wrapper.error {
-            border-color: var(--sigma-danger);
-            background: var(--sigma-danger-soft);
-        }
-
-        .input-icon {
-            width: 52px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-muted);
-            transition: var(--transition-smooth);
-            flex-shrink: 0;
-        }
-
-        .input-wrapper:focus-within .input-icon { color: var(--sigma-accent); }
-        .input-wrapper.error .input-icon { color: var(--sigma-danger); }
-
-        .input-icon svg {
-            width: 20px; height: 20px;
-            stroke: currentColor; stroke-width: 2; fill: none;
-        }
-
-        .input-field {
-            flex: 1;
-            height: 60px;
-            padding: 22px 16px 6px 0;
-            font-size: 1rem;
-            color: var(--text-main);
-            font-weight: 600;
-        }
-
-        .input-field::placeholder { color: transparent; }
-
-        .floating-label {
-            position: absolute;
-            left: 52px; top: 19px;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            pointer-events: none;
-            transition: 0.2s ease all;
+            font-size: 0.9rem;
             font-weight: 500;
-        }
-
-        .input-field:focus ~ .floating-label,
-        .input-field:not(:placeholder-shown) ~ .floating-label {
-            top: 7px;
-            font-size: 0.7rem;
-            color: var(--sigma-accent);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .input-wrapper.error .floating-label { color: var(--sigma-danger); }
-
-        .trailing-action {
-            width: 52px; height: 60px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-muted);
-            transition: var(--transition-smooth);
-        }
-
-        .trailing-action:hover { color: var(--sigma-primary); }
-
-        .trailing-action svg {
-            width: 20px; height: 20px;
-            stroke: currentColor; stroke-width: 2; fill: none;
         }
 
         /* Error Banner */
         .error-banner {
-            background: var(--sigma-danger-soft);
-            color: var(--sigma-danger-dark);
-            padding: 12px 16px;
-            border-radius: var(--radius-btn);
+            background: var(--sigma-danger-bg);
+            border: 1px solid #FCA5A5;
+            color: #B91C1C;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
             font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
             display: none;
             align-items: center;
             gap: 10px;
-            border: 1px solid rgba(239, 68, 68, 0.3);
             animation: shake 0.4s ease;
         }
-        .error-banner svg { width: 18px; height: 18px; flex-shrink: 0; }
 
-        /* Tools Row */
-        .tools-row {
+        .error-banner svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-heading);
+            background: var(--sigma-input-bg);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--sigma-accent);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 40px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .password-toggle:hover {
+            color: var(--sigma-primary);
+        }
+
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Forgot Password */
+        .form-options {
             display: flex;
             justify-content: flex-end;
-            margin-top: -8px;
-            margin-bottom: 24px;
-            padding: 0 4px;
+            margin-bottom: 28px;
         }
 
         .forgot-link {
             font-size: 0.85rem;
             font-weight: 700;
-            color: var(--sigma-primary);
-            transition: var(--transition-fast);
+            color: var(--sigma-accent-dark);
+            text-decoration: none;
+            transition: var(--transition);
         }
-        .forgot-link:hover { color: var(--sigma-accent); text-decoration: underline; }
 
-        /* Buttons */
-        .btn-submit {
+        .forgot-link:hover {
+            color: var(--sigma-primary);
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .btn-primary {
             width: 100%;
-            height: 56px;
-            border-radius: var(--radius-input);
+            padding: 16px;
+            border-radius: var(--radius-md);
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
             color: white;
+            border: none;
             font-size: 1.05rem;
             font-weight: 800;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
-            transition: var(--transition-bounce);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 20px rgba(11, 19, 43, 0.25);
         }
 
-        .btn-submit:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.35);
+        .btn-primary:active {
+            transform: scale(0.97);
+            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.15);
         }
 
-        .btn-submit:active:not(:disabled) { transform: scale(0.98); }
-        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-        /* Full Screen Loading Overlay for Auth Check */
-        .auth-overlay {
+        /* Loading Spinner inside Button */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn-primary.loading .spinner { display: block; }
+        .btn-primary.loading span, .btn-primary.loading svg { display: none; }
+
+        /* Full Screen Loader */
+        .page-loader {
             position: fixed;
             inset: 0;
             background: var(--sigma-primary);
@@ -312,358 +300,295 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: white;
-            transition: opacity 0.4s ease;
             opacity: 0;
             visibility: hidden;
+            transition: 0.3s ease;
+            color: white;
         }
 
-        .auth-overlay.active {
+        .page-loader.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .spinner-large {
-            width: 48px; height: 48px;
-            border: 4px solid rgba(255,255,255,0.1);
+        .page-loader .large-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(16, 185, 129, 0.2);
             border-top-color: var(--sigma-accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
-        .auth-overlay h2 {
-            font-size: 1.2rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-        
-        .auth-overlay p {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .spinner-small {
-            width: 22px; height: 22px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            display: none;
-        }
-        .btn-submit.loading .spinner-small { display: block; }
-        .btn-submit.loading span, .btn-submit.loading svg { display: none; }
-
+        /* Animations */
+        @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-6px); }
             75% { transform: translateX(6px); }
         }
-
-        @media (max-width: 480px) {
-            .login-card {
-                padding: 32px 24px;
-                border-radius: 24px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <!-- SVG SPRITES -->
-    <svg width="0" height="0" style="display:none;" aria-hidden="true">
-        <symbol id="icon-shield" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </symbol>
-        <symbol id="icon-mail" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-            <polyline stroke-linecap="round" stroke-linejoin="round" points="22,6 12,13 2,6" />
-        </symbol>
-        <symbol id="icon-lock" viewBox="0 0 24 24">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0 1 10 0v4" />
-        </symbol>
-        <symbol id="icon-eye" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-            <circle cx="12" cy="12" r="3" />
-        </symbol>
-        <symbol id="icon-eye-off" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-            <line x1="1" y1="1" x2="23" y2="23" />
-        </symbol>
-        <symbol id="icon-alert" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="12" y1="8" x2="12" y2="12" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" stroke-linejoin="round"/>
-        </symbol>
-        <symbol id="icon-arrow-right" viewBox="0 0 24 24">
-            <line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round" stroke-linejoin="round"/>
-            <polyline points="12 5 19 12 12 19" stroke-linecap="round" stroke-linejoin="round"/>
-        </symbol>
-    </svg>
-
-    <!-- Global Fullscreen Loader -->
-    <div class="auth-overlay active" id="authOverlay">
-        <div class="spinner-large"></div>
-        <h2 id="overlayTitle">Initializing Core</h2>
-        <p id="overlaySub">Establishing secure connection...</p>
+    <!-- Full Screen Preloader (For Auth State Checks) -->
+    <div class="page-loader" id="pageLoader">
+        <div class="large-spinner"></div>
+        <h3 id="loaderText" style="font-weight: 700; letter-spacing: 1px;">Verifying Secure Session...</h3>
     </div>
 
-    <!-- Login Container -->
-    <main class="login-card">
-        <div class="header-wrap">
-            <div class="ops-logo">
-                <svg><use href="#icon-shield"/></svg>
+    <!-- Login UI Card -->
+    <div class="login-card">
+        
+        <div class="login-header">
+            <!-- Brand Logos from your assets -->
+            <div class="brand-logos">
+                <img src="../assets/logo.png" alt="Sigma Icon" class="logo-icon" onerror="this.style.display='none'">
+                <img src="../assets/textlogo.png" alt="SIGMA" class="logo-text" onerror="this.style.display='none'">
             </div>
-            <h1>Sigma Operations</h1>
-            <p>Secure Administrator Portal</p>
+            <h1>Admin Control Panel</h1>
+            <p>Authorized personnel only.</p>
         </div>
 
         <div class="error-banner" id="errorBanner">
-            <svg><use href="#icon-alert"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
             <span id="errorMessage">Authentication failed.</span>
         </div>
 
-        <form id="adminLoginForm" novalidate>
-            <!-- Email -->
+        <form id="adminLoginForm">
             <div class="form-group">
-                <div class="input-wrapper" id="wrapEmail">
-                    <div class="input-icon"><svg><use href="#icon-mail"/></svg></div>
-                    <input type="email" id="email" class="input-field" placeholder=" " autocomplete="username" required>
-                    <label class="floating-label">Admin Email</label>
-                </div>
+                <label class="form-label" for="email">Administrator Email</label>
+                <input type="email" id="email" class="form-input" placeholder="admin@sigma.com" required autocomplete="username">
             </div>
 
-            <!-- Password -->
             <div class="form-group">
-                <div class="input-wrapper" id="wrapPassword">
-                    <div class="input-icon"><svg><use href="#icon-lock"/></svg></div>
-                    <input type="password" id="password" class="input-field" placeholder=" " autocomplete="current-password" required>
-                    <label class="floating-label">Security Key</label>
-                    <button type="button" class="trailing-action" id="togglePassword" aria-label="Toggle password">
-                        <svg id="eyeIcon"><use href="#icon-eye"/></svg>
-                    </button>
-                </div>
+                <label class="form-label" for="password">Secure Password</label>
+                <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle Password">
+                    <svg viewBox="0 0 24 24" id="eyeIcon">
+                        <!-- Default: Eye Icon (Hide) -->
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
             </div>
 
-            <div class="tools-row">
-                <a href="#" class="forgot-link" id="forgotPwdBtn">Reset Credentials?</a>
+            <div class="form-options">
+                <a href="#" class="forgot-link" id="forgotPasswordBtn">Forgot Password?</a>
             </div>
 
-            <button type="submit" class="btn-submit" id="loginBtn">
-                <span>Authorize Access</span>
-                <svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-arrow-right"/></svg>
-                <div class="spinner-small"></div>
+            <button type="submit" class="btn-primary" id="loginBtn">
+                <span>Access Terminal</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+                <div class="spinner"></div>
             </button>
         </form>
-    </main>
+    </div>
 
+    <!-- ==========================================================================
+         JAVASCRIPT LOGIC (Firebase Auth & Custom UID Validation)
+         ========================================================================== -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
             // DOM Elements
             const form = document.getElementById('adminLoginForm');
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
-            const wrapEmail = document.getElementById('wrapEmail');
-            const wrapPassword = document.getElementById('wrapPassword');
-            const togglePwdBtn = document.getElementById('togglePassword');
+            const togglePasswordBtn = document.getElementById('togglePassword');
             const eyeIcon = document.getElementById('eyeIcon');
-            const loginBtn = document.getElementById('loginBtn');
-            const forgotPwdBtn = document.getElementById('forgotPwdBtn');
+            const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
             const errorBanner = document.getElementById('errorBanner');
             const errorMessage = document.getElementById('errorMessage');
-            
-            const authOverlay = document.getElementById('authOverlay');
-            const overlayTitle = document.getElementById('overlayTitle');
-            const overlaySub = document.getElementById('overlaySub');
+            const loginBtn = document.getElementById('loginBtn');
+            const pageLoader = document.getElementById('pageLoader');
+            const loaderText = document.getElementById('loaderText');
 
-            // --- UI Functions ---
-            
-            const showError = (msg, targetWrap = null) => {
+            // Specific Admin UID requested
+            const MASTER_ADMIN_UID = "9NQHVzL4KiSVUoaGf63BcmCGMDa2";
+
+            // Setup Persistence
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                .catch(err => console.error("Persistence error:", err));
+
+            // UI Helpers
+            const showError = (msg) => {
                 errorMessage.textContent = msg;
                 errorBanner.style.display = 'flex';
-                
-                // Shake Animation Reset
+                // Trigger shake animation by re-adding the element class
                 errorBanner.classList.remove('shake');
                 void errorBanner.offsetWidth; 
-                errorBanner.classList.add('shake');
-
-                if (targetWrap) targetWrap.classList.add('error');
+                errorBanner.style.animation = 'shake 0.4s ease';
+                hideLoader();
+                
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
             };
 
-            const clearErrors = () => {
+            const hideError = () => {
                 errorBanner.style.display = 'none';
-                wrapEmail.classList.remove('error');
-                wrapPassword.classList.remove('error');
             };
 
-            const showFullscreenLoading = (title, sub) => {
-                overlayTitle.textContent = title;
-                overlaySub.textContent = sub;
-                authOverlay.classList.add('active');
+            const showLoader = (text = "Verifying...") => {
+                loaderText.textContent = text;
+                pageLoader.classList.add('active');
             };
 
-            const hideFullscreenLoading = () => {
-                authOverlay.classList.remove('active');
+            const hideLoader = () => {
+                pageLoader.classList.remove('active');
             };
 
-            // Password Toggle Logic
-            togglePwdBtn.addEventListener('click', () => {
-                const isPassword = passwordInput.getAttribute('type') === 'password';
-                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-                eyeIcon.innerHTML = isPassword ? '<use href="#icon-eye-off"/>' : '<use href="#icon-eye"/>';
-                passwordInput.focus();
+            // Toggle Password View
+            togglePasswordBtn.addEventListener('click', () => {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+                } else {
+                    passwordInput.type = 'password';
+                    eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+                }
             });
 
-            emailInput.addEventListener('input', clearErrors);
-            passwordInput.addEventListener('input', clearErrors);
+            // Clear errors on input
+            emailInput.addEventListener('input', hideError);
+            passwordInput.addEventListener('input', hideError);
 
-            // --- Firebase Logic ---
-
-            const isFirebaseReady = () => typeof firebase !== 'undefined' && firebase.apps.length > 0;
-
-            // 1. Initial Session Check (Protects login page if already an admin)
-            const initSessionCheck = () => {
-                if (!isFirebaseReady()) {
-                    showError("Firebase configuration missing. Check network.");
-                    hideFullscreenLoading();
-                    return;
-                }
-
-                // Set secure persistence
-                firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.error);
-
-                firebase.auth().onAuthStateChanged(async (user) => {
-                    if (user) {
-                        showFullscreenLoading("Verifying Credentials", "Checking security clearance...");
-                        await verifyAdminRole(user, false);
-                    } else {
-                        // Not logged in, reveal form
-                        hideFullscreenLoading();
-                    }
-                });
-            };
-
-            // 2. Core Admin Role Verification (Queries Firestore)
-            const verifyAdminRole = async (user, isManualLogin = false) => {
+            // =========================================================
+            // AUTHORIZATION LOGIC
+            // =========================================================
+            async function verifyAdminAccess(user) {
+                showLoader("Authenticating Credentials...");
                 try {
                     const db = firebase.firestore();
-                    const doc = await db.collection('users').doc(user.uid).get();
-                    
-                    if (doc.exists) {
-                        const role = doc.data().role;
-                        // Strict check for admin or superadmin
-                        if (role === 'admin' || role === 'superadmin') {
-                            overlaySub.textContent = "Clearance granted. Redirecting...";
-                            setTimeout(() => {
-                                window.location.replace('dashboard.html'); // Redirect to step 2 file
-                            }, 500);
-                            return;
+                    let isAuthorized = false;
+
+                    // 1. Check Master UID (Highest Priority)
+                    if (user.uid === MASTER_ADMIN_UID) {
+                        isAuthorized = true;
+                    } 
+                    // 2. Check Firestore Role
+                    else {
+                        const userDoc = await db.collection('users').doc(user.uid).get();
+                        if (userDoc.exists) {
+                            const role = userDoc.data().role;
+                            if (role === 'admin' || role === 'superadmin') {
+                                isAuthorized = true;
+                            }
                         }
                     }
-                    
-                    // Unauthorized Action
-                    await firebase.auth().signOut();
-                    hideFullscreenLoading();
-                    showError("Access Denied: Administrator privileges required.", wrapEmail);
-                    
-                } catch (error) {
-                    console.error("Verification failed:", error);
-                    await firebase.auth().signOut();
-                    hideFullscreenLoading();
-                    showError("Security verification failed. Please try again.");
-                }
-            };
 
-            // 3. Handle Form Submission
+                    // 3. Action based on Authorization
+                    if (isAuthorized) {
+                        // Success! Proceed to dashboard
+                        window.location.replace('dashboard.html');
+                    } else {
+                        // Reject and Sign Out
+                        await firebase.auth().signOut();
+                        showError("Access Denied: You do not have administrator permissions.");
+                    }
+                } catch (error) {
+                    console.error("Verification Error:", error);
+                    await firebase.auth().signOut();
+                    showError("Database connection failed. Contact system administrator.");
+                }
+            }
+
+            // Global Auth Listener (Checks session on page load)
+            let isInitialLoad = true;
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    verifyAdminAccess(user);
+                } else {
+                    if (isInitialLoad) {
+                        hideLoader(); // Show login form
+                        isInitialLoad = false;
+                    }
+                }
+            });
+            
+            // Show loader instantly on boot until Auth state returns
+            if (isInitialLoad) showLoader("Initializing System...");
+
+            // =========================================================
+            // FORM SUBMISSION (LOGIN)
+            // =========================================================
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                clearErrors();
+                hideError();
 
                 const email = emailInput.value.trim();
-                const pwd = passwordInput.value;
+                const password = passwordInput.value;
+                
+                if (!email || !password) return;
 
-                if (!email) return showError("Please enter your admin email.", wrapEmail);
-                if (!pwd) return showError("Please enter your security key.", wrapPassword);
-
-                // Start button loading state
                 loginBtn.classList.add('loading');
                 loginBtn.disabled = true;
 
                 try {
-                    // Sign In
-                    const userCred = await firebase.auth().signInWithEmailAndPassword(email, pwd);
-                    
-                    // Success UI transition
-                    loginBtn.classList.remove('loading');
-                    loginBtn.innerHTML = `<span><svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Authenticated</span>`;
-                    loginBtn.style.background = 'var(--sigma-accent)';
-                    
-                    // Trigger fullscreen role check
-                    showFullscreenLoading("Authenticating", "Fetching security clearance level...");
-                    await verifyAdminRole(userCred.user, true);
-
+                    // Firebase Sign In
+                    await firebase.auth().signInWithEmailAndPassword(email, password);
+                    // The onAuthStateChanged listener above will automatically trigger verifyAdminAccess()
                 } catch (error) {
-                    loginBtn.classList.remove('loading');
-                    loginBtn.disabled = false;
-                    
-                    let msg = "Authentication failed. Please check credentials.";
+                    let msg = "Authentication failed. Please check your credentials.";
                     if (error.code === 'auth/too-many-requests') {
-                        msg = "Too many failed attempts. Device locked temporarily.";
-                    } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                        msg = "Invalid email or security key.";
-                        wrapPassword.classList.add('error');
+                        msg = "Security Lock: Too many failed attempts. Try again later.";
+                    } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                        msg = "Invalid email or password provided.";
                     } else if (error.code === 'auth/network-request-failed') {
-                        msg = "Network error. Connection to secure server failed.";
+                        msg = "Network Error: Please check your internet connection.";
                     }
                     showError(msg);
                 }
             });
 
-            // 4. Password Reset Logic
-            forgotPwdBtn.addEventListener('click', async (e) => {
+            // =========================================================
+            // FORGOT PASSWORD
+            // =========================================================
+            forgotPasswordBtn.addEventListener('click', async (e) => {
                 e.preventDefault();
-                clearErrors();
-                
+                hideError();
+
                 const email = emailInput.value.trim();
                 if (!email) {
-                    showError("Enter your admin email address first to send a reset link.", wrapEmail);
+                    showError("Please enter your admin email to reset password.");
                     emailInput.focus();
                     return;
                 }
 
-                showFullscreenLoading("Sending Reset Protocol", "Please wait...");
+                loginBtn.classList.add('loading');
+                loginBtn.disabled = true;
+
                 try {
                     await firebase.auth().sendPasswordResetEmail(email);
-                    hideFullscreenLoading();
                     
+                    // Show Success in Banner
                     errorBanner.style.backgroundColor = 'var(--sigma-accent-soft)';
-                    errorBanner.style.borderColor = 'var(--border-focus)';
+                    errorBanner.style.borderColor = 'var(--sigma-accent-border)';
                     errorBanner.style.color = 'var(--sigma-accent-dark)';
-                    errorBanner.innerHTML = `<svg style="stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg><span>Recovery email dispatched to ${email}.</span>`;
+                    errorBanner.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span>Password reset instructions sent to your email.</span>`;
                     errorBanner.style.display = 'flex';
                     
                 } catch (error) {
-                    hideFullscreenLoading();
                     console.error("Reset error:", error);
-                    // Revert colors to danger if they were changed
-                    errorBanner.style.backgroundColor = 'var(--sigma-danger-soft)';
-                    errorBanner.style.borderColor = 'rgba(239, 68, 68, 0.3)';
-                    errorBanner.style.color = 'var(--sigma-danger-dark)';
-                    showError("Failed to send recovery email. Ensure address is correct.", wrapEmail);
+                    errorBanner.style.backgroundColor = 'var(--sigma-danger-bg)';
+                    errorBanner.style.borderColor = '#FCA5A5';
+                    errorBanner.style.color = '#B91C1C';
+                    showError("Failed to send reset email. Ensure the email address is correct.");
+                } finally {
+                    loginBtn.classList.remove('loading');
+                    loginBtn.disabled = false;
                 }
             });
-
-            // Boot
-            setTimeout(initSessionCheck, 500);
         });
     </script>
 </body>
