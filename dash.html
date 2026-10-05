@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sigma | User Dashboard & Financial Terminal</title>
 
-    <!-- SEO & Security Hygiene (Noindex for Authenticated Protected Workspaces) -->
+    <!-- SEO, Privacy & PWA Meta (Noindex for Authenticated Workspace) -->
     <meta name="description" content="Authorized member workspace for Sigma automated portfolios, real-time PKR wallet management, and referral network monitoring.">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#ffffff">
@@ -19,15 +19,15 @@
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="assets/favicon.png">
 
-    <!-- Typography (Inter & Monospace Numbers) -->
+    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,500;0,700;0,800;1,600&display=swap" rel="stylesheet">
 
-    <!-- QR Code Generator Engine (Lightweight, Production-Grade CDN) -->
+    <!-- QR Code Generator Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <!-- Firebase Compat SDKs -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -52,32 +52,32 @@
 
     <style>
         /* ==========================================================================
-           1. COMPREHENSIVE DESIGN TOKENS (SIGMA LIGHT FINTECH SYSTEM)
+           1. COMPREHENSIVE DESIGN TOKENS (SIGMA NEXT-GEN LIGHT FINTECH)
            ========================================================================== */
         :root {
             /* Brand Color Architecture */
-            --sigma-primary: #0B132B;       /* Midnight Slate */
-            --sigma-secondary: #1C2541;     /* Corporate Navy */
-            --sigma-surface: #FFFFFF;       /* Pure Elevated Surface */
-            --sigma-subtle: #F8FAFC;        /* Architectural Background */
-            --sigma-muted-border: #E2E8F0;  /* Card Contour */
+            --sigma-primary: #0B132B;
+            --sigma-secondary: #1C2541;
+            --sigma-surface: #FFFFFF;
+            --sigma-subtle: #F8FAFC;
+            --sigma-muted-border: #E2E8F0;
             --sigma-input-border: #CBD5E1;
 
-            /* Financial State Indicators */
-            --sigma-accent: #10B981;        /* Yield Emerald */
+            /* Financial Indicators */
+            --sigma-accent: #10B981;
             --sigma-accent-dark: #059669;
             --sigma-accent-soft: #ECFDF5;
             --sigma-accent-border: #A7F3D0;
 
-            --sigma-gold: #F59E0B;          /* VIP & Tier Gold */
+            --sigma-gold: #F59E0B;
             --sigma-gold-soft: #FEF3C7;
             --sigma-gold-border: #FDE68A;
 
-            --sigma-danger: #EF4444;        /* Outflow & Hazard */
+            --sigma-danger: #EF4444;
             --sigma-danger-soft: #FEE2E2;
             --sigma-danger-border: #FECACA;
 
-            --sigma-info: #3B82F6;          /* Operational Blue */
+            --sigma-info: #3B82F6;
             --sigma-info-soft: #EFF6FF;
 
             /* Text Hierarchies */
@@ -126,7 +126,7 @@
             line-height: 1.5;
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: 120px; /* Essential clearance for 3-button floating dock */
+            padding-bottom: 120px;
             background-image: 
                 radial-gradient(circle at 10% 0%, rgba(16, 185, 129, 0.04) 0%, transparent 40vw),
                 radial-gradient(circle at 90% 100%, rgba(59, 130, 246, 0.03) 0%, transparent 40vw);
@@ -148,9 +148,7 @@
         .text-accent { color: var(--sigma-accent); }
         .text-gold { color: var(--sigma-gold); }
 
-        /* ==========================================================================
-           3. SYSTEM NETWORK MONITOR & PULL TO REFRESH NOTIFICATION
-           ========================================================================== */
+        /* Offline Bar & Pull-To-Refresh */
         #networkOfflineBanner {
             position: fixed; top: 0; left: 0; width: 100%;
             background: linear-gradient(90deg, #F59E0B, #D97706);
@@ -170,7 +168,7 @@
         .ptr-indicator svg { width: 20px; height: 20px; animation: spin 0.8s linear infinite; }
 
         /* ==========================================================================
-           4. RESPONSIVE CONTAINER & SINGLE-ROW ISLAND TOPBAR (320px SAFE)
+           3. SINGLE-ROW ISLAND HEADER (320px Safe)
            ========================================================================== */
         .app-container {
             width: 100%; max-width: 860px; margin: 0 auto;
@@ -179,7 +177,7 @@
 
         .island-topbar {
             position: sticky; top: 12px; margin: 0 16px 20px; height: 68px;
-            background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border-radius: var(--radius-pill);
             box-shadow: var(--shadow-subtle); display: flex; align-items: center;
             justify-content: space-between; padding: 0 12px 0 18px; z-index: var(--z-header);
@@ -212,11 +210,10 @@
         .unread-dot.active { display: block; }
 
         /* ==========================================================================
-           5. DASHBOARD WORKSPACE CANVAS
+           4. WORKSPACE & IDENTITY STRIP
            ========================================================================== */
         .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Welcome Identity Strip */
         .identity-card {
             background: var(--sigma-surface); border-radius: var(--radius-xl);
             padding: 16px 20px; border: 1px solid var(--sigma-muted-border);
@@ -225,15 +222,16 @@
         }
         .id-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
         .user-avatar-wrap {
-            position: relative; width: 48px; height: 48px; flex-shrink: 0;
+            position: relative; width: 50px; height: 50px; flex-shrink: 0;
         }
         .user-avatar {
             width: 100%; height: 100%; border-radius: 50%;
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
             color: white; display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 1.15rem; text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.15);
+            font-weight: 800; font-size: 1.2rem; text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.15); overflow: hidden;
         }
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .avatar-tier-badge {
             position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px;
             border-radius: 50%; background: var(--sigma-gold); color: white;
@@ -263,9 +261,7 @@
         .btn-id-pill:active { transform: scale(0.95); background: #E2E8F0; }
         .btn-id-pill svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
-        /* ==========================================================================
-           6. LIVE PROFIT COUNTDOWN CLOCK & SYSTEM ALERT
-           ========================================================================== */
+        /* Announcement Bar */
         .system-announcement-pill {
             background: var(--sigma-accent-soft); border: 1px solid var(--sigma-accent-border);
             padding: 10px 16px; border-radius: var(--radius-md); display: flex;
@@ -276,30 +272,32 @@
         .announcement-text { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; font-weight: 700; color: #065F46; }
         .announcement-text svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; flex-shrink: 0; }
 
+        /* ==========================================================================
+           5. EXACT 24-HOUR SUBSCRIPTION COUNTDOWN TIMER
+           ========================================================================== */
         .live-countdown-island {
             background: var(--sigma-surface); border-radius: var(--radius-lg);
-            border: 1px solid var(--sigma-muted-border); padding: 14px 20px;
+            border: 1px solid var(--sigma-muted-border); padding: 16px 20px;
             box-shadow: var(--shadow-subtle); display: flex; align-items: center;
-            justify-content: space-between; flex-wrap: wrap; gap: 10px;
+            justify-content: space-between; flex-wrap: wrap; gap: 12px;
         }
-        .countdown-info { display: flex; align-items: center; gap: 10px; }
+        .countdown-info { display: flex; align-items: center; gap: 12px; }
         .pulsing-yield-ring {
-            width: 38px; height: 38px; border-radius: 12px; background: var(--sigma-accent-soft);
+            width: 42px; height: 42px; border-radius: 12px; background: var(--sigma-accent-soft);
             color: var(--sigma-accent-dark); display: flex; align-items: center; justify-content: center;
-            position: relative;
         }
-        .pulsing-yield-ring svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .pulsing-yield-ring svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
         .countdown-info div small { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .countdown-info div strong { font-size: 0.88rem; color: var(--text-heading); display: block; }
+        .countdown-info div strong { font-size: 0.9rem; color: var(--text-heading); display: block; }
 
         .clock-display {
-            background: var(--sigma-primary); color: white; padding: 6px 14px;
-            border-radius: var(--radius-pill); font-size: 1.05rem; font-weight: 800;
+            background: var(--sigma-primary); color: white; padding: 8px 16px;
+            border-radius: var(--radius-pill); font-size: 1.15rem; font-weight: 800;
             letter-spacing: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
         }
 
         /* ==========================================================================
-           7. MULTI-WALLET MATRIX (TOTAL, MAIN, PROFIT, COMMISSION)
+           6. MULTI-WALLET ARCHITECTURE (MAIN, PROFIT, COMMISSION)
            ========================================================================== */
         .vault-main-card {
             background: linear-gradient(135deg, var(--sigma-primary) 0%, var(--sigma-secondary) 100%);
@@ -344,7 +342,7 @@
         .btn-vault-action.ghost:active { transform: scale(0.97); background: rgba(255,255,255,0.14); }
         .btn-vault-action svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
-        /* Triple Modular Pocket Wallets */
+        /* Triple Pocket Matrix */
         .pocket-wallets-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
         }
@@ -356,10 +354,10 @@
         }
         .pocket-head { display: flex; align-items: center; justify-content: space-between; }
         .pocket-icon-wrap {
-            width: 28px; height: 28px; border-radius: 8px; display: flex;
+            width: 30px; height: 30px; border-radius: 8px; display: flex;
             align-items: center; justify-content: center;
         }
-        .pocket-icon-wrap svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .pocket-icon-wrap svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.2; }
         
         .p-deposit .pocket-icon-wrap { background: var(--sigma-info-soft); color: var(--sigma-info); }
         .p-profit .pocket-icon-wrap { background: var(--sigma-accent-soft); color: var(--sigma-accent-dark); }
@@ -377,46 +375,75 @@
         }
 
         /* ==========================================================================
-           8. ACTION WORKFLOW TERMINAL (6 CORE TILES)
+           7. SIGNATURE CIRCULAR ORBITAL ACTION TERMINAL
            ========================================================================== */
-        .workspace-panel {
+        .orbital-terminal-wrapper {
             background: var(--sigma-surface); border-radius: var(--radius-xl);
-            padding: 22px; border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 16px;
+            padding: 28px 20px; border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle); position: relative; overflow: hidden;
         }
-        .panel-heading {
-            display: flex; align-items: center; justify-content: space-between;
+        .orbital-header {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
         }
-        .panel-heading h3 { font-size: 1.05rem; font-weight: 800; }
-        .panel-heading a { font-size: 0.78rem; font-weight: 700; color: var(--sigma-accent-dark); }
+        .orbital-header h3 { font-size: 1.1rem; }
 
-        .terminal-actions-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+        /* The Circular Layout Engine */
+        .orbit-stage {
+            position: relative; width: 100%; max-width: 380px; margin: 0 auto;
+            aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
         }
-        .terminal-btn {
-            background: var(--sigma-subtle); border-radius: var(--radius-md);
-            padding: 16px 8px; border: 1px solid var(--sigma-muted-border);
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            transition: var(--transition-fast); text-align: center;
+        .orbit-ring {
+            position: absolute; width: 80%; height: 80%; border-radius: 50%;
+            border: 2px dashed rgba(16, 185, 129, 0.25); animation: orbitSpin 60s linear infinite;
         }
-        .terminal-btn:active { transform: scale(0.96); background: #E2E8F0; }
-        .terminal-btn-icon {
-            width: 44px; height: 44px; border-radius: var(--radius-md);
-            background: white; display: flex; align-items: center; justify-content: center;
-            box-shadow: var(--shadow-xs); border: 1px solid var(--sigma-muted-border);
-        }
-        .terminal-btn-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-        .terminal-btn span { font-size: 0.75rem; font-weight: 800; color: var(--text-heading); }
+        @keyframes orbitSpin { 100% { transform: rotate(360deg); } }
 
-        .c-deposit { color: var(--sigma-info); }
-        .c-withdraw { color: var(--sigma-danger); }
-        .c-plans { color: var(--sigma-primary); }
-        .c-team { color: var(--sigma-gold); }
-        .c-exchange { color: var(--sigma-accent-dark); }
-        .c-support { color: #8B5CF6; }
+        /* Central Sigma Core Hub */
+        .orbit-center-core {
+            position: relative; z-index: 10; width: 84px; height: 84px;
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 25px rgba(11, 19, 43, 0.35); border: 4px solid white;
+            transition: var(--transition-bounce);
+        }
+        .orbit-center-core img { width: 44px; height: 44px; object-fit: contain; }
+        .orbit-center-core:active { transform: scale(0.92); }
+
+        /* 6 Orbital Nodes Positioned Radially */
+        .orbit-node {
+            position: absolute; display: flex; flex-direction: column; align-items: center;
+            gap: 4px; width: 70px; text-align: center; z-index: 15;
+            transition: var(--transition-bounce);
+        }
+        .orbit-node:active { transform: scale(0.9); }
+        .orbit-node-icon {
+            width: 48px; height: 48px; border-radius: 50%; background: white;
+            box-shadow: var(--shadow-card); border: 2px solid var(--sigma-muted-border);
+            display: flex; align-items: center; justify-content: center; transition: var(--transition-fast);
+        }
+        .orbit-node:hover .orbit-node-icon { border-color: var(--sigma-accent); transform: translateY(-2px); }
+        .orbit-node-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .orbit-node span { font-size: 0.68rem; font-weight: 800; color: var(--text-heading); white-space: nowrap; }
+
+        /* Trigonometric Placement for 6 Equidistant Nodes (Radius ~40%) */
+        .node-pos-1 { top: 4%; left: 50%; transform: translateX(-50%); } /* Top: Deposit */
+        .node-pos-2 { top: 25%; right: 4%; }                              /* Top Right: Exchange */
+        .node-pos-3 { bottom: 25%; right: 4%; }                           /* Bottom Right: Plans */
+        .node-pos-4 { bottom: 4%; left: 50%; transform: translateX(-50%); } /* Bottom: Withdraw */
+        .node-pos-5 { bottom: 25%; left: 4%; }                            /* Bottom Left: Network */
+        .node-pos-6 { top: 25%; left: 4%; }                               /* Top Left: Support */
+
+        /* Responsive Linear Flow Fallback for Small Mobile */
+        @media (max-width: 360px) {
+            .orbit-stage { display: none; }
+            .orbit-linear-fallback { display: grid !important; }
+        }
+        .orbit-linear-fallback {
+            display: none; grid-template-columns: repeat(3, 1fr); gap: 10px;
+        }
 
         /* ==========================================================================
-           9. LIVE TRANSACTION STEPPER (RECENT OUTFLOW/INFLOW)
+           8. TRANSACTION LIFECYCLE TRACKER (STEPPER)
            ========================================================================== */
         .stepper-card {
             background: var(--sigma-surface); border-radius: var(--radius-xl);
@@ -464,7 +491,7 @@
         }
 
         /* ==========================================================================
-           10. REFERRAL NETWORK TREE TABS & STATS (RS. 400, RS. 250, 2%)
+           9. REFERRAL NETWORK TREE & DYNAMIC QR
            ========================================================================== */
         .referral-tree-card {
             background: var(--sigma-surface); border-radius: var(--radius-xl);
@@ -481,9 +508,7 @@
             padding: 8px 4px; border-radius: 10px; font-size: 0.75rem; font-weight: 800;
             color: var(--text-muted); transition: var(--transition-fast); text-align: center;
         }
-        .tree-tab-btn.active {
-            background: white; color: var(--sigma-primary); box-shadow: var(--shadow-xs);
-        }
+        .tree-tab-btn.active { background: white; color: var(--sigma-primary); box-shadow: var(--shadow-xs); }
 
         .tree-pane-content {
             background: var(--sigma-subtle); border-radius: var(--radius-lg);
@@ -494,7 +519,19 @@
         .tree-metric-col strong { font-size: 1.15rem; font-weight: 900; color: var(--text-heading); display: block; margin-top: 2px;}
 
         /* ==========================================================================
-           11. STRICT 3-BUTTON FLOATING MOBILE DOCK & ACTION CENTER
+           10. HISTORICAL TRANSACTIONS & LEADERBOARD NAVIGATION
+           ========================================================================== */
+        .workspace-panel {
+            background: var(--sigma-surface); border-radius: var(--radius-xl);
+            padding: 22px; border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 16px;
+        }
+        .panel-heading { display: flex; align-items: center; justify-content: space-between; }
+        .panel-heading h3 { font-size: 1.05rem; font-weight: 800; }
+        .panel-heading a { font-size: 0.78rem; font-weight: 700; color: var(--sigma-accent-dark); }
+
+        /* ==========================================================================
+           11. 3-BUTTON FLOATING MOBILE DOCK
            ========================================================================== */
         .mobile-dock {
             position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
@@ -530,8 +567,22 @@
             body { padding-bottom: 40px; }
         }
 
+        /* Configurable WhatsApp Button */
+        .whatsapp-float {
+            position: fixed; bottom: 110px; right: 20px;
+            width: 56px; height: 56px; background: #25D366; color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4); z-index: var(--z-whatsapp);
+            transition: var(--transition-bounce); text-decoration: none;
+        }
+        .whatsapp-float svg { width: 32px; height: 32px; fill: currentColor; }
+        .whatsapp-float:active { transform: scale(0.9); }
+        @media (min-width: 860px) {
+            .whatsapp-float { bottom: 30px; right: 30px; width: 64px; height: 64px; }
+        }
+
         /* ==========================================================================
-           12. BOTTOM SHEETS & SYSTEM MODALS (EXCHANGE, QR, ANNOUNCEMENT)
+           12. BOTTOM SHEETS & SYSTEM MODALS (EXCHANGE, QR, NOTIFICATIONS)
            ========================================================================== */
         .overlay {
             position: fixed; inset: 0; z-index: var(--z-modal);
@@ -563,7 +614,6 @@
         .sheet-close-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; }
         .sheet-body { padding: 20px 24px 32px; overflow-y: auto; flex: 1; }
 
-        /* Form Components Inside Sheet */
         .sheet-field { margin-bottom: 16px; }
         .sheet-field label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
         .sheet-input-box {
@@ -582,15 +632,19 @@
         }
         .btn-sheet-submit:active { transform: scale(0.98); }
 
-        /* QR Modal Area */
-        #qrBoxContainer {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; background: white; border-radius: var(--radius-lg); margin-bottom: 16px;
+        /* Notification Item Style */
+        .notif-feed-item {
+            padding: 12px 16px; border-radius: var(--radius-md); background: var(--sigma-subtle);
+            margin-bottom: 8px; border: 1px solid var(--sigma-muted-border);
+            display: flex; flex-direction: column; gap: 4px;
         }
+        .notif-feed-item.unread { border-left: 4px solid var(--sigma-accent); background: white; }
+        .notif-feed-top { display: flex; justify-content: space-between; align-items: center; }
+        .notif-feed-top strong { font-size: 0.85rem; color: var(--text-heading); }
+        .notif-feed-top span { font-size: 0.7rem; color: var(--text-light); }
+        .notif-feed-item p { font-size: 0.78rem; color: var(--text-body); margin: 0; }
 
-        /* ==========================================================================
-           13. HARDENED TOAST NOTIFICATION ENGINE
-           ========================================================================== */
+        /* Toast */
         .toast {
             position: fixed; top: 20px; left: 50%; transform: translate(-50%, -20px);
             background: var(--sigma-primary); color: white; padding: 12px 20px;
@@ -600,9 +654,7 @@
         }
         .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
 
-        /* ==========================================================================
-           14. ADMIN BLOCKER & SAFETY SCREEN
-           ========================================================================== */
+        /* Blocker Screen */
         #blockerScreen {
             position: fixed; inset: 0; z-index: var(--z-blocker);
             background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px);
@@ -618,7 +670,6 @@
             border-radius: var(--radius-pill); font-weight: 800; font-size: 0.95rem;
         }
 
-        /* Skeleton States */
         .skeleton { background: #E2E8F0; color: transparent !important; border-radius: 6px; animation: skel 1.4s infinite ease-in-out; }
         @keyframes skel { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -650,6 +701,7 @@
         <symbol id="icon-pie" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z"/></symbol>
         <symbol id="icon-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
         <symbol id="icon-lifebuoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/></symbol>
+        <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M6 9H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/><path d="M18 9h3a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-3"/><path d="M4 3h16v7a8 8 0 0 1-16 0V3z"/><path d="M12 15v5"/><path d="M8 21h8"/></symbol>
         <symbol id="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
         <symbol id="icon-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
         <symbol id="icon-shield-alert" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
@@ -660,7 +712,7 @@
         <svg><use href="#icon-shield-alert"/></svg>
         <h1 id="blockerTitle">Access Suspended</h1>
         <p id="blockerMsg">Security protocols have placed this session on hold. Contact administrator verification.</p>
-        <a href="https://wa.me/923000000000" class="btn-blocker-contact">Open Priority Support</a>
+        <a href="https://wa.me/923000000000" class="btn-blocker-contact" id="blockerContactBtn">Open Priority Support</a>
     </div>
 
     <!-- Main Mobile & Responsive Workspace Frame -->
@@ -674,6 +726,9 @@
             </div>
             
             <div class="header-actions">
+                <a href="leaderboard.html" class="btn-top-action" title="Leaderboard Rankings" aria-label="Leaderboard">
+                    <svg><use href="#icon-trophy"/></svg>
+                </a>
                 <button class="btn-top-action" onclick="openSheet('sheetNotif')" aria-label="Notifications">
                     <svg><use href="#icon-bell"/></svg>
                     <span class="unread-dot" id="headerNotifDot"></span>
@@ -691,7 +746,9 @@
             <section class="identity-card">
                 <div class="id-left">
                     <div class="user-avatar-wrap">
-                        <div class="user-avatar" id="uiAvatarLetter">S</div>
+                        <div class="user-avatar" id="uiAvatarWrap">
+                            <span id="uiAvatarLetter">S</span>
+                        </div>
                         <div class="avatar-tier-badge"><svg><use href="#icon-crown"/></svg></div>
                     </div>
                     <div class="id-text">
@@ -715,13 +772,13 @@
                 <span style="font-size: 0.7rem; font-weight: 800; color: #065F46;">READ &rarr;</span>
             </section>
 
-            <!-- Digital Payout Cycle Clock -->
+            <!-- Exact 24-Hour Purchase-Timestamp Countdown -->
             <section class="live-countdown-island">
                 <div class="countdown-info">
                     <div class="pulsing-yield-ring"><svg><use href="#icon-pie"/></svg></div>
                     <div>
-                        <small>Next Profit Credit</small>
-                        <strong>Active Portfolio Distribution</strong>
+                        <small id="cmsCountdownKicker">Next Profit Credit</small>
+                        <strong id="cmsCountdownPlan">No Active Cycle</strong>
                     </div>
                 </div>
                 <div class="clock-display font-mono" id="profitClockDisplay">00:00:00</div>
@@ -730,7 +787,7 @@
             <!-- Multi-Wallet Core Engine -->
             <section class="vault-main-card">
                 <div class="vault-top">
-                    <span>Total Net Worth (Combined)</span>
+                    <span id="cmsTotalBalanceLabel">Total Net Worth (Combined)</span>
                     <button class="btn-eye-toggle" id="btnEyeToggle" aria-label="Toggle Confidentiality">
                         <svg id="eyeIconElem"><use href="#icon-eye"/></svg>
                     </button>
@@ -742,14 +799,14 @@
                 </div>
 
                 <div class="vault-action-bar">
-                    <a href="deposit.html" class="btn-vault-action primary">
-                        <svg><use href="#icon-arrow-down"/></svg> Deposit
+                    <a href="deposit.html" class="btn-vault-action primary" onclick="recordAction('deposit_nav', 'Navigated to deposit interface')">
+                        <svg><use href="#icon-arrow-down"/></svg> <span id="cmsBtnDeposit">Deposit</span>
                     </a>
-                    <a href="withdraw.html" class="btn-vault-action ghost">
-                        <svg><use href="#icon-arrow-up"/></svg> Withdraw
+                    <a href="withdraw.html" class="btn-vault-action ghost" onclick="recordAction('withdraw_nav', 'Navigated to withdraw interface')">
+                        <svg><use href="#icon-arrow-up"/></svg> <span id="cmsBtnWithdraw">Withdraw</span>
                     </a>
-                    <button class="btn-vault-action ghost" onclick="openSheet('sheetExchange')">
-                        <svg><use href="#icon-exchange"/></svg> Transfer
+                    <button class="btn-vault-action ghost" onclick="openSheet('sheetExchange'); recordAction('exchange_nav', 'Opened internal transfer interface')">
+                        <svg><use href="#icon-exchange"/></svg> <span id="cmsBtnTransfer">Transfer</span>
                     </button>
                 </div>
             </section>
@@ -759,69 +816,113 @@
                 <!-- 1. Main Wallet -->
                 <div class="pocket-card p-deposit">
                     <div class="pocket-head">
-                        <span class="pocket-title">Deposit / Main</span>
+                        <span class="pocket-title" id="cmsWalletDepositTitle">Deposit / Main</span>
                         <div class="pocket-icon-wrap"><svg><use href="#icon-wallet"/></svg></div>
                     </div>
                     <div class="pocket-val font-mono" id="uiDepositWallet" data-real="0">Rs. 0.00</div>
-                    <div class="pocket-sub">Plans Buying Only</div>
+                    <div class="pocket-sub" id="cmsWalletDepositSub">Plans Buying Only</div>
                 </div>
 
                 <!-- 2. Profit Wallet -->
                 <div class="pocket-card p-profit">
                     <div class="pocket-head">
-                        <span class="pocket-title">Profit / ROI</span>
+                        <span class="pocket-title" id="cmsWalletProfitTitle">Profit / ROI</span>
                         <div class="pocket-icon-wrap"><svg><use href="#icon-arrow-up"/></svg></div>
                     </div>
                     <div class="pocket-val font-mono" id="uiProfitWallet" data-real="0">Rs. 0.00</div>
-                    <div class="pocket-sub">100% Withdrawable</div>
+                    <div class="pocket-sub" id="cmsWalletProfitSub">100% Withdrawable</div>
                 </div>
 
                 <!-- 3. Commission Wallet -->
                 <div class="pocket-card p-comm">
                     <div class="pocket-head">
-                        <span class="pocket-title">Commission</span>
+                        <span class="pocket-title" id="cmsWalletCommissionTitle">Commission</span>
                         <div class="pocket-icon-wrap"><svg><use href="#icon-crown"/></svg></div>
                     </div>
                     <div class="pocket-val font-mono" id="uiCommissionWallet" data-real="0">Rs. 0.00</div>
-                    <div class="pocket-sub">L1, L2, L3 Bonuses</div>
+                    <div class="pocket-sub" id="cmsWalletCommissionSub">L1, L2, L3 Bonuses</div>
                 </div>
             </section>
 
-            <!-- Terminal Actions Hub (6 Operational Grid Tiles) -->
-            <section class="workspace-panel">
-                <div class="panel-heading">
-                    <h3>Action Terminal</h3>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: var(--sigma-accent-dark);">ENCRYPTED</span>
+            <!-- Signature Circular Orbital Action Terminal -->
+            <section class="orbital-terminal-wrapper">
+                <div class="orbital-header">
+                    <h3 id="cmsTerminalTitle">Command Center</h3>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: var(--sigma-accent-dark);">ORBITAL MATRIX</span>
                 </div>
-                <div class="terminal-actions-grid">
-                    <a href="deposit.html" class="terminal-btn">
-                        <div class="terminal-btn-icon c-deposit"><svg><use href="#icon-arrow-down"/></svg></div>
+
+                <!-- Radial Circular Hub Interface -->
+                <div class="orbit-stage">
+                    <div class="orbit-ring"></div>
+
+                    <!-- Central Core Hub -->
+                    <div class="orbit-center-core" onclick="recordAction('core_click', 'Interacted with central orbital hub'); toast('Sigma Core Operational');">
+                        <img src="assets/logo.png" alt="Sigma Hub" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+                    </div>
+
+                    <!-- 6 Orbiting Nodes -->
+                    <!-- Node 1: Deposit -->
+                    <a href="deposit.html" class="orbit-node node-pos-1" onclick="recordAction('deposit_node', 'Clicked orbital deposit node')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-info);"><svg><use href="#icon-arrow-down"/></svg></div>
                         <span>Deposit</span>
                     </a>
-                    <a href="withdraw.html" class="terminal-btn">
-                        <div class="terminal-btn-icon c-withdraw"><svg><use href="#icon-arrow-up"/></svg></div>
+                    <!-- Node 2: Transfer -->
+                    <div class="orbit-node node-pos-2" onclick="openSheet('sheetExchange'); recordAction('exchange_node', 'Opened orbital exchange')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-exchange"/></svg></div>
+                        <span>Transfer</span>
+                    </div>
+                    <!-- Node 3: Plans -->
+                    <a href="plans.html" class="orbit-node node-pos-3" onclick="recordAction('plans_node', 'Clicked orbital plans node')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg><use href="#icon-pie"/></svg></div>
+                        <span>Plans</span>
+                    </a>
+                    <!-- Node 4: Withdraw -->
+                    <a href="withdraw.html" class="orbit-node node-pos-4" onclick="recordAction('withdraw_node', 'Clicked orbital withdraw node')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-danger);"><svg><use href="#icon-arrow-up"/></svg></div>
                         <span>Withdraw</span>
                     </a>
-                    <a href="plans.html" class="terminal-btn">
-                        <div class="terminal-btn-icon c-plans"><svg><use href="#icon-pie"/></svg></div>
-                        <span>Portfolios</span>
-                    </a>
-                    <button class="terminal-btn" onclick="openSheet('sheetExchange')">
-                        <div class="terminal-btn-icon c-exchange"><svg><use href="#icon-exchange"/></svg></div>
-                        <span>Exchange</span>
-                    </button>
-                    <a href="team.html" class="terminal-btn">
-                        <div class="terminal-btn-icon c-team"><svg><use href="#icon-users"/></svg></div>
+                    <!-- Node 5: Network -->
+                    <a href="team.html" class="orbit-node node-pos-5" onclick="recordAction('network_node', 'Clicked orbital network node')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-gold);"><svg><use href="#icon-users"/></svg></div>
                         <span>Network</span>
                     </a>
-                    <a href="support.html" class="terminal-btn">
-                        <div class="terminal-btn-icon c-support"><svg><use href="#icon-lifebuoy"/></svg></div>
+                    <!-- Node 6: Support -->
+                    <a href="support.html" class="orbit-node node-pos-6" onclick="recordAction('support_node', 'Clicked orbital support node')">
+                        <div class="orbit-node-icon" style="color: #8B5CF6;"><svg><use href="#icon-lifebuoy"/></svg></div>
+                        <span>Support</span>
+                    </a>
+                </div>
+
+                <!-- Fallback Grid for Ultra-Narrow Viewports (<360px) -->
+                <div class="orbit-linear-fallback">
+                    <a href="deposit.html" class="terminal-btn" onclick="recordAction('deposit_node', 'Clicked mobile fallback deposit')">
+                        <div class="terminal-btn-icon" style="color: var(--sigma-info);"><svg><use href="#icon-arrow-down"/></svg></div>
+                        <span>Deposit</span>
+                    </a>
+                    <button class="terminal-btn" onclick="openSheet('sheetExchange'); recordAction('exchange_node', 'Opened mobile fallback exchange')">
+                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-exchange"/></svg></div>
+                        <span>Transfer</span>
+                    </button>
+                    <a href="plans.html" class="terminal-btn" onclick="recordAction('plans_node', 'Clicked mobile fallback plans')">
+                        <div class="terminal-btn-icon" style="color: var(--sigma-primary);"><svg><use href="#icon-pie"/></svg></div>
+                        <span>Plans</span>
+                    </a>
+                    <a href="withdraw.html" class="terminal-btn" onclick="recordAction('withdraw_node', 'Clicked mobile fallback withdraw')">
+                        <div class="terminal-btn-icon" style="color: var(--sigma-danger);"><svg><use href="#icon-arrow-up"/></svg></div>
+                        <span>Withdraw</span>
+                    </a>
+                    <a href="team.html" class="terminal-btn" onclick="recordAction('network_node', 'Clicked mobile fallback network')">
+                        <div class="terminal-btn-icon" style="color: var(--sigma-gold);"><svg><use href="#icon-users"/></svg></div>
+                        <span>Network</span>
+                    </a>
+                    <a href="support.html" class="terminal-btn" onclick="recordAction('support_node', 'Clicked mobile fallback support')">
+                        <div class="terminal-btn-icon" style="color: #8B5CF6;"><svg><use href="#icon-lifebuoy"/></svg></div>
                         <span>Support</span>
                     </a>
                 </div>
             </section>
 
-            <!-- Live Stepper for Pending Transaction Lifecycle -->
+            <!-- 3-Step Stepper for Transaction Lifecycle -->
             <section class="stepper-card" id="stepperLifecycleBox" style="display: none;">
                 <div class="stepper-header">
                     <div>
@@ -851,20 +952,20 @@
                 </div>
             </section>
 
-            <!-- Interactive 3-Tier Referral Tree Explorer -->
+            <!-- Configurable Referral Network Matrix -->
             <section class="referral-tree-card">
                 <div class="tree-header">
                     <div>
-                        <h3>Referral Network Matrix</h3>
+                        <h3 id="cmsNetworkMatrixTitle">Referral Network Matrix</h3>
                         <p style="font-size: 0.78rem;">Verified Ledger Distributions</p>
                     </div>
                     <button class="btn-id-pill" onclick="openQrModal()"><svg><use href="#icon-qr"/></svg> Invite QR</button>
                 </div>
 
                 <div class="tree-tabs-nav">
-                    <button class="tree-tab-btn active" onclick="switchTreeTier(1, this)">Level 1 (Rs. 400)</button>
-                    <button class="tree-tab-btn" onclick="switchTreeTier(2, this)">Level 2 (Rs. 250)</button>
-                    <button class="tree-tab-btn" onclick="switchTreeTier(3, this)">Level 3 (2.0%)</button>
+                    <button class="tree-tab-btn active" id="btnTier1" onclick="switchTreeTier(1, this)">Level 1 (Rs. 400)</button>
+                    <button class="tree-tab-btn" id="btnTier2" onclick="switchTreeTier(2, this)">Level 2 (Rs. 250)</button>
+                    <button class="tree-tab-btn" id="btnTier3" onclick="switchTreeTier(3, this)">Level 3 (2.0%)</button>
                 </div>
 
                 <div class="tree-pane-content" id="treeTierContent">
@@ -883,14 +984,14 @@
                 </div>
             </section>
 
-            <!-- Immutable Historical Transaction Ledger Snippet -->
+            <!-- Immutable Historical Transactions Snippet -->
             <section class="workspace-panel" style="padding-bottom: 8px;">
                 <div class="panel-heading">
-                    <h3>Recent Ledger Records</h3>
+                    <h3 id="cmsRecentLedgerTitle">Recent Ledger Records</h3>
                     <a href="transactions.html">Full History &rarr;</a>
                 </div>
                 <div id="recentTransactionList">
-                    <div style="padding: 24px 0; text-align: center; color: var(--text-light); font-size: 0.85rem;">
+                    <div style="padding: 18px 0; text-align: center; color: var(--text-light); font-size: 0.85rem;">
                         Connecting to authenticated ledger...
                     </div>
                 </div>
@@ -898,27 +999,34 @@
 
         </main>
 
-        <!-- Fixed Floating 3-Button Dock (Mobile / APK Native Shell) -->
+        <!-- 3-Button Native Mobile Dock -->
         <nav class="mobile-dock" aria-label="Primary Mobile Commands">
             <a href="dash.html" class="dock-slot active" aria-current="page">
                 <svg><use href="#icon-wallet"/></svg>
                 <span>Terminal</span>
             </a>
 
-            <!-- Centralized Crest Button -->
-            <a href="plans.html" class="dock-crest-btn" aria-label="Available Portfolios">
+            <!-- Central Crest Button -->
+            <a href="plans.html" class="dock-crest-btn" aria-label="Available Portfolios" onclick="recordAction('dock_plans', 'Opened investment plans from mobile dock')">
                 <img src="assets/logo.png" alt="Sigma Crest" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
             </a>
 
             <a href="profile.html" class="dock-slot">
-                <svg><use href="#icon-menu"/></svg>
+                <div style="width: 22px; height: 22px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;" id="dockAvatarContainer">
+                    <svg><use href="#icon-user"/></svg>
+                </div>
                 <span>Account</span>
             </a>
         </nav>
     </div>
 
+    <!-- Dynamic Admin Configurable Floating WhatsApp Button -->
+    <a href="https://whatsapp.com/channel/sigma_official" target="_blank" class="whatsapp-float" id="btnFloatingWhatsApp" aria-label="WhatsApp Priority Support" onclick="recordAction('whatsapp_click', 'Clicked floating WhatsApp channel support')">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
     <!-- ==========================================================================
-         INTERNAL WALLET EXCHANGE MODAL (PROFIT/COMMISSION -> DEPOSIT WALLET)
+         INTERNAL WALLET TRANSFER MODAL
          ========================================================================== -->
     <div class="overlay" id="sheetExchange">
         <div class="sheet">
@@ -929,7 +1037,7 @@
             </div>
             <div class="sheet-body">
                 <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
-                    Transfer your earned profits or referral bonuses to your <strong>Deposit Wallet</strong> instantly to purchase new investment plans without external gateway fees.
+                    Transfer your earned profit or referral bonus into your <strong>Deposit Wallet</strong> instantly to purchase plans without external fee charges.
                 </p>
 
                 <div class="sheet-field">
@@ -964,20 +1072,20 @@
     </div>
 
     <!-- ==========================================================================
-         REFERRAL QR SCAN MODAL
+         INVITE QR MODAL
          ========================================================================== -->
     <div class="overlay" id="sheetQr">
         <div class="sheet" style="max-width: 440px;">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <h3>Camera Invite QR</h3>
+                <h3>Personal Invite QR</h3>
                 <button class="sheet-close-btn" onclick="closeSheet('sheetQr')"><svg><use href="#icon-x"/></svg></button>
             </div>
             <div class="sheet-body" style="text-align: center;">
                 <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
-                    Have your invitee scan this code directly with their smartphone camera to auto-bind your referral incentives.
+                    Scan with any camera app to bind your referral tree automatically.
                 </p>
-                <div id="qrBoxContainer"></div>
+                <div id="qrBoxContainer" style="display:flex; justify-content:center; padding: 16px; background: white; border-radius: 16px; margin-bottom: 16px;"></div>
                 <button class="btn-sheet-submit" onclick="copyReferralLink()">Copy Text Link Instead</button>
             </div>
         </div>
@@ -1002,93 +1110,100 @@
     </div>
 
     <!-- ==========================================================================
-         NOTIFICATION CENTER BOTTOM SHEET
+         PERSISTENT SYNCHRONIZED NOTIFICATION CENTER
          ========================================================================== -->
     <div class="overlay" id="sheetNotif">
         <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <h3>System Notifications</h3>
+                <h3>Activity & Notification Log</h3>
                 <button class="sheet-close-btn" onclick="closeSheet('sheetNotif')"><svg><use href="#icon-x"/></svg></button>
             </div>
-            <div class="sheet-body" id="notifListContainer" style="padding: 12px 24px;">
-                <p style="text-align: center; color: var(--text-light); padding: 20px 0;">No unread transmissions.</p>
+            <div class="sheet-body" id="notifListContainer" style="padding: 12px 20px;">
+                <p style="text-align: center; color: var(--text-light); padding: 20px 0;">No active notifications recorded.</p>
             </div>
         </div>
     </div>
 
     <!-- ==========================================================================
-         QUICK MENU SHEET
+         QUICK TERMINAL MENU
          ========================================================================== -->
     <div class="overlay" id="sheetMenu">
         <div class="sheet" style="max-width: 480px;">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <h3>Navigation Overview</h3>
+                <h3>Terminal Navigation</h3>
                 <button class="sheet-close-btn" onclick="closeSheet('sheetMenu')"><svg><use href="#icon-x"/></svg></button>
             </div>
             <div class="sheet-body">
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="profile.html" class="terminal-btn" style="flex-direction: row; justify-content: flex-start; padding: 12px 16px;">
-                        <svg style="width: 20px; height: 20px;"><use href="#icon-crown"/></svg>
-                        <span style="font-size: 0.9rem;">Identity & Security Credentials</span>
+                    <a href="leaderboard.html" class="btn-vault-action ghost" style="color: var(--text-heading); justify-content: flex-start; padding: 12px 16px; border: 1px solid var(--sigma-muted-border); background: var(--sigma-subtle);">
+                        <svg style="width: 18px; height: 18px; color: var(--sigma-gold);"><use href="#icon-trophy"/></svg>
+                        <span>Top Investor Leaderboard</span>
                     </a>
-                    <a href="transactions.html" class="terminal-btn" style="flex-direction: row; justify-content: flex-start; padding: 12px 16px;">
-                        <svg style="width: 20px; height: 20px;"><use href="#icon-wallet"/></svg>
-                        <span style="font-size: 0.9rem;">Full Immutable Ledger Records</span>
+                    <a href="profile.html" class="btn-vault-action ghost" style="color: var(--text-heading); justify-content: flex-start; padding: 12px 16px; border: 1px solid var(--sigma-muted-border); background: var(--sigma-subtle);">
+                        <svg style="width: 18px; height: 18px;"><use href="#icon-crown"/></svg>
+                        <span>Account Profile & KYC</span>
                     </a>
-                    <a href="support.html" class="terminal-btn" style="flex-direction: row; justify-content: flex-start; padding: 12px 16px;">
-                        <svg style="width: 20px; height: 20px;"><use href="#icon-lifebuoy"/></svg>
-                        <span style="font-size: 0.9rem;">Help Desk & Support Desk</span>
+                    <a href="transactions.html" class="btn-vault-action ghost" style="color: var(--text-heading); justify-content: flex-start; padding: 12px 16px; border: 1px solid var(--sigma-muted-border); background: var(--sigma-subtle);">
+                        <svg style="width: 18px; height: 18px;"><use href="#icon-wallet"/></svg>
+                        <span>Full Immutable Ledger</span>
                     </a>
-                    <button onclick="terminateSession()" class="terminal-btn" style="flex-direction: row; justify-content: flex-start; padding: 12px 16px; color: var(--sigma-danger); border-color: var(--sigma-danger-border);">
-                        <svg style="width: 20px; height: 20px; stroke: var(--sigma-danger);"><use href="#icon-shield-alert"/></svg>
-                        <span style="font-size: 0.9rem; color: var(--sigma-danger);">Terminate Authenticated Session</span>
+                    <a href="support.html" class="btn-vault-action ghost" style="color: var(--text-heading); justify-content: flex-start; padding: 12px 16px; border: 1px solid var(--sigma-muted-border); background: var(--sigma-subtle);">
+                        <svg style="width: 18px; height: 18px;"><use href="#icon-lifebuoy"/></svg>
+                        <span>Support Desk & Tickets</span>
+                    </a>
+                    <button onclick="terminateSession()" class="btn-vault-action ghost" style="justify-content: flex-start; padding: 12px 16px; color: var(--sigma-danger); border: 1px solid var(--sigma-danger-border); background: var(--sigma-danger-soft);">
+                        <svg style="width: 18px; height: 18px; stroke: var(--sigma-danger);"><use href="#icon-shield-alert"/></svg>
+                        <span>Terminate Authenticated Session</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Standard Feedback Toast -->
+    <!-- Toast Component -->
     <div class="toast" id="toastBox">
         <svg style="width:16px;height:16px;stroke:var(--sigma-accent);fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg>
-        <span id="toastMsg">Transaction verified</span>
+        <span id="toastMsg">Verified</span>
     </div>
 
     <!-- ==========================================================================
-         15. INTEGRATED APPLICATION LOGIC & REAL-TIME ARCHITECTURE
-         ========================================================================== */
-    -->
+         13. JAVASCRIPT ARCHITECTURE & FIREBASE LOGIC
+         ========================================================================== -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- A. Core State Variables ---
+            // --- State Variables ---
             let authUser = null;
             let userProfile = null;
             let balanceMasked = sessionStorage.getItem('sigma_mask_balance') === 'true';
+            let clockInterval = null;
+            
+            // Dynamic Referral Structure State (Fetched from Firestore, default fallback values)
+            let referralRates = { l1: 400, l2: 250, l3_percent: 2.0 };
             let treeData = {
                 l1: { members: 0, active: 0, earnings: 0 },
                 l2: { members: 0, active: 0, earnings: 0 },
                 l3: { members: 0, active: 0, earnings: 0 }
             };
 
-            // Haptic trigger helper (Safe check for browser support)
-            const hapticTouch = (ms = 40) => {
+            // Haptic Touch Feedback
+            const hapticTouch = (ms = 35) => {
                 if ('vibrate' in navigator) navigator.vibrate(ms);
             };
 
-            // Toast helper
+            // Notification / Toast Dispatcher
             const toast = (msg) => {
                 const box = document.getElementById('toastBox');
                 document.getElementById('toastMsg').textContent = msg;
                 box.classList.add('show');
-                hapticTouch(30);
-                setTimeout(() => box.classList.remove('show'), 2600);
+                hapticTouch(25);
+                setTimeout(() => box.classList.remove('show'), 2400);
             };
 
             // Number Animation (Smooth Count-Up)
-            const animateValue = (element, start, end, duration = 650) => {
+            const animateValue = (element, start, end, duration = 600) => {
                 if (balanceMasked) {
                     element.textContent = "••••••";
                     return;
@@ -1105,7 +1220,7 @@
                 requestAnimationFrame(step);
             };
 
-            // Balance Confidentiality Eye Toggle
+            // Balance Confidentiality Controller
             const btnEyeToggle = document.getElementById('btnEyeToggle');
             const eyeIconElem = document.getElementById('eyeIconElem');
             
@@ -1124,7 +1239,8 @@
                 } else {
                     eyeIconElem.innerHTML = '<use href="#icon-eye"/>';
                     if (userProfile) {
-                        animateValue(netElem, 0, (userProfile.depositBalance || 0) + (userProfile.profitBalance || 0) + (userProfile.commissionBalance || 0));
+                        const total = (userProfile.depositBalance || 0) + (userProfile.profitBalance || 0) + (userProfile.commissionBalance || 0);
+                        animateValue(netElem, 0, total);
                         depElem.textContent = "Rs. " + (userProfile.depositBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
                         proElem.textContent = "Rs. " + (userProfile.profitBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
                         comElem.textContent = "Rs. " + (userProfile.commissionBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
@@ -1135,11 +1251,11 @@
             btnEyeToggle.addEventListener('click', () => {
                 balanceMasked = !balanceMasked;
                 sessionStorage.setItem('sigma_mask_balance', balanceMasked ? 'true' : 'false');
-                hapticTouch(40);
+                hapticTouch(35);
                 updateBalanceVisibility();
             });
 
-            // --- B. Pull to Refresh Detection ---
+            // Pull To Refresh Listener
             let touchStartY = 0;
             const ptrSpinner = document.getElementById('ptrSpinner');
             window.addEventListener('touchstart', e => {
@@ -1148,50 +1264,29 @@
 
             window.addEventListener('touchmove', e => {
                 const touchY = e.touches[0].clientY;
-                if (window.scrollY === 0 && touchY - touchStartY > 80) {
-                    ptrSpinner.classList.add('active');
-                }
+                if (window.scrollY === 0 && touchY - touchStartY > 80) ptrSpinner.classList.add('active');
             }, { passive: true });
 
             window.addEventListener('touchend', () => {
                 if (ptrSpinner.classList.contains('active')) {
-                    hapticTouch(60);
-                    setTimeout(() => location.reload(), 400);
+                    hapticTouch(50);
+                    setTimeout(() => location.reload(), 300);
                 }
             });
 
-            // --- C. Offline Connectivity Monitor ---
+            // Network Connectivity Monitor
             const offlineBanner = document.getElementById('networkOfflineBanner');
             window.addEventListener('offline', () => { offlineBanner.style.display = 'block'; });
             window.addEventListener('online', () => { offlineBanner.style.display = 'none'; toast('Back online'); });
 
-            // --- D. Profit Distribution Digital Countdown ---
-            const clockDisplay = document.getElementById('profitClockDisplay');
-            const initAuthoritativeClock = () => {
-                setInterval(() => {
-                    const now = new Date();
-                    // Scheduled daily payout anchor (Midnight PKT / 19:00 UTC)
-                    const target = new Date();
-                    target.setUTCHours(19, 0, 0, 0);
-                    if (now > target) target.setUTCDate(target.getUTCDate() + 1);
-
-                    const diff = target - now;
-                    const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
-                    const minutes = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
-                    const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
-                    clockDisplay.textContent = `${hours}:${minutes}:${seconds}`;
-                }, 1000);
-            };
-            initAuthoritativeClock();
-
-            // --- E. Sheet & Modal Controllers ---
+            // Sheet & Modal Helpers
             window.openSheet = (id) => {
                 document.querySelectorAll('.overlay.show').forEach(el => el.classList.remove('show'));
                 const el = document.getElementById(id);
                 if (el) {
                     el.classList.add('show');
                     document.body.classList.add('locked');
-                    hapticTouch(30);
+                    hapticTouch(25);
                 }
             };
 
@@ -1209,19 +1304,20 @@
                 });
             });
 
-            // Referral Link Action
+            // Copy Referral Link Handler
             window.copyReferralLink = async () => {
                 const link = document.getElementById('rawReferralUrl').value;
                 if (!link) return;
                 try {
                     await navigator.clipboard.writeText(link);
-                    toast('Invite link copied!');
+                    toast('Unique referral link copied!');
+                    recordAction('copy_referral', 'Copied personal referral URL');
                 } catch(e) {
-                    toast('Copied to clipboard');
+                    toast('Link ready in clipboard');
                 }
             };
 
-            // QR Code Generation
+            // Dynamic QR Code Generator
             let qrcodeInstance = null;
             window.openQrModal = () => {
                 const link = document.getElementById('rawReferralUrl').value;
@@ -1230,17 +1326,18 @@
                 if (window.QRCode) {
                     qrcodeInstance = new QRCode(container, {
                         text: link,
-                        width: 180,
-                        height: 180,
+                        width: 170,
+                        height: 170,
                         colorDark: "#0B132B",
                         colorLight: "#FFFFFF",
                         correctLevel: QRCode.CorrectLevel.M
                     });
                 }
                 openSheet('sheetQr');
+                recordAction('open_qr', 'Generated invite QR code');
             };
 
-            // Switch Tree Tiers
+            // Referral Tree Tier Switcher
             window.switchTreeTier = (tier, btnElem) => {
                 document.querySelectorAll('.tree-tab-btn').forEach(b => b.classList.remove('active'));
                 btnElem.classList.add('active');
@@ -1252,20 +1349,130 @@
                 document.getElementById('tierCommissionEarned').textContent = "Rs. " + data.earnings.toLocaleString('en-PK');
             };
 
-            // Open Announcement Modal
+            // Modal Display for Announcements
             window.openAnnouncementModal = () => {
                 openSheet('sheetAnnouncement');
+                recordAction('view_announcement', 'Viewed system bulletin');
             };
 
-            // Terminate Session
+            // Terminate Session Helper
             window.terminateSession = async () => {
                 if (typeof firebase !== 'undefined' && firebase.auth()) {
+                    await recordAction('logout', 'Signed out from terminal');
                     await firebase.auth().signOut();
                 }
                 window.location.href = 'login.html';
             };
 
-            // --- F. Core Firebase Authenticated Listeners (Scoped to Authorized UID) ---
+            // ==========================================================================
+            // 14. AUTOMATIC CROSS-DEVICE ACTIVITY & NOTIFICATION LOGGER
+            // ==========================================================================
+            window.recordAction = async (actionType, description) => {
+                if (!authUser) return;
+                try {
+                    const db = firebase.firestore();
+                    // User-specific persistent notification record
+                    await db.collection('users').doc(authUser.uid).collection('notifications').add({
+                        type: actionType,
+                        title: actionType.replace('_', ' ').toUpperCase(),
+                        body: description,
+                        read: false,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        device: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
+                    });
+                } catch(e) {
+                    console.warn("Could not log action:", e);
+                }
+            };
+
+            // ==========================================================================
+            // 15. EXACT 24-HOUR SUBSCRIPTION TIMESTAMP COUNTDOWN ENGINE
+            // ==========================================================================
+            const startExact24hTimer = (subscribedTimestamp) => {
+                if (clockInterval) clearInterval(clockInterval);
+                const clockDisplay = document.getElementById('profitClockDisplay');
+
+                if (!subscribedTimestamp) {
+                    clockDisplay.textContent = "00:00:00";
+                    document.getElementById('cmsCountdownPlan').textContent = "No Active Cycle";
+                    return;
+                }
+
+                // Subscribed time in milliseconds
+                const startTimeMs = (subscribedTimestamp.seconds ? subscribedTimestamp.seconds * 1000 : new Date(subscribedTimestamp).getTime());
+                const cycleDurationMs = 24 * 60 * 60 * 1000; // 24-hour exact interval
+
+                clockInterval = setInterval(() => {
+                    const nowMs = Date.now();
+                    const elapsedMs = nowMs - startTimeMs;
+                    
+                    // Remainder of current 24-hour cycle
+                    const remainingInCycleMs = cycleDurationMs - (elapsedMs % cycleDurationMs);
+
+                    const hours = String(Math.floor((remainingInCycleMs / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+                    const minutes = String(Math.floor((remainingInCycleMs / (1000 * 60)) % 60)).padStart(2, '0');
+                    const seconds = String(Math.floor((remainingInCycleMs / 1000) % 60)).padStart(2, '0');
+
+                    clockDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+                }, 1000);
+            };
+
+            // ==========================================================================
+            // 16. CENTRALIZED CMS & DYNAMIC LABELS LISTENER
+            // ==========================================================================
+            const initDynamicCmsLabels = (db) => {
+                db.collection('settings').doc('cms_dashboard').onSnapshot(doc => {
+                    if (!doc.exists) return;
+                    const cms = doc.data();
+
+                    // Dynamic text injection with safe assignment
+                    if (cms.totalBalanceLabel) document.getElementById('cmsTotalBalanceLabel').textContent = cms.totalBalanceLabel;
+                    if (cms.btnDeposit) document.getElementById('cmsBtnDeposit').textContent = cms.btnDeposit;
+                    if (cms.btnWithdraw) document.getElementById('cmsBtnWithdraw').textContent = cms.btnWithdraw;
+                    if (cms.btnTransfer) document.getElementById('cmsBtnTransfer').textContent = cms.btnTransfer;
+                    if (cms.walletDepositTitle) document.getElementById('cmsWalletDepositTitle').textContent = cms.walletDepositTitle;
+                    if (cms.walletDepositSub) document.getElementById('cmsWalletDepositSub').textContent = cms.walletDepositSub;
+                    if (cms.walletProfitTitle) document.getElementById('cmsWalletProfitTitle').textContent = cms.walletProfitTitle;
+                    if (cms.walletProfitSub) document.getElementById('cmsWalletProfitSub').textContent = cms.walletProfitSub;
+                    if (cms.walletCommissionTitle) document.getElementById('cmsWalletCommissionTitle').textContent = cms.walletCommissionTitle;
+                    if (cms.walletCommissionSub) document.getElementById('cmsWalletCommissionSub').textContent = cms.walletCommissionSub;
+                    if (cms.terminalTitle) document.getElementById('cmsTerminalTitle').textContent = cms.terminalTitle;
+                    if (cms.networkMatrixTitle) document.getElementById('cmsNetworkMatrixTitle').textContent = cms.networkMatrixTitle;
+                    if (cms.recentLedgerTitle) document.getElementById('cmsRecentLedgerTitle').textContent = cms.recentLedgerTitle;
+                    if (cms.countdownKicker) document.getElementById('cmsCountdownKicker').textContent = cms.countdownKicker;
+                });
+
+                // Dynamic Referral Commission Tiers Configuration
+                db.collection('settings').doc('referrals').onSnapshot(doc => {
+                    if (doc.exists) {
+                        const r = doc.data();
+                        if (r.l1_amount) referralRates.l1 = Number(r.l1_amount);
+                        if (r.l2_amount) referralRates.l2 = Number(r.l2_amount);
+                        if (r.l3_percent) referralRates.l3_percent = Number(r.l3_percent);
+                    }
+                    document.getElementById('btnTier1').textContent = `Level 1 (Rs. ${referralRates.l1})`;
+                    document.getElementById('btnTier2').textContent = `Level 2 (Rs. ${referralRates.l2})`;
+                    document.getElementById('btnTier3').textContent = `Level 3 (${referralRates.l3_percent}%)`;
+                });
+
+                // Floating WhatsApp Support Configuration
+                db.collection('settings').doc('support').onSnapshot(doc => {
+                    const waBtn = document.getElementById('btnFloatingWhatsApp');
+                    if (doc.exists) {
+                        const s = doc.data();
+                        if (s.whatsapp_enabled === false) {
+                            waBtn.style.display = 'none';
+                        } else {
+                            waBtn.style.display = 'flex';
+                            if (s.whatsapp_url) waBtn.href = s.whatsapp_url;
+                        }
+                    }
+                });
+            };
+
+            // ==========================================================================
+            // 17. FIREBASE AUTH & REAL-TIME DATA OBSERVER
+            // ==========================================================================
             const initDashboard = () => {
                 if (typeof firebase === 'undefined' || !firebase.apps.length) {
                     console.error("Firebase runtime missing.");
@@ -1275,9 +1482,10 @@
                 const auth = firebase.auth();
                 const db = firebase.firestore();
 
+                initDynamicCmsLabels(db);
+
                 auth.onAuthStateChanged(user => {
                     if (!user) {
-                        // Strict zero-trust redirect
                         window.location.replace('login.html');
                         return;
                     }
@@ -1285,12 +1493,29 @@
                     authUser = user;
                     const uid = user.uid;
 
-                    // 1. Establish Referral Endpoint
-                    const invUrl = `https://sigmaaz.vercel.app/reg.html?ref=${uid.substring(0, 7).toUpperCase()}`;
+                    // A. Real Authenticated Profile & Avatar Handling
+                    const avatarWrap = document.getElementById('uiAvatarWrap');
+                    const dockAvatar = document.getElementById('dockAvatarContainer');
+
+                    if (user.photoURL) {
+                        const imgTag = `<img src="${user.photoURL}" alt="User Avatar" referrerpolicy="no-referrer">`;
+                        avatarWrap.innerHTML = imgTag;
+                        dockAvatar.innerHTML = imgTag;
+                    }
+
+                    // B. Unique, Non-Guessable Referral Endpoint
+                    const uniqueSlug = user.displayName ? user.displayName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 5) : uid.substring(0, 5).toUpperCase();
+                    const invUrl = `https://sigmaaz.vercel.app/reg.html?ref=SIGMA-${uniqueSlug}-${uid.substring(0, 4).toUpperCase()}`;
                     document.getElementById('rawReferralUrl').value = invUrl;
                     document.getElementById('uiAccountUID').textContent = `UID: SIGMA-${uid.substring(0, 5).toUpperCase()}`;
 
-                    // 2. Real-time User Profile & Multi-Wallet Listener
+                    // Log Successful Login / Initialization Action once per session
+                    if (!sessionStorage.getItem('sigma_session_logged')) {
+                        recordAction('login', `Session authenticated from ${navigator.platform}`);
+                        sessionStorage.setItem('sigma_session_logged', 'true');
+                    }
+
+                    // C. Real-time User Profile & Multi-Wallet Listener
                     db.collection('users').doc(uid).onSnapshot(doc => {
                         if (!doc.exists) return;
                         userProfile = doc.data();
@@ -1303,10 +1528,12 @@
                             return;
                         }
 
-                        // Populate Profile Details
-                        const name = userProfile.username || userProfile.fullName || "Member";
+                        // Populate User Display Name
+                        const name = userProfile.username || userProfile.fullName || user.displayName || "Investor";
                         document.getElementById('uiDisplayName').textContent = name;
-                        document.getElementById('uiAvatarLetter').textContent = name.charAt(0).toUpperCase();
+                        if (!user.photoURL) {
+                            document.getElementById('uiAvatarLetter').textContent = name.charAt(0).toUpperCase();
+                        }
 
                         // Determine VIP Tier Retention Badge
                         const refCount = userProfile.referralsCount || 0;
@@ -1326,16 +1553,72 @@
                         // Remove Skeletons
                         document.querySelectorAll('.skeleton').forEach(sk => sk.classList.remove('skeleton'));
 
-                        // Reflect Real Wallet Balances
+                        // Reflect Real Multi-Wallet Balances
                         updateBalanceVisibility();
 
-                    }, err => {
-                        console.error("Profile authorization error:", err);
+                    }, err => console.error("Profile access error:", err));
+
+                    // D. Active Plan Timing (Exact Purchase Timestamp Cycle)
+                    db.collection('users').doc(uid).collection('active_plans')
+                      .where('status', '==', 'active')
+                      .limit(1)
+                      .onSnapshot(planSnap => {
+                        if (!planSnap.empty) {
+                            const activePlan = planSnap.docs[0].data();
+                            document.getElementById('cmsCountdownPlan').textContent = activePlan.name || "Portfolio Cycle";
+                            startExact24hTimer(activePlan.subscribedAt);
+                        } else {
+                            startExact24hTimer(null);
+                        }
                     });
 
-                    // 3. Recent Transactions Ledger & Active Status Stepper (Sub-collection Query: users/{uid}/transactions)
+                    // E. Cross-Device Synchronized Notifications Listener
+                    db.collection('users').doc(uid).collection('notifications')
+                      .orderBy('timestamp', 'desc')
+                      .limit(15)
+                      .onSnapshot(notifSnap => {
+                        const notifContainer = document.getElementById('notifListContainer');
+                        const dot = document.getElementById('headerNotifDot');
+
+                        if (notifSnap.empty) {
+                            notifContainer.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px 0;">No active notifications recorded.</p>';
+                            dot.classList.remove('active');
+                            return;
+                        }
+
+                        notifContainer.innerHTML = '';
+                        let hasUnread = false;
+
+                        notifSnap.forEach(doc => {
+                            const n = doc.data();
+                            if (!n.read) hasUnread = true;
+                            
+                            const item = document.createElement('div');
+                            item.className = `notif-feed-item ${n.read ? '' : 'unread'}`;
+                            const timeStr = n.timestamp ? new Date(n.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent';
+                            
+                            item.innerHTML = `
+                                <div class="notif-feed-top">
+                                    <strong>${n.title}</strong>
+                                    <span>${timeStr}</span>
+                                </div>
+                                <p>${n.body}</p>
+                            `;
+                            // Tap to mark as read
+                            item.addEventListener('click', () => {
+                                doc.ref.update({ read: true });
+                            });
+                            notifContainer.appendChild(item);
+                        });
+
+                        if (hasUnread) dot.classList.add('active');
+                        else dot.classList.remove('active');
+                    });
+
+                    // F. Recent Transactions Ledger & Active Status Stepper
                     db.collection('users').doc(uid).collection('transactions')
-                      .limit(6).onSnapshot(snapshot => {
+                      .orderBy('createdAt', 'desc')
+                      .limit(5).onSnapshot(snapshot => {
                         const listElem = document.getElementById('recentTransactionList');
                         const stepperBox = document.getElementById('stepperLifecycleBox');
 
@@ -1352,11 +1635,10 @@
                             const tx = doc.data();
                             const isPositive = tx.type === 'deposit' || tx.type === 'commission' || tx.type === 'welcome_bonus';
 
-                            // Populate Stepper using the latest transaction
                             if (idx === 0 && (tx.status === 'pending' || tx.status === 'rejected')) {
                                 pendingFound = true;
                                 stepperBox.style.display = 'block';
-                                document.getElementById('stepperTrxType').textContent = tx.type.replace('_', ' ');
+                                document.getElementById('stepperTrxType').textContent = (tx.type || 'Transaction').replace('_', ' ');
                                 document.getElementById('stepperTrxAmount').textContent = "Rs. " + Number(tx.amount || 0).toLocaleString('en-PK');
                                 document.getElementById('stepperReference').textContent = tx.referenceId || doc.id.substring(0, 8);
 
@@ -1380,13 +1662,12 @@
                                 }
                             }
 
-                            // Render Transaction Row
                             const row = document.createElement('div');
                             row.style.cssText = "display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--sigma-muted-border);";
                             row.innerHTML = `
                                 <div>
                                     <strong style="font-size: 0.88rem; color: var(--text-heading);">${tx.description || tx.type}</strong>
-                                    <small style="display: block; font-size: 0.72rem; color: var(--text-muted);">${tx.status.toUpperCase()} &bull; ${tx.referenceId || ''}</small>
+                                    <small style="display: block; font-size: 0.72rem; color: var(--text-muted);">${(tx.status || 'Verified').toUpperCase()} &bull; ${tx.referenceId || ''}</small>
                                 </div>
                                 <div style="text-align: right;">
                                     <strong class="font-mono" style="font-size: 0.95rem; color: ${isPositive ? 'var(--sigma-accent-dark)' : 'var(--text-heading)'};">
@@ -1398,12 +1679,10 @@
                         });
 
                         if (!pendingFound) stepperBox.style.display = 'none';
-                    }, err => {
-                        console.error("Ledger access exception:", err);
                     });
 
-                    // 4. Team Matrix Aggregation (Scoring 400 Rs, 250 Rs, and 2%)
-                    db.collection('users').where('referredBy', '==', uid.substring(0, 7).toUpperCase())
+                    // G. Referral Matrix Aggregation
+                    db.collection('users').where('referredBy', '==', uid)
                       .onSnapshot(querySnapshot => {
                         const count = querySnapshot.size;
                         treeData.l1.members = count;
@@ -1411,20 +1690,18 @@
                         querySnapshot.forEach(doc => {
                             if (doc.data().activePlans > 0) treeData.l1.active++;
                         });
-                        treeData.l1.earnings = count * 400; // Rs. 400 per Level 1 Verified
+                        treeData.l1.earnings = count * referralRates.l1;
                         
-                        // Default view to Level 1
                         document.getElementById('tierMembersCount').textContent = treeData.l1.members;
                         document.getElementById('tierActiveCount').textContent = treeData.l1.active;
                         document.getElementById('tierCommissionEarned').textContent = "Rs. " + treeData.l1.earnings.toLocaleString('en-PK');
                     });
 
-                    // 5. Global Admin Maintenance & System Announcement Observer
+                    // H. Global System Maintenance Check
                     db.collection('settings').doc('system').onSnapshot(sysDoc => {
                         if (!sysDoc.exists) return;
                         const sys = sysDoc.data();
 
-                        // Maintenance mode enforcement
                         const blocker = document.getElementById('blockerScreen');
                         if (sys.maintenance === true) {
                             document.body.classList.add('locked');
@@ -1436,7 +1713,6 @@
                             document.body.classList.remove('locked');
                         }
 
-                        // Broadcast Announcement Pill
                         if (sys.activeAnnouncement) {
                             const pill = document.getElementById('announcementPill');
                             pill.style.display = 'flex';
@@ -1445,22 +1721,12 @@
                             document.getElementById('announcementModalBody').textContent = sys.activeAnnouncement.body || "No additional parameters provided.";
                         }
                     });
-
-                    // 6. User Specific Notification Counter
-                    db.collection('users').doc(uid).collection('notifications')
-                      .where('read', '==', false).onSnapshot(notifSnap => {
-                        const dot = document.getElementById('headerNotifDot');
-                        if (!notifSnap.empty) {
-                            dot.classList.add('active');
-                        } else {
-                            dot.classList.remove('active');
-                        }
-                    });
-
                 });
             };
 
-            // --- G. Internal Transfer Execution Engine ---
+            // ==========================================================================
+            // 18. INTERNAL WALLET EXCHANGE EXECUTION
+            // ==========================================================================
             window.executeInternalTransfer = async () => {
                 if (!authUser || !userProfile) return;
                 const src = document.getElementById('transferSourceWallet').value;
@@ -1489,7 +1755,6 @@
                     const db = firebase.firestore();
                     const userRef = db.collection('users').doc(authUser.uid);
 
-                    // Atomic Firestore Transaction Execution
                     await db.runTransaction(async (transaction) => {
                         const sfDoc = await transaction.get(userRef);
                         if (!sfDoc.exists) throw "User record absent.";
@@ -1499,7 +1764,6 @@
 
                         if (amt > currentSource) throw "Balance mismatch.";
 
-                        // Deduct from Source and Credit to Deposit Wallet
                         const updateData = {
                             depositBalance: currentDeposit + amt
                         };
@@ -1507,7 +1771,6 @@
 
                         transaction.update(userRef, updateData);
 
-                        // Record Sub-collection Audit Entry
                         const txRef = userRef.collection('transactions').doc();
                         transaction.set(txRef, {
                             type: 'wallet_transfer',
@@ -1521,6 +1784,7 @@
                         });
                     });
 
+                    await recordAction('exchange_complete', `Transferred Rs. ${amt} from ${src} to Deposit wallet`);
                     toast("Transfer completed successfully!");
                     amtInput.value = '';
                     closeSheet('sheetExchange');
@@ -1534,7 +1798,7 @@
                 }
             };
 
-            // Initialize Security Protocols
+            // Run Initialization
             initDashboard();
         });
     </script>
