@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sigma | User Dashboard & Financial Terminal</title>
-
+    
     <!-- SEO, Privacy & PWA Meta (Noindex for Authenticated Workspace) -->
     <meta name="description" content="Authorized member workspace for Sigma automated portfolios, real-time PKR wallet management, and referral network monitoring.">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
@@ -15,6 +14,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sigma Terminal">
     <link rel="canonical" href="https://sigmaaz.vercel.app/dash.html">
+
+    <title>Sigma | Investor Dashboard</title>
 
     <!-- Favicon & Touch Icons -->
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
@@ -28,7 +29,7 @@
     <!-- QR Code Generator Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <!-- Firebase SDKs (Compat Architecture) -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -47,6 +48,7 @@
                 measurementId: "G-REGQKRZHX7"
             };
             firebase.initializeApp(fallbackConfig);
+            console.log("Sigma Firebase fallback verified.");
         }
     </script>
 
@@ -69,6 +71,7 @@
             /* Financial Indicators */
             --sigma-accent: #10B981;
             --sigma-accent-dark: #059669;
+            --sigma-accent-light: #34D399;
             --sigma-accent-soft: #ECFDF5;
             --sigma-accent-border: #A7F3D0;
 
@@ -88,12 +91,14 @@
             --sigma-info-border: #BFDBFE;
             
             --sigma-purple: #8B5CF6;
+            --sigma-purple-soft: #F5F3FF;
 
             /* Text Hierarchies */
             --text-heading: #0F172A;
             --text-body: #334155;
             --text-muted: #64748B;
             --text-light: #94A3B8;
+            --text-inverse: #FFFFFF;
 
             /* Radii & Depth Tokens */
             --radius-pill: 9999px;
@@ -108,7 +113,7 @@
             --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
             --shadow-island: 0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04);
             --shadow-float: 0 25px 50px -12px rgba(15, 23, 42, 0.18);
-            --shadow-glow: 0 0 30px rgba(11, 19, 43, 0.3);
+            --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.2);
 
             /* Z-Indices */
             --z-dock: 1000;
@@ -122,7 +127,7 @@
 
             --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-smooth: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-bounce: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             --safe-area-bottom: env(safe-area-inset-bottom, 16px);
         }
 
@@ -141,12 +146,12 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background-color: var(--sigma-subtle);
+            background-color: var(--sigma-surface-alt);
             color: var(--text-body);
             line-height: 1.5;
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: calc(100px + var(--safe-area-bottom));
+            padding-bottom: calc(100px + var(--safe-area-bottom)); /* Leave space for dock */
             background-image: 
                 radial-gradient(circle at 15% 0%, rgba(16, 185, 129, 0.035) 0%, transparent 45vw),
                 radial-gradient(circle at 85% 100%, rgba(59, 130, 246, 0.025) 0%, transparent 45vw);
@@ -161,12 +166,15 @@
         button, input, select { font-family: inherit; border: none; outline: none; background: none; }
         button { cursor: pointer; user-select: none; }
         img { max-width: 100%; display: block; }
+        ul { list-style: none; }
 
         h1, h2, h3, h4, h5 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
         p { color: var(--text-muted); }
 
         .font-mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
         .text-accent { color: var(--sigma-accent-dark); }
+        .text-gold { color: var(--sigma-gold-dark); }
+        .text-danger { color: var(--sigma-danger-dark); }
 
         /* Offline Bar & Pull-To-Refresh */
         #networkOfflineBanner {
@@ -185,10 +193,10 @@
             color: var(--sigma-accent); z-index: var(--z-header); transition: top 0.2s ease;
         }
         .ptr-indicator.active { top: 20px; }
-        .ptr-indicator svg { width: 22px; height: 22px; animation: spin 0.8s linear infinite; }
+        .ptr-indicator svg { width: 20px; height: 20px; animation: spin 0.8s linear infinite; }
 
         /* ==========================================================================
-           3. SINGLE-ROW ISLAND HEADER
+           3. SINGLE-ROW ISLAND HEADER (Safe & Responsive)
            ========================================================================== */
         .app-container {
             width: 100%; max-width: 860px; margin: 0 auto;
@@ -197,10 +205,10 @@
 
         .island-topbar {
             position: sticky; top: 12px; margin: 0 16px 20px; height: 68px;
-            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(24px);
+            background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px); border-radius: var(--radius-pill);
             box-shadow: var(--shadow-subtle); display: flex; align-items: center;
-            justify-content: space-between; padding: 0 14px 0 20px; z-index: var(--z-header);
+            justify-content: space-between; padding: 0 12px 0 18px; z-index: var(--z-header);
             border: 1px solid rgba(255, 255, 255, 0.85); flex-wrap: nowrap; gap: 8px;
             transition: var(--transition-smooth);
         }
@@ -208,167 +216,140 @@
             top: 8px; box-shadow: var(--shadow-island); background: #FFFFFF; 
         }
 
-        .brand-cluster { display: flex; align-items: center; gap: 10px; min-width: 0; flex-shrink: 1; }
-        .brand-logo-img { width: 38px; height: 38px; object-fit: contain; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-        .brand-text-img { height: 20px; object-fit: contain; margin-top: 1px; flex-shrink: 1; min-width: 0; }
+        .brand-cluster {
+            display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 1;
+        }
+        .brand-logo-img { width: 34px; height: 34px; object-fit: contain; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .brand-text-img { height: 19px; object-fit: contain; margin-top: 2px; flex-shrink: 1; min-width: 0; }
 
-        .header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 
         .btn-top-action {
-            width: 44px; height: 44px; border-radius: 50%; background: var(--sigma-subtle);
+            width: 42px; height: 42px; border-radius: 50%; background: var(--sigma-subtle);
             color: var(--text-heading); display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--sigma-muted-border); position: relative; transition: var(--transition-bounce);
+            border: 1px solid var(--sigma-muted-border); position: relative; transition: var(--transition-fast);
         }
         .btn-top-action:active { transform: scale(0.92); background: #E2E8F0; }
-        .btn-top-action svg { width: 20px; height: 20px; stroke-width: 2.2; stroke: currentColor; fill: none; }
+        .btn-top-action svg { width: 19px; height: 19px; stroke-width: 2.2; stroke: currentColor; fill: none; }
 
         .unread-dot {
-            position: absolute; top: -1px; right: -1px; width: 12px; height: 12px;
+            position: absolute; top: -1px; right: -1px; width: 11px; height: 11px;
             background: var(--sigma-danger); border: 2px solid white; border-radius: 50%;
-            display: none; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
-            animation: pulse-dot 2s infinite;
+            display: none;
         }
         .unread-dot.active { display: block; }
-        @keyframes pulse-dot { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
         /* ==========================================================================
-           4. WORKSPACE & IDENTITY STRIP (Clickable Avatar)
+           4. DASHBOARD WORKSPACE CANVAS
            ========================================================================== */
         .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 20px; }
 
+        /* Welcome Identity Strip */
         .identity-card {
             background: var(--sigma-surface); border-radius: var(--radius-xl);
             padding: 16px 20px; border: 1px solid var(--sigma-muted-border);
             box-shadow: var(--shadow-subtle); display: flex; align-items: center;
-            justify-content: space-between; gap: 12px; position: relative; overflow: hidden;
+            justify-content: space-between; gap: 12px;
         }
-        .id-left { display: flex; align-items: center; gap: 14px; min-width: 0; position: relative; z-index: 2; }
-        
+        .id-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
         .user-avatar-wrap {
-            position: relative; width: 56px; height: 56px; flex-shrink: 0;
-            cursor: pointer; transition: var(--transition-bounce);
-        }
-        .user-avatar-wrap:active { transform: scale(0.92); }
-        .user-avatar-wrap::before {
-            content: ''; position: absolute; inset: -3px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--sigma-accent), var(--sigma-info));
-            opacity: 0.3; z-index: 0;
+            position: relative; width: 48px; height: 48px; flex-shrink: 0; cursor: pointer;
         }
         .user-avatar {
-            position: relative; z-index: 1; width: 100%; height: 100%; border-radius: 50%;
+            width: 100%; height: 100%; border-radius: 50%;
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
             color: white; display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 1.4rem; text-transform: uppercase;
-            box-shadow: 0 6px 14px rgba(11, 19, 43, 0.2); overflow: hidden;
-            border: 2px solid var(--sigma-surface);
+            font-weight: 800; font-size: 1.15rem; text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.15); overflow: hidden;
         }
-        .user-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .avatar-tier-badge {
-            position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px;
+            position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px;
             border-radius: 50%; background: var(--sigma-gold); color: white;
-            display: flex; align-items: center; justify-content: center; border: 2.5px solid white;
-            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4); z-index: 2;
+            display: flex; align-items: center; justify-content: center; border: 2px solid white;
         }
-        .avatar-tier-badge svg { width: 12px; height: 12px; fill: currentColor; }
+        .avatar-tier-badge svg { width: 9px; height: 9px; fill: currentColor; }
 
         .id-text { min-width: 0; }
         .id-text h2 {
-            font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             display: flex; align-items: center; gap: 6px;
         }
         .tier-chip {
-            font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: var(--radius-pill);
+            font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: var(--radius-pill);
             background: var(--sigma-gold-soft); color: #B45309; text-transform: uppercase;
-            letter-spacing: 0.5px; border: 1px solid var(--sigma-gold-border); flex-shrink: 0;
+            letter-spacing: 0.5px; border: 1px solid var(--sigma-gold-border);
         }
-        .id-text p { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+        .id-text p { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
 
-        .id-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; position: relative; z-index: 2; }
+        .id-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
         .btn-id-pill {
-            padding: 10px 14px; border-radius: var(--radius-pill); background: var(--sigma-subtle);
-            border: 1px solid var(--sigma-muted-border); font-size: 0.8rem; font-weight: 700;
+            padding: 8px 12px; border-radius: var(--radius-pill); background: var(--sigma-subtle);
+            border: 1px solid var(--sigma-muted-border); font-size: 0.78rem; font-weight: 700;
             color: var(--text-heading); display: inline-flex; align-items: center; gap: 6px;
-            transition: var(--transition-bounce);
+            transition: var(--transition-fast);
         }
-        .btn-id-pill:active { transform: scale(0.92); background: var(--sigma-muted-border); }
-        .btn-id-pill svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-
-        /* Announcement Bar */
-        .system-announcement-pill {
-            background: var(--sigma-accent-soft); border: 1px solid var(--sigma-accent-border);
-            padding: 12px 18px; border-radius: var(--radius-lg); display: flex;
-            align-items: center; justify-content: space-between; cursor: pointer;
-            transition: var(--transition-smooth); box-shadow: var(--shadow-xs);
-        }
-        .system-announcement-pill:active { transform: translateY(1px); }
-        .announcement-text { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; font-weight: 700; color: #065F46; }
-        .announcement-text svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; flex-shrink: 0; }
+        .btn-id-pill:active { transform: scale(0.95); background: #E2E8F0; }
+        .btn-id-pill svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
         /* ==========================================================================
-           5. EXACT 24-HOUR SUBSCRIPTION COUNTDOWN TIMER
+           5. LIVE PROFIT COUNTDOWN CLOCK & SYSTEM ALERT
            ========================================================================== */
-        .live-countdown-island {
-            background: var(--sigma-surface); border-radius: var(--radius-xl);
-            border: 1px solid var(--sigma-muted-border); padding: 18px 22px;
-            box-shadow: var(--shadow-subtle); display: flex; align-items: center;
-            justify-content: space-between; flex-wrap: wrap; gap: 16px;
-            position: relative; overflow: hidden;
+        .system-announcement-pill {
+            background: var(--sigma-accent-soft); border: 1px solid var(--sigma-accent-border);
+            padding: 10px 16px; border-radius: var(--radius-md); display: flex;
+            align-items: center; justify-content: space-between; cursor: pointer;
+            transition: var(--transition-smooth);
         }
-        .countdown-info { display: flex; align-items: center; gap: 14px; z-index: 2; position: relative; }
+        .system-announcement-pill:hover { background: #D1FAE5; }
+        .announcement-text { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; font-weight: 700; color: #065F46; }
+        .announcement-text svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; flex-shrink: 0; }
+
+        .live-countdown-island {
+            background: var(--sigma-surface); border-radius: var(--radius-lg);
+            border: 1px solid var(--sigma-muted-border); padding: 14px 20px;
+            box-shadow: var(--shadow-subtle); display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 10px;
+        }
+        .countdown-info { display: flex; align-items: center; gap: 10px; }
         .pulsing-yield-ring {
-            width: 46px; height: 46px; border-radius: 14px; background: var(--sigma-accent-soft);
+            width: 38px; height: 38px; border-radius: 12px; background: var(--sigma-accent-soft);
             color: var(--sigma-accent-dark); display: flex; align-items: center; justify-content: center;
             position: relative;
         }
-        .pulsing-yield-ring::before {
-            content: ''; position: absolute; inset: -4px; border-radius: 18px;
-            border: 2px dashed var(--sigma-accent-border); animation: orbitSpin 10s linear infinite;
-        }
-        .pulsing-yield-ring svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; }
-        .countdown-info div { display: flex; flex-direction: column; gap: 2px; }
-        .countdown-info div small { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
-        .countdown-info div strong { font-size: 0.95rem; color: var(--text-heading); }
+        .pulsing-yield-ring svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .countdown-info div small { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .countdown-info div strong { font-size: 0.88rem; color: var(--text-heading); display: block; }
 
         .clock-display {
-            background: var(--sigma-primary); color: white; padding: 10px 20px;
-            border-radius: var(--radius-pill); font-size: 1.25rem; font-weight: 800;
-            letter-spacing: 1.5px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.4), 0 4px 12px rgba(11, 19, 43, 0.2);
-            z-index: 2; position: relative;
+            background: var(--sigma-primary); color: white; padding: 6px 14px;
+            border-radius: var(--radius-pill); font-size: 1.05rem; font-weight: 800;
+            letter-spacing: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
         }
 
         /* ==========================================================================
-           6. NEXT-GEN REDESIGNED WALLET CARD (NO EYE BUTTON)
+           6. MULTI-WALLET MATRIX (PREMIUM FINTECH CARD)
            ========================================================================== */
         .vault-main-card {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            border-radius: var(--radius-2xl); padding: 32px 28px; color: white;
-            box-shadow: var(--shadow-island), var(--shadow-glow); position: relative; overflow: hidden;
-            display: flex; flex-direction: column; gap: 6px;
+            background: linear-gradient(135deg, var(--sigma-primary) 0%, var(--sigma-secondary) 100%);
+            border-radius: var(--radius-xl); padding: 28px 24px; color: white;
+            box-shadow: var(--shadow-island); position: relative; overflow: hidden;
         }
-        
-        /* Premium Background Elements */
         .vault-main-card::after {
             content: ''; position: absolute; -webkit-mask-image: radial-gradient(circle, black 30%, transparent 70%);
-            top: -40px; right: -40px; width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
-            border-radius: 50%; pointer-events: none; z-index: 0;
+            top: -40px; right: -40px; width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
         }
-        .vault-main-card::before {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg opacity="0.03" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M0 10l10-10 10 10L10 20zM20 30l10-10 10 10-10 10z" fill="white"/></svg>');
-            pointer-events: none; z-index: 0;
-        }
-        
+
         /* Authentic Fintech Branding on Card */
         .vault-branding {
-            position: absolute; bottom: 24px; right: 24px;
-            display: flex; flex-direction: column; align-items: flex-end; opacity: 0.9; z-index: 1;
+            position: absolute; bottom: 20px; right: 24px;
+            display: flex; flex-direction: column; align-items: flex-end; opacity: 0.8; z-index: 1;
         }
-        .vault-branding img.vault-text-logo { height: 16px; object-fit: contain; margin-bottom: 4px; filter: brightness(0) invert(1); opacity: 0.8;}
-        .vault-branding img.vault-icon-logo { height: 44px; object-fit: contain; opacity: 0.15;}
+        .vault-branding img.vault-text-logo { height: 16px; object-fit: contain; margin-bottom: 4px; filter: brightness(0) invert(1); opacity: 0.7;}
+        .vault-branding img.vault-icon-logo { height: 40px; object-fit: contain; opacity: 0.2;}
 
-        /* EMV Chip & NFC */
         .vault-chip-row {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 16px; z-index: 2; position: relative;
@@ -376,123 +357,112 @@
         .vault-chip-icon {
             width: 44px; height: 32px; background: linear-gradient(135deg, #FDE68A, #D97706);
             border-radius: 6px; opacity: 0.95; box-shadow: inset 0 0 4px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2);
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center; z-index: 1;
         }
-        .vault-chip-icon::after { content: ''; width: 80%; height: 60%; border: 1px solid rgba(255,255,255,0.4); border-radius: 3px; }
-        .vault-nfc-icon { width: 26px; height: 26px; opacity: 0.7; }
-
-        .vault-top-label {
-            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #94A3B8;
-            z-index: 2; position: relative; margin-bottom: 4px;
+        .vault-chip-icon::after {
+            content: ''; width: 80%; height: 60%; border: 1px solid rgba(255,255,255,0.4); border-radius: 3px;
+        }
+        .vault-nfc-icon {
+            width: 26px; height: 26px; opacity: 0.7; z-index: 1;
         }
 
-        .vault-balance-row { 
-            display: flex; align-items: baseline; gap: 8px; z-index: 2; position: relative;
+        .vault-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; z-index: 2; position: relative;}
+        .vault-top span { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94A3B8; }
+        .btn-eye-toggle {
+            color: #94A3B8; padding: 6px; border-radius: 50%; transition: var(--transition-fast); z-index: 3; position: relative;
         }
-        .vault-currency { font-size: 1.6rem; font-weight: 800; color: var(--sigma-accent-light); opacity: 0.9; }
-        .vault-number { font-size: clamp(2.5rem, 8vw, 3.8rem); font-weight: 900; letter-spacing: -1.5px; line-height: 1; }
+        .btn-eye-toggle:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
+        .btn-eye-toggle svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-        /* Triple Pocket Matrix */
+        .vault-balance-row { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 16px; position: relative; z-index: 2;}
+        .vault-currency { font-size: 1.4rem; font-weight: 800; color: var(--sigma-accent-light); }
+        .vault-number { font-size: clamp(2.3rem, 7vw, 3.2rem); font-weight: 900; letter-spacing: -1.5px; }
+
+        /* Triple Modular Pocket Wallets */
         .pocket-wallets-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
         }
         .pocket-card {
             background: var(--sigma-surface); border-radius: var(--radius-lg);
-            padding: 18px 14px; border: 1px solid var(--sigma-muted-border);
+            padding: 16px 12px; border: 1px solid var(--sigma-muted-border);
             box-shadow: var(--shadow-subtle); display: flex; flex-direction: column;
-            justify-content: space-between; gap: 12px; position: relative;
-            transition: var(--transition-smooth);
+            justify-content: space-between; gap: 8px; position: relative;
         }
-        .pocket-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
         .pocket-head { display: flex; align-items: center; justify-content: space-between; }
         .pocket-icon-wrap {
-            width: 34px; height: 34px; border-radius: 10px; display: flex;
+            width: 28px; height: 28px; border-radius: 8px; display: flex;
             align-items: center; justify-content: center;
         }
-        .pocket-icon-wrap svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .pocket-icon-wrap svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
         
-        .p-deposit .pocket-icon-wrap { background: var(--sigma-info-soft); color: var(--sigma-info-dark); border: 1px solid var(--sigma-info-border); }
-        .p-profit .pocket-icon-wrap { background: var(--sigma-accent-soft); color: var(--sigma-accent-dark); border: 1px solid var(--sigma-accent-border); }
-        .p-comm .pocket-icon-wrap { background: var(--sigma-gold-soft); color: var(--sigma-gold-dark); border: 1px solid var(--sigma-gold-border); }
+        .p-deposit .pocket-icon-wrap { background: var(--sigma-info-soft); color: var(--sigma-info); }
+        .p-profit .pocket-icon-wrap { background: var(--sigma-accent-soft); color: var(--sigma-accent-dark); }
+        .p-comm .pocket-icon-wrap { background: var(--sigma-gold-soft); color: #B45309; }
 
-        .pocket-title { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .pocket-val { font-size: 1.2rem; font-weight: 800; color: var(--text-heading); word-break: break-all; }
-        .pocket-sub { font-size: 0.7rem; font-weight: 600; color: var(--text-light); }
+        .pocket-title { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        .pocket-val { font-size: 1.05rem; font-weight: 800; color: var(--text-heading); word-break: break-all; }
+        .pocket-sub { font-size: 0.65rem; font-weight: 600; color: var(--text-light); }
 
-        @media (max-width: 600px) {
-            .pocket-wallets-grid { grid-template-columns: 1fr; gap: 8px; }
-            .pocket-card { padding: 16px 20px; flex-direction: row; align-items: center; justify-content: flex-start; gap: 16px; }
-            .pocket-head { display: contents; }
-            .pocket-title { display: none; }
-            .pocket-details { display: flex; flex-direction: column; flex: 1; }
-            .pocket-val { font-size: 1.3rem; }
-            .pocket-title-mobile { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        @media (max-width: 480px) {
+            .pocket-wallets-grid { grid-template-columns: 1fr; }
+            .pocket-card { padding: 14px 16px; flex-direction: row; align-items: center; }
+            .pocket-head { gap: 10px; }
+            .pocket-val { font-size: 1.15rem; text-align: right; }
         }
-        .pocket-title-mobile { display: none; }
 
         /* ==========================================================================
            7. SIGNATURE CIRCULAR ORBITAL ACTION TERMINAL
            ========================================================================== */
         .orbital-terminal-wrapper {
-            background: var(--sigma-surface); border-radius: var(--radius-2xl);
+            background: var(--sigma-surface); border-radius: var(--radius-xl);
             padding: 28px 20px 40px; border: 1px solid var(--sigma-muted-border);
             box-shadow: var(--shadow-subtle); position: relative; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center;
         }
         .orbital-header {
-            width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
         }
-        .orbital-header h3 { font-size: 1.15rem; }
+        .orbital-header h3 { font-size: 1.1rem; }
 
         /* The Circular Layout Engine */
         .orbit-stage {
-            position: relative; width: 100%; max-width: 320px;
+            position: relative; width: 100%; max-width: 380px; margin: 0 auto;
             aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
-            margin-bottom: 20px;
         }
         .orbit-ring {
-            position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            border: 2px dashed rgba(16, 185, 129, 0.2); animation: orbitSpin 60s linear infinite;
-        }
-        .orbit-ring-inner {
-            position: absolute; width: 65%; height: 65%; border-radius: 50%;
-            border: 1px solid rgba(15, 23, 42, 0.05);
+            position: absolute; width: 80%; height: 80%; border-radius: 50%;
+            border: 2px dashed rgba(16, 185, 129, 0.25); animation: orbitSpin 60s linear infinite;
         }
         @keyframes orbitSpin { 100% { transform: rotate(360deg); } }
 
         /* Central Sigma Core Hub */
         .orbit-center-core {
-            position: relative; z-index: 10; width: 90px; height: 90px;
+            position: relative; z-index: 10; width: 84px; height: 84px;
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 12px 30px rgba(11, 19, 43, 0.35); border: 4px solid var(--sigma-surface);
-            transition: var(--transition-bounce); cursor: pointer;
+            box-shadow: 0 10px 25px rgba(11, 19, 43, 0.35); border: 4px solid white;
+            transition: var(--transition-bounce);
         }
-        .orbit-center-core img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
-        .orbit-center-core:active { transform: scale(0.92); box-shadow: 0 4px 12px rgba(11, 19, 43, 0.2); }
-        .orbit-center-core::after {
-            content: ''; position: absolute; inset: -8px; border-radius: 50%;
-            border: 2px solid var(--sigma-accent); opacity: 0.3; animation: pulse-dot 3s infinite;
-        }
+        .orbit-center-core img { width: 44px; height: 44px; object-fit: contain; }
+        .orbit-center-core:active { transform: scale(0.92); }
 
-        /* 6 Orbital Nodes Positioned Radially using Absolute Percentages */
+        /* 6 Orbital Nodes Positioned Radially - Animation Fixes applied */
         .orbit-node {
             position: absolute; display: flex; flex-direction: column; align-items: center;
-            gap: 6px; width: 70px; text-align: center; z-index: 15;
-            cursor: pointer; text-decoration: none;
+            gap: 4px; width: 70px; text-align: center; z-index: 15;
+            text-decoration: none;
         }
         .orbit-node-icon {
-            width: 52px; height: 52px; border-radius: 50%; background: var(--sigma-surface);
+            width: 48px; height: 48px; border-radius: 50%; background: white;
             box-shadow: var(--shadow-card); border: 2px solid var(--sigma-muted-border);
             display: flex; align-items: center; justify-content: center; transition: var(--transition-bounce);
         }
-        .orbit-node:hover .orbit-node-icon { border-color: var(--sigma-accent); transform: translateY(-4px) scale(1.05); box-shadow: var(--shadow-float); }
-        .orbit-node:active .orbit-node-icon { transform: scale(0.9); border-color: var(--sigma-primary); }
-        
-        .orbit-node-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-        .orbit-node span { font-size: 0.72rem; font-weight: 800; color: var(--text-heading); white-space: nowrap; }
+        /* Hover ONLY affects the icon, not the entire hit area, preventing click-glitch */
+        .orbit-node:hover .orbit-node-icon { border-color: var(--sigma-accent); transform: translateY(-3px); box-shadow: var(--shadow-float); }
+        .orbit-node:active .orbit-node-icon { transform: scale(0.9); }
+        .orbit-node-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .orbit-node span { font-size: 0.68rem; font-weight: 800; color: var(--text-heading); white-space: nowrap; }
 
-        /* Exact placement on the circular ring (Radius = 50%) */
+        /* Exact placement on the circular ring */
         .node-pos-1 { top: 0%; left: 50%; transform: translate(-50%, -50%); } 
         .node-pos-2 { top: 25%; left: 93.3%; transform: translate(-50%, -50%); } 
         .node-pos-3 { top: 75%; left: 93.3%; transform: translate(-50%, -50%); } 
@@ -501,209 +471,187 @@
         .node-pos-6 { top: 25%; left: 6.7%; transform: translate(-50%, -50%); }  
 
         /* Fallback linear for very narrow screens */
-        @media (max-width: 380px) {
+        @media (max-width: 360px) {
             .orbit-stage { display: none; }
             .orbit-linear-fallback { display: grid !important; }
         }
         .orbit-linear-fallback {
-            display: none; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-bottom: 20px;
+            display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
         }
         .terminal-btn {
             display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 8px;
             background: var(--sigma-subtle); border-radius: var(--radius-lg); border: 1px solid var(--sigma-muted-border);
             text-align: center; font-size: 0.75rem; font-weight: 700; color: var(--text-heading);
-            transition: var(--transition-bounce);
+            transition: var(--transition-bounce); text-decoration: none; cursor: pointer;
         }
         .terminal-btn:active { transform: scale(0.94); }
         .terminal-btn-icon { width: 40px; height: 40px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); margin-bottom: 4px; }
         .terminal-btn-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
-        /* ==========================================================================
-           8. SECONDARY QUICK ACTIONS GRID (Transactions, Leaderboard, FBR)
-           ========================================================================== */
-        .secondary-actions-container {
-            display: flex; flex-direction: column; gap: 16px; margin-top: 10px; width: 100%;
-        }
-
+        /* Secondary Grid Actions (Leaderboard, App, Transactions etc.) */
         .secondary-actions-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; margin-top: 10px;
         }
-        
         .sec-action-btn {
-            display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: var(--radius-lg);
+            display: flex; align-items: center; gap: 10px; padding: 16px; border-radius: var(--radius-lg);
             background: var(--sigma-subtle); border: 1px solid var(--sigma-muted-border);
-            color: var(--text-heading); font-size: 0.9rem; font-weight: 800; transition: var(--transition-bounce); text-decoration: none;
+            color: var(--text-heading); font-size: 0.85rem; font-weight: 800; transition: var(--transition-bounce); text-decoration: none;
             box-shadow: var(--shadow-xs);
         }
         .sec-action-btn:active { transform: scale(0.96); background: #E2E8F0;}
         .sec-action-icon {
-            width: 38px; height: 38px; border-radius: 10px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); flex-shrink: 0;
+            width: 36px; height: 36px; border-radius: 10px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); flex-shrink: 0;
         }
         .sec-action-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
-        /* Specific Full Width Buttons */
+        /* Full Width Buttons */
         .btn-full-wide {
             grid-column: 1 / -1; width: 100%; height: 60px; border-radius: var(--radius-xl);
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            font-size: 1.05rem; font-weight: 800; transition: var(--transition-bounce);
+            font-size: 1.05rem; font-weight: 800; transition: var(--transition-bounce); cursor: pointer; text-decoration: none;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2); box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
         .btn-full-wide:active { transform: scale(0.97); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn-full-wide svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.2; }
         
         .btn-leaderboard { background: linear-gradient(135deg, var(--sigma-gold), var(--sigma-gold-dark)); color: white; border: 2px solid #FDE68A; }
-        .btn-fbr { background: linear-gradient(135deg, var(--sigma-tertiary), var(--sigma-primary)); color: white; border: 2px solid var(--sigma-muted-border); }
-
+        .btn-fbr { background: linear-gradient(135deg, var(--sigma-tertiary), var(--sigma-primary)); color: white; border: 2px solid var(--sigma-muted-border); margin-top: 10px;}
 
         /* ==========================================================================
-           9. TRANSACTION LIFECYCLE TRACKER (STEPPER)
+           8. LIVE TRANSACTION STEPPER (RECENT OUTFLOW/INFLOW)
            ========================================================================== */
         .stepper-card {
             background: var(--sigma-surface); border-radius: var(--radius-xl);
-            padding: 24px; border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle); margin-bottom: 20px; display: none;
+            padding: 22px; border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle); display: none;
         }
-        .stepper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .stepper-header h3 { font-size: 1.1rem; }
+        .stepper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .stepper-header h3 { font-size: 1.05rem; }
         .badge-type {
-            font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: var(--radius-pill);
+            font-size: 0.68rem; font-weight: 800; padding: 3px 8px; border-radius: var(--radius-pill);
             text-transform: uppercase; background: var(--sigma-subtle); color: var(--text-body);
         }
 
         .stepper-track {
             display: flex; align-items: center; justify-content: space-between;
-            position: relative; margin: 24px 12px 12px;
+            position: relative; margin: 24px 8px 12px;
         }
         .stepper-track::before {
-            content: ''; position: absolute; left: 16px; right: 16px; top: 16px;
-            height: 4px; background: var(--sigma-muted-border); z-index: 0; border-radius: 2px;
+            content: ''; position: absolute; left: 16px; right: 16px; top: 14px;
+            height: 3px; background: var(--sigma-muted-border); z-index: 0;
         }
         .step-node {
             display: flex; flex-direction: column; align-items: center;
-            gap: 10px; position: relative; z-index: 1; width: 80px; text-align: center;
+            gap: 8px; position: relative; z-index: 1; width: 80px; text-align: center;
         }
         .step-circle {
-            width: 36px; height: 36px; border-radius: 50%; background: var(--sigma-surface);
+            width: 30px; height: 30px; border-radius: 50%; background: white;
             border: 3px solid var(--sigma-muted-border); display: flex; align-items: center;
-            justify-content: center; transition: var(--transition-smooth); box-shadow: 0 0 0 4px var(--sigma-surface);
+            justify-content: center; transition: var(--transition-smooth);
         }
-        .step-circle svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 3; display: none; }
-        
+        .step-circle svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 3; display: none; }
         .step-node.completed .step-circle { background: var(--sigma-accent); border-color: var(--sigma-accent); }
         .step-node.completed .step-circle svg { display: block; }
-        .step-node.current .step-circle { background: white; border-color: var(--sigma-gold); box-shadow: 0 0 0 6px var(--sigma-gold-soft); }
+        .step-node.current .step-circle { background: white; border-color: var(--sigma-gold); box-shadow: 0 0 0 4px var(--sigma-gold-soft); }
         .step-node.rejected .step-circle { background: var(--sigma-danger); border-color: var(--sigma-danger); }
-        .step-node.rejected .step-circle svg { display: block; stroke: white; }
+        .step-node.rejected .step-circle svg { display: block; }
 
-        .step-node span { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); }
+        .step-node span { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); }
         .step-node.completed span, .step-node.current span { color: var(--text-heading); }
 
         .rejection-reason-box {
-            margin-top: 20px; padding: 14px 18px; border-radius: var(--radius-md);
+            margin-top: 16px; padding: 12px 16px; border-radius: var(--radius-md);
             background: var(--sigma-danger-soft); border: 1px solid var(--sigma-danger-border);
-            color: #991B1B; font-size: 0.85rem; font-weight: 600; display: none; line-height: 1.4;
+            color: #991B1B; font-size: 0.8rem; font-weight: 600; display: none;
         }
 
         /* ==========================================================================
-           10. REFERRAL NETWORK TREE & DYNAMIC QR
+           9. REFERRAL NETWORK TREE TABS & STATS (RS. 400, RS. 250, 2%)
            ========================================================================== */
         .referral-tree-card {
-            background: var(--sigma-surface); border-radius: var(--radius-2xl);
-            padding: 26px 22px; border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 20px;
+            background: var(--sigma-surface); border-radius: var(--radius-xl);
+            padding: 22px; border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 16px;
         }
         .tree-header { display: flex; align-items: center; justify-content: space-between; }
         
         .tree-tabs-nav {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-            background: var(--sigma-subtle); padding: 6px; border-radius: var(--radius-lg);
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            background: var(--sigma-subtle); padding: 4px; border-radius: var(--radius-md);
         }
         .tree-tab-btn {
-            padding: 10px 4px; border-radius: var(--radius-md); font-size: 0.78rem; font-weight: 800;
+            padding: 8px 4px; border-radius: 10px; font-size: 0.75rem; font-weight: 800;
             color: var(--text-muted); transition: var(--transition-fast); text-align: center;
         }
-        .tree-tab-btn.active { background: white; color: var(--sigma-primary); box-shadow: var(--shadow-sm); }
+        .tree-tab-btn.active {
+            background: white; color: var(--sigma-primary); box-shadow: var(--shadow-xs);
+        }
 
         .tree-pane-content {
-            background: var(--sigma-subtle); border-radius: var(--radius-xl);
-            padding: 20px; border: 1px solid var(--sigma-muted-border);
+            background: var(--sigma-subtle); border-radius: var(--radius-lg);
+            padding: 16px; border: 1px solid var(--sigma-muted-border);
             display: flex; justify-content: space-around; align-items: center; text-align: center;
         }
-        .tree-metric-col small { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-        .tree-metric-col strong { font-size: 1.25rem; font-weight: 900; color: var(--text-heading); display: block; margin-top: 4px;}
-
-        .referral-detailed-stats {
-            display: flex; justify-content: space-between; align-items: center;
-            background: white; padding: 12px 16px; border-radius: var(--radius-md);
-            border: 1px solid var(--sigma-muted-border); margin-top: 4px;
-        }
-        .referral-detailed-stats span { font-size: 0.8rem; font-weight: 700; color: var(--text-body); }
-        .badge-pending { color: var(--sigma-gold-dark); background: var(--sigma-gold-soft); padding: 2px 8px; border-radius: 8px; font-size: 0.7rem; }
+        .tree-metric-col small { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        .tree-metric-col strong { font-size: 1.15rem; font-weight: 900; color: var(--text-heading); display: block; margin-top: 2px;}
 
         /* ==========================================================================
-           11. HISTORICAL TRANSACTIONS PANEL
+           10. HISTORICAL TRANSACTIONS
            ========================================================================== */
-        .workspace-panel {
-            background: var(--sigma-surface); border-radius: var(--radius-2xl);
-            padding: 26px 22px; border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 16px;
-        }
         .panel-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-        .panel-heading h3 { font-size: 1.15rem; font-weight: 800; }
-        .panel-heading a { font-size: 0.82rem; font-weight: 700; color: var(--sigma-info-dark); display: flex; align-items: center; gap: 4px; }
+        .panel-heading h3 { font-size: 1.05rem; font-weight: 800; }
+        .panel-heading a { font-size: 0.78rem; font-weight: 700; color: var(--sigma-info-dark); display: flex; align-items: center; gap: 4px; }
 
         .tx-history-item {
             display: flex; align-items: center; justify-content: space-between;
             padding: 16px 0; border-bottom: 1px solid var(--sigma-muted-border);
         }
         .tx-history-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .tx-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--sigma-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .tx-icon svg { width: 22px; height: 22px; stroke: var(--text-body); fill: none; stroke-width: 2.2; }
+        .tx-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--sigma-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .tx-icon svg { width: 20px; height: 20px; stroke: var(--text-body); fill: none; stroke-width: 2.2; }
         .tx-icon.positive { background: var(--sigma-accent-soft); }
         .tx-icon.positive svg { stroke: var(--sigma-accent-dark); }
         .tx-icon.negative { background: var(--sigma-danger-soft); }
         .tx-icon.negative svg { stroke: var(--sigma-danger-dark); }
-        .tx-icon.neutral { background: var(--sigma-info-soft); }
-        .tx-icon.neutral svg { stroke: var(--sigma-info-dark); }
 
         .tx-details { flex: 1; padding: 0 14px; min-width: 0; }
-        .tx-details strong { display: block; font-size: 0.95rem; color: var(--text-heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .tx-details small { font-size: 0.78rem; color: var(--text-muted); }
+        .tx-details strong { display: block; font-size: 0.9rem; color: var(--text-heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tx-details small { font-size: 0.75rem; color: var(--text-muted); }
         .tx-amount { text-align: right; }
-        .tx-amount strong { display: block; font-size: 1.05rem; font-family: 'JetBrains Mono', monospace; }
-        .tx-amount small { font-size: 0.72rem; color: var(--text-light); font-weight: 700; text-transform: uppercase; }
+        .tx-amount strong { display: block; font-size: 1rem; font-family: 'JetBrains Mono', monospace; }
+        .tx-amount small { font-size: 0.7rem; color: var(--text-light); font-weight: 700; text-transform: uppercase; }
 
         /* ==========================================================================
-           12. STRICT 3-BUTTON FLOATING MOBILE DOCK
+           11. STRICT 3-BUTTON FLOATING MOBILE DOCK
            ========================================================================== */
         .mobile-dock {
             position: fixed; bottom: var(--safe-area-bottom); left: 50%; transform: translateX(-50%);
-            height: 76px; width: calc(100% - 32px); max-width: 440px;
-            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px); border-radius: var(--radius-2xl);
+            height: 72px; width: calc(100% - 32px); max-width: 420px;
+            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-radius: var(--radius-xl);
             box-shadow: var(--shadow-float); display: flex; align-items: center;
-            justify-content: space-between; padding: 0 16px; z-index: var(--z-dock);
-            border: 1px solid rgba(255, 255, 255, 0.9);
+            justify-content: space-between; padding: 0 20px; z-index: var(--z-dock);
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
         .dock-slot {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 6px; color: var(--text-muted); flex: 1; height: 100%;
+            gap: 4px; color: var(--text-muted); width: 64px; height: 60px;
             transition: var(--transition-bounce); position: relative; text-decoration: none;
         }
-        .dock-slot svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-        .dock-slot span { font-size: 0.68rem; font-weight: 800; }
-        .dock-slot.active { color: var(--sigma-primary); }
-        .dock-slot.active svg { stroke-width: 2.8; transform: translateY(-2px); color: var(--sigma-accent-dark); }
-        
+        .dock-slot svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .dock-slot span { font-size: 0.65rem; font-weight: 800; }
+        .dock-slot.active { color: var(--sigma-accent-dark); }
+        .dock-slot.active svg { stroke-width: 2.6; transform: translateY(-2px); }
+
         .dock-crest-btn {
-            position: relative; top: -24px; width: 68px; height: 68px; flex-shrink: 0;
+            position: relative; top: -20px; width: 68px; height: 68px; flex-shrink: 0;
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 12px 24px rgba(11, 19, 43, 0.35); border: 5px solid var(--sigma-surface-alt);
-            transition: var(--transition-bounce); margin: 0 8px;
+            box-shadow: 0 10px 24px rgba(11, 19, 43, 0.35); border: 4px solid var(--sigma-subtle);
+            transition: var(--transition-bounce);
         }
-        .dock-crest-btn:active { transform: scale(0.9); }
-        .dock-crest-btn img { width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .dock-crest-btn:active { transform: scale(0.92); }
+        .dock-crest-btn img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
         .dock-crest-btn::after {
             content: 'PLANS'; position: absolute; bottom: -22px; font-size: 0.65rem; font-weight: 800; color: var(--text-heading);
         }
@@ -713,23 +661,8 @@
             body { padding-bottom: 40px; }
         }
 
-        /* Configurable WhatsApp Button positioned ABOVE dock */
-        .whatsapp-float {
-            position: fixed; bottom: calc(100px + var(--safe-area-bottom)); right: 20px;
-            width: 60px; height: 60px; background: #25D366; color: white;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 24px rgba(37, 211, 102, 0.4); z-index: var(--z-whatsapp);
-            transition: var(--transition-bounce); text-decoration: none; border: 2px solid white;
-        }
-        .whatsapp-float svg { width: 34px; height: 34px; fill: currentColor; }
-        .whatsapp-float:active { transform: scale(0.85); box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
-        @media (min-width: 860px) {
-            .whatsapp-float { bottom: 40px; right: 40px; width: 68px; height: 68px; }
-            .whatsapp-float svg { width: 38px; height: 38px; }
-        }
-
         /* ==========================================================================
-           13. BOTTOM SHEETS & SYSTEM MODALS
+           12. BOTTOM SHEETS & SYSTEM MODALS
            ========================================================================== */
         .overlay {
             position: fixed; inset: 0; z-index: var(--z-overlay);
@@ -744,113 +677,100 @@
             border-radius: 28px 28px 0 0; transform: translateY(100%);
             transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
             max-height: 88vh; display: flex; flex-direction: column;
-            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.2); position: relative; z-index: var(--z-modal);
+            box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.15);
         }
         .overlay.show .sheet { transform: translateY(0); }
 
-        .sheet-handle { width: 44px; height: 6px; border-radius: 99px; background: var(--sigma-input-border); margin: 14px auto 8px; }
+        .sheet-handle { width: 44px; height: 5px; border-radius: 99px; background: #CBD5E1; margin: 12px auto 4px; }
         .sheet-header {
-            padding: 16px 24px 20px; border-bottom: 1px solid var(--sigma-muted-border);
+            padding: 12px 24px 16px; border-bottom: 1px solid var(--sigma-muted-border);
             display: flex; justify-content: space-between; align-items: center;
         }
-        .sheet-header h3 { font-size: 1.25rem; font-weight: 800; }
+        .sheet-header h3 { font-size: 1.15rem; font-weight: 800; }
         .sheet-close-btn {
-            width: 36px; height: 36px; border-radius: 50%; background: var(--sigma-subtle);
+            width: 32px; height: 32px; border-radius: 50%; background: var(--sigma-subtle);
             display: flex; align-items: center; justify-content: center; color: var(--text-muted);
-            transition: var(--transition-fast);
         }
         .sheet-close-btn:active { background: var(--sigma-muted-border); transform: scale(0.9); }
-        .sheet-close-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; }
-        .sheet-body { padding: 24px 24px 40px; overflow-y: auto; flex: 1; overscroll-behavior: contain; }
+        .sheet-close-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        .sheet-body { padding: 20px 24px 32px; overflow-y: auto; flex: 1; overscroll-behavior: contain; }
+
+        .sheet-field { margin-bottom: 16px; }
+        .sheet-field label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
+        .sheet-input-box {
+            width: 100%; height: 52px; border-radius: var(--radius-md); background: var(--sigma-subtle);
+            border: 1px solid var(--sigma-muted-border); padding: 0 14px; font-size: 0.95rem;
+            color: var(--text-heading); font-weight: 600; display: flex; align-items: center;
+        }
+        .sheet-input-box select, .sheet-input-box input { width: 100%; height: 100%; font-size: 0.95rem; font-weight: 700; color: var(--text-heading); }
 
         .btn-sheet-submit {
-            width: 100%; height: 56px; border-radius: var(--radius-xl);
+            width: 100%; height: 52px; border-radius: var(--radius-btn);
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white; font-size: 1rem; font-weight: 800; display: flex;
-            align-items: center; justify-content: center; gap: 10px; margin-top: 12px;
+            color: white; font-size: 0.95rem; font-weight: 800; display: flex;
+            align-items: center; justify-content: center; gap: 8px; margin-top: 10px;
             box-shadow: var(--shadow-card); transition: var(--transition-fast);
         }
-        .btn-sheet-submit:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(11, 19, 43, 0.2); }
+        .btn-sheet-submit:active { transform: scale(0.98); box-shadow: 0 4px 10px rgba(11, 19, 43, 0.2); }
 
-        /* Next-Level Notification Center Items */
-        .notif-feed-item {
-            padding: 16px 20px; border-radius: var(--radius-xl); background: var(--sigma-surface-alt);
-            margin-bottom: 12px; border: 1px solid var(--sigma-muted-border);
-            display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: var(--transition-fast);
-            position: relative; overflow: hidden;
-        }
-        .notif-feed-item:active { transform: scale(0.98); }
-        .notif-feed-item.unread { 
-            background: white; border-color: var(--sigma-accent-border); box-shadow: var(--shadow-sm);
-        }
-        .notif-feed-item.unread::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--sigma-accent);
-        }
-        .notif-feed-item.pinned { border-color: var(--sigma-gold-border); background: var(--sigma-gold-soft); }
-        .notif-feed-item.pinned::before { background: var(--sigma-gold); }
-
-        .notif-feed-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-        .notif-feed-title-wrap { display: flex; align-items: center; gap: 8px; flex: 1; }
-        .notif-icon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle); flex-shrink: 0; }
-        .notif-icon svg { width: 16px; height: 16px; stroke: var(--text-heading); fill: none; stroke-width: 2.2; }
-        .notif-feed-top strong { font-size: 0.95rem; color: var(--text-heading); line-height: 1.2; }
-        .notif-feed-top span { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; white-space: nowrap; }
-        .notif-feed-item p { font-size: 0.85rem; color: var(--text-body); margin: 0; margin-left: 40px; line-height: 1.4; }
-
-        .mark-all-read-btn { font-size: 0.8rem; font-weight: 700; color: var(--sigma-info-dark); background: transparent; border: none; outline: none; cursor: pointer; }
-
-        /* Premium QR Code Modal Style */
+        /* QR Code Modal Specialized Style */
         .qr-wrapper {
             position: relative; display: inline-block; padding: 16px; background: white; border-radius: 20px;
             box-shadow: var(--shadow-card); border: 1px solid var(--sigma-muted-border);
         }
         .qr-logo-overlay {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 48px; height: 48px; background: white; border-radius: 50%;
+            width: 44px; height: 44px; background: white; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 3px solid white; z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: 3px solid white; z-index: 10;
         }
-        .qr-logo-overlay img { width: 30px; height: 30px; object-fit: contain; }
+        .qr-logo-overlay img { width: 28px; height: 28px; object-fit: contain; }
 
-        /* Proof Viewer Modal */
-        #sheetProofViewer { max-height: 95vh; height: 95vh; }
+        /* Notification Center */
+        .notif-feed-item {
+            padding: 16px 20px; border-radius: var(--radius-xl); background: var(--sigma-surface-alt);
+            margin-bottom: 12px; border: 1px solid var(--sigma-muted-border);
+            display: flex; flex-direction: column; gap: 6px; transition: var(--transition-fast);
+            position: relative; overflow: hidden;
+        }
+        .notif-feed-item.unread { background: white; border-left: 4px solid var(--sigma-accent); box-shadow: var(--shadow-sm); }
+        .notif-feed-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+        .notif-feed-top strong { font-size: 0.95rem; color: var(--text-heading); }
+        .notif-feed-top span { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; white-space: nowrap; }
+        .notif-feed-item p { font-size: 0.85rem; color: var(--text-body); margin: 0; line-height: 1.4; }
+
+        /* Official Documents Viewer */
         .proof-viewer-body { display: flex; flex-direction: column; align-items: center; gap: 20px; }
         .proof-viewer-img { max-width: 100%; max-height: 50vh; border-radius: var(--radius-lg); border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-md); object-fit: contain; }
 
-        /* Toast Notification */
+        /* Toast */
         .toast {
             position: fixed; top: 24px; left: 50%; transform: translate(-50%, -20px) scale(0.9);
-            background: var(--sigma-primary); color: white; padding: 14px 24px;
-            border-radius: var(--radius-pill); font-size: 0.9rem; font-weight: 700;
+            background: var(--sigma-primary); color: white; padding: 12px 24px;
+            border-radius: var(--radius-pill); font-size: 0.85rem; font-weight: 600;
             box-shadow: var(--shadow-float); z-index: var(--z-toast); opacity: 0;
-            visibility: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
+            visibility: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 8px;
         }
         .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); }
 
-        /* ==========================================================================
-           14. ADMIN BLOCKER & SAFETY SCREEN
-           ========================================================================== */
+        /* Admin Blocker Screen */
         #blockerScreen {
             position: fixed; inset: 0; z-index: var(--z-blocker);
-            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(24px);
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px);
             display: none; flex-direction: column; align-items: center; justify-content: center;
             padding: 24px; text-align: center;
         }
         #blockerScreen.active { display: flex; }
-        #blockerScreen svg { width: 80px; height: 80px; stroke: var(--sigma-danger); fill: none; stroke-width: 1.5; margin-bottom: 24px; }
-        #blockerScreen h1 { font-size: 2.5rem; color: var(--sigma-primary); margin-bottom: 12px; }
-        #blockerScreen p { font-size: 1.1rem; color: var(--text-muted); max-width: 460px; margin-bottom: 32px; line-height: 1.6;}
+        #blockerScreen svg { width: 72px; height: 72px; stroke: var(--sigma-danger); fill: none; stroke-width: 1.6; margin-bottom: 20px; }
+        #blockerScreen h1 { font-size: 2.2rem; color: var(--sigma-primary); margin-bottom: 10px; }
+        #blockerScreen p { font-size: 1rem; color: var(--text-muted); max-width: 420px; margin-bottom: 24px; line-height: 1.6;}
         .btn-blocker-contact {
-            background: var(--sigma-danger); color: white; padding: 16px 32px;
-            border-radius: var(--radius-pill); font-weight: 800; font-size: 1rem;
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); transition: var(--transition-bounce);
+            background: var(--sigma-danger); color: white; padding: 14px 28px;
+            border-radius: var(--radius-pill); font-weight: 800; font-size: 0.95rem;
         }
-        .btn-blocker-contact:active { transform: scale(0.95); }
 
-        /* Animations & Skeletons */
-        .skeleton { background: #E2E8F0; color: transparent !important; border-radius: 6px; animation: skel 1.5s infinite ease-in-out; }
-        @keyframes skel { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .skeleton { background: #E2E8F0; color: transparent !important; border-radius: 6px; animation: skel 1.4s infinite ease-in-out; }
+        @keyframes skel { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -872,8 +792,11 @@
         <symbol id="icon-menu" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
         <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
         <symbol id="icon-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="8" y="8" width="8" height="8" rx="1"/></symbol>
+        <symbol id="icon-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+        <symbol id="icon-eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></symbol>
         <symbol id="icon-arrow-down" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></symbol>
         <symbol id="icon-arrow-up" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+        <symbol id="icon-exchange" viewBox="0 0 24 24"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"/></symbol>
         <symbol id="icon-pie" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z"/></symbol>
         <symbol id="icon-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
         <symbol id="icon-lifebuoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/></symbol>
@@ -881,11 +804,8 @@
         <symbol id="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
         <symbol id="icon-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
         <symbol id="icon-shield-alert" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
-        <symbol id="icon-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
-        <symbol id="icon-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
-        <symbol id="icon-message" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
-        <symbol id="icon-download" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline stroke-linecap="round" stroke-linejoin="round" points="7 10 12 15 17 10"/><line stroke-linecap="round" stroke-linejoin="round" x1="12" y1="15" x2="12" y2="3"/></symbol>
-        <symbol id="icon-receipt" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></symbol>
+        <symbol id="icon-file-text" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></symbol>
+        <symbol id="icon-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
     </svg>
 
     <!-- Administrative Blocker Screen -->
@@ -899,7 +819,7 @@
     <!-- Main Mobile & Responsive Workspace Frame -->
     <div class="app-container">
 
-        <!-- Guaranteed 320px Safe Single-Row Header -->
+        <!-- 320px Safe Single-Row Header -->
         <header class="island-topbar" id="mainHeader">
             <div class="brand-cluster">
                 <img src="assets/logo.png" alt="Sigma Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
@@ -907,6 +827,9 @@
             </div>
             
             <div class="header-actions">
+                <a href="leaderboard.html" class="btn-top-action" title="Leaderboard Rankings" aria-label="Leaderboard">
+                    <svg><use href="#icon-trophy"/></svg>
+                </a>
                 <button class="btn-top-action" onclick="appController.openSheet('sheetNotif')" aria-label="Notifications">
                     <svg><use href="#icon-bell"/></svg>
                     <span class="unread-dot" id="headerNotifDot"></span>
@@ -920,7 +843,7 @@
         <!-- Primary Body Modules -->
         <main class="workspace">
 
-            <!-- Dynamic Identity Strip with Clickable Profile -->
+            <!-- Dynamic Identity Strip with Level Badge -->
             <section class="identity-card">
                 <div class="id-left">
                     <div class="user-avatar-wrap" onclick="window.location.href='profile.html'" title="Open Profile">
@@ -930,7 +853,7 @@
                         <div class="avatar-tier-badge" title="Account Tier"><svg><use href="#icon-crown"/></svg></div>
                     </div>
                     <div class="id-text">
-                        <h2><span id="uiDisplayName" class="skeleton">Investor</span> <span class="tier-chip" id="uiTierBadge">Bronze</span></h2>
+                        <h2><span id="uiDisplayName" class="skeleton">Investor Account</span> <span class="tier-chip" id="uiTierBadge">Bronze</span></h2>
                         <p id="uiAccountUID" class="font-mono">UID: SIGMA-••••</p>
                     </div>
                 </div>
@@ -945,14 +868,24 @@
             <section class="system-announcement-pill" id="announcementPill" onclick="appController.openAnnouncementModal()" style="display: none;">
                 <div class="announcement-text">
                     <svg><use href="#icon-bell"/></svg>
-                    <span id="announcementHeadline">Platform Transmissions</span>
+                    <span id="announcementHeadline">Bank IBFT clearing schedule announcement</span>
                 </div>
-                <span style="font-size: 0.75rem; font-weight: 800; color: #065F46;">READ &rarr;</span>
+                <span style="font-size: 0.7rem; font-weight: 800; color: #065F46;">READ &rarr;</span>
             </section>
 
-         
+            <!-- Exact 24-Hour Purchase-Timestamp Countdown Engine -->
+            <section class="live-countdown-island">
+                <div class="countdown-info">
+                    <div class="pulsing-yield-ring"><svg><use href="#icon-pie"/></svg></div>
+                    <div>
+                        <small id="cmsCountdownKicker">Next Profit Credit</small>
+                        <strong id="cmsCountdownPlan">No Active Cycle</strong>
+                    </div>
+                </div>
+                <div class="clock-display font-mono" id="profitClockDisplay">00:00:00</div>
+            </section>
 
-            <!-- Next-Gen Multi-Wallet Core Engine (Premium Card UI with Logos) -->
+            <!-- Multi-Wallet Core Engine -->
             <section class="vault-main-card">
                 <!-- Authentic Embedded Branding inside the Card -->
                 <div class="vault-branding">
@@ -965,11 +898,16 @@
                     <svg class="vault-nfc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h.01M12 12h.01M15 12h.01M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z"/></svg>
                 </div>
 
-                <span class="vault-top-label" id="cmsTotalBalanceLabel">Total Net Worth</span>
+                <div class="vault-top">
+                    <span class="vault-top-label" id="cmsTotalBalanceLabel">Total Net Worth</span>
+                    <button class="btn-eye-toggle" id="btnEyeToggle" aria-label="Toggle Confidentiality">
+                        <svg id="eyeIconElem"><use href="#icon-eye"/></svg>
+                    </button>
+                </div>
 
                 <div class="vault-balance-row">
                     <span class="vault-currency">Rs.</span>
-                    <span class="vault-number font-mono" id="uiNetBalance">0.00</span>
+                    <span class="vault-number font-mono" id="uiNetBalance" data-real="0">0.00</span>
                 </div>
             </section>
 
@@ -983,7 +921,7 @@
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Deposit</span>
-                        <div class="pocket-val font-mono" id="uiDepositWallet">Rs. 0.00</div>
+                        <div class="pocket-val font-mono" id="uiDepositWallet" data-real="0">Rs. 0.00</div>
                         <div class="pocket-sub" id="cmsWalletDepositSub">Plans Buying Only</div>
                     </div>
                 </div>
@@ -996,7 +934,7 @@
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Profit</span>
-                        <div class="pocket-val font-mono" id="uiProfitWallet">Rs. 0.00</div>
+                        <div class="pocket-val font-mono" id="uiProfitWallet" data-real="0">Rs. 0.00</div>
                         <div class="pocket-sub" id="cmsWalletProfitSub">100% Withdrawable</div>
                     </div>
                 </div>
@@ -1009,24 +947,12 @@
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Commission</span>
-                        <div class="pocket-val font-mono" id="uiCommissionWallet">Rs. 0.00</div>
-                        <div class="pocket-sub" id="cmsWalletCommissionSub">Referral Bonuses</div>
+                        <div class="pocket-val font-mono" id="uiCommissionWallet" data-real="0">Rs. 0.00</div>
+                        <div class="pocket-sub" id="cmsWalletCommissionSub">L1, L2, L3 Bonuses</div>
                     </div>
                 </div>
             </section>
 
-               <!-- Exact 24-Hour Purchase-Timestamp Countdown Engine -->
-            <section class="live-countdown-island">
-                <div class="countdown-info">
-                    <div class="pulsing-yield-ring"><svg><use href="#icon-pie"/></svg></div>
-                    <div>
-                        <small id="cmsCountdownKicker">Next Profit Credit</small>
-                        <strong id="cmsCountdownPlan">No Active Cycle</strong>
-                    </div>
-                </div>
-                <div class="clock-display font-mono" id="profitClockDisplay">00:00:00</div>
-            </section>
-            
             <!-- Signature Circular Orbital Action Terminal -->
             <section class="orbital-terminal-wrapper">
                 <div class="orbital-header">
@@ -1045,17 +971,17 @@
                     </div>
 
                     <!-- 6 Equidistant Orbiting Nodes (Perfect Hitboxes, No Animation Glitches) -->
-                    <!-- Node 1: Deposit (Routes to plans) -->
+                    <!-- Node 1: Deposit (Routes to plans.html as requested) -->
                     <a href="plans.html" class="orbit-node node-pos-1" onclick="appController.logAction('deposit_node', 'Opened deposit/plans via terminal')">
                         <div class="orbit-node-icon" style="color: var(--sigma-info-dark);"><svg><use href="#icon-arrow-down"/></svg></div>
                         <span>Deposit</span>
                     </a>
-                    <!-- Node 2: App Download (Replaces Transfer) -->
+                    <!-- Node 2: App Download (Replacing Transfer in Orbit) -->
                     <a href="assets/sigma.apk" download class="orbit-node node-pos-2" onclick="appController.logAction('app_download_node', 'Initiated App Download')">
                         <div class="orbit-node-icon" style="color: var(--sigma-purple);"><svg><use href="#icon-download"/></svg></div>
                         <span>App (APK)</span>
                     </a>
-                    <!-- Node 3: My Plans (Routes to my-plans) -->
+                    <!-- Node 3: My Plans (Routes to my-plans.html) -->
                     <a href="my-plans.html" class="orbit-node node-pos-3" onclick="appController.logAction('my_plans_node', 'Navigated to my plans')">
                         <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg><use href="#icon-pie"/></svg></div>
                         <span>My Plans</span>
@@ -1065,14 +991,14 @@
                         <div class="orbit-node-icon" style="color: var(--sigma-danger-dark);"><svg><use href="#icon-arrow-up"/></svg></div>
                         <span>Withdraw</span>
                     </a>
-                    <!-- Node 5: Network -->
+                    <!-- Node 5: Network (Routes to team.html) -->
                     <a href="team.html" class="orbit-node node-pos-5" onclick="appController.logAction('network_node', 'Viewed network tree')">
                         <div class="orbit-node-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-users"/></svg></div>
                         <span>Network</span>
                     </a>
-                    <!-- Node 6: Support (Uses Chat Icon) -->
+                    <!-- Node 6: Support (Uses Chat/Lifebuoy Icon) -->
                     <a href="support.html" class="orbit-node node-pos-6" onclick="appController.logAction('support_node', 'Opened support desk')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-message"/></svg></div>
+                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-lifebuoy"/></svg></div>
                         <span>Support</span>
                     </a>
                 </div>
@@ -1095,7 +1021,7 @@
                         <div class="terminal-btn-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-users"/></svg></div><span>Network</span>
                     </a>
                     <a href="support.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-message"/></svg></div><span>Support</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-lifebuoy"/></svg></div><span>Support</span>
                     </a>
                 </div>
             </section>
@@ -1103,30 +1029,36 @@
             <!-- New Dedicated Action Grid Below Terminal -->
             <section class="secondary-actions-container">
                 <div class="secondary-actions-grid">
+                    <!-- Exchange / Transfer moved here -->
+                    <button class="sec-action-btn" onclick="appController.openSheet('sheetExchange')">
+                        <div class="sec-action-icon" style="color: var(--sigma-purple);"><svg><use href="#icon-exchange"/></svg></div>
+                        Transfer
+                    </button>
                     <a href="transactions.html" class="sec-action-btn">
                         <div class="sec-action-icon" style="color: var(--sigma-secondary);"><svg><use href="#icon-receipt"/></svg></div>
                         Transactions
                     </a>
-                    <a href="leaderboard.html" class="sec-action-btn">
-                        <div class="sec-action-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-trophy"/></svg></div>
-                        Leaderboard
-                    </a>
                 </div>
 
-                <!-- Official Verification Dynamically Injected Button -->
+                <!-- Leaderboard Button Full Width -->
+                <a href="leaderboard.html" class="btn-full-wide btn-leaderboard" onclick="appController.logAction('leaderboard_click', 'Navigated to global leaderboard')">
+                    <svg><use href="#icon-trophy"/></svg> View Global Leaderboard
+                </a>
+
+                <!-- Official Verification Dynamically Injected Buttons (FBR/SBP) -->
                 <div id="proofsGridContainer">
-                    <!-- FBR/SBP Buttons populated here via JS -->
+                    <!-- Buttons populated here via JS -->
                 </div>
             </section>
 
-            <!-- 3-Step Stepper for Active Transaction Lifecycle -->
+            <!-- Live Stepper for Pending Transaction Lifecycle -->
             <section class="stepper-card" id="stepperLifecycleBox" style="display: none;">
                 <div class="stepper-header">
                     <div>
                         <span class="badge-type" id="stepperTrxType">Transaction</span>
-                        <h3 id="stepperTrxAmount" class="font-mono" style="margin-top: 6px;">Rs. 0.00</h3>
+                        <h3 id="stepperTrxAmount" class="font-mono" style="margin-top: 4px;">Rs. 0.00</h3>
                     </div>
-                    <span id="stepperReference" class="font-mono" style="font-size: 0.8rem; color: var(--text-muted);">REF-••••</span>
+                    <span id="stepperReference" class="font-mono" style="font-size: 0.75rem; color: var(--text-muted);">REF-••••</span>
                 </div>
 
                 <div class="stepper-track">
@@ -1145,7 +1077,7 @@
                 </div>
 
                 <div class="rejection-reason-box" id="stepperRejectionDetails">
-                    <strong>Verification Note:</strong> <span id="rejectionReasonText">None</span>
+                    <strong>Admin Verification Note:</strong> <span id="rejectionReasonText">None</span>
                 </div>
             </section>
 
@@ -1156,7 +1088,7 @@
                         <h3 id="cmsNetworkMatrixTitle">Referral Network Matrix</h3>
                         <p style="font-size: 0.8rem; margin-top: 2px;">Verified Ledger Distributions</p>
                     </div>
-                    <button class="btn-id-pill" onclick="appController.openQrModal()"><svg><use href="#icon-qr"/></svg> Invite</button>
+                    <button class="btn-id-pill" onclick="appController.openQrModal()"><svg><use href="#icon-qr"/></svg> Invite QR</button>
                 </div>
 
                 <div class="tree-tabs-nav">
@@ -1194,7 +1126,7 @@
                     <a href="transactions.html">Full History &rarr;</a>
                 </div>
                 <div id="recentTransactionList">
-                    <div style="padding: 24px 0; text-align: center; color: var(--text-light); font-size: 0.9rem;">
+                    <div style="padding: 24px 0; text-align: center; color: var(--text-light); font-size: 0.85rem;">
                         Connecting to authenticated ledger...
                     </div>
                 </div>
@@ -1229,17 +1161,63 @@
     </a>
 
     <!-- ==========================================================================
+         INTERNAL WALLET TRANSFER MODAL
+         ========================================================================== -->
+    <div class="overlay" id="sheetExchange">
+        <div class="sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <h3>Internal Wallet Transfer</h3>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetExchange')"><svg><use href="#icon-x"/></svg></button>
+            </div>
+            <div class="sheet-body">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5;">
+                    Transfer your earned profit or referral bonus into your <strong>Deposit Wallet</strong> instantly to purchase plans without external fee charges.
+                </p>
+
+                <div class="sheet-field">
+                    <label>Transfer Source</label>
+                    <div class="sheet-input-box">
+                        <select id="transferSourceWallet">
+                            <option value="profit">Profit / ROI Wallet</option>
+                            <option value="commission">Commission Wallet</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sheet-field">
+                    <label>Destination</label>
+                    <div class="sheet-input-box" style="background: var(--sigma-surface-alt); opacity: 0.8;">
+                        <input type="text" value="Main / Deposit Wallet" readonly tabindex="-1">
+                    </div>
+                </div>
+
+                <div class="sheet-field">
+                    <label>Transfer Amount (PKR)</label>
+                    <div class="sheet-input-box">
+                        <input type="number" id="transferAmountInput" placeholder="Min. Rs. 50" min="50" step="any">
+                    </div>
+                </div>
+
+                <button class="btn-sheet-submit" id="btnExecuteTransfer" onclick="appController.executeInternalTransfer()">
+                    Confirm Internal Transfer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
          INVITE QR MODAL (PREMIUM WITH LOGO)
          ========================================================================== -->
     <div class="overlay" id="sheetQr">
-        <div class="sheet" style="max-width: 460px;">
+        <div class="sheet" style="max-width: 440px;">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <h3>Personal Invite Code</h3>
+                <h3>Personal Invite QR</h3>
                 <button class="sheet-close-btn" onclick="appController.closeSheet('sheetQr')"><svg><use href="#icon-x"/></svg></button>
             </div>
             <div class="sheet-body" style="text-align: center;">
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px;">
                     Scan with any camera app to bind your referral tree automatically. Your unique identifier is embedded.
                 </p>
                 <div class="qr-wrapper">
@@ -1271,7 +1249,7 @@
             <div class="sheet-body proof-viewer-body">
                 <img id="proofViewerImg" src="" alt="Official Document" class="proof-viewer-img">
                 <p id="proofViewerDesc" style="text-align: center; color: var(--text-muted); font-size: 0.9rem; max-width: 400px; margin: 0 auto;"></p>
-                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetProofViewer')">Close Viewer</button>
+                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetProofViewer')" style="background: var(--sigma-secondary);">Close Viewer</button>
             </div>
         </div>
     </div>
@@ -1328,12 +1306,8 @@
             </div>
             <div class="sheet-body" id="cmsNavMenuWrapper">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <a href="leaderboard.html" class="btn-sheet-submit" style="color: var(--sigma-gold-dark); background: var(--sigma-gold-soft); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-gold-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;"><use href="#icon-trophy"/></svg>
-                        <span class="cms-nav-label" data-key="navLeaderboard">Global Leaderboard</span>
-                    </a>
                     <a href="profile.html" class="btn-sheet-submit" style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;"><use href="#icon-crown"/></svg>
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-user"/></svg>
                         <span class="cms-nav-label" data-key="navProfile">Profile & Settings</span>
                     </a>
                     <a href="transactions.html" class="btn-sheet-submit" style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
@@ -1372,8 +1346,10 @@
          */
         const appController = (() => {
             
+            // --- State Variables ---
             let authUser = null;
             let userProfile = null;
+            let balanceMasked = sessionStorage.getItem('sigma_mask_balance') === 'true';
             let clockInterval = null;
             let qrcodeInstance = null;
             let currentNotifications = [];
@@ -1398,8 +1374,6 @@
                 if (el) el.style[prop] = value;
             };
 
-            // Haptic Feedback Intervention Bug Fix
-            // Uses navigator.userActivation to ensure it only vibrates when user interacts.
             const hapticTouch = (ms = 30) => {
                 try {
                     if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return;
@@ -1417,6 +1391,10 @@
 
             const animateValue = (element, start, end, duration = 700) => {
                 if (!element) return;
+                if (balanceMasked) {
+                    element.textContent = "••••••••";
+                    return;
+                }
                 const startTime = performance.now();
                 const step = (currentTime) => {
                     const progress = Math.min((currentTime - startTime) / duration, 1);
@@ -1435,15 +1413,31 @@
             const updateBalanceVisibility = () => {
                 if (!dom.uiNetBalance) return; 
 
-                if (userProfile) {
-                    const total = (userProfile.depositBalance || 0) + (userProfile.profitBalance || 0) + (userProfile.commissionBalance || 0);
-                    animateValue(dom.uiNetBalance, 0, total);
-                    if(dom.uiDepositWallet) dom.uiDepositWallet.textContent = "Rs. " + (userProfile.depositBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
-                    if(dom.uiProfitWallet) dom.uiProfitWallet.textContent = "Rs. " + (userProfile.profitBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
-                    if(dom.uiCommissionWallet) dom.uiCommissionWallet.textContent = "Rs. " + (userProfile.commissionBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
+                if (balanceMasked) {
+                    dom.uiNetBalance.textContent = "••••••••";
+                    if(dom.uiDepositWallet) dom.uiDepositWallet.textContent = "••••••";
+                    if(dom.uiProfitWallet) dom.uiProfitWallet.textContent = "••••••";
+                    if(dom.uiCommissionWallet) dom.uiCommissionWallet.textContent = "••••••";
+                    if(dom.eyeIconElem) dom.eyeIconElem.innerHTML = '<use href="#icon-eye-off"/>';
                 } else {
-                    animateValue(dom.uiNetBalance, 0, 0);
+                    if(dom.eyeIconElem) dom.eyeIconElem.innerHTML = '<use href="#icon-eye"/>';
+                    if (userProfile) {
+                        const total = (userProfile.depositBalance || 0) + (userProfile.profitBalance || 0) + (userProfile.commissionBalance || 0);
+                        animateValue(dom.uiNetBalance, 0, total);
+                        if(dom.uiDepositWallet) dom.uiDepositWallet.textContent = "Rs. " + (userProfile.depositBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
+                        if(dom.uiProfitWallet) dom.uiProfitWallet.textContent = "Rs. " + (userProfile.profitBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
+                        if(dom.uiCommissionWallet) dom.uiCommissionWallet.textContent = "Rs. " + (userProfile.commissionBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
+                    } else {
+                        animateValue(dom.uiNetBalance, 0, 0);
+                    }
                 }
+            };
+
+            const toggleEye = () => {
+                balanceMasked = !balanceMasked;
+                sessionStorage.setItem('sigma_mask_balance', balanceMasked ? 'true' : 'false');
+                hapticTouch(35);
+                updateBalanceVisibility();
             };
 
             const setupPullToRefresh = () => {
@@ -1625,108 +1619,111 @@
                 }, 1000);
             };
 
-            // --- Centralized CMS Configuration Binder ---
+            // --- Centralized CMS Configuration Binder & Listener Safe Wrapper ---
             const bindCMS = (db) => {
-                db.collection('settings').doc('cms_dashboard').onSnapshot(doc => {
-                    if (!doc.exists) return;
-                    const cms = doc.data();
+                try {
+                    db.collection('settings').doc('cms_dashboard').onSnapshot(doc => {
+                        if (!doc.exists) return;
+                        const cms = doc.data();
 
-                    safeSetText('cmsTotalBalanceLabel', cms.totalBalanceLabel || 'Total Net Worth');
-                    safeSetText('cmsBtnDeposit', cms.btnDeposit || 'Deposit');
-                    safeSetText('cmsBtnWithdraw', cms.btnWithdraw || 'Withdraw');
-                    safeSetText('cmsWalletDepositTitle', cms.walletDepositTitle || 'Deposit / Main');
-                    safeSetText('cmsWalletDepositSub', cms.walletDepositSub || 'Plans Buying Only');
-                    safeSetText('cmsWalletProfitTitle', cms.walletProfitTitle || 'Profit / ROI');
-                    safeSetText('cmsWalletProfitSub', cms.walletProfitSub || '100% Withdrawable');
-                    safeSetText('cmsWalletCommissionTitle', cms.walletCommissionTitle || 'Commission');
-                    safeSetText('cmsWalletCommissionSub', cms.walletCommissionSub || 'Referral Bonuses');
-                    safeSetText('cmsTerminalTitle', cms.terminalTitle || 'Command Center');
-                    safeSetText('cmsNetworkMatrixTitle', cms.networkMatrixTitle || 'Referral Network Matrix');
-                    safeSetText('cmsRecentLedgerTitle', cms.recentLedgerTitle || 'Recent Ledger Records');
-                    safeSetText('cmsCountdownKicker', cms.countdownKicker || 'Next Profit Credit');
+                        safeSetText('cmsTotalBalanceLabel', cms.totalBalanceLabel || 'Total Net Worth');
+                        safeSetText('cmsBtnDeposit', cms.btnDeposit || 'Deposit');
+                        safeSetText('cmsBtnWithdraw', cms.btnWithdraw || 'Withdraw');
+                        safeSetText('cmsWalletDepositTitle', cms.walletDepositTitle || 'Deposit / Main');
+                        safeSetText('cmsWalletDepositSub', cms.walletDepositSub || 'Plans Buying Only');
+                        safeSetText('cmsWalletProfitTitle', cms.walletProfitTitle || 'Profit / ROI');
+                        safeSetText('cmsWalletProfitSub', cms.walletProfitSub || '100% Withdrawable');
+                        safeSetText('cmsWalletCommissionTitle', cms.walletCommissionTitle || 'Commission');
+                        safeSetText('cmsWalletCommissionSub', cms.walletCommissionSub || 'Referral Bonuses');
+                        safeSetText('cmsTerminalTitle', cms.terminalTitle || 'Command Center');
+                        safeSetText('cmsNetworkMatrixTitle', cms.networkMatrixTitle || 'Referral Network Matrix');
+                        safeSetText('cmsRecentLedgerTitle', cms.recentLedgerTitle || 'Recent Ledger Records');
+                        safeSetText('cmsCountdownKicker', cms.countdownKicker || 'Next Profit Credit');
 
-                    if (cms.navLabels) {
-                        document.querySelectorAll('.cms-nav-label').forEach(el => {
-                            const key = el.getAttribute('data-key');
-                            if (key && cms.navLabels[key]) el.textContent = cms.navLabels[key];
-                        });
-                    }
-                });
+                        if (cms.navLabels) {
+                            document.querySelectorAll('.cms-nav-label').forEach(el => {
+                                const key = el.getAttribute('data-key');
+                                if (key && cms.navLabels[key]) el.textContent = cms.navLabels[key];
+                            });
+                        }
+                    }, err => console.warn("Waiting for CMS permissions..."));
 
-                db.collection('settings').doc('referrals').onSnapshot(doc => {
-                    if (doc.exists) {
-                        const r = doc.data();
-                        if (r.l1_amount) referralRates.l1 = Number(r.l1_amount);
-                        if (r.l2_amount) referralRates.l2 = Number(r.l2_amount);
-                        if (r.l3_percent) referralRates.l3_percent = Number(r.l3_percent);
-                    }
-                    safeSetText('btnTier1', `Level 1 (Rs. ${referralRates.l1})`);
-                    safeSetText('btnTier2', `Level 2 (Rs. ${referralRates.l2})`);
-                    safeSetText('btnTier3', `Level 3 (${referralRates.l3_percent}%)`);
-                });
-
-                // Official FBR/SBP Proofs
-                db.collection('settings').doc('proofs').onSnapshot(doc => {
-                    const proofsGrid = document.getElementById('proofsGridContainer');
-                    if (!proofsGrid) return;
-
-                    if (doc.exists && doc.data().documents && doc.data().documents.length > 0) {
-                        const docs = doc.data().documents;
-                        proofsGrid.innerHTML = '';
-                        docs.forEach(d => {
-                            if(d.visible !== false) {
-                                const btn = document.createElement('div');
-                                btn.className = 'btn-full-wide btn-fbr';
-                                btn.innerHTML = `<svg><use href="#icon-file-text"/></svg> ${d.title}`;
-                                btn.onclick = () => openProofModal(d.imageUrl, d.description);
-                                proofsGrid.appendChild(btn);
-                            }
-                        });
-                    } else {
-                        proofsGrid.innerHTML = '';
-                    }
-                });
-
-                db.collection('settings').doc('support').onSnapshot(doc => {
-                    if (dom.btnFloatingWhatsApp) {
+                    db.collection('settings').doc('referrals').onSnapshot(doc => {
                         if (doc.exists) {
-                            const s = doc.data();
-                            if (s.whatsapp_enabled === false) {
-                                safeStyle('btnFloatingWhatsApp', 'display', 'none');
+                            const r = doc.data();
+                            if (r.l1_amount) referralRates.l1 = Number(r.l1_amount);
+                            if (r.l2_amount) referralRates.l2 = Number(r.l2_amount);
+                            if (r.l3_percent) referralRates.l3_percent = Number(r.l3_percent);
+                        }
+                        safeSetText('btnTier1', `Level 1 (Rs. ${referralRates.l1})`);
+                        safeSetText('btnTier2', `Level 2 (Rs. ${referralRates.l2})`);
+                        safeSetText('btnTier3', `Level 3 (${referralRates.l3_percent}%)`);
+                    }, err => console.warn("Waiting for Referral permissions..."));
+
+                    db.collection('settings').doc('proofs').onSnapshot(doc => {
+                        const proofsGrid = document.getElementById('proofsGridContainer');
+                        if (!proofsGrid) return;
+
+                        if (doc.exists && doc.data().documents && doc.data().documents.length > 0) {
+                            const docs = doc.data().documents;
+                            proofsGrid.innerHTML = '';
+                            docs.forEach(d => {
+                                if(d.visible !== false) {
+                                    const btn = document.createElement('div');
+                                    btn.className = 'btn-full-wide btn-fbr';
+                                    btn.innerHTML = `<svg><use href="#icon-file-text"/></svg> ${d.title}`;
+                                    btn.onclick = () => openProofModal(d.imageUrl, d.description);
+                                    proofsGrid.appendChild(btn);
+                                }
+                            });
+                        } else {
+                            proofsGrid.innerHTML = '';
+                        }
+                    }, err => console.warn("Waiting for Proof permissions..."));
+
+                    db.collection('settings').doc('support').onSnapshot(doc => {
+                        if (dom.btnFloatingWhatsApp) {
+                            if (doc.exists) {
+                                const s = doc.data();
+                                if (s.whatsapp_enabled === false) {
+                                    safeStyle('btnFloatingWhatsApp', 'display', 'none');
+                                } else {
+                                    safeStyle('btnFloatingWhatsApp', 'display', 'flex');
+                                    if (s.whatsapp_url) dom.btnFloatingWhatsApp.href = s.whatsapp_url;
+                                }
                             } else {
                                 safeStyle('btnFloatingWhatsApp', 'display', 'flex');
-                                if (s.whatsapp_url) dom.btnFloatingWhatsApp.href = s.whatsapp_url;
                             }
-                        } else {
-                            safeStyle('btnFloatingWhatsApp', 'display', 'flex');
                         }
-                    }
-                });
+                    }, err => console.warn("Waiting for Support permissions..."));
 
-                db.collection('settings').doc('system').onSnapshot(sysDoc => {
-                    if (!sysDoc.exists) return;
-                    const sys = sysDoc.data();
+                    db.collection('settings').doc('system').onSnapshot(sysDoc => {
+                        if (!sysDoc.exists) return;
+                        const sys = sysDoc.data();
 
-                    if (sys.maintenance === true && dom.blockerScreen) {
-                        document.body.classList.add('locked');
-                        dom.blockerScreen.classList.add('active');
-                        safeSetText('blockerTitle', "System Maintenance");
-                        safeSetText('blockerMsg', sys.maintenanceMessage || "Sigma network node updates in progress. Functionality is temporarily suspended.");
-                        if (dom.blockerContactBtn && sys.supportUrl) dom.blockerContactBtn.href = sys.supportUrl;
-                    } else if (dom.blockerScreen) {
-                        dom.blockerScreen.classList.remove('active');
-                        document.body.classList.remove('locked');
-                    }
+                        if (sys.maintenance === true && dom.blockerScreen) {
+                            document.body.classList.add('locked');
+                            dom.blockerScreen.classList.add('active');
+                            safeSetText('blockerTitle', "System Maintenance");
+                            safeSetText('blockerMsg', sys.maintenanceMessage || "Sigma network node updates in progress. Functionality is temporarily suspended.");
+                            if (dom.blockerContactBtn && sys.supportUrl) dom.blockerContactBtn.href = sys.supportUrl;
+                        } else if (dom.blockerScreen) {
+                            dom.blockerScreen.classList.remove('active');
+                            document.body.classList.remove('locked');
+                        }
 
-                    if (sys.activeAnnouncement && dom.announcementPill) {
-                        safeStyle('announcementPill', 'display', 'flex');
-                        safeSetText('announcementHeadline', sys.activeAnnouncement.title || "Platform Transmissions");
-                        safeSetText('announcementModalTitle', sys.activeAnnouncement.title || "Platform Transmissions");
-                        safeSetText('announcementModalBody', sys.activeAnnouncement.body || "Please read the latest updates regarding the platform infrastructure.");
-                    } else if (dom.announcementPill) {
-                        safeStyle('announcementPill', 'display', 'none');
-                    }
-                });
+                        if (sys.activeAnnouncement && dom.announcementPill) {
+                            safeStyle('announcementPill', 'display', 'flex');
+                            safeSetText('announcementHeadline', sys.activeAnnouncement.title || "Platform Transmissions");
+                            safeSetText('announcementModalTitle', sys.activeAnnouncement.title || "Platform Transmissions");
+                            safeSetText('announcementModalBody', sys.activeAnnouncement.body || "Please read the latest updates regarding the platform infrastructure.");
+                        } else if (dom.announcementPill) {
+                            safeStyle('announcementPill', 'display', 'none');
+                        }
+                    }, err => console.warn("Waiting for System permissions..."));
+                } catch (error) {
+                    console.warn("Global settings not yet accessible.");
+                }
             };
 
             // --- Firebase Auth & Data Listeners ---
@@ -1752,16 +1749,26 @@
 
                     // Identity & Avatar
                     if (user.photoURL && dom.uiAvatarWrap) {
-                        const imgTag = `<img src="${user.photoURL}" alt="User Avatar" referrerpolicy="no-referrer">`;
+                        const imgTag = `<img src="${user.photoURL}" alt="User Avatar" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
                         dom.uiAvatarWrap.innerHTML = imgTag;
                         const dockAvatar = document.getElementById('dockAvatarContainer');
                         if(dockAvatar) dockAvatar.innerHTML = imgTag;
                     }
 
-                    // Unique Ref URL
-                    const uniqueSlug = user.displayName ? user.displayName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 5) : uid.substring(0, 5).toLowerCase();
-                    const invUrl = `https://sigmaaz.vercel.app/reg.html?ref=${uniqueSlug}`; 
-                    if(dom.rawReferralUrl) dom.rawReferralUrl.value = invUrl;
+                    // Safe Username Retrieval
+                    db.collection('users').doc(uid).get().then(uDoc => {
+                        let uniqueSlug = uid.substring(0, 5).toLowerCase(); // Default
+                        if (uDoc.exists && uDoc.data().username) {
+                            uniqueSlug = uDoc.data().username;
+                        } else if (user.displayName) {
+                            uniqueSlug = user.displayName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 5);
+                        }
+                        
+                        // Enforce ?ref=username link format
+                        const invUrl = `https://sigmaaz.vercel.app/reg.html?ref=${uniqueSlug}`; 
+                        if(dom.rawReferralUrl) dom.rawReferralUrl.value = invUrl;
+                    });
+                    
                     safeSetText('uiAccountUID', `UID: SIGMA-${uid.substring(0, 5).toUpperCase()}`);
 
                     if (!sessionStorage.getItem('sigma_session_logged')) {
@@ -1769,212 +1776,299 @@
                         sessionStorage.setItem('sigma_session_logged', 'true');
                     }
 
-                    // Real-Time User Profile Listener
-                    db.collection('users').doc(uid).onSnapshot(doc => {
-                        if (!doc.exists) return;
-                        userProfile = doc.data();
+                    // Real-Time User Profile Listener (Wrapped in Try-Catch)
+                    try {
+                        db.collection('users').doc(uid).onSnapshot(doc => {
+                            if (!doc.exists) return;
+                            userProfile = doc.data();
 
-                        if (userProfile.status === 'blocked' && dom.blockerScreen) {
-                            document.body.classList.add('locked');
-                            dom.blockerScreen.classList.add('active');
-                            safeSetText('blockerTitle', "Account Suspended");
-                            safeSetText('blockerMsg', "Your account has been restricted. Contact support.");
-                            auth.signOut();
-                            return;
-                        }
-
-                        const name = userProfile.username || userProfile.fullName || user.displayName || "Investor";
-                        safeSetText('uiDisplayName', name);
-                        if (!user.photoURL && dom.uiAvatarLetter) dom.uiAvatarLetter.textContent = name.charAt(0).toUpperCase();
-
-                        const refCount = userProfile.referralsCount || 0;
-                        if (dom.uiTierBadge) {
-                            if (refCount >= 50) {
-                                dom.uiTierBadge.textContent = "Sigma Elite";
-                                dom.uiTierBadge.style.background = "#FEF3C7"; dom.uiTierBadge.style.color = "#92400E";
-                            } else if (refCount >= 20) {
-                                dom.uiTierBadge.textContent = "Gold";
-                                dom.uiTierBadge.style.background = "#FEF3C7"; dom.uiTierBadge.style.color = "#B45309";
-                            } else if (refCount >= 5) {
-                                dom.uiTierBadge.textContent = "Silver";
-                                dom.uiTierBadge.style.background = "#F1F5F9"; dom.uiTierBadge.style.color = "#475569";
-                            } else {
-                                dom.uiTierBadge.textContent = "Bronze";
+                            if (userProfile.status === 'blocked' && dom.blockerScreen) {
+                                document.body.classList.add('locked');
+                                dom.blockerScreen.classList.add('active');
+                                safeSetText('blockerTitle', "Account Suspended");
+                                safeSetText('blockerMsg', "Your account has been restricted. Contact support.");
+                                auth.signOut();
+                                return;
                             }
-                        }
 
-                        document.querySelectorAll('.skeleton').forEach(sk => sk.classList.remove('skeleton'));
-                        updateBalanceVisibility();
+                            const name = userProfile.username || userProfile.fullName || user.displayName || "Investor";
+                            safeSetText('uiDisplayName', name);
+                            if (!user.photoURL && dom.uiAvatarLetter) dom.uiAvatarLetter.textContent = name.charAt(0).toUpperCase();
 
-                    }, err => console.error("Profile access error:", err));
-
-                    // Active Plan Timing Listener
-                    db.collection('users').doc(uid).collection('active_plans')
-                      .where('status', '==', 'active')
-                      .limit(1)
-                      .onSnapshot(planSnap => {
-                        if (!planSnap.empty) {
-                            const activePlan = planSnap.docs[0].data();
-                            safeSetText('cmsCountdownPlan', activePlan.name || "Portfolio Cycle");
-                            startExact24hTimer(activePlan.subscribedAt);
-                        } else {
-                            startExact24hTimer(null);
-                        }
-                    });
-
-                    // Notifications Listener
-                    db.collection('users').doc(uid).collection('notifications')
-                      .orderBy('timestamp', 'desc')
-                      .limit(25)
-                      .onSnapshot(notifSnap => {
-                        currentNotifications = notifSnap.docs;
-                        
-                        if (notifSnap.empty) {
-                            if(dom.notifListContainer) dom.notifListContainer.innerHTML = '<div style="padding: 40px 0; text-align: center; color: var(--text-light);"><svg style="width: 48px; height: 48px; stroke: currentColor; fill: none; stroke-width: 1.5; margin-bottom: 16px;"><use href="#icon-bell"/></svg><p>No active notifications recorded.</p></div>';
-                            if(dom.headerNotifDot) dom.headerNotifDot.classList.remove('active');
-                            if(dom.btnMarkAllRead) dom.btnMarkAllRead.style.display = 'none';
-                            return;
-                        }
-
-                        if(dom.notifListContainer) dom.notifListContainer.innerHTML = '';
-                        let hasUnread = false;
-
-                        notifSnap.forEach(doc => {
-                            const n = doc.data();
-                            if (!n.read) hasUnread = true;
-                            
-                            const item = document.createElement('div');
-                            item.className = `notif-feed-item ${n.read ? '' : 'unread'} ${n.pinned ? 'pinned' : ''}`;
-                            const timeStr = n.timestamp ? new Date(n.timestamp.seconds * 1000).toLocaleDateString(undefined, {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : 'Just now';
-                            
-                            let iconObj = '#icon-bell';
-                            if (n.type.includes('deposit') || n.type.includes('withdraw')) iconObj = '#icon-wallet';
-                            else if (n.type.includes('security') || n.type.includes('login')) iconObj = '#icon-shield-alert';
-                            else if (n.type.includes('plan')) iconObj = '#icon-pie';
-
-                            item.innerHTML = `
-                                <div class="notif-feed-top">
-                                    <div class="notif-feed-title-wrap">
-                                        <div class="notif-icon"><svg><use href="${iconObj}"/></svg></div>
-                                        <strong>${n.title}</strong>
-                                    </div>
-                                    <span>${timeStr}</span>
-                                </div>
-                                <p>${n.body}</p>
-                            `;
-                            
-                            item.addEventListener('click', () => {
-                                if (!n.read) doc.ref.update({ read: true });
-                            });
-                            if(dom.notifListContainer) dom.notifListContainer.appendChild(item);
-                        });
-
-                        if(dom.headerNotifDot) dom.headerNotifDot.classList.toggle('active', hasUnread);
-                        if(dom.btnMarkAllRead) dom.btnMarkAllRead.style.display = hasUnread ? 'block' : 'none';
-                    });
-
-                    // Recent Transactions & Stepper Listener
-                    db.collection('users').doc(uid).collection('transactions')
-                      .orderBy('createdAt', 'desc')
-                      .limit(6).onSnapshot(snapshot => {
-                        
-                        if (snapshot.empty) {
-                            if(dom.recentTransactionList) dom.recentTransactionList.innerHTML = '<div style="padding: 24px 0; text-align: center; color: var(--text-light); font-size: 0.9rem;">No historical ledger entries verified yet.</div>';
-                            if(dom.stepperLifecycleBox) dom.stepperLifecycleBox.style.display = 'none';
-                            return;
-                        }
-
-                        if(dom.recentTransactionList) dom.recentTransactionList.innerHTML = '';
-                        let pendingFound = false;
-
-                        snapshot.forEach((doc, idx) => {
-                            const tx = doc.data();
-                            const isPositive = ['deposit', 'commission', 'welcome_bonus', 'profit'].includes(tx.type);
-                            const amtParsed = Number(tx.amount || 0);
-
-                            if (idx === 0 && (tx.status === 'pending' || tx.status === 'rejected')) {
-                                pendingFound = true;
-                                if(dom.stepperLifecycleBox) dom.stepperLifecycleBox.style.display = 'block';
-                                safeSetText('stepperTrxType', (tx.type || 'Transaction').replace('_', ' '));
-                                safeSetText('stepperTrxAmount', "Rs. " + amtParsed.toLocaleString('en-PK'));
-                                safeSetText('stepperReference', tx.referenceId || doc.id.substring(0, 8));
-
-                                const sNode1 = document.getElementById('stepNode1');
-                                const sNode2 = document.getElementById('stepNode2');
-                                const sNode3 = document.getElementById('stepNode3');
-                                const rejBox = document.getElementById('stepperRejectionDetails');
-
-                                if(sNode1) sNode1.className = "step-node completed";
-                                if (tx.status === 'rejected') {
-                                    if(sNode2) sNode2.className = "step-node completed";
-                                    if(sNode3) sNode3.className = "step-node rejected";
-                                    safeSetText('step3Label', "Rejected");
-                                    if(rejBox) {
-                                        rejBox.style.display = 'block';
-                                        safeSetText('rejectionReasonText', tx.rejectionReason || "Verification failed. Contact support desk.");
-                                    }
+                            const refCount = userProfile.referralsCount || 0;
+                            if (dom.uiTierBadge) {
+                                if (refCount >= 50) {
+                                    dom.uiTierBadge.textContent = "Sigma Elite";
+                                    dom.uiTierBadge.style.background = "#FEF3C7"; dom.uiTierBadge.style.color = "#92400E";
+                                } else if (refCount >= 20) {
+                                    dom.uiTierBadge.textContent = "Gold";
+                                    dom.uiTierBadge.style.background = "#FEF3C7"; dom.uiTierBadge.style.color = "#B45309";
+                                } else if (refCount >= 5) {
+                                    dom.uiTierBadge.textContent = "Silver";
+                                    dom.uiTierBadge.style.background = "#F1F5F9"; dom.uiTierBadge.style.color = "#475569";
                                 } else {
-                                    if(sNode2) sNode2.className = "step-node current";
-                                    if(sNode3) sNode3.className = "step-node";
-                                    safeSetText('step3Label', "Processing");
-                                    if(rejBox) rejBox.style.display = 'none';
+                                    dom.uiTierBadge.textContent = "Bronze";
                                 }
                             }
 
-                            const row = document.createElement('div');
-                            row.className = 'tx-history-item';
+                            document.querySelectorAll('.skeleton').forEach(sk => sk.classList.remove('skeleton'));
+                            updateBalanceVisibility();
+
+                        }, err => console.warn("Waiting for User Profile permissions..."));
+                    } catch (e) { console.warn(e); }
+
+                    // Active Plan Timing Listener
+                    try {
+                        db.collection('users').doc(uid).collection('active_plans')
+                        .where('status', '==', 'active')
+                        .limit(1)
+                        .onSnapshot(planSnap => {
+                            if (!planSnap.empty) {
+                                const activePlan = planSnap.docs[0].data();
+                                safeSetText('cmsCountdownPlan', activePlan.name || "Portfolio Cycle");
+                                startExact24hTimer(activePlan.subscribedAt);
+                            } else {
+                                startExact24hTimer(null);
+                            }
+                        }, err => console.warn("Waiting for Plan permissions..."));
+                    } catch (e) {}
+
+                    // Notifications Listener
+                    try {
+                        db.collection('users').doc(uid).collection('notifications')
+                        .orderBy('timestamp', 'desc')
+                        .limit(25)
+                        .onSnapshot(notifSnap => {
+                            currentNotifications = notifSnap.docs;
                             
-                            let txIconStr = 'neutral';
-                            if (tx.status === 'rejected') txIconStr = 'negative';
-                            else if (isPositive) txIconStr = 'positive';
+                            if (notifSnap.empty) {
+                                if(dom.notifListContainer) dom.notifListContainer.innerHTML = '<div style="padding: 40px 0; text-align: center; color: var(--text-light);"><svg style="width: 48px; height: 48px; stroke: currentColor; fill: none; stroke-width: 1.5; margin-bottom: 16px;"><use href="#icon-bell"/></svg><p>No active notifications recorded.</p></div>';
+                                if(dom.headerNotifDot) dom.headerNotifDot.classList.remove('active');
+                                if(dom.btnMarkAllRead) dom.btnMarkAllRead.style.display = 'none';
+                                return;
+                            }
 
-                            let txSvg = '#icon-exchange';
-                            if (tx.type === 'deposit') txSvg = '#icon-arrow-down';
-                            if (tx.type === 'withdraw') txSvg = '#icon-arrow-up';
+                            if(dom.notifListContainer) dom.notifListContainer.innerHTML = '';
+                            let hasUnread = false;
 
-                            row.innerHTML = `
-                                <div class="tx-icon ${txIconStr}"><svg><use href="${txSvg}"/></svg></div>
-                                <div class="tx-details">
-                                    <strong>${tx.description || tx.type.replace('_', ' ')}</strong>
-                                    <small>${tx.referenceId || doc.id.substring(0,8)} &bull; ${tx.status ? tx.status.toUpperCase() : 'VERIFIED'}</small>
-                                </div>
-                                <div class="tx-amount">
-                                    <strong class="font-mono" style="color: ${isPositive ? 'var(--sigma-accent-dark)' : 'var(--text-heading)'};">
-                                        ${isPositive ? '+' : '-'}Rs. ${amtParsed.toLocaleString('en-PK')}
-                                    </strong>
-                                    <small>${tx.createdAt ? new Date(tx.createdAt.seconds * 1000).toLocaleDateString() : 'Recent'}</small>
-                                </div>
-                            `;
-                            if(dom.recentTransactionList) dom.recentTransactionList.appendChild(row);
+                            notifSnap.forEach(doc => {
+                                const n = doc.data();
+                                if (!n.read) hasUnread = true;
+                                
+                                const item = document.createElement('div');
+                                item.className = `notif-feed-item ${n.read ? '' : 'unread'} ${n.pinned ? 'pinned' : ''}`;
+                                const timeStr = n.timestamp ? new Date(n.timestamp.seconds * 1000).toLocaleDateString(undefined, {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : 'Just now';
+                                
+                                let iconObj = '#icon-bell';
+                                if (n.type.includes('deposit') || n.type.includes('withdraw') || n.type.includes('transfer')) iconObj = '#icon-wallet';
+                                else if (n.type.includes('security') || n.type.includes('login')) iconObj = '#icon-shield-alert';
+                                else if (n.type.includes('plan')) iconObj = '#icon-pie';
+
+                                item.innerHTML = `
+                                    <div class="notif-feed-top">
+                                        <div class="notif-feed-title-wrap">
+                                            <div class="notif-icon"><svg><use href="${iconObj}"/></svg></div>
+                                            <strong>${n.title}</strong>
+                                        </div>
+                                        <span>${timeStr}</span>
+                                    </div>
+                                    <p>${n.body}</p>
+                                `;
+                                
+                                item.addEventListener('click', () => {
+                                    if (!n.read) doc.ref.update({ read: true });
+                                });
+                                if(dom.notifListContainer) dom.notifListContainer.appendChild(item);
+                            });
+
+                            if(dom.headerNotifDot) dom.headerNotifDot.classList.toggle('active', hasUnread);
+                            if(dom.btnMarkAllRead) dom.btnMarkAllRead.style.display = hasUnread ? 'block' : 'none';
+                        }, err => console.warn("Waiting for Notification permissions..."));
+                    } catch (e) {}
+
+                    // Recent Transactions & Stepper Listener
+                    try {
+                        db.collection('users').doc(uid).collection('transactions')
+                        .orderBy('createdAt', 'desc')
+                        .limit(6).onSnapshot(snapshot => {
+                            
+                            if (snapshot.empty) {
+                                if(dom.recentTransactionList) dom.recentTransactionList.innerHTML = '<div style="padding: 24px 0; text-align: center; color: var(--text-light); font-size: 0.9rem;">No historical ledger entries verified yet.</div>';
+                                if(dom.stepperLifecycleBox) dom.stepperLifecycleBox.style.display = 'none';
+                                return;
+                            }
+
+                            if(dom.recentTransactionList) dom.recentTransactionList.innerHTML = '';
+                            let pendingFound = false;
+
+                            snapshot.forEach((doc, idx) => {
+                                const tx = doc.data();
+                                const isPositive = ['deposit', 'commission', 'welcome_bonus', 'profit'].includes(tx.type);
+                                const amtParsed = Number(tx.amount || 0);
+
+                                if (idx === 0 && (tx.status === 'pending' || tx.status === 'rejected')) {
+                                    pendingFound = true;
+                                    if(dom.stepperLifecycleBox) dom.stepperLifecycleBox.style.display = 'block';
+                                    safeSetText('stepperTrxType', (tx.type || 'Transaction').replace('_', ' '));
+                                    safeSetText('stepperTrxAmount', "Rs. " + amtParsed.toLocaleString('en-PK'));
+                                    safeSetText('stepperReference', tx.referenceId || doc.id.substring(0, 8));
+
+                                    const sNode1 = document.getElementById('stepNode1');
+                                    const sNode2 = document.getElementById('stepNode2');
+                                    const sNode3 = document.getElementById('stepNode3');
+                                    const rejBox = document.getElementById('stepperRejectionDetails');
+
+                                    if(sNode1) sNode1.className = "step-node completed";
+                                    if (tx.status === 'rejected') {
+                                        if(sNode2) sNode2.className = "step-node completed";
+                                        if(sNode3) sNode3.className = "step-node rejected";
+                                        safeSetText('step3Label', "Rejected");
+                                        if(rejBox) {
+                                            rejBox.style.display = 'block';
+                                            safeSetText('rejectionReasonText', tx.rejectionReason || "Verification failed. Contact support desk.");
+                                        }
+                                    } else {
+                                        if(sNode2) sNode2.className = "step-node current";
+                                        if(sNode3) sNode3.className = "step-node";
+                                        safeSetText('step3Label', "Processing");
+                                        if(rejBox) rejBox.style.display = 'none';
+                                    }
+                                }
+
+                                const row = document.createElement('div');
+                                row.className = 'tx-history-item';
+                                
+                                let txIconStr = 'neutral';
+                                if (tx.status === 'rejected') txIconStr = 'negative';
+                                else if (isPositive) txIconStr = 'positive';
+
+                                let txSvg = '#icon-exchange';
+                                if (tx.type === 'deposit') txSvg = '#icon-arrow-down';
+                                if (tx.type === 'withdraw') txSvg = '#icon-arrow-up';
+
+                                row.innerHTML = `
+                                    <div class="tx-icon ${txIconStr}"><svg><use href="${txSvg}"/></svg></div>
+                                    <div class="tx-details">
+                                        <strong>${tx.description || tx.type.replace('_', ' ')}</strong>
+                                        <small>${tx.referenceId || doc.id.substring(0,8)} &bull; ${tx.status ? tx.status.toUpperCase() : 'VERIFIED'}</small>
+                                    </div>
+                                    <div class="tx-amount">
+                                        <strong class="font-mono" style="color: ${isPositive ? 'var(--sigma-accent-dark)' : 'var(--text-heading)'};">
+                                            ${isPositive ? '+' : '-'}Rs. ${amtParsed.toLocaleString('en-PK')}
+                                        </strong>
+                                        <small>${tx.createdAt ? new Date(tx.createdAt.seconds * 1000).toLocaleDateString() : 'Recent'}</small>
+                                    </div>
+                                `;
+                                if(dom.recentTransactionList) dom.recentTransactionList.appendChild(row);
+                            });
+
+                            if (!pendingFound && dom.stepperLifecycleBox) dom.stepperLifecycleBox.style.display = 'none';
+                        }, err => console.warn("Waiting for Transaction permissions..."));
+                    } catch (e) {}
+
+                    // H. Referral Matrix Aggregation
+                    try {
+                        db.collection('users').doc(uid).get().then(uDoc => {
+                            const refUsername = uDoc.exists && uDoc.data().username ? uDoc.data().username : uid.substring(0,7).toLowerCase();
+
+                            db.collection('users').where('referredBy', '==', refUsername)
+                            .onSnapshot(querySnapshot => {
+                                const total = querySnapshot.size;
+                                treeData.l1.members = total;
+                                treeData.l1.active = 0;
+                                treeData.l1.pending = 0;
+
+                                querySnapshot.forEach(doc => {
+                                    const u = doc.data();
+                                    if (u.activePlans > 0) treeData.l1.active++;
+                                    else treeData.l1.pending++;
+                                });
+                                
+                                treeData.l1.earnings = treeData.l1.active * referralRates.l1;
+                                
+                                const activeBtn = document.querySelector('.tree-tab-btn.active');
+                                if (activeBtn && activeBtn.id === 'btnTier1') {
+                                    switchTreeTier(1, null);
+                                }
+                            });
                         });
-
-                        if (!pendingFound && dom.stepperLifecycleBox) dom.stepperLifecycleBox.style.display = 'none';
-                    });
-
-                    // H. Referral Matrix Aggregation (Pending vs Active split)
-                    db.collection('users').where('referredBy', '==', userProfile?.username || uid.substring(0,7).toLowerCase())
-                      .onSnapshot(querySnapshot => {
-                        const total = querySnapshot.size;
-                        treeData.l1.members = total;
-                        treeData.l1.active = 0;
-                        treeData.l1.pending = 0;
-
-                        querySnapshot.forEach(doc => {
-                            const u = doc.data();
-                            if (u.activePlans > 0) treeData.l1.active++;
-                            else treeData.l1.pending++;
-                        });
-                        
-                        // Recalculate earnings safely based on business rules configuration
-                        treeData.l1.earnings = treeData.l1.active * referralRates.l1;
-                        
-                        // Trigger UI update if Level 1 is active tab
-                        const activeBtn = document.querySelector('.tree-tab-btn.active');
-                        if (activeBtn && activeBtn.id === 'btnTier1') {
-                            switchTreeTier(1, null);
-                        }
-                    });
+                    } catch (e) {}
                 });
+            };
+
+            // --- Execution: Internal Wallet Transfer Engine ---
+            const executeInternalTransfer = async () => {
+                if (!authUser || !userProfile) return;
+                
+                const srcEl = document.getElementById('transferSourceWallet');
+                const amtInput = document.getElementById('transferAmountInput');
+                const btn = document.getElementById('btnExecuteTransfer');
+                if(!srcEl || !amtInput || !btn) return;
+
+                const src = srcEl.value;
+                const amt = Number(amtInput.value);
+                const originalText = btn.textContent;
+
+                if (!amt || amt < 50) {
+                    toast("Minimum transfer volume is Rs. 50");
+                    return;
+                }
+
+                const availableBalance = src === 'profit' ? (userProfile.profitBalance || 0) : (userProfile.commissionBalance || 0);
+
+                if (amt > availableBalance) {
+                    toast("Insufficient wallet reserves verified");
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = "Processing Exchange...";
+
+                try {
+                    const db = firebase.firestore();
+                    const userRef = db.collection('users').doc(authUser.uid);
+
+                    await db.runTransaction(async (transaction) => {
+                        const sfDoc = await transaction.get(userRef);
+                        if (!sfDoc.exists) throw "Identity record missing.";
+
+                        const currentDeposit = sfDoc.data().depositBalance || 0;
+                        const currentSource = sfDoc.data()[src === 'profit' ? 'profitBalance' : 'commissionBalance'] || 0;
+
+                        if (amt > currentSource) throw "Balance mismatch during transit.";
+
+                        const updateData = {
+                            depositBalance: currentDeposit + amt
+                        };
+                        updateData[src === 'profit' ? 'profitBalance' : 'commissionBalance'] = currentSource - amt;
+
+                        transaction.update(userRef, updateData);
+
+                        const txRef = userRef.collection('transactions').doc();
+                        transaction.set(txRef, {
+                            type: 'internal_transfer',
+                            amount: amt,
+                            sourceWallet: src,
+                            destinationWallet: 'deposit',
+                            status: 'completed',
+                            referenceId: 'EXC-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+                            description: `Exchanged ${src} funds to Deposit`,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    });
+
+                    await logAction('exchange_complete', `Transferred Rs. ${amt} securely from ${src} to Deposit wallet`);
+                    toast("Internal exchange completed successfully!");
+                    amtInput.value = '';
+                    closeSheet('sheetExchange');
+
+                } catch (e) {
+                    console.error("Exchange protocol failure:", e);
+                    toast("Exchange failed. Check permissions or try again.");
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
             };
 
             // --- Safe Initialization Protocol ---
@@ -1987,7 +2081,7 @@
                     'announcementPill', 'announcementHeadline', 'announcementModalTitle', 'announcementModalBody',
                     'rawReferralUrl', 'qrBoxContainer', 'blockerScreen', 'blockerTitle', 'blockerMsg', 'blockerContactBtn',
                     'btnFloatingWhatsApp', 'headerNotifDot', 'notifListContainer', 'btnMarkAllRead',
-                    'recentTransactionList', 'stepperLifecycleBox'
+                    'recentTransactionList', 'stepperLifecycleBox', 'eyeIconElem'
                 ];
                 ids.forEach(id => dom[id] = document.getElementById(id));
             };
@@ -2000,6 +2094,9 @@
                 window.addEventListener('offline', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'block'; });
                 window.addEventListener('online', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'none'; toast('Connection verified'); });
 
+                const btnEye = document.getElementById('btnEyeToggle');
+                if (btnEye) btnEye.addEventListener('click', toggleEye);
+
                 initFirebase();
             };
 
@@ -2007,7 +2104,7 @@
             return {
                 init, openSheet, closeSheet, copyReferralLink, openQrModal, switchTreeTier,
                 openAnnouncementModal: () => openSheet('sheetAnnouncement'),
-                terminateSession, logAction, markAllNotifsRead, toast
+                terminateSession, executeInternalTransfer, logAction, markAllNotifsRead, toast
             };
 
         })();
