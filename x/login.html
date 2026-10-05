@@ -504,17 +504,24 @@
         // Google Sign In
         googleLoginBtn.addEventListener('click', async () => {
             showLoading("Opening Google Sign-In...");
+            const provider = new firebase.auth.GoogleAuthProvider();
             try {
-                const provider = new firebase.auth.GoogleAuthProvider();
                 await firebase.auth().signInWithPopup(provider);
                 // onAuthStateChanged will take over to verify Admin claims
             } catch (error) {
-                console.error("Google login error:", error);
-                if (error.code !== 'auth/popup-closed-by-user') {
-                    showError("Google authentication failed. Try again.");
+                console.warn("Google popup error:", error);
+                // If popup is blocked by COOP or user closed it
+                if (error.code === 'auth/popup-blocked' || error.message.includes('Cross-Origin') || error.code === 'auth/popup-closed-by-user') {
+                    // Hide error and try redirect instead for COOP issues
+                    if (error.code !== 'auth/popup-closed-by-user') {
+                        showLoading("Redirecting to Google...");
+                        await firebase.auth().signInWithRedirect(provider);
+                    } else {
+                        hideError();
+                        loadingOverlay.classList.remove('active');
+                    }
                 } else {
-                    hideError();
-                    loadingOverlay.classList.remove('active');
+                    showError("Google authentication failed. Try again.");
                 }
             }
         });
