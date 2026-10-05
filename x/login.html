@@ -503,27 +503,26 @@
 
         // Google Sign In
         googleLoginBtn.addEventListener('click', async () => {
-            showLoading("Opening Google Sign-In...");
-            const provider = new firebase.auth.GoogleAuthProvider();
+            showLoading("Redirecting to Google...");
             try {
-                await firebase.auth().signInWithPopup(provider);
-                // onAuthStateChanged will take over to verify Admin claims
+                const provider = new firebase.auth.GoogleAuthProvider();
+                await firebase.auth().signInWithRedirect(provider);
             } catch (error) {
-                console.warn("Google popup error:", error);
-                // If popup is blocked by COOP or user closed it
-                if (error.code === 'auth/popup-blocked' || error.message.includes('Cross-Origin') || error.code === 'auth/popup-closed-by-user') {
-                    // Hide error and try redirect instead for COOP issues
-                    if (error.code !== 'auth/popup-closed-by-user') {
-                        showLoading("Redirecting to Google...");
-                        await firebase.auth().signInWithRedirect(provider);
-                    } else {
-                        hideError();
-                        loadingOverlay.classList.remove('active');
-                    }
-                } else {
-                    showError("Google authentication failed. Try again.");
-                }
+                console.error("Google redirect error:", error);
+                showError("Google authentication failed. Try again.");
+                loadingOverlay.classList.remove('active');
             }
+        });
+
+        // Handle Redirect Result for COOP environments
+        firebase.auth().getRedirectResult().then((result) => {
+             if (result.credential) {
+                 showLoading("Verifying Admin Access...");
+                 // onAuthStateChanged will handle the verification
+             }
+        }).catch((error) => {
+             console.error("Redirect auth error", error);
+             showError("Google sign-in failed: " + error.message);
         });
 
         // Forgot Password Workflow
