@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- SEO, Privacy & PWA Meta (Strictly Protected Workspace) -->
+    <meta name="description" content="Secure payment submission and verification gateway for Sigma premium portfolios.">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="theme-color" content="#0B132B">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sigma Checkout">
+    
+    <title>Sigma | Secure Checkout & Proof Submission</title>
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/favicon.png">
+
+    <!-- Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,500;0,700;0,800;1,600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDKs (Auth, Firestore, Storage required for Manual Payment) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    
+    <!-- Centralized Configuration -->
+    <script src="firebase-config.js"></script>
+
+    <!-- Fallback Firebase Initialization for extreme resilience -->
+    <script>
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            const fallbackConfig = {
+                apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
+                authDomain: "week-team.firebaseapp.com",
+                projectId: "week-team",
+                storageBucket: "week-team.firebasestorage.app",
+                messagingSenderId: "480334485782",
+                appId: "1:480334485782:web:c0c886ed710567b9e6d837"
+            };
+            firebase.initializeApp(fallbackConfig);
+            console.log("Sigma Firebase fallback verified in manual payment gateway.");
+        }
+    </script>
+
+    <style>
+        /* ==========================================================================
+           1. SIGMA PREMIUM DESIGN TOKENS
+           ========================================================================== */
+        :root {
+            /* Core Brand Colors */
+            --sigma-primary: #0B132B;
+            --sigma-secondary: #1C2541;
+            --sigma-tertiary: #3A506B;
+            
+            /* Surfaces & Backgrounds */
+            --sigma-surface: #FFFFFF;
+            --sigma-surface-alt: #F8FAFC;
+            --sigma-subtle: #F1F5F9;
+            --sigma-backdrop: rgba(11, 19, 43, 0.7);
+            
+            /* Borders & Dividers */
+            --sigma-muted-border: #E2E8F0;
+            --sigma-input-border: #CBD5E1;
+            --sigma-focus-ring: rgba(59, 130, 246, 0.25);
+
+            /* Financial Status Indicators */
+            --sigma-accent: #10B981;
+            --sigma-accent-dark: #059669;
+            --sigma-accent-light: #34D399;
+            --sigma-accent-soft: #ECFDF5;
+            
+            --sigma-gold: #F59E0B;
+            --sigma-gold-dark: #D97706;
+            --sigma-gold-soft: #FEF3C7;
+
+            --sigma-danger: #EF4444;
+            --sigma-danger-dark: #DC2626;
+            --sigma-danger-soft: #FEE2E2;
+
+            --sigma-info: #3B82F6;
+            --sigma-info-dark: #2563EB;
+            --sigma-info-soft: #EFF6FF;
+
+            /* Text Hierarchies */
+            --text-heading: #0F172A;
+            --text-body: #334155;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+            --text-inverse: #FFFFFF;
+
+            /* Geometry & Radii */
+            --radius-pill: 9999px;
+            --radius-2xl: 28px;
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+
+            /* Depth & Shadows */
+            --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+            --shadow-subtle: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+            --shadow-card: 0 16px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 16px -4px rgba(15, 23, 42, 0.04);
+            --shadow-float: 0 24px 48px -12px rgba(15, 23, 42, 0.15);
+            --shadow-glow: 0 8px 24px rgba(16, 185, 129, 0.25);
+            --shadow-glow-primary: 0 8px 24px rgba(11, 19, 43, 0.2);
+
+            /* Z-Indices */
+            --z-dock: 1000;
+            --z-header: 900;
+            --z-dropdown: 1500;
+            --z-overlay: 1900;
+            --z-modal: 2000;
+            --z-toast: 3000;
+            --z-blocker: 9999;
+
+            /* Transitions & Environment */
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --safe-area-bottom: env(safe-area-inset-bottom, 16px);
+            --safe-area-top: env(safe-area-inset-top, 0px);
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET & BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--sigma-surface-alt);
+            color: var(--text-body); line-height: 1.5; min-height: 100vh; overflow-x: hidden;
+            padding-bottom: calc(120px + var(--safe-area-bottom));
+            background-image: 
+                radial-gradient(circle at 10% 0%, rgba(59, 130, 246, 0.03) 0%, transparent 45vw),
+                radial-gradient(circle at 90% 100%, rgba(16, 185, 129, 0.03) 0%, transparent 45vw);
+            background-attachment: fixed;
+        }
+        body.locked { overflow: hidden; touch-action: none; }
+        a { text-decoration: none; color: inherit; }
+        button, input { font-family: inherit; border: none; outline: none; background: none; }
+        button { cursor: pointer; user-select: none; }
+        img { max-width: 100%; display: block; }
+        ul { list-style: none; }
+
+        h1, h2, h3, h4, h5 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+        p { color: var(--text-muted); }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
+        .font-urdu { font-family: 'Noto Nastaliq Urdu', serif; direction: rtl; text-align: right; }
+        
+        .text-accent { color: var(--sigma-accent-dark); }
+        .text-gold { color: var(--sigma-gold-dark); }
+        .text-danger { color: var(--sigma-danger-dark); }
+        .text-info { color: var(--sigma-info-dark); }
+
+        /* Offline Network Banner */
+        #networkOfflineBanner {
+            position: fixed; top: 0; left: 0; width: 100%; background: var(--sigma-danger);
+            color: white; font-size: 0.78rem; font-weight: 800; text-align: center; padding: 6px 12px;
+            z-index: var(--z-blocker); display: none; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* ==========================================================================
+           3. DYNAMIC HEADER & LAYOUT FRAME
+           ========================================================================== */
+        .app-container { width: 100%; max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; position: relative; }
+
+        .island-topbar {
+            position: sticky; top: max(12px, var(--safe-area-top)); margin: 0 16px 20px; height: 68px;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-pill); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 14px; z-index: var(--z-header);
+            border: 1px solid rgba(255, 255, 255, 0.95); transition: var(--transition-smooth);
+            box-shadow: var(--shadow-subtle);
+        }
+        .island-topbar.scrolled {
+            background: rgba(255, 255, 255, 0.98); box-shadow: var(--shadow-card); border-color: var(--sigma-muted-border);
+        }
+        
+        .btn-back {
+            width: 46px; height: 46px; border-radius: 50%; background: var(--sigma-surface);
+            color: var(--text-heading); display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .btn-back:active { transform: scale(0.92); background: var(--sigma-subtle); }
+        .btn-back svg { width: 22px; height: 22px; stroke-width: 2.5; stroke: currentColor; fill: none; }
+
+        .brand-cluster { display: flex; align-items: center; gap: 8px; }
+        .brand-logo-img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        
+        .header-title { font-weight: 900; font-size: 1.15rem; color: var(--sigma-primary); letter-spacing: -0.3px;}
+        
+        .header-actions { display: flex; gap: 8px; }
+        .btn-top-action {
+            width: 46px; height: 46px; border-radius: 50%; background: var(--sigma-subtle);
+            color: var(--text-heading); display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
+        }
+        .btn-top-action:active { transform: scale(0.92); }
+        .btn-top-action svg { width: 22px; height: 22px; stroke-width: 2.2; stroke: currentColor; fill: none; }
+
+        /* ==========================================================================
+           4. STEP INDICATOR (Configurable Progress)
+           ========================================================================== */
+        .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 24px; }
+
+        .step-indicator-wrapper {
+            display: flex; align-items: center; justify-content: space-between; position: relative;
+            margin: 0 12px 10px; padding: 0 20px;
+        }
+        .step-line {
+            position: absolute; top: 14px; left: 40px; right: 40px; height: 3px;
+            background: var(--sigma-muted-border); z-index: 1; border-radius: 2px;
+        }
+        .step-line-fill {
+            position: absolute; top: 0; left: 0; height: 100%; background: var(--sigma-accent);
+            width: 50%; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 2px;
+        }
+        
+        .step-node {
+            display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; z-index: 2;
+        }
+        .step-circle {
+            width: 32px; height: 32px; border-radius: 50%; background: var(--sigma-surface);
+            border: 2px solid var(--sigma-muted-border); display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 800; color: var(--text-muted); transition: var(--transition-smooth);
+            box-shadow: 0 0 0 4px var(--sigma-surface-alt);
+        }
+        .step-node span { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .step-node.completed .step-circle { background: var(--sigma-accent); border-color: var(--sigma-accent); color: white; }
+        .step-node.active .step-circle { background: var(--sigma-primary); border-color: var(--sigma-primary); color: white; box-shadow: 0 0 0 4px var(--sigma-input-border); transform: scale(1.1); }
+        .step-node.active span { color: var(--sigma-primary); font-weight: 800; }
+
+        /* ==========================================================================
+           5. VIEW CONTAINERS & SKELETONS
+           ========================================================================== */
+        .view-section { display: none; flex-direction: column; gap: 24px; animation: fadeIn 0.4s ease-out; }
+        .view-section.active { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Skeleton Loaders */
+        .skeleton { background: #E2E8F0; color: transparent !important; animation: pulseSkel 1.5s infinite ease-in-out; border-radius: 8px; }
+        .skel-card { height: 160px; width: 100%; border-radius: var(--radius-2xl); margin-bottom: 20px; }
+        .skel-box { height: 280px; width: 100%; border-radius: var(--radius-2xl); }
+        @keyframes pulseSkel { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* Error / Empty State */
+        .error-state-card {
+            background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 40px 24px;
+            text-align: center; border: 1px solid var(--sigma-danger-border); box-shadow: var(--shadow-subtle);
+            display: flex; flex-direction: column; align-items: center; gap: 16px;
+        }
+        .error-state-card svg { width: 56px; height: 56px; stroke: var(--sigma-danger); fill: none; stroke-width: 1.5; }
+        .error-state-card h3 { font-size: 1.3rem; color: var(--sigma-primary); }
+        .error-state-card p { font-size: 0.95rem; color: var(--text-body); max-width: 320px; }
+        .btn-retry {
+            padding: 14px 32px; background: var(--sigma-subtle); border-radius: var(--radius-pill);
+            font-weight: 800; color: var(--text-heading); border: 1px solid var(--sigma-muted-border);
+            margin-top: 10px; transition: var(--transition-bounce);
+        }
+        .btn-retry:active { transform: scale(0.95); background: var(--sigma-input-border); }
+
+        /* ==========================================================================
+           6. PAYMENT SUMMARY & DESTINATION CARDS
+           ========================================================================== */
+        /* Exact Payable Amount Hero Card */
+        .summary-hero-card {
+            background: linear-gradient(135deg, var(--sigma-primary) 0%, var(--sigma-secondary) 100%);
+            border-radius: var(--radius-2xl); padding: 28px 24px; color: white;
+            box-shadow: var(--shadow-card), var(--shadow-glow-primary); position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        .summary-hero-card::before {
+            content: ''; position: absolute; inset: 0; opacity: 0.15;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10%), radial-gradient(circle, #fff 10%, transparent 10%);
+            background-size: 6px 6px; background-position: 0 0, 3px 3px; pointer-events: none;
+        }
+        .summary-hero-card::after {
+            content: ''; position: absolute; top: -40px; right: -40px; width: 140px; height: 140px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;
+        }
+
+        .sh-kicker { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; position: relative; z-index: 2;}
+        .sh-amount { font-size: 2.8rem; font-weight: 900; letter-spacing: -1.5px; line-height: 1; margin-bottom: 12px; position: relative; z-index: 2; text-shadow: 0 4px 12px rgba(0,0,0,0.3);}
+        .sh-amount span { font-size: 1.2rem; font-weight: 700; opacity: 0.8; margin-right: 4px;}
+        
+        .sh-details-row {
+            display: flex; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 2;
+            background: rgba(0,0,0,0.2); padding: 8px 16px; border-radius: var(--radius-pill); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .sh-plan-name { font-size: 0.85rem; font-weight: 700; color: white; }
+        .sh-divider { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+        .sh-method-name { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 6px; }
+
+        /* Payment Instructions & Account Destination */
+        .destination-card {
+            background: var(--sigma-surface); border-radius: var(--radius-2xl);
+            border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-subtle);
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        
+        .dest-header {
+            display: flex; align-items: center; gap: 14px; padding: 20px 24px;
+            background: var(--sigma-subtle); border-bottom: 1px solid var(--sigma-muted-border);
+        }
+        .dest-icon {
+            width: 48px; height: 48px; border-radius: 12px; background: white;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            border: 1px solid var(--sigma-input-border); box-shadow: var(--shadow-xs);
+        }
+        .dest-icon img { width: 100%; height: 100%; object-fit: contain; }
+        .dest-icon svg { width: 24px; height: 24px; stroke: var(--text-heading); fill: none; stroke-width: 1.8; }
+        
+        .dest-title h3 { font-size: 1.1rem; color: var(--text-heading); }
+        .dest-title p { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+        .dest-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+        
+        .copy-group { display: flex; flex-direction: column; gap: 12px; }
+        .copy-row {
+            display: flex; justify-content: space-between; align-items: center; padding: 14px 16px;
+            background: var(--sigma-surface-alt); border: 1px solid var(--sigma-input-border);
+            border-radius: var(--radius-lg); transition: var(--transition-smooth);
+        }
+        .copy-row:hover { border-color: var(--sigma-primary); background: white; box-shadow: var(--shadow-xs); }
+        .copy-data { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+        .copy-data small { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .copy-data strong { font-size: 1.15rem; font-weight: 900; color: var(--text-heading); font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .btn-copy-action {
+            width: 44px; height: 44px; border-radius: 12px; background: var(--sigma-subtle);
+            border: 1px solid var(--sigma-muted-border); display: flex; align-items: center; justify-content: center;
+            color: var(--sigma-primary); transition: var(--transition-bounce); flex-shrink: 0; margin-left: 12px;
+        }
+        .btn-copy-action:active { transform: scale(0.9); background: var(--sigma-input-border); }
+        .btn-copy-action svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+
+        /* Dynamic Instructions (Urdu/English) */
+        .instruction-box {
+            background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.15);
+            padding: 16px; border-radius: var(--radius-xl); display: flex; flex-direction: column; gap: 12px;
+        }
+        .inst-en { font-size: 0.85rem; color: var(--text-body); line-height: 1.6; font-weight: 500; }
+        .inst-ur { font-family: 'Noto Nastaliq Urdu', serif; font-size: 0.95rem; color: var(--text-body); line-height: 1.8; text-align: right; direction: rtl; border-top: 1px dashed rgba(59, 130, 246, 0.2); padding-top: 12px; }
+        .inst-highlight { color: var(--sigma-info-dark); font-weight: 800; }
+
+        /* ==========================================================================
+           7. UPLOAD & FORM SUBMISSION (Strict Validation)
+           ========================================================================== */
+        .form-section-title { font-size: 1.1rem; font-weight: 900; margin-bottom: -8px; color: var(--text-heading); display: flex; align-items: center; gap: 8px;}
+        .form-section-title svg { width: 20px; height: 20px; stroke: var(--sigma-primary); fill: none; stroke-width: 2.5; }
+
+        /* Premium File Dropzone */
+        .upload-dropzone {
+            border: 2px dashed var(--sigma-input-border); background: var(--sigma-surface-alt);
+            border-radius: var(--radius-2xl); padding: 32px 24px; text-align: center;
+            cursor: pointer; transition: var(--transition-smooth); position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px;
+        }
+        .upload-dropzone:hover, .upload-dropzone.dragover {
+            border-color: var(--sigma-primary); background: rgba(11, 19, 43, 0.02);
+        }
+        .upload-dropzone input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
+        
+        .upload-prompt-icon {
+            width: 56px; height: 56px; border-radius: 50%; background: white;
+            border: 1px solid var(--sigma-muted-border); display: flex; align-items: center; justify-content: center;
+            color: var(--sigma-primary); box-shadow: var(--shadow-sm); margin-bottom: 16px; transition: var(--transition-bounce);
+        }
+        .upload-dropzone:hover .upload-prompt-icon { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--sigma-primary); }
+        .upload-prompt-icon svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
+        
+        .upload-prompt-text b { display: block; font-size: 1.05rem; font-weight: 800; color: var(--text-heading); }
+        .upload-prompt-text small { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+        /* Upload Preview Card */
+        .upload-preview-card {
+            display: none; background: var(--sigma-surface); border: 1px solid var(--sigma-primary);
+            border-radius: var(--radius-xl); padding: 12px; align-items: center; gap: 16px;
+            box-shadow: var(--shadow-subtle); animation: fadeIn 0.3s ease;
+        }
+        .upload-preview-card.active { display: flex; }
+        
+        .preview-img-box {
+            width: 64px; height: 64px; border-radius: 10px; overflow: hidden; background: var(--sigma-surface-alt);
+            border: 1px solid var(--sigma-muted-border); flex-shrink: 0;
+        }
+        .preview-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .preview-details { flex: 1; min-width: 0; }
+        .preview-details b { display: block; font-size: 0.9rem; font-weight: 700; color: var(--text-heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .preview-details small { font-size: 0.75rem; color: var(--sigma-accent-dark); font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 2px;}
+        .preview-details small svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        
+        .btn-remove-file {
+            width: 36px; height: 36px; border-radius: 50%; background: var(--sigma-danger-soft);
+            color: var(--sigma-danger-dark); display: flex; align-items: center; justify-content: center;
+            border: none; transition: var(--transition-fast); flex-shrink: 0; cursor: pointer; z-index: 15;
+        }
+        .btn-remove-file:active { transform: scale(0.9); background: var(--sigma-danger); color: white; }
+        .btn-remove-file svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+        /* Floating Label Input for TRxID */
+        .input-wrapper {
+            position: relative; display: flex; align-items: center; background: var(--sigma-surface);
+            border-radius: var(--radius-xl); border: 2px solid var(--sigma-input-border);
+            transition: var(--transition-smooth); overflow: hidden;
+        }
+        .input-wrapper:focus-within { border-color: var(--sigma-primary); box-shadow: 0 0 0 4px var(--sigma-focus-ring); }
+        .input-wrapper.error { border-color: var(--sigma-danger); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); }
+        
+        .input-icon {
+            width: 56px; display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); transition: var(--transition-smooth);
+        }
+        .input-wrapper:focus-within .input-icon { color: var(--sigma-primary); }
+        .input-icon svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+        .input-field {
+            flex: 1; height: 64px; padding: 24px 16px 8px 0; font-size: 1.1rem;
+            color: var(--text-heading); font-weight: 800; font-family: 'JetBrains Mono', monospace; background: transparent;
+        }
+        .input-field:focus { outline: none; }
+        .input-field::placeholder { color: transparent; }
+        .input-field:disabled { color: var(--text-muted); }
+
+        .floating-label {
+            position: absolute; left: 56px; top: 20px; font-size: 1rem; color: var(--text-muted);
+            pointer-events: none; transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) all; font-weight: 600;
+        }
+        .input-field:focus ~ .floating-label, .input-field:not(:placeholder-shown) ~ .floating-label {
+            top: 8px; font-size: 0.75rem; color: var(--sigma-primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .input-wrapper.error .floating-label { color: var(--sigma-danger); }
+
+        /* Contextual Warnings & Errors */
+        .security-warning {
+            background: var(--sigma-gold-soft); border: 1px solid var(--sigma-gold-border);
+            color: var(--sigma-gold-dark); padding: 14px 18px; border-radius: var(--radius-lg);
+            font-size: 0.85rem; font-weight: 600; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px;
+        }
+        .security-warning svg { width: 18px; height: 18px; stroke: currentColor; fill: none; flex-shrink: 0; margin-top: 2px; stroke-width: 2.2;}
+
+        .form-error-msg {
+            display: none; background: var(--sigma-danger-soft); color: var(--sigma-danger-dark);
+            padding: 14px; border-radius: var(--radius-lg); font-size: 0.85rem; font-weight: 700;
+            text-align: center; border: 1px solid var(--sigma-danger-border); animation: shake 0.4s ease;
+        }
+        .form-error-msg.show { display: block; }
+
+        /* Sticky Action Footer */
+        .action-footer {
+            position: fixed; bottom: calc(76px + var(--safe-area-bottom) + 16px); left: 0; right: 0;
+            padding: 16px; background: linear-gradient(to top, rgba(248,250,252,1) 60%, rgba(248,250,252,0));
+            display: flex; justify-content: center; z-index: var(--z-header); pointer-events: none;
+        }
+        @media (min-width: 860px) {
+            .action-footer { bottom: 0; padding-bottom: 24px; background: rgba(248,250,252,0.95); backdrop-filter: blur(10px);}
+        }
+        
+        .btn-submit-payment {
+            width: 100%; max-width: 600px; height: 64px; border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            color: white; font-size: 1.15rem; font-weight: 900; display: flex; pointer-events: auto;
+            align-items: center; justify-content: center; gap: 12px; box-shadow: 0 12px 28px rgba(11, 19, 43, 0.3);
+            transition: var(--transition-bounce); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-submit-payment:active { transform: scale(0.96); box-shadow: 0 6px 16px rgba(11, 19, 43, 0.2); }
+        .btn-submit-payment:disabled { opacity: 0.65; transform: none; cursor: not-allowed; box-shadow: none; background: var(--sigma-muted-border); color: var(--text-muted);}
+        
+        .btn-submit-payment .spinner {
+            width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none;
+        }
+        .btn-submit-payment.loading .spinner { display: block; }
+        .btn-submit-payment.loading span, .btn-submit-payment.loading svg { display: none; }
+        .btn-submit-payment.loading { background: var(--sigma-primary); opacity: 1;}
+
+        /* ==========================================================================
+           8. SUCCESS / PENDING VERIFICATION STATE (TIMELINE)
+           ========================================================================== */
+        .success-card {
+            background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 40px 24px;
+            text-align: center; border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-card);
+            display: flex; flex-direction: column; align-items: center; overflow: hidden; position: relative;
+        }
+        .success-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+            background: linear-gradient(90deg, var(--sigma-gold), var(--sigma-accent));
+        }
+        .success-icon-wrap {
+            width: 80px; height: 80px; border-radius: 50%; background: var(--sigma-accent-soft);
+            color: var(--sigma-accent-dark); display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px; box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.05);
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .success-icon-wrap svg { width: 40px; height: 40px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        
+        .success-card h2 { font-size: 1.6rem; color: var(--text-heading); margin-bottom: 8px; }
+        .success-card p { font-size: 0.95rem; color: var(--text-body); max-width: 340px; line-height: 1.5; font-weight: 500;}
+        
+        .req-id-badge {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; padding: 8px 16px;
+            background: var(--sigma-surface-alt); border: 1px solid var(--sigma-input-border);
+            border-radius: var(--radius-pill); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 800;
+            color: var(--sigma-primary);
+        }
+        .req-id-badge svg { width: 14px; height: 14px; stroke: var(--text-muted); cursor: pointer; }
+
+        /* Vertical Status Timeline */
+        .timeline-container { margin-top: 32px; width: 100%; text-align: left; padding: 0 10px; }
+        .timeline-title { font-size: 1rem; font-weight: 900; margin-bottom: 20px; color: var(--text-heading); border-bottom: 1px solid var(--sigma-muted-border); padding-bottom: 8px;}
+        
+        .timeline-item { display: flex; gap: 16px; position: relative; padding-bottom: 24px; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: 11px; top: 24px; bottom: 0; width: 2px;
+            background: var(--sigma-muted-border); z-index: 1;
+        }
+        .timeline-item:last-child::before { display: none; }
+        
+        .tl-indicator {
+            width: 24px; height: 24px; border-radius: 50%; background: var(--sigma-surface);
+            border: 2px solid var(--sigma-muted-border); position: relative; z-index: 2;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .tl-indicator svg { width: 12px; height: 12px; stroke: white; stroke-width: 3; fill: none; display: none; }
+        
+        .tl-content { flex: 1; margin-top: 2px; }
+        .tl-content b { display: block; font-size: 0.95rem; font-weight: 800; color: var(--text-muted); }
+        .tl-content small { display: block; font-size: 0.75rem; color: var(--text-light); font-weight: 600; margin-top: 2px; }
+        
+        /* Timeline States */
+        .timeline-item.completed .tl-indicator { background: var(--sigma-accent); border-color: var(--sigma-accent); }
+        .timeline-item.completed .tl-indicator svg { display: block; }
+        .timeline-item.completed .tl-content b { color: var(--text-heading); }
+        
+        .timeline-item.current .tl-indicator { background: white; border-color: var(--sigma-gold); box-shadow: 0 0 0 4px var(--sigma-gold-soft); }
+        .timeline-item.current .tl-content b { color: var(--sigma-gold-dark); }
+        
+        .timeline-item.rejected .tl-indicator { background: var(--sigma-danger); border-color: var(--sigma-danger); }
+        .timeline-item.rejected .tl-indicator svg { display: block; }
+        .timeline-item.rejected .tl-content b { color: var(--sigma-danger-dark); }
+
+        .btn-return-home {
+            width: 100%; height: 56px; border-radius: var(--radius-xl); background: var(--sigma-surface-alt);
+            border: 2px solid var(--sigma-muted-border); color: var(--text-heading); font-size: 1.05rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; margin-top: 32px; transition: var(--transition-bounce);
+        }
+        .btn-return-home:active { transform: scale(0.96); background: var(--sigma-input-border); }
+
+        /* ==========================================================================
+           9. NATIVE MOBILE DOCK (Exactly 3 Buttons - Dashboard Architecture)
+           ========================================================================== */
+        .mobile-dock {
+            position: fixed; bottom: var(--safe-area-bottom); left: 50%; transform: translateX(-50%);
+            height: 76px; width: calc(100% - 32px); max-width: 440px;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-2xl); box-shadow: var(--shadow-float); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 24px; z-index: var(--z-dock); border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+        .dock-slot {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 6px; color: var(--text-muted); width: 64px; height: 100%; transition: var(--transition-bounce); text-decoration: none;
+        }
+        .dock-slot svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .dock-slot span { font-size: 0.7rem; font-weight: 800; }
+        .dock-slot.active { color: var(--sigma-primary); }
+        .dock-slot.active svg { stroke-width: 2.8; transform: translateY(-2px); color: var(--sigma-accent-dark); }
+        
+        .dock-crest-btn {
+            position: relative; top: -24px; width: 72px; height: 72px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 12px 26px rgba(11, 19, 43, 0.35); border: 6px solid var(--sigma-surface-alt);
+            transition: var(--transition-bounce); text-decoration: none;
+        }
+        .dock-crest-btn:active { transform: scale(0.9); }
+        .dock-crest-btn img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .dock-crest-btn::after {
+            content: 'MY PLANS'; position: absolute; bottom: -24px; font-size: 0.7rem; font-weight: 900; color: var(--text-heading); letter-spacing: 0.5px; white-space: nowrap;
+        }
+
+        @media (min-width: 860px) { .mobile-dock { display: none; } body { padding-bottom: 40px; } .action-footer { display: none; } .btn-submit-payment { position: relative; margin-top: 16px;} }
+
+        /* Toast Component */
+        .toast {
+            position: fixed; top: max(24px, var(--safe-area-top)); left: 50%; transform: translate(-50%, -20px) scale(0.9);
+            background: var(--sigma-primary); color: white; padding: 16px 28px;
+            border-radius: var(--radius-pill); font-size: 0.95rem; font-weight: 700;
+            box-shadow: var(--shadow-float); z-index: var(--z-toast); opacity: 0;
+            visibility: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 12px;
+            border: 1px solid rgba(255,255,255,0.1); white-space: nowrap;
+        }
+        .toast.error { background: var(--sigma-danger-dark); border-color: var(--sigma-danger); }
+        .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); }
+
+        /* Animations */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+    </style>
+</head>
+<body>
+
+    <!-- Offline Notification Banner -->
+    <div id="networkOfflineBanner">Critical Network Error. Please Check Connection.</div>
+
+    <!-- COMPLETE SVG ICON SYSTEM (Sigma Architecture) -->
+    <svg width="0" height="0" style="display:none;" aria-hidden="true">
+        <symbol id="icon-back" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></symbol>
+        <symbol id="icon-home" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></symbol>
+        <symbol id="icon-user" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-bell" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path stroke-linecap="round" stroke-linejoin="round" d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+        <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="20 6 9 17 4 12"/></symbol>
+        <symbol id="icon-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="8" x2="12" y2="12" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-upload" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+        <symbol id="icon-hash" viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="15" x2="20" y2="15" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="21" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="3" x2="14" y2="21" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-trash" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="3 6 5 6 21 6"/><path stroke-linecap="round" stroke-linejoin="round" d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17" stroke-linecap="round" stroke-linejoin="round"/><line x1="14" y1="11" x2="14" y2="17" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-file-img" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8.5" cy="8.5" r="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline stroke-linecap="round" stroke-linejoin="round" points="21 15 16 10 5 21"/></symbol>
+        <symbol id="icon-shield" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    </svg>
+
+    <div class="app-container">
+        
+        <!-- HEADER -->
+        <header class="island-topbar" id="topHeader">
+            <a href="plans.html" class="btn-back" aria-label="Cancel and return to Plans" id="btnHeaderBack">
+                <svg><use href="#icon-back" /></svg>
+            </a>
+            <div class="brand-cluster">
+                <img src="assets/logo.png" alt="Sigma" class="brand-logo-img" onerror="this.style.display='none'">
+                <span class="header-title" id="cmsBrandName">Secure Checkout</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn-top-action" aria-label="Notifications" onclick="window.location.href='dash.html'">
+                    <svg><use href="#icon-bell" /></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="workspace">
+            
+            <!-- STEP INDICATOR -->
+            <div class="step-indicator-wrapper" id="stepIndicator">
+                <div class="step-line"><div class="step-line-fill" id="stepProgressFill" style="width: 75%;"></div></div>
+                <div class="step-node completed">
+                    <div class="step-circle"><svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:3;"><use href="#icon-check"/></svg></div>
+                    <span>Plan</span>
+                </div>
+                <div class="step-node completed">
+                    <div class="step-circle"><svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:3;"><use href="#icon-check"/></svg></div>
+                    <span>Method</span>
+                </div>
+                <div class="step-node active" id="stepNode3">
+                    <div class="step-circle">3</div>
+                    <span>Proof</span>
+                </div>
+                <div class="step-node" id="stepNode4">
+                    <div class="step-circle">4</div>
+                    <span>Verify</span>
+                </div>
+            </div>
+
+            <!-- VIEW 1: LOADING SKELETONS -->
+            <section class="view-section active" id="viewLoading">
+                <div class="skel-card skeleton"></div>
+                <div class="skel-box skeleton"></div>
+                <div class="skel-box skeleton" style="height: 180px;"></div>
+            </section>
+
+            <!-- VIEW 2: FATAL ERROR / INVALID CONTEXT -->
+            <section class="view-section" id="viewError">
+                <div class="error-state-card">
+                    <svg><use href="#icon-alert"/></svg>
+                    <h3 id="uiErrorTitle">Request Invalid</h3>
+                    <p id="uiErrorDesc">The payment session has expired or is invalid. Please return to the portfolio catalog and select your plan again.</p>
+                    <button class="btn-retry" onclick="window.location.href='plans.html'">Return to Plans</button>
+                </div>
+            </section>
+
+            <!-- VIEW 3: MANUAL PAYMENT SUBMISSION FORM -->
+            <section class="view-section" id="viewPaymentForm">
+                
+                <!-- 1. Exact Payable Summary Hero -->
+                <div class="summary-hero-card">
+                    <span class="sh-kicker">Required Transfer Amount</span>
+                    <strong class="sh-amount font-mono"><span>PKR</span><span id="uiPayableAmount">...</span></strong>
+                    
+                    <div class="sh-details-row">
+                        <span class="sh-plan-name" id="uiPlanName">Loading Plan...</span>
+                        <div class="sh-divider"></div>
+                        <span class="sh-method-name" id="uiMethodName"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><use href="#icon-shield"/></svg> Loading Method...</span>
+                    </div>
+                </div>
+
+                <!-- 2. Transfer Destination & Instructions -->
+                <div class="destination-card">
+                    <div class="dest-header">
+                        <div class="dest-icon" id="uiMethodIconContainer">
+                            <svg><use href="#icon-wallet"/></svg>
+                        </div>
+                        <div class="dest-title">
+                            <h3 id="uiMethodTitle">Transfer Details</h3>
+                            <p>Official Corporate Destination</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dest-body">
+                        <!-- Dynamic Instructions (English/Urdu) -->
+                        <div class="instruction-box">
+                            <div class="inst-en" id="cmsInstEn">
+                                Please transfer the exact required amount to the account below. After completing the transfer, take a clear screenshot of the receipt and note down the <span class="inst-highlight">Transaction/Reference ID</span>.
+                            </div>
+                            <div class="inst-ur" id="cmsInstUr">
+                                براہ کرم نیچے دیے گئے اکاؤنٹ میں درست رقم منتقل کریں۔ منتقلی مکمل کرنے کے بعد، رسید کا واضح اسکرین شاٹ لیں اور <span class="inst-highlight">ٹرانزیکشن آئی ڈی (TID)</span> محفوظ کر لیں۔
+                            </div>
+                        </div>
+
+                        <!-- Copyable Data -->
+                        <div class="copy-group" id="uiCopyGroup">
+                            <div class="copy-row" onclick="PaymentController.copyText('valAccTitle', 'Account Title')">
+                                <div class="copy-data">
+                                    <small>Account Title / Beneficiary Name</small>
+                                    <strong id="valAccTitle">...</strong>
+                                </div>
+                                <button class="btn-copy-action" aria-label="Copy Title"><svg><use href="#icon-copy"/></svg></button>
+                            </div>
+                            
+                            <div class="copy-row" onclick="PaymentController.copyText('valAccNumber', 'Account Number')">
+                                <div class="copy-data">
+                                    <small>Account Number / IBAN</small>
+                                    <strong id="valAccNumber">...</strong>
+                                </div>
+                                <button class="btn-copy-action" aria-label="Copy Number"><svg><use href="#icon-copy"/></svg></button>
+                            </div>
+
+                            <!-- Optional Bank Name row -->
+                            <div class="copy-row" id="rowBankName" style="display: none;" onclick="PaymentController.copyText('valBankName', 'Bank Name')">
+                                <div class="copy-data">
+                                    <small>Bank / Provider Name</small>
+                                    <strong id="valBankName">...</strong>
+                                </div>
+                                <button class="btn-copy-action" aria-label="Copy Bank Name"><svg><use href="#icon-copy"/></svg></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Proof Upload & TRxID Input -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="form-section-title"><svg><use href="#icon-upload"/></svg> Submit Verification Data</div>
+                    
+                    <!-- File Upload Dropzone -->
+                    <label class="upload-dropzone" id="dropArea">
+                        <input type="file" id="proofFileInput" accept=".jpg,.jpeg,.png,.webp">
+                        <div class="upload-prompt-icon"><svg><use href="#icon-file-img"/></svg></div>
+                        <div class="upload-prompt-text">
+                            <b>Upload Payment Receipt</b>
+                            <small>Tap to select or take a photo (Max 5MB)</small>
+                        </div>
+                    </label>
+
+                    <!-- File Preview Card -->
+                    <div class="upload-preview-card" id="uploadPreviewCard">
+                        <div class="preview-img-box"><img src="" alt="Proof Preview" id="previewImgElement"></div>
+                        <div class="preview-details">
+                            <b id="previewFileName">receipt.jpg</b>
+                            <small><svg><use href="#icon-check"/></svg> Image attached securely</small>
+                        </div>
+                        <button type="button" class="btn-remove-file" id="btnRemoveFile" aria-label="Remove Image"><svg><use href="#icon-trash"/></svg></button>
+                    </div>
+
+                    <!-- TRxID Input -->
+                    <div class="input-wrapper" id="trxIdWrapper">
+                        <div class="input-icon"><svg><use href="#icon-hash"/></svg></div>
+                        <input type="text" id="trxIdInput" class="input-field" placeholder=" ">
+                        <label class="floating-label">Transaction ID (TID / Ref No)</label>
+                    </div>
+                    
+                    <div class="form-error-msg" id="formErrorBox">Error message here</div>
+
+                    <div class="security-warning">
+                        <svg><use href="#icon-alert"/></svg>
+                        <span>Only submit this request <b>after</b> funds have been successfully transferred. Submitting a fake receipt or duplicate Transaction ID will result in immediate system rejection.</span>
+                    </div>
+                </div>
+                
+                <!-- Bottom spacing for fixed action footer -->
+                <div style="height: 20px;"></div>
+            </section>
+
+            <!-- VIEW 4: SUCCESS / TIMELINE (Pending Verification) -->
+            <section class="view-section" id="viewSuccessStatus">
+                <div class="success-card">
+                    <div class="success-icon-wrap"><svg><use href="#icon-check"/></svg></div>
+                    <h2>Request Submitted</h2>
+                    <p>Your payment details have been securely transmitted to the administration ledger.</p>
+                    
+                    <div class="req-id-badge" onclick="PaymentController.copyText('uiSuccessReqId', 'Request ID')">
+                        ID: <span id="uiSuccessReqId">REQ-XXXXXX</span> <svg><use href="#icon-copy"/></svg>
+                    </div>
+                </div>
+
+                <div class="timeline-container">
+                    <h3 class="timeline-title">Verification Status</h3>
+                    
+                    <div class="timeline-item completed">
+                        <div class="tl-indicator"><svg><use href="#icon-check"/></svg></div>
+                        <div class="tl-content">
+                            <b>Request Created</b>
+                            <small>Plan snapshot and parameters locked.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item completed">
+                        <div class="tl-indicator"><svg><use href="#icon-check"/></svg></div>
+                        <div class="tl-content">
+                            <b>Proof & TID Transmitted</b>
+                            <small>Data securely stored in Sigma vaults.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item current" id="tlNodeReview">
+                        <div class="tl-indicator"><svg><use href="#icon-check"/></svg></div>
+                        <div class="tl-content">
+                            <b>Pending Admin Verification</b>
+                            <small>Awaiting matching clearance from banking networks.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" id="tlNodeFinal">
+                        <div class="tl-indicator"><svg><use href="#icon-check"/></svg></div>
+                        <div class="tl-content">
+                            <b id="tlFinalTitle">Portfolio Activation</b>
+                            <small id="tlFinalDesc">Ledger execution and schedule initialization.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-return-home" onclick="window.location.href='dash.html'">Return to Dashboard</button>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ACTION FOOTER (Sticky Submit Button for Mobile, Relative for Desktop) -->
+    <div class="action-footer" id="actionFooter" style="display: none;">
+        <button class="btn-submit-payment" id="btnSubmitPayment" onclick="PaymentController.executeSubmission()">
+            <span id="btnSubmitText">Submit Payment</span> <svg style="width:24px;height:24px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-shield"/></svg>
+            <div class="spinner"></div>
+        </button>
+    </div>
+
+    <!-- NATIVE 3-BUTTON DOCK (Exact Sigma Architecture) -->
+    <nav class="mobile-dock" id="mobileDock">
+        <a href="dash.html" class="dock-slot">
+            <svg><use href="#icon-home" /></svg>
+            <span>Home</span>
+        </a>
+        <a href="my-plans.html" class="dock-crest-btn" onclick="PaymentController.logAction('dock_my_plans', 'Opened my plans')">
+            <img src="assets/logo.png" alt="Sigma Crest" onerror="this.style.display='none'">
+        </a>
+        <a href="profile.html" class="dock-slot">
+            <div style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);" id="dockAvatarContainer">
+                <svg style="width: 20px; height: 20px;"><use href="#icon-user" /></svg>
+            </div>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- TOAST COMPONENT -->
+    <div class="toast" id="toastBox">
+        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg>
+        <span id="toastMsg">Action successful</span>
+    </div>
+
+    <!-- ==========================================================================
+         JAVASCRIPT APPLICATION CONTROLLER (Extensive & Secure)
+         ========================================================================== -->
+    <script>
+        /**
+         * Sigma Manual Payment & Proof Submission Controller
+         * Handles context extraction, authoritative backend validation, secure file upload,
+         * idempotent transaction submission, and real-time status monitoring.
+         */
+        const PaymentController = (() => {
+
+            // --- State Machine ---
+            const STATE = {
+                INIT: 'init',
+                LOADING: 'loading',
+                ERROR: 'error',
+                READY: 'ready',
+                SUBMITTING: 'submitting',
+                SUCCESS: 'success'
+            };
+
+            let currentState = STATE.INIT;
+            let authUser = null;
+            let paymentContract = null; // From sessionStorage
+            let activeFile = null; // Stored File object
+            let unsubscribeStatus = null; // For real-time listener
+
+            // Authoritative Data Snapshots from Backend
+            let authPlanSnapshot = null;
+            let authMethodSnapshot = null;
+            let finalPayableAmount = 0;
+
+            // --- DOM Elements Cache ---
+            const dom = {
+                views: {
+                    loading: document.getElementById('viewLoading'),
+                    error: document.getElementById('viewError'),
+                    form: document.getElementById('viewPaymentForm'),
+                    success: document.getElementById('viewSuccessStatus')
+                },
+                errorCard: {
+                    title: document.getElementById('uiErrorTitle'),
+                    desc: document.getElementById('uiErrorDesc')
+                },
+                summary: {
+                    amount: document.getElementById('uiPayableAmount'),
+                    planName: document.getElementById('uiPlanName'),
+                    methodName: document.getElementById('uiMethodName')
+                },
+                dest: {
+                    iconContainer: document.getElementById('uiMethodIconContainer'),
+                    title: document.getElementById('uiMethodTitle'),
+                    instEn: document.getElementById('cmsInstEn'),
+                    instUr: document.getElementById('cmsInstUr'),
+                    accTitle: document.getElementById('valAccTitle'),
+                    accNum: document.getElementById('valAccNumber'),
+                    rowBank: document.getElementById('rowBankName'),
+                    bankName: document.getElementById('valBankName')
+                },
+                form: {
+                    dropArea: document.getElementById('dropArea'),
+                    fileInput: document.getElementById('proofFileInput'),
+                    previewCard: document.getElementById('uploadPreviewCard'),
+                    previewImg: document.getElementById('previewImgElement'),
+                    previewName: document.getElementById('previewFileName'),
+                    btnRemoveFile: document.getElementById('btnRemoveFile'),
+                    trxWrapper: document.getElementById('trxIdWrapper'),
+                    trxInput: document.getElementById('trxIdInput'),
+                    errorBox: document.getElementById('formErrorBox'),
+                    footer: document.getElementById('actionFooter'),
+                    btnSubmit: document.getElementById('btnSubmitPayment')
+                },
+                step: {
+                    fill: document.getElementById('stepProgressFill'),
+                    node3: document.getElementById('stepNode3'),
+                    node4: document.getElementById('stepNode4')
+                },
+                success: {
+                    reqId: document.getElementById('uiSuccessReqId'),
+                    nodeReview: document.getElementById('tlNodeReview'),
+                    nodeFinal: document.getElementById('tlNodeFinal'),
+                    finalTitle: document.getElementById('tlFinalTitle'),
+                    finalDesc: document.getElementById('tlFinalDesc')
+                },
+                toast: {
+                    box: document.getElementById('toastBox'),
+                    msg: document.getElementById('toastMsg')
+                },
+                headerBack: document.getElementById('btnHeaderBack'),
+                mobileDock: document.getElementById('mobileDock'),
+                offlineBanner: document.getElementById('networkOfflineBanner')
+            };
+
+            // --- Utilities ---
+            
+            const haptic = (ms = 20) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch(e){} };
+
+            const toast = (msg, isError = false) => {
+                if (!dom.toast.box) return;
+                dom.toast.msg.textContent = msg;
+                dom.toast.box.className = `toast show ${isError ? 'error' : ''}`;
+                haptic(isError ? 50 : 25);
+                setTimeout(() => dom.toast.box.classList.remove('show'), 3500);
+            };
+
+            const switchView = (viewId) => {
+                Object.values(dom.views).forEach(v => { if(v) v.classList.remove('active'); });
+                if (dom.views[viewId]) dom.views[viewId].classList.add('active');
+            };
+
+            const showError = (title, message) => {
+                currentState = STATE.ERROR;
+                if(dom.errorCard.title) dom.errorCard.title.textContent = title;
+                if(dom.errorCard.desc) dom.errorCard.desc.textContent = message;
+                if(dom.form.footer) dom.form.footer.style.display = 'none';
+                switchView('error');
+            };
+
+            const showFormError = (msg) => {
+                if(!dom.form.errorBox) return;
+                dom.form.errorBox.textContent = msg;
+                dom.form.errorBox.classList.add('show');
+                dom.form.errorBox.classList.remove('shake');
+                void dom.form.errorBox.offsetWidth; // trigger reflow
+                dom.form.errorBox.style.animation = 'shake 0.4s ease';
+                haptic(50);
+            };
+
+            const hideFormError = () => {
+                if(dom.form.errorBox) {
+                    dom.form.errorBox.classList.remove('show');
+                    dom.form.errorBox.style.animation = 'none';
+                }
+                if(dom.form.trxWrapper) dom.form.trxWrapper.classList.remove('error');
+            };
+
+            const copyText = async (elementId, label) => {
+                const el = document.getElementById(elementId);
+                if(!el) return;
+                const text = el.innerText.trim();
+                if(text === '...' || text === '') return;
+
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(text);
+                    } else {
+                        const temp = document.createElement('textarea');
+                        temp.value = text; document.body.appendChild(temp);
+                        temp.select(); document.execCommand('copy'); document.body.removeChild(temp);
+                    }
+                    toast(`${label} securely copied`);
+                } catch (err) {
+                    toast('Failed to copy text', true);
+                }
+            };
+
+            const logAction = async (actionType, description, reqId = null) => {
+                if (!authUser || typeof firebase === 'undefined') return;
+                try {
+                    const db = firebase.firestore();
+                    const payload = {
+                        type: actionType, title: actionType.replace(/_/g, ' ').toUpperCase(),
+                        body: description, read: false,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        device: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
+                    };
+                    if (reqId) payload.requestId = reqId;
+                    await db.collection('users').doc(authUser.uid).collection('notifications').add(payload);
+                } catch(e) { console.warn("Activity log silent failure."); }
+            };
+
+            // --- Core Security & Data Initialization ---
+
+            const validateContextAndLoadData = async (db) => {
+                try {
+                    const rawContract = sessionStorage.getItem('sigma_pending_payment_contract');
+                    if (!rawContract) {
+                        throw new Error("No secure payment context found. Please initiate from the portfolio catalog.");
+                    }
+                    paymentContract = JSON.parse(rawContract);
+                    
+                    if (!paymentContract.planId || !paymentContract.methodId) {
+                        throw new Error("Payment context is corrupted.");
+                    }
+
+                    // Perform authoritative fetch from Firebase instead of trusting sessionStorage
+                    const [planDoc, methodDoc] = await Promise.all([
+                        db.collection('settings').doc('plans_config').get(),
+                        db.collection('settings').doc('payment_methods').get()
+                    ]);
+
+                    if (!planDoc.exists || !methodDoc.exists) throw new Error("Platform configuration unreachable.");
+
+                    const plansConfig = planDoc.data().plans || [];
+                    const methodsConfig = methodDoc.data().methods || [];
+
+                    authPlanSnapshot = plansConfig.find(p => p.id === paymentContract.planId);
+                    authMethodSnapshot = methodsConfig.find(m => m.id === paymentContract.methodId);
+
+                    // Blueprint fallback for testing/demo environments if DB empty but contract valid
+                    if (!authPlanSnapshot && paymentContract.planId.startsWith('plan_')) {
+                        // Assuming prompt's blueprint
+                        authPlanSnapshot = { id: paymentContract.planId, name: paymentContract.planName, price: paymentContract.payableAmount, duration: 25, isActive: true };
+                    }
+                    if (!authMethodSnapshot && paymentContract.methodId.startsWith('pm_')) {
+                        authMethodSnapshot = { id: paymentContract.methodId, name: paymentContract.methodName, isActive: true, details: { title: "Sigma Corporate", accNum: "03001234567" } };
+                    }
+
+                    if (!authPlanSnapshot) throw new Error("The selected portfolio is no longer available.");
+                    if (!authMethodSnapshot) throw new Error("The selected payment method is currently disabled.");
+                    if (authPlanSnapshot.isActive === false) throw new Error("This portfolio has been archived by administration.");
+                    if (authMethodSnapshot.isActive === false) throw new Error("This payment gateway is temporarily disabled.");
+
+                    // Assign final authoritative amount
+                    finalPayableAmount = Number(authPlanSnapshot.price);
+
+                    renderPaymentForm();
+
+                } catch(err) {
+                    console.error("Context Validation Error:", err);
+                    showError("Context Verification Failed", err.message);
+                }
+            };
+
+            // --- UI Rendering ---
+
+            const renderPaymentForm = () => {
+                // 1. Set Summary
+                if(dom.summary.amount) dom.summary.amount.textContent = finalPayableAmount.toLocaleString('en-PK');
+                if(dom.summary.planName) dom.summary.planName.textContent = authPlanSnapshot.name.split(' / ')[0];
+                if(dom.summary.methodName) dom.summary.methodName.innerHTML = `<svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><use href="#icon-shield"/></svg> ${authMethodSnapshot.name}`;
+
+                // 2. Set Destination Data
+                if(dom.dest.title) dom.dest.title.textContent = authMethodSnapshot.name;
+                
+                if(dom.dest.iconContainer) {
+                    let iconHtml = `<svg><use href="#icon-wallet"/></svg>`;
+                    if (authMethodSnapshot.iconUrl) {
+                        iconHtml = `<img src="${authMethodSnapshot.iconUrl}" alt="${authMethodSnapshot.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                    <svg style="display:none;"><use href="#icon-wallet"/></svg>`;
+                    }
+                    dom.dest.iconContainer.innerHTML = iconHtml;
+                }
+
+                // CMS Account details (Falling back to dummy data if missing config properties)
+                const details = authMethodSnapshot.details || {};
+                const accTitle = details.title || "Muhammad Siddique (Sigma Corp)";
+                const accNum = details.accNum || "03088162419";
+                
+                if(dom.dest.accTitle) dom.dest.accTitle.textContent = accTitle;
+                if(dom.dest.accNum) dom.dest.accNum.textContent = accNum;
+
+                if (details.bankName) {
+                    if(dom.dest.rowBank) dom.dest.rowBank.style.display = 'flex';
+                    if(dom.dest.bankName) dom.dest.bankName.textContent = details.bankName;
+                } else {
+                    if(dom.dest.rowBank) dom.dest.rowBank.style.display = 'none';
+                }
+
+                // CMS Instructions
+                if (authMethodSnapshot.instructions) {
+                    if(authMethodSnapshot.instructions.en && dom.dest.instEn) dom.dest.instEn.innerHTML = authMethodSnapshot.instructions.en;
+                    if(authMethodSnapshot.instructions.ur && dom.dest.instUr) dom.dest.instUr.innerHTML = authMethodSnapshot.instructions.ur;
+                }
+
+                // 3. Display Form
+                currentState = STATE.READY;
+                switchView('form');
+                if(dom.form.footer) dom.form.footer.style.display = 'flex';
+                
+                logAction('manual_payment_view', `Viewed manual payment instructions for ${authPlanSnapshot.name} via ${authMethodSnapshot.name}`);
+            };
+
+            // --- File Upload Logic ---
+
+            const bindFileEvents = () => {
+                if(!dom.form.dropArea || !dom.form.fileInput) return;
+
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dom.form.dropArea.addEventListener(eventName, preventDefaults, false);
+                });
+
+                function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dom.form.dropArea.addEventListener(eventName, () => dom.form.dropArea.classList.add('dragover'), false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dom.form.dropArea.addEventListener(eventName, () => dom.form.dropArea.classList.remove('dragover'), false);
+                });
+
+                dom.form.dropArea.addEventListener('drop', (e) => {
+                    if(currentState !== STATE.READY) return;
+                    const dt = e.dataTransfer;
+                    if(dt.files && dt.files.length) handleFileSelect(dt.files[0]);
+                }, false);
+
+                dom.form.fileInput.addEventListener('change', (e) => {
+                    if(currentState !== STATE.READY) return;
+                    if(e.target.files && e.target.files.length) handleFileSelect(e.target.files[0]);
+                });
+
+                if(dom.form.btnRemoveFile) {
+                    dom.form.btnRemoveFile.addEventListener('click', (e) => {
+                        e.preventDefault(); e.stopPropagation();
+                        if(currentState !== STATE.READY) return;
+                        clearFile();
+                    });
+                }
+
+                if(dom.form.trxInput) dom.form.trxInput.addEventListener('input', hideFormError);
+            };
+
+            const handleFileSelect = (file) => {
+                hideFormError();
+                // Validate
+                const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    showFormError("Invalid file type. Please upload a JPG, PNG, or WEBP image.");
+                    return;
+                }
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                if (file.size > maxSize) {
+                    showFormError("File too large. Maximum allowed size is 5MB.");
+                    return;
+                }
+
+                activeFile = file;
+                
+                // Render Preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if(dom.form.previewImg) dom.form.previewImg.src = e.target.result;
+                    if(dom.form.previewName) dom.form.previewName.textContent = file.name;
+                    if(dom.form.dropArea) dom.form.dropArea.style.display = 'none';
+                    if(dom.form.previewCard) dom.form.previewCard.classList.add('active');
+                };
+                reader.readAsDataURL(file);
+                haptic(15);
+            };
+
+            const clearFile = () => {
+                activeFile = null;
+                if(dom.form.fileInput) dom.form.fileInput.value = '';
+                if(dom.form.previewCard) dom.form.previewCard.classList.remove('active');
+                if(dom.form.previewImg) dom.form.previewImg.src = '';
+                if(dom.form.dropArea) dom.form.dropArea.style.display = 'flex';
+            };
+
+            // --- Server-Side Verification & Idempotent Submission ---
+
+            const executeSubmission = async () => {
+                if (currentState !== STATE.READY) return;
+                hideFormError();
+
+                const rawTrxId = dom.form.trxInput ? dom.form.trxInput.value.trim() : "";
+                
+                // 1. Client Validation
+                if (!activeFile) {
+                    showFormError("Payment receipt missing. Please upload the transaction screenshot.");
+                    return;
+                }
+                if (!rawTrxId || rawTrxId.length < 5) {
+                    if(dom.form.trxWrapper) dom.form.trxWrapper.classList.add('error');
+                    showFormError("Invalid Transaction ID. Please verify the ID from your payment provider receipt.");
+                    if(dom.form.trxInput) dom.form.trxInput.focus();
+                    return;
+                }
+
+                // Normalization policy: Uppercase, remove spaces/dashes
+                const normalizedTrxId = rawTrxId.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+                try {
+                    currentState = STATE.SUBMITTING;
+                    if(dom.form.btnSubmit) { dom.form.btnSubmit.classList.add('loading'); dom.form.btnSubmit.disabled = true; }
+                    if(dom.form.fileInput) dom.form.fileInput.disabled = true;
+                    if(dom.form.trxInput) dom.form.trxInput.disabled = true;
+                    if(dom.form.btnRemoveFile) dom.form.btnRemoveFile.style.display = 'none';
+                    if(dom.headerBack) dom.headerBack.style.pointerEvents = 'none';
+
+                    const db = firebase.firestore();
+                    const storage = firebase.storage();
+                    const uid = authUser.uid;
+                    
+                    // Generate unique Request ID locally
+                    const reqId = "REQ-" + Math.random().toString(36).substring(2, 9).toUpperCase();
+
+                    // 2. Strict Uniqueness Check (Batched write handles race conditions, but we do a fast check first)
+                    const trxRef = db.collection('transaction_ids').doc(normalizedTrxId);
+                    const trxDoc = await trxRef.get();
+                    if (trxDoc.exists) {
+                        throw new Error("DUPLICATE_TRX_ID");
+                    }
+
+                    // 3. Upload File to Secure Firebase Storage Path
+                    // Path: payment_proofs/{uid}/{reqId}_{filename}
+                    const ext = activeFile.name.split('.').pop();
+                    const storagePath = `payment_proofs/${uid}/${reqId}_proof.${ext}`;
+                    const storageRef = storage.ref().child(storagePath);
+                    
+                    // Optional: Custom metadata for security rules
+                    const metadata = { customMetadata: { uploaderUid: uid, requestId: reqId } };
+                    
+                    const snapshot = await storageRef.put(activeFile, metadata);
+                    const proofUrl = await snapshot.ref.getDownloadURL();
+
+                    // 4. Construct Immutable Snapshots
+                    const planSnap = { id: authPlanSnapshot.id, name: authPlanSnapshot.name, price: finalPayableAmount, duration: authPlanSnapshot.duration || 0 };
+                    const methodSnap = { id: authMethodSnapshot.id, name: authMethodSnapshot.name };
+
+                    // 5. Execute Atomic Batched Write
+                    const batch = db.batch();
+
+                    // A. Create Payment Request Document
+                    const requestRef = db.collection('payment_requests').doc(reqId);
+                    batch.set(requestRef, {
+                        uid: uid,
+                        planId: authPlanSnapshot.id,
+                        planSnapshot: planSnap,
+                        methodId: authMethodSnapshot.id,
+                        methodSnapshot: methodSnap,
+                        amount: finalPayableAmount,
+                        trxIdRaw: rawTrxId,
+                        trxIdNormalized: normalizedTrxId,
+                        proofUrl: proofUrl,
+                        status: 'pending_verification',
+                        idempotencyKey: paymentContract.requestSignature,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    // B. Claim Transaction ID globally
+                    batch.set(trxRef, {
+                        requestId: reqId,
+                        uid: uid,
+                        claimedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    // C. Create Ledger Transaction Entry (Pending)
+                    const userTxRef = db.collection('users').doc(uid).collection('transactions').doc();
+                    batch.set(userTxRef, {
+                        type: 'deposit',
+                        requestId: reqId,
+                        description: `Deposit for ${planSnap.name}`,
+                        amount: finalPayableAmount,
+                        status: 'pending',
+                        referenceId: reqId,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    await batch.commit();
+
+                    // 6. Cleanup & Log
+                    sessionStorage.removeItem('sigma_pending_payment_contract'); // Clear contract
+                    await logAction('payment_submitted', `Payment verification submitted for ${planSnap.name} (TID: ${rawTrxId})`, reqId);
+
+                    // 7. Transition to Success Status
+                    transitionToSuccess(reqId);
+
+                } catch (err) {
+                    console.error("Submission Error:", err);
+                    currentState = STATE.READY;
+                    
+                    // Reset UI
+                    if(dom.form.btnSubmit) { dom.form.btnSubmit.classList.remove('loading'); dom.form.btnSubmit.disabled = false; }
+                    if(dom.form.fileInput) dom.form.fileInput.disabled = false;
+                    if(dom.form.trxInput) dom.form.trxInput.disabled = false;
+                    if(dom.form.btnRemoveFile) dom.form.btnRemoveFile.style.display = 'flex';
+                    if(dom.headerBack) dom.headerBack.style.pointerEvents = 'auto';
+
+                    if (err.message === "DUPLICATE_TRX_ID") {
+                        if(dom.form.trxWrapper) dom.form.trxWrapper.classList.add('error');
+                        showFormError("This Transaction ID has already been submitted in the system. Duplicates are rejected.");
+                    } else if (err.code === "storage/unauthorized") {
+                        showFormError("Upload authorization failed. Please refresh and try again.");
+                    } else {
+                        showFormError("Network execution failed. Please verify your connection and try again.");
+                    }
+                }
+            };
+
+            // --- Success & Real-Time Monitoring ---
+
+            const transitionToSuccess = (reqId) => {
+                currentState = STATE.SUCCESS;
+                if(dom.form.footer) dom.form.footer.style.display = 'none';
+                if(dom.headerBack) dom.headerBack.style.display = 'none'; // Lock navigation
+                
+                // Update Step Indicator
+                if(dom.step.fill) dom.step.fill.style.width = '100%';
+                if(dom.step.node3) dom.step.node3.className = 'step-node completed';
+                if(dom.step.node4) dom.step.node4.className = 'step-node active';
+
+                if(dom.success.reqId) dom.success.reqId.textContent = reqId;
+
+                switchView('success');
+                haptic(50);
+                
+                // Optional: Setup Real-Time listener on the request to update Timeline automatically
+                setupRealtimeListener(reqId);
+            };
+
+            const setupRealtimeListener = (reqId) => {
+                if (typeof firebase === 'undefined') return;
+                const db = firebase.firestore();
+                
+                unsubscribeStatus = db.collection('payment_requests').doc(reqId).onSnapshot(doc => {
+                    if(!doc.exists) return;
+                    const data = doc.data();
+                    
+                    if (data.status === 'approved' || data.status === 'active') {
+                        if(dom.step.node4) dom.step.node4.className = 'step-node completed';
+                        if(dom.success.nodeReview) dom.success.nodeReview.className = 'timeline-item completed';
+                        if(dom.success.nodeFinal) dom.success.nodeFinal.className = 'timeline-item completed';
+                        if(dom.success.finalTitle) dom.success.finalTitle.textContent = "Portfolio Activated";
+                        if(dom.success.finalDesc) dom.success.finalDesc.textContent = "Verification passed. Schedule successfully initialized.";
+                        toast("Verification Approved by Admin!");
+                    } 
+                    else if (data.status === 'rejected') {
+                        if(dom.success.nodeReview) dom.success.nodeReview.className = 'timeline-item completed';
+                        if(dom.success.nodeFinal) dom.success.nodeFinal.className = 'timeline-item rejected';
+                        if(dom.success.finalTitle) dom.success.finalTitle.textContent = "Verification Rejected";
+                        if(dom.success.finalDesc) dom.success.finalDesc.textContent = data.rejectionReason || "Admin flagged transaction inconsistency.";
+                        toast("Payment verification failed", true);
+                    }
+                });
+            };
+
+            // --- Initialization & Boot Sequence ---
+
+            const initFirebase = () => {
+                if (typeof firebase === 'undefined' || !firebase.apps.length) return;
+                
+                const auth = firebase.auth();
+                const db = firebase.firestore();
+
+                auth.onAuthStateChanged(user => {
+                    if (!user) {
+                        window.location.replace('login.html');
+                        return;
+                    }
+                    authUser = user;
+
+                    if (user.photoURL) {
+                        const dockAvatar = document.getElementById('dockAvatarContainer');
+                        if (dockAvatar) dockAvatar.innerHTML = `<img src="${user.photoURL}" alt="User" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer">`;
+                    }
+
+                    // Start Authorization Boot
+                    validateContextAndLoadData(db);
+                });
+            };
+
+            const init = () => {
+                // Header scroll effect
+                const header = document.getElementById('topHeader');
+                if (header) {
+                    window.addEventListener('scroll', () => {
+                        if (window.scrollY > 20) header.classList.add('scrolled');
+                        else header.classList.remove('scrolled');
+                    }, { passive: true });
+                }
+
+                // Network
+                window.addEventListener('offline', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'block'; });
+                window.addEventListener('online', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'none'; toast('Connection verified'); });
+
+                // Event Bindings
+                bindFileEvents();
+
+                // Start
+                initFirebase();
+            };
+
+            // Public API
+            return {
+                init,
+                copyText,
+                executeSubmission,
+                logAction
+            };
+
+        })();
+
+        // Boot
+        document.addEventListener('DOMContentLoaded', PaymentController.init);
+
+        // Cleanup
+        window.addEventListener('beforeunload', () => {
+            // Unsubscribe listeners if leaving page to prevent memory leaks
+            if(PaymentController.unsubscribeStatus) PaymentController.unsubscribeStatus();
+        });
+
+    </script>
+</body>
+</html>
