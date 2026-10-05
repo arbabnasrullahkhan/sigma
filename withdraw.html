@@ -29,20 +29,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
-    <!-- Fallback Firebase Initialization -->
-    <script>
-        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-            firebase.initializeApp({
-                apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
-                authDomain: "week-team.firebaseapp.com",
-                projectId: "week-team",
-                storageBucket: "week-team.firebasestorage.app",
-                messagingSenderId: "480334485782",
-                appId: "1:480334485782:web:c0c886ed710567b9e6d837"
-            });
-        }
-    </script>
-
     <style>
         /* ==========================================================================
            1. SIGMA PREMIUM DESIGN TOKENS
@@ -61,6 +47,7 @@
             --sigma-gold: #F59E0B;
             --sigma-gold-dark: #D97706;
             --sigma-danger: #EF4444;
+            --sigma-danger-soft: #FEF2F2;
             --sigma-danger-dark: #DC2626;
 
             --text-heading: #0F172A;
@@ -409,6 +396,8 @@
         <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><polyline stroke-linecap="round" stroke-linejoin="round" points="12 6 12 12 16 14"/></symbol>
         <symbol id="icon-bank" viewBox="0 0 24 24"><rect x="3" y="21" width="18" height="2" rx="1" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="10" width="2" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/><rect x="10" y="10" width="2" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/><rect x="16" y="10" width="2" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 8 12 2l9.5 6H2.5Z"/></symbol>
         <symbol id="icon-crypto" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+        <symbol id="icon-map-pin" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round"></circle></symbol>
+        <symbol id="icon-link" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path stroke-linecap="round" stroke-linejoin="round" d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></symbol>
     </svg>
 
     <div class="app-container">
@@ -488,7 +477,7 @@
                     <!-- Amount Input -->
                     <div class="input-wrapper has-prefix" id="wrapAmount">
                         <span class="currency-prefix">PKR</span>
-                        <input type="number" id="inpAmount" class="input-field" placeholder=" " min="90" max="3000000">
+                        <input type="number" id="inpAmt" class="input-field" placeholder=" " min="90" max="3000000">
                         <label class="floating-label">Withdraw Amount</label>
                     </div>
 
@@ -509,7 +498,7 @@
         </main>
     </div>
 
-    <!-- NATIVE 3-BUTTON DOCK (Exact Architecture) -->
+    <!-- NATIVE 3-BUTTON DOCK -->
     <nav class="mobile-dock">
         <a href="dash.html" class="dock-slot active">
             <svg><use href="#icon-home" /></svg>
@@ -541,29 +530,8 @@
             </div>
             <div class="sheet-body">
                 
-                <div class="confirm-box">
-                    <div class="c-row">
-                        <span>Gateway</span>
-                        <strong id="confMethod">--</strong>
-                    </div>
-                    <div class="c-row">
-                        <span>Account Holder</span>
-                        <strong id="confName">--</strong>
-                    </div>
-                    <div class="c-row">
-                        <span id="confNumLabel">Account No.</span>
-                        <strong id="confNum" class="font-mono">--</strong>
-                    </div>
-                    <!-- Extra field for Bank/Crypto -->
-                    <div class="c-row" id="confExtraRow" style="display: none;">
-                        <span id="confExtraLabel">Bank Name</span>
-                        <strong id="confExtra">--</strong>
-                    </div>
-
-                    <div class="c-row total">
-                        <span>Withdraw Amount</span>
-                        <strong id="confAmount">Rs. 0</strong>
-                    </div>
+                <div class="confirm-box" id="dynamicConfirmBox">
+                    <!-- Data Injected dynamically based on inputs -->
                 </div>
 
                 <div style="background: var(--sigma-gold-soft); color: var(--sigma-gold-dark); padding: 12px 16px; border-radius: var(--radius-lg); font-size: 0.8rem; font-weight: 600; border: 1px solid var(--sigma-gold); margin-top: 8px;">
@@ -592,7 +560,7 @@
     </div>
 
     <!-- ==========================================================================
-         JAVASCRIPT CONTROLLER (Strict Firebase Logic & UI)
+         JAVASCRIPT CONTROLLER 
          ========================================================================== -->
     <script>
         const WithdrawController = (() => {
@@ -600,17 +568,15 @@
             let authUser = null;
             let availableBalance = 0;
             let selectedMethod = null;
-            
-            // Extracted Dynamic Inputs
             let formData = {};
 
-            // Default Method Blueprint (If CMS is empty)
+            // Proper image mapping as defined by user context
             const defaultMethods = [
                 { id: "easypaisa", name: "EasyPaisa", type: "wallet", img: "easypaisa.png", min: 90, max: 3000000 },
                 { id: "jazzcash", name: "JazzCash", type: "wallet", img: "jazzcash.png", min: 90, max: 3000000 },
                 { id: "sadapay", name: "SadaPay", type: "wallet", img: "sadapay.png", min: 90, max: 3000000 },
                 { id: "nayapay", name: "NayaPay", type: "wallet", img: "nayapay.png", min: 90, max: 3000000 },
-                { id: "bank", name: "Bank Transfer", type: "bank", img: "bank.png", min: 500, max: 3000000 },
+                { id: "bank", name: "All Banks", type: "bank", img: "bank.png", min: 500, max: 3000000 },
                 { id: "usdt", name: "USDT Crypto", type: "crypto", img: "usdt.png", min: 1500, max: 3000000 }
             ];
 
@@ -623,9 +589,10 @@
                 step2: document.getElementById('step2'),
                 dynamicContainer: document.getElementById('dynamicFieldsContainer'),
                 bal: document.getElementById('uiAvailBalance'),
-                inpAmt: document.getElementById('inpAmount'),
+                inpAmt: document.getElementById('inpAmt'),
                 err1: document.getElementById('step1Error'),
                 err2: document.getElementById('formErrorBox'),
+                confirmBox: document.getElementById('dynamicConfirmBox'),
                 btnFinal: document.getElementById('btnSubmitFinal'),
                 successScr: document.getElementById('successScreen'),
                 offline: document.getElementById('networkOfflineBanner'),
@@ -633,7 +600,6 @@
                 toastMsg: document.getElementById('toastMsg')
             };
 
-            // --- Utilities ---
             const haptic = (ms = 20) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch(e){} };
             
             const toast = (msg, isError = false) => {
@@ -657,19 +623,15 @@
             const openSheet = (id) => { document.getElementById(id).classList.add('show'); document.body.classList.add('locked'); haptic(); };
             const closeSheet = (id) => { document.getElementById(id).classList.remove('show'); document.body.classList.remove('locked'); };
 
-            // --- UI Rendering ---
-
+            // Render Gateway Grid
             const renderMethods = (methodsArray) => {
                 dom.grid.innerHTML = '';
                 methodsArray.forEach(method => {
                     const card = document.createElement('div');
                     card.className = 'method-card';
                     card.onclick = () => selectMethod(method, card);
-
-                    // Dynamic image loading with safe fallback to bank.png
-                    // We use assets/pay/ as requested.
-                    const imgSrc = `assets/pay/${method.img || method.id + '.png'}`;
-                    
+                    // Force load from correctly resolved assets/pay path
+                    const imgSrc = `assets/pay/${method.img}`;
                     card.innerHTML = `
                         <div class="method-check"><svg><use href="#icon-check"/></svg></div>
                         <div class="method-icon">
@@ -686,20 +648,16 @@
             const selectMethod = (methodObj, cardEl) => {
                 selectedMethod = methodObj;
                 hideError(dom.err1);
-                
-                // Visual Grid Selection (Blur others)
                 dom.grid.classList.add('has-selection');
                 Array.from(dom.grid.children).forEach(c => c.classList.remove('selected'));
                 cardEl.classList.add('selected');
-                
                 haptic(15);
             };
 
-            // Transition from Grid to Form
+            // Build conditional dynamic form
             const goToStep2 = () => {
                 if (!selectedMethod) { showError(dom.err1, "Please select a withdrawal gateway."); return; }
                 
-                // Build dynamic form based on type
                 dom.dynamicContainer.innerHTML = '';
                 
                 const buildInput = (id, label, icon) => {
@@ -713,15 +671,19 @@
                 };
 
                 if (selectedMethod.type === 'crypto') {
-                    dom.dynamicContainer.innerHTML += buildInput('extra', 'Exchange App (Binance, Bitget)', '#icon-bank');
-                    dom.dynamicContainer.innerHTML += buildInput('accNum', 'USDT Address (TRC20/ERC20)', '#icon-crypto'); // assuming crypto icon exists, fallback to bank
+                    // Crypto inputs
+                    dom.dynamicContainer.innerHTML += buildInput('cryptoApp', 'App Name (Binance, Bitget, etc)', '#icon-bank');
+                    dom.dynamicContainer.innerHTML += buildInput('cryptoNetwork', 'Network (e.g. TRC20, ERC20)', '#icon-link');
+                    dom.dynamicContainer.innerHTML += buildInput('accNum', 'USDT Wallet Address', '#icon-crypto');
                     dom.dynamicContainer.innerHTML += buildInput('accName', 'Account Holder Name', '#icon-user');
                 } else if (selectedMethod.type === 'bank') {
-                    dom.dynamicContainer.innerHTML += buildInput('extra', 'Bank Name (e.g. Meezan, HBL)', '#icon-bank');
-                    dom.dynamicContainer.innerHTML += buildInput('accNum', 'IBAN / Account Number', '#icon-wallet');
+                    // Bank inputs
+                    dom.dynamicContainer.innerHTML += buildInput('bankName', 'Bank Name (e.g. Meezan, HBL)', '#icon-bank');
+                    dom.dynamicContainer.innerHTML += buildInput('accNum', 'Bank Account Number / IBAN', '#icon-wallet');
                     dom.dynamicContainer.innerHTML += buildInput('accName', 'Account Holder Name', '#icon-user');
+                    dom.dynamicContainer.innerHTML += buildInput('location', 'Location / Branch Name', '#icon-map-pin');
                 } else {
-                    // Mobile Wallets (EasyPaisa, JazzCash, etc)
+                    // Mobile Wallets (Easypaisa, Jazzcash, Sadapay, Nayapay)
                     dom.dynamicContainer.innerHTML += buildInput('accNum', 'Mobile / Account Number', '#icon-wallet');
                     dom.dynamicContainer.innerHTML += buildInput('accName', 'Account Holder Name', '#icon-user');
                 }
@@ -729,7 +691,7 @@
                 dom.step1.style.display = 'none';
                 dom.step2.style.display = 'flex';
                 
-                // Attach clear error listeners
+                // Clear errors on input logic
                 dom.inpAmt.addEventListener('input', () => hideError(dom.err2));
                 const inputs = dom.dynamicContainer.querySelectorAll('input');
                 inputs.forEach(inp => inp.addEventListener('input', () => { hideError(dom.err2); inp.parentElement.classList.remove('error'); }));
@@ -741,7 +703,7 @@
                 hideError(dom.err2);
             };
 
-            // Modal Confirmation
+            // Validation & Launch Modal
             const showConfirmation = () => {
                 hideError(dom.err2);
                 const amt = Number(dom.inpAmt.value);
@@ -757,53 +719,69 @@
                     return;
                 }
 
-                const inpName = document.getElementById('inp_accName');
-                const inpNum = document.getElementById('inp_accNum');
-                const inpExtra = document.getElementById('inp_extra');
+                formData = { amount: amt, methodName: selectedMethod.name, type: selectedMethod.type };
 
-                if (inpName && inpName.value.trim().length < 3) { inpName.parentElement.classList.add('error'); showError(dom.err2, "Enter a valid holder name."); return; }
-                if (inpNum && inpNum.value.trim().length < 5) { inpNum.parentElement.classList.add('error'); showError(dom.err2, "Enter a valid account number/address."); return; }
-                if (inpExtra && inpExtra.value.trim().length < 2) { inpExtra.parentElement.classList.add('error'); showError(dom.err2, "Bank/App name is required."); return; }
+                // Generic text getter & validator
+                const val = (id) => document.getElementById(`inp_${id}`) ? document.getElementById(`inp_${id}`).value.trim() : "";
+                const checkLen = (id, minLen, errorMsg) => {
+                    const el = document.getElementById(`inp_${id}`);
+                    if(el && el.value.trim().length < minLen) {
+                        el.parentElement.classList.add('error');
+                        showError(dom.err2, errorMsg);
+                        return false;
+                    }
+                    return true;
+                }
 
-                // Save to formData
-                formData = {
-                    amount: amt,
-                    methodName: selectedMethod.name,
-                    accName: inpName ? inpName.value.trim() : "",
-                    accNum: inpNum ? inpNum.value.trim() : "",
-                    extra: inpExtra ? inpExtra.value.trim() : ""
-                };
+                // Base fields all methods require
+                if (!checkLen('accName', 3, "Enter a valid account holder name.")) return;
+                if (!checkLen('accNum', 5, "Enter a valid account number/address.")) return;
 
-                // Populate Modal
-                document.getElementById('confMethod').textContent = formData.methodName;
-                document.getElementById('confName').textContent = formData.accName;
-                document.getElementById('confNum').textContent = formData.accNum;
-                document.getElementById('confAmount').textContent = "Rs. " + amt.toLocaleString();
+                // Conditional fields
+                if (selectedMethod.type === 'bank') {
+                    if (!checkLen('bankName', 2, "Enter a valid Bank Name.")) return;
+                    if (!checkLen('location', 2, "Enter a valid Location/Branch.")) return;
+                    formData.bankName = val('bankName');
+                    formData.location = val('location');
+                } else if (selectedMethod.type === 'crypto') {
+                    if (!checkLen('cryptoApp', 2, "Enter exchange app name.")) return;
+                    if (!checkLen('cryptoNetwork', 2, "Enter a valid network (e.g. TRC20).")) return;
+                    formData.cryptoApp = val('cryptoApp');
+                    formData.cryptoNetwork = val('cryptoNetwork');
+                }
+                
+                formData.accName = val('accName');
+                formData.accNum = val('accNum');
 
-                const elExtraRow = document.getElementById('confExtraRow');
-                const elExtraLabel = document.getElementById('confExtraLabel');
-                const elExtraVal = document.getElementById('confExtra');
-                const elNumLabel = document.getElementById('confNumLabel');
+                // Generate HTML for Confirmation Popup Dynamically
+                let confHTML = `
+                    <div class="c-row"><span>Gateway</span><strong>${formData.methodName}</strong></div>
+                    <div class="c-row"><span>Account Holder</span><strong>${formData.accName}</strong></div>
+                `;
 
                 if (selectedMethod.type === 'crypto') {
-                    elExtraRow.style.display = 'flex';
-                    elExtraLabel.textContent = 'Exchange App';
-                    elExtraVal.textContent = formData.extra;
-                    elNumLabel.textContent = 'Crypto Address';
+                    confHTML += `
+                        <div class="c-row"><span>Exchange App</span><strong>${formData.cryptoApp}</strong></div>
+                        <div class="c-row"><span>Network</span><strong>${formData.cryptoNetwork}</strong></div>
+                        <div class="c-row"><span>USDT Address</span><strong class="font-mono">${formData.accNum}</strong></div>
+                    `;
                 } else if (selectedMethod.type === 'bank') {
-                    elExtraRow.style.display = 'flex';
-                    elExtraLabel.textContent = 'Bank Name';
-                    elExtraVal.textContent = formData.extra;
-                    elNumLabel.textContent = 'Account No.';
+                    confHTML += `
+                        <div class="c-row"><span>Bank Name</span><strong>${formData.bankName}</strong></div>
+                        <div class="c-row"><span>Account Number</span><strong class="font-mono">${formData.accNum}</strong></div>
+                        <div class="c-row"><span>Location</span><strong>${formData.location}</strong></div>
+                    `;
                 } else {
-                    elExtraRow.style.display = 'none';
-                    elNumLabel.textContent = 'Mobile No.';
+                    confHTML += `
+                        <div class="c-row"><span>Account Number</span><strong class="font-mono">${formData.accNum}</strong></div>
+                    `;
                 }
+
+                confHTML += `<div class="c-row total"><span>Withdraw Amount</span><strong>Rs. ${formData.amount.toLocaleString()}</strong></div>`;
+                dom.confirmBox.innerHTML = confHTML;
 
                 openSheet('sheetConfirm');
             };
-
-            // --- Server/Firebase Logic ---
 
             const submitWithdrawal = async () => {
                 if (!authUser || !formData.amount) return;
@@ -816,14 +794,10 @@
                     const uid = authUser.uid;
                     const reqId = "WTH-" + Math.random().toString(36).substring(2, 9).toUpperCase();
 
-                    // Security: We use a batched write to ensure the withdrawal is recorded and the balance is deducted safely.
-                    // A real backend would validate this via Cloud Functions. Here we build the robust client-side batch.
-                    
                     const batch = db.batch();
                     const userRef = db.collection('users').doc(uid);
                     const wthRef = db.collection('withdrawals').doc(reqId);
 
-                    // Re-read balance inside transaction to ensure accuracy
                     await db.runTransaction(async (transaction) => {
                         const userDoc = await transaction.get(userRef);
                         if (!userDoc.exists) throw new Error("User record missing");
@@ -831,24 +805,28 @@
                         const currentProfit = userDoc.data().profitBalance || 0;
                         if (formData.amount > currentProfit) throw new Error("Insufficient verified balance");
 
-                        // 1. Deduct Balance
+                        // Deduct Balance
                         transaction.update(userRef, { profitBalance: currentProfit - formData.amount });
 
-                        // 2. Create Withdrawal Record
+                        // Create Request Record with dynamic conditional details
                         transaction.set(wthRef, {
                             uid: uid,
                             amount: formData.amount,
                             methodName: formData.methodName,
+                            methodType: formData.type,
                             accountDetails: {
                                 name: formData.accName,
                                 number: formData.accNum,
-                                bankOrApp: formData.extra || null
+                                bankName: formData.bankName || null,
+                                location: formData.location || null,
+                                cryptoApp: formData.cryptoApp || null,
+                                cryptoNetwork: formData.cryptoNetwork || null,
                             },
                             status: 'pending',
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
 
-                        // 3. Create Ledger Entry
+                        // Create Ledger Record
                         const txRef = userRef.collection('transactions').doc();
                         transaction.set(txRef, {
                             type: 'withdrawal',
@@ -860,12 +838,12 @@
                         });
                     });
 
-                    // Success Process
+                    // Success - Full Screen Popup Sequence
                     closeSheet('sheetConfirm');
                     dom.successScr.classList.add('show');
                     haptic(100);
 
-                    // Exactly 3 seconds overlay, then redirect to Dashboard
+                    // Re-direct to dash after 3 seconds exactly as requested
                     setTimeout(() => {
                         window.location.replace('dash.html');
                     }, 3000);
@@ -882,11 +860,7 @@
 
             const checkEligibility = async (db, uid) => {
                 try {
-                    // FIX FOR FIREBASE INDEX ERROR:
-                    // Instead of compound querying status + uid which requires an index,
-                    // we query by uid and filter status locally. This is safe and requires no manual indexing.
                     const snapshot = await db.collection('withdrawals').where('uid', '==', uid).get();
-                    
                     let hasPending = false;
                     snapshot.forEach(doc => {
                         const data = doc.data();
@@ -904,8 +878,6 @@
                     }
 
                 } catch (e) {
-                    console.error("Eligibility Check failed. Passing for now.", e);
-                    // Fail open so user isn't stuck forever on a bad network query
                     dom.load.style.display = 'none';
                     dom.active.style.display = 'flex';
                 }
@@ -916,26 +888,17 @@
                 const auth = firebase.auth();
                 const db = firebase.firestore();
 
-                // Load CMS Methods (or blueprint)
-                db.collection('settings').doc('withdraw_methods').get().then(doc => {
-                    if (doc.exists && doc.data().methods && Array.isArray(doc.data().methods)) {
-                        renderMethods(doc.data().methods.filter(m => m.isActive !== false));
-                    } else {
-                        renderMethods(defaultMethods);
-                    }
-                }).catch(() => renderMethods(defaultMethods));
+                renderMethods(defaultMethods);
 
                 auth.onAuthStateChanged(user => {
                     if (!user) { window.location.replace('login.html'); return; }
                     authUser = user;
 
-                    // Fetch Avatar for Dock
                     if (user.photoURL) {
                         const dockAvatar = document.getElementById('dockAvatarContainer');
                         if (dockAvatar) dockAvatar.innerHTML = `<img src="${user.photoURL}" alt="User" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer">`;
                     }
 
-                    // Fetch authoritative profit balance
                     db.collection('users').doc(user.uid).onSnapshot(doc => {
                         if (doc.exists) {
                             availableBalance = doc.data().profitBalance || 0;
@@ -943,13 +906,11 @@
                         }
                     });
 
-                    // Enforce Pending Lock Rule
                     checkEligibility(db, user.uid);
                 });
             };
 
             const init = () => {
-                // Header scroll effect
                 const header = document.getElementById('topHeader');
                 if (header) {
                     window.addEventListener('scroll', () => {
@@ -958,7 +919,6 @@
                     }, { passive: true });
                 }
 
-                // Overlay delegates
                 document.querySelectorAll('.overlay').forEach(ov => {
                     ov.addEventListener('click', e => { if (e.target === ov) closeSheet(ov.id); });
                 });
@@ -969,10 +929,7 @@
                 initFirebase();
             };
 
-            return {
-                init, selectMethod, goToStep2, backToStep1, showConfirmation, closeSheet, submitWithdrawal
-            };
-
+            return { init, goToStep2, backToStep1, showConfirmation, closeSheet, submitWithdrawal };
         })();
 
         document.addEventListener('DOMContentLoaded', WithdrawController.init);
