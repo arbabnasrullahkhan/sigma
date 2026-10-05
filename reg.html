@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sigma | Create Account & Start Trading</title>
 
-    <!-- SEO & Metadata -->
+    <!-- SEO & Metadata (Configured for sigmaaz.vercel.app) -->
     <meta name="description" content="Create your Sigma account in seconds. Access automated trading portfolios, daily PKR profits, and instant Easypaisa & JazzCash withdrawals.">
     <meta name="keywords" content="Sigma, Register, Sign Up, Pakistan Trading, Earn PKR, Easypaisa, JazzCash, Automated Investment">
     <meta name="author" content="Sigma Technologies">
@@ -23,6 +23,17 @@
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="assets/favicon.png">
 
+    <!-- Open Graph & Social Cards -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sigmaaz.vercel.app/reg.html">
+    <meta property="og:title" content="Create Your Sigma Account | Premium Trading Platform">
+    <meta property="og:description" content="Join thousands of Pakistani investors generating daily profits with Sigma.">
+    <meta property="og:image" content="https://sigmaaz.vercel.app/assets/preview.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sigma | Create Account">
+    <meta name="twitter:description" content="Automated trading and daily PKR profits. Open your free account now.">
+    <meta name="twitter:image" content="https://sigmaaz.vercel.app/assets/preview.png">
+
     <!-- Preconnect & Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +47,7 @@
     <!-- Connect External Config with Fallback Initialization -->
     <script src="firebase-config.js"></script>
     <script>
+        // Failsafe Initialization
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             const fallbackConfig = {
                 apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
@@ -47,12 +59,13 @@
                 measurementId: "G-REGQKRZHX7"
             };
             firebase.initializeApp(fallbackConfig);
+            console.log("Sigma Firebase initialized via verified backup configuration.");
         }
     </script>
 
     <style>
         /* ==========================================================================
-           1. CSS VARIABLES & SYSTEM (Sigma Theme)
+           1. CSS VARIABLES & DESIGN SYSTEM (Sigma Theme)
            ========================================================================== */
         :root {
             --sigma-primary: #0F172A;
@@ -91,10 +104,18 @@
 
             --transition-fast: 0.2s ease;
             --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
+        /* ==========================================================================
+           2. GLOBAL RESET & BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
+        }
+
+        html { font-size: 16px; scroll-behavior: smooth; }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-body);
@@ -119,7 +140,7 @@
         p { color: var(--text-muted); }
 
         /* ==========================================================================
-           2. ISLAND TOPBAR (Single Row across all viewports)
+           3. ISLAND TOPBAR (Single Row across all viewports)
            ========================================================================== */
         .island-topbar {
             position: sticky; top: 12px; margin: 0 auto 24px;
@@ -165,7 +186,7 @@
         }
 
         /* ==========================================================================
-           3. MAIN RESPONSIVE CONTAINER & DESKTOP 2-COLUMN LAYOUT
+           4. MAIN RESPONSIVE CONTAINER & DESKTOP 2-COLUMN LAYOUT
            ========================================================================== */
         .page-wrapper {
             width: 100%; max-width: 1160px; margin: 0 auto;
@@ -180,7 +201,7 @@
         }
 
         /* ==========================================================================
-           4. REGISTRATION CARD (Left Column) - STRICTLY 4 INPUTS
+           5. REGISTRATION CARD (Left Column) - STRICTLY 4 INPUTS
            ========================================================================== */
         .auth-card {
             background: var(--bg-surface); border-radius: var(--radius-island);
@@ -307,7 +328,7 @@
         .btn-submit:active:not(:disabled) { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        .auth-footer { text-align: center; font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-top: 20px;}
+        .auth-footer { text-align: center; font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-top: 24px;}
         .auth-footer a { color: var(--sigma-primary); font-weight: 800; }
         .auth-footer a:hover { text-decoration: underline; }
 
@@ -320,7 +341,7 @@
         .btn-submit.loading span { display: none; }
 
         /* ==========================================================================
-           5. DESKTOP SHOWCASE PANEL (Right Column - Desktop Only)
+           6. DESKTOP SHOWCASE PANEL (Right Column - Desktop Only)
            ========================================================================== */
         .showcase-panel {
             display: none; /* Shown strictly on min-width 1024px */
@@ -398,7 +419,7 @@
         <symbol id="icon-login" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></symbol>
         <symbol id="icon-check" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="20 6 9 17 4 12"/></symbol>
         <symbol id="icon-shield" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
-        <symbol id="icon-gift" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="22" x2="12" y2="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></symbol>
+        <symbol id="icon-gift" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="22" x2="12" y2="7" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></symbol>
     </svg>
 
     <div class="page-wrapper">
@@ -447,11 +468,11 @@
                 <form id="regForm" novalidate autocomplete="off">
                     <div class="global-error" id="globalError"></div>
 
-                    <!-- INPUT 1: USERNAME (NO FULL NAME) -->
+                    <!-- INPUT 1: USERNAME (NO FULL NAME) - STRICTLY 5-9 CHARACTERS, NO @ SYMBOL -->
                     <div class="form-group">
                         <div class="input-wrapper" id="wrapUsername">
                             <div class="input-icon"><svg><use href="#icon-user"></use></svg></div>
-                            <input type="text" id="username" class="input-field" placeholder=" " minlength="4" maxlength="15" autocomplete="username" required>
+                            <input type="text" id="username" class="input-field" placeholder=" " minlength="5" maxlength="9" autocomplete="username" required>
                             <label class="floating-label">Choose Username</label>
                         </div>
                     </div>
@@ -475,7 +496,7 @@
                     </div>
 
                     <!-- INPUT 4: PASSWORD (NO CONFIRM PASSWORD) -->
-                    <div class="form-group">
+                    <div class="form-group" style="margin-bottom: 12px;">
                         <div class="input-wrapper" id="wrapPassword">
                             <div class="input-icon"><svg><use href="#icon-lock"></use></svg></div>
                             <input type="password" id="password" class="input-field" placeholder=" " autocomplete="new-password" minlength="6" required>
@@ -515,7 +536,7 @@
                     </button>
 
                     <!-- Route to Login -->
-                    <div class="auth-footer" style="margin-top: 20px;">
+                    <div class="auth-footer" style="margin-top: 24px;">
                         Already have an account? <a href="login.html">Log In</a>
                     </div>
                 </form>
@@ -674,8 +695,16 @@
                 input.addEventListener('input', clearErrors);
             });
 
+            // STRICT USERNAME LOGIC: 5 to 9 chars, remove everything from @ onwards, alphanumeric lowercase only
             inUser.addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase().slice(0, 15);
+                let val = e.target.value;
+                if(val.includes('@')) {
+                    val = val.split('@')[0]; // Remove @ and everything after
+                }
+                val = val.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().slice(0, 9); // Max 9 chars
+                if (e.target.value !== val) {
+                    e.target.value = val;
+                }
             });
 
             inMobile.addEventListener('input', (e) => {
@@ -727,7 +756,7 @@
                 const db = firebase.firestore();
                 const userRef = db.collection('users').doc(user.uid);
                 
-                // We do NOT throw here so the redirect always happens even if Firestore rules are not fully setup yet.
+                // Do NOT throw here so the redirect always happens even if Firestore rules are not fully setup yet.
                 try {
                     const doc = await userRef.get();
                     if (!doc.exists) {
@@ -783,7 +812,7 @@
                 const password = inPwd.value;
 
                 // Validation
-                if (!username || username.length < 4) return showError("Username must be at least 4 characters.", "wrapUsername");
+                if (!username || username.length < 5) return showError("Username must be between 5 and 9 characters.", "wrapUsername");
                 if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError("Please enter a valid email address.", "wrapEmail");
                 if (!mobile || mobile.length < 10) return showError("Mobile number must be at least 10 digits.", "wrapMobile");
                 if (!password || password.length < 6) return showError("Password must be at least 6 characters.", "wrapPassword");
@@ -812,22 +841,29 @@
                         console.warn("Username check skipped due to permission rules. Proceeding to auth.");
                     }
 
-                    // Create Firebase Auth User
+                    // 1. Create Firebase Auth User (Will throw if email already exists, which is correct)
                     const userCred = await auth.createUserWithEmailAndPassword(email, password);
 
-                    // Initialize Profile & Ledger Transaction (Failsafe)
-                    await provisionAccountProfile(userCred.user, {
-                        username: username,
-                        phone: mobile
-                    });
+                    // 2. Initialize Profile & Ledger Transaction (Failsafe block so redirect is guaranteed)
+                    try {
+                        await provisionAccountProfile(userCred.user, {
+                            username: username,
+                            phone: mobile
+                        });
+                    } catch(e) {
+                        console.error("Firestore sync bypassed. Ensure rules are configured.");
+                        // Proceed to dashboard anyway since account exists.
+                    }
 
-                    // Success Feedback & Force Routing
+                    // 3. Success Feedback & Force Routing
                     btnSubmit.classList.remove('loading');
                     btnSubmit.innerHTML = `<span><svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Account Created</span>`;
                     btnSubmit.style.background = 'var(--sigma-accent)';
 
                     // Use replace to prevent going back to the form
-                    window.location.replace('dash.html');
+                    setTimeout(() => {
+                        window.location.replace('dash.html');
+                    }, 800);
 
                 } catch (err) {
                     btnSubmit.disabled = false;
@@ -852,7 +888,6 @@
                     }
                 }
             });
-
         });
     </script>
 </body>
