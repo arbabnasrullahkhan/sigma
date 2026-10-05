@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sigma Plans">
     
-    <title>Sigma | Investment Portfolios</title>
+    <title>Sigma | Premium Portfolios</title>
 
     <!-- Favicon & Touch Icons -->
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
@@ -28,6 +28,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Centralized Firebase Configuration Reference -->
     <script src="firebase-config.js"></script>
 
     <!-- Fallback Firebase Initialization -->
@@ -42,6 +44,7 @@
                 appId: "1:480334485782:web:c0c886ed710567b9e6d837"
             };
             firebase.initializeApp(fallbackConfig);
+            console.log("Sigma Firebase fallback verified.");
         }
     </script>
 
@@ -94,12 +97,12 @@
             --radius-md: 12px;
             --radius-sm: 8px;
 
-            --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
             --shadow-subtle: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
-            --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+            --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
             --shadow-island: 0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04);
             --shadow-float: 0 25px 50px -12px rgba(15, 23, 42, 0.18);
-            --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.15);
+            --shadow-glow: 0 0 25px rgba(16, 185, 129, 0.25);
+            --shadow-glow-gold: 0 0 25px rgba(245, 158, 11, 0.25);
 
             /* Z-Indices */
             --z-dock: 1000;
@@ -110,7 +113,7 @@
             --z-blocker: 9999;
 
             --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-smooth: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             --safe-area-bottom: env(safe-area-inset-bottom, 16px);
         }
@@ -118,26 +121,17 @@
         /* ==========================================================================
            2. GLOBAL RESET & FOUNDATIONAL STRUCTURE
            ========================================================================== */
-        *, *::before, *::after {
-            margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
-        }
-
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background-color: var(--sigma-surface-alt);
-            color: var(--text-body);
-            line-height: 1.5;
-            min-height: 100vh;
-            overflow-x: hidden;
-            padding-bottom: calc(100px + var(--safe-area-bottom));
-            background-image: 
-                radial-gradient(circle at 15% 0%, rgba(16, 185, 129, 0.03) 0%, transparent 45vw),
-                radial-gradient(circle at 85% 100%, rgba(59, 130, 246, 0.02) 0%, transparent 45vw);
+            color: var(--text-body); line-height: 1.5; min-height: 100vh; overflow-x: hidden;
+            padding-bottom: calc(110px + var(--safe-area-bottom));
+            background-image: radial-gradient(circle at 10% 0%, rgba(16, 185, 129, 0.035) 0%, transparent 50vw),
+                              radial-gradient(circle at 90% 100%, rgba(59, 130, 246, 0.035) 0%, transparent 50vw);
             background-attachment: fixed;
         }
-
         body.locked { overflow: hidden; touch-action: none; }
         a { text-decoration: none; color: inherit; }
         button, input { font-family: inherit; border: none; outline: none; background: none; }
@@ -155,30 +149,23 @@
         .text-gold { color: var(--sigma-gold-dark); }
         .text-danger { color: var(--sigma-danger-dark); }
 
-        /* Offline Bar */
         #networkOfflineBanner {
-            position: fixed; top: 0; left: 0; width: 100%;
-            background: linear-gradient(90deg, #F59E0B, #D97706);
-            color: white; font-size: 0.78rem; font-weight: 800;
-            text-align: center; padding: 6px 12px; z-index: var(--z-toast);
+            position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #F59E0B, #D97706);
+            color: white; font-size: 0.78rem; font-weight: 800; text-align: center; padding: 6px 12px; z-index: var(--z-toast);
             display: none; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25); text-transform: uppercase;
         }
 
         /* ==========================================================================
            3. ISLAND HEADER (Safe & Responsive)
            ========================================================================== */
-        .app-container {
-            width: 100%; max-width: 860px; margin: 0 auto;
-            display: flex; flex-direction: column; position: relative; z-index: 1;
-        }
+        .app-container { width: 100%; max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; position: relative; z-index: 1; }
 
         .island-topbar {
             position: sticky; top: 12px; margin: 0 16px 20px; height: 68px;
-            background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px); border-radius: var(--radius-pill);
-            box-shadow: var(--shadow-subtle); display: flex; align-items: center;
+            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-pill); box-shadow: var(--shadow-subtle); display: flex; align-items: center;
             justify-content: space-between; padding: 0 14px; z-index: var(--z-header);
-            border: 1px solid rgba(255, 255, 255, 0.85); transition: var(--transition-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.9); transition: var(--transition-smooth);
         }
         
         .btn-back {
@@ -187,10 +174,10 @@
             border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
         }
         .btn-back:active { transform: scale(0.9); background: var(--sigma-muted-border); }
-        .btn-back svg { width: 20px; height: 20px; stroke-width: 2.5; stroke: currentColor; fill: none; }
+        .btn-back svg { width: 22px; height: 22px; stroke-width: 2.5; stroke: currentColor; fill: none; }
 
-        .brand-cluster { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.05rem; }
-        .brand-logo-img { width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .brand-cluster { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.1rem; }
+        .brand-logo-img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
         
         .header-actions { display: flex; align-items: center; gap: 8px; }
         .btn-top-action {
@@ -199,16 +186,16 @@
             border: 1px solid var(--sigma-muted-border); position: relative; transition: var(--transition-bounce);
         }
         .btn-top-action:active { transform: scale(0.9); background: var(--sigma-muted-border); }
-        .btn-top-action svg { width: 20px; height: 20px; stroke-width: 2.2; stroke: currentColor; fill: none; }
+        .btn-top-action svg { width: 22px; height: 22px; stroke-width: 2.2; stroke: currentColor; fill: none; }
 
         /* ==========================================================================
            4. PAGE CONTENT & HEADER
            ========================================================================== */
-        .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 20px; }
+        .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 24px; }
 
-        .page-header { text-align: center; padding: 10px 0 20px; animation: fadeInDown 0.6s ease-out; }
-        .page-header h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px; }
-        .page-header p { font-size: 0.95rem; color: var(--text-muted); max-width: 400px; margin: 0 auto; line-height: 1.5; }
+        .page-header { text-align: center; padding: 12px 0 16px; animation: fadeInDown 0.6s ease-out; }
+        .page-header h1 { font-size: 1.9rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px; color: var(--sigma-primary); }
+        .page-header p { font-size: 0.95rem; color: var(--text-muted); max-width: 420px; margin: 0 auto; line-height: 1.5; }
 
         /* Filter Pills */
         .filter-scroll {
@@ -217,101 +204,114 @@
         }
         .filter-scroll::-webkit-scrollbar { display: none; }
         .filter-pill {
-            padding: 8px 16px; border-radius: var(--radius-pill); background: var(--sigma-surface);
-            border: 1px solid var(--sigma-muted-border); font-size: 0.8rem; font-weight: 700;
+            padding: 10px 20px; border-radius: var(--radius-pill); background: var(--sigma-surface);
+            border: 1px solid var(--sigma-muted-border); font-size: 0.85rem; font-weight: 700;
             color: var(--text-muted); white-space: nowrap; transition: var(--transition-fast);
             box-shadow: var(--shadow-xs);
         }
-        .filter-pill.active {
-            background: var(--sigma-primary); color: white; border-color: var(--sigma-primary);
-        }
+        .filter-pill.active { background: var(--sigma-primary); color: white; border-color: var(--sigma-primary); box-shadow: 0 4px 12px rgba(11, 19, 43, 0.2); }
 
         /* ==========================================================================
-           5. PREMIUM PLAN CARDS (SIGMA SIGNATURE UI)
+           5. NEXT-LEVEL PREMIUM PLAN CARDS (HYPER REALISTIC)
            ========================================================================== */
-        .plan-list-container { display: flex; flex-direction: column; gap: 20px; min-height: 300px; }
+        .plan-list-container { display: flex; flex-direction: column; gap: 24px; min-height: 400px; perspective: 1000px; }
         
         .plan-card {
             background: var(--sigma-surface); border-radius: var(--radius-2xl);
-            padding: 24px; border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle); position: relative; overflow: hidden;
-            transition: var(--transition-smooth); animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-            cursor: pointer; display: flex; flex-direction: column; gap: 16px;
+            border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-subtle);
+            position: relative; overflow: hidden; transition: var(--transition-bounce);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            cursor: pointer; display: flex; flex-direction: column;
         }
-        .plan-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); border-color: var(--sigma-input-border); }
+        .plan-card:hover { transform: translateY(-4px) rotateX(2deg); box-shadow: var(--shadow-card); border-color: var(--sigma-input-border); }
         .plan-card:active { transform: translateY(0) scale(0.98); }
 
-        /* Featured / Popular State */
-        .plan-card.featured {
-            border-color: rgba(16, 185, 129, 0.4); box-shadow: var(--shadow-card), var(--shadow-glow);
+        /* THE REALISTIC CARD HERO SECTION */
+        .plan-card-hero {
+            position: relative; width: 100%; height: 140px; padding: 20px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            color: white; overflow: hidden;
         }
-        .plan-card.featured::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
-            background: linear-gradient(90deg, var(--sigma-accent), var(--sigma-accent-dark));
+        
+        /* Realistic Metallic Gradients */
+        .theme-bronze { background: linear-gradient(135deg, #A2684A 0%, #764127 100%); }
+        .theme-silver { background: linear-gradient(135deg, #94A3B8 0%, #475569 100%); }
+        .theme-gold { background: linear-gradient(135deg, #F59E0B 0%, #B45309 100%); }
+        .theme-platinum { background: linear-gradient(135deg, #334155 0%, #0F172A 100%); }
+        .theme-diamond { background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); }
+        .theme-master { background: linear-gradient(135deg, #8B5CF6 0%, #4C1D95 100%); }
+        .theme-grandmaster { background: linear-gradient(135deg, #000000 0%, #111111 100%); border-bottom: 2px solid #F59E0B; }
+
+        /* Logo Watermark & Chip */
+        .plan-card-hero::after {
+            content: ''; position: absolute; right: -20px; bottom: -20px; width: 120px; height: 120px;
+            background-image: url('assets/logo.png'); background-size: contain; background-repeat: no-repeat;
+            opacity: 0.15; transform: rotate(-15deg); filter: grayscale(100%) contrast(200%); pointer-events: none;
         }
+        .sim-chip {
+            width: 38px; height: 28px; background: linear-gradient(135deg, #FDE68A, #D97706);
+            border-radius: 6px; box-shadow: inset 0 0 4px rgba(0,0,0,0.4); margin-bottom: auto;
+            position: relative; opacity: 0.9;
+        }
+        .sim-chip::after {
+            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80%; height: 60%; border: 1px solid rgba(255,255,255,0.4); border-radius: 2px;
+        }
+
+        .plan-hero-content { display: flex; justify-content: space-between; align-items: flex-end; position: relative; z-index: 2; }
+        .plan-hero-content h2 { font-size: 1.3rem; font-weight: 900; color: white; letter-spacing: 0.5px; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .plan-price-display { text-align: right; }
+        .plan-price-display .currency { font-size: 1rem; opacity: 0.9; font-weight: 700; }
+        .plan-price-display .amount { font-size: 2.4rem; font-weight: 900; letter-spacing: -1px; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        
+        /* Recommended/Featured Badge */
+        .plan-card.featured { border-color: rgba(16, 185, 129, 0.4); box-shadow: var(--shadow-card), var(--shadow-glow); }
         .featured-badge {
             position: absolute; top: 16px; right: 16px; background: linear-gradient(135deg, var(--sigma-accent), var(--sigma-accent-dark));
-            color: white; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
-            padding: 4px 12px; border-radius: var(--radius-pill); letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+            color: white; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; z-index: 5;
+            padding: 4px 12px; border-radius: var(--radius-pill); letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
         }
 
-        .plan-top { display: flex; align-items: flex-start; gap: 16px; }
-        .plan-icon-box {
-            width: 56px; height: 56px; border-radius: 16px; background: var(--sigma-subtle);
-            color: var(--sigma-primary); display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--sigma-muted-border); flex-shrink: 0;
-            background: linear-gradient(135deg, var(--sigma-surface), var(--sigma-subtle));
-        }
-        .plan-card.featured .plan-icon-box { background: var(--sigma-accent-soft); color: var(--sigma-accent-dark); border-color: var(--sigma-accent-border); }
-        .plan-icon-box svg { width: 28px; height: 28px; stroke-width: 1.8; stroke: currentColor; fill: none; }
+        /* Metrics Bottom Section */
+        .plan-card-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+        .plan-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .plan-title-area { flex: 1; }
-        .plan-title-area h2 { font-size: 1.25rem; font-weight: 900; margin-bottom: 4px; color: var(--text-heading); }
-        .plan-title-area p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-        .plan-price-row { display: flex; align-items: baseline; gap: 6px; margin: 4px 0; }
-        .plan-price-row .currency { font-size: 1.1rem; color: var(--text-muted); font-weight: 700; }
-        .plan-price-row .amount { font-size: 2.2rem; font-weight: 900; letter-spacing: -1px; color: var(--text-heading); line-height: 1; }
-        .plan-price-row .label { font-size: 0.75rem; color: var(--text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; }
-
-        /* The specific Urdu/English hybrid metric grid requested */
         .plan-metrics-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-            background: var(--sigma-surface-alt); padding: 14px; border-radius: var(--radius-lg);
-            border: 1px solid var(--sigma-muted-border);
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+            background: var(--sigma-surface-alt); padding: 16px; border-radius: var(--radius-xl);
+            border: 1px solid var(--sigma-input-border);
         }
         .metric-item { display: flex; flex-direction: column; gap: 4px; }
         .metric-item small { 
-            font-size: 0.65rem; color: var(--text-muted); font-weight: 700; 
-            display: flex; align-items: center; gap: 4px; text-transform: uppercase; 
+            font-size: 0.65rem; color: var(--text-muted); font-weight: 800; 
+            display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .metric-item small svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.5; fill: none; color: var(--sigma-accent-dark); }
-        .metric-item strong { font-size: 0.95rem; font-weight: 900; color: var(--text-heading); }
-        
-        .metric-urdu-label { font-family: 'Noto Nastaliq Urdu', serif; font-size: 0.7rem; color: var(--text-muted); line-height: 1; margin-top: 2px; }
+        .metric-item small svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; fill: none; color: var(--sigma-primary); }
+        .metric-item strong { font-size: 1rem; font-weight: 900; color: var(--text-heading); }
+        .metric-urdu-label { font-family: 'Noto Nastaliq Urdu', serif; font-size: 0.75rem; color: var(--text-muted); line-height: 1; margin-top: 2px; }
 
         .btn-plan-action {
-            width: 100%; height: 52px; border-radius: var(--radius-xl);
+            width: 100%; height: 56px; border-radius: var(--radius-xl);
             background: var(--sigma-surface); color: var(--text-heading);
-            font-size: 1rem; font-weight: 800; border: 2px solid var(--sigma-muted-border);
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-size: 1.05rem; font-weight: 800; border: 2px solid var(--sigma-muted-border);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
             transition: var(--transition-bounce);
         }
-        .plan-card:hover .btn-plan-action { border-color: var(--sigma-input-border); background: var(--sigma-subtle); }
+        .plan-card:hover .btn-plan-action { border-color: var(--sigma-primary); background: var(--sigma-subtle); color: var(--sigma-primary); }
         .plan-card.featured .btn-plan-action {
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white; border: none; box-shadow: 0 6px 16px rgba(11, 19, 43, 0.2);
+            color: white; border: none; box-shadow: 0 8px 20px rgba(11, 19, 43, 0.25);
         }
-        .btn-plan-action svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2.2; fill: none; }
+        .btn-plan-action svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2.2; fill: none; }
 
         /* Loading Skeleton */
-        .skeleton-card { height: 260px; display: flex; flex-direction: column; gap: 16px; }
-        .skeleton { background: #E2E8F0; color: transparent !important; border-radius: 8px; animation: pulseSkel 1.5s infinite ease-in-out; }
-        .skel-icon { width: 56px; height: 56px; border-radius: 16px; }
-        .skel-text { height: 20px; width: 60%; }
-        .skel-price { height: 40px; width: 40%; margin: 10px 0; }
-        .skel-grid { height: 70px; width: 100%; border-radius: var(--radius-lg); }
-        .skel-btn { height: 52px; width: 100%; border-radius: var(--radius-xl); }
+        .skeleton-card { height: 380px; display: flex; flex-direction: column; border-radius: var(--radius-2xl); overflow: hidden; border: 1px solid var(--sigma-muted-border); }
+        .skeleton { background: #E2E8F0; color: transparent !important; animation: pulseSkel 1.5s infinite ease-in-out; }
+        .skel-hero { height: 140px; width: 100%; background: #CBD5E1; }
+        .skel-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+        .skel-text { height: 20px; width: 80%; border-radius: 8px; }
+        .skel-grid { height: 80px; width: 100%; border-radius: var(--radius-xl); }
+        .skel-btn { height: 56px; width: 100%; border-radius: var(--radius-xl); }
         @keyframes pulseSkel { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
         /* ==========================================================================
@@ -319,7 +319,7 @@
            ========================================================================== */
         .overlay {
             position: fixed; inset: 0; z-index: var(--z-overlay);
-            background: rgba(11, 19, 43, 0.6); backdrop-filter: blur(6px);
+            background: rgba(11, 19, 43, 0.7); backdrop-filter: blur(8px);
             opacity: 0; visibility: hidden; transition: var(--transition-smooth);
             display: flex; align-items: flex-end; justify-content: center;
         }
@@ -330,101 +330,107 @@
             border-radius: 32px 32px 0 0; transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
             max-height: 90vh; display: flex; flex-direction: column;
-            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.2); position: relative; z-index: var(--z-modal);
+            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.25); position: relative; z-index: var(--z-modal);
         }
         .overlay.show .sheet { transform: translateY(0); }
 
-        .sheet-handle { width: 48px; height: 6px; border-radius: 99px; background: var(--sigma-input-border); margin: 14px auto 8px; }
+        .sheet-handle { width: 50px; height: 6px; border-radius: 99px; background: var(--sigma-input-border); margin: 16px auto 10px; }
         .sheet-header {
             padding: 12px 24px 20px; border-bottom: 1px solid var(--sigma-muted-border);
             display: flex; justify-content: space-between; align-items: center;
         }
-        .sheet-header h3 { font-size: 1.25rem; font-weight: 900; }
-        .sheet-header p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+        .sheet-header h3 { font-size: 1.3rem; font-weight: 900; color: var(--sigma-primary); }
+        .sheet-header p { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
         
         .sheet-close-btn {
-            width: 36px; height: 36px; border-radius: 50%; background: var(--sigma-subtle);
+            width: 40px; height: 40px; border-radius: 50%; background: var(--sigma-subtle);
             display: flex; align-items: center; justify-content: center; color: var(--text-muted);
-            transition: var(--transition-fast);
+            transition: var(--transition-fast); border: 1px solid var(--sigma-muted-border);
         }
-        .sheet-close-btn:active { background: var(--sigma-muted-border); transform: scale(0.9); }
-        .sheet-close-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        .sheet-close-btn:active { background: var(--sigma-input-border); transform: scale(0.9); }
+        .sheet-close-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.5; }
         
-        .sheet-body { padding: 24px 24px 40px; overflow-y: auto; flex: 1; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 20px;}
+        .sheet-body { padding: 24px; overflow-y: auto; flex: 1; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 20px;}
 
-        /* Sheet Inner Elements */
+        /* Plan Detail Summary Card */
         .detail-summary-card {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(59, 130, 246, 0.05));
-            border: 1px solid rgba(16, 185, 129, 0.15); padding: 20px; border-radius: var(--radius-xl);
-            display: flex; flex-direction: column; gap: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.2); padding: 24px; border-radius: var(--radius-2xl);
+            display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden;
         }
-        .detail-row { display: flex; justify-content: space-between; align-items: center; }
-        .detail-row span { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-        .detail-row strong { font-size: 1rem; color: var(--text-heading); font-weight: 800; text-align: right;}
-        .detail-row.total strong { font-size: 1.3rem; color: var(--sigma-accent-dark); font-family: 'JetBrains Mono', monospace; }
-        .detail-divider { height: 1px; background: rgba(0,0,0,0.05); margin: 4px 0; }
+        .detail-summary-card::after {
+            content: ''; position: absolute; top: -30px; right: -30px; width: 100px; height: 100px;
+            background: url('assets/logo.png') no-repeat center; background-size: contain; opacity: 0.05; transform: rotate(15deg);
+        }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
+        .detail-row span { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .detail-row strong { font-size: 1.05rem; color: var(--text-heading); font-weight: 900; text-align: right;}
+        .detail-row.total strong { font-size: 1.4rem; color: var(--sigma-accent-dark); font-family: 'JetBrains Mono', monospace; }
+        .detail-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 6px 0; }
 
         .terms-box {
-            background: var(--sigma-subtle); padding: 16px; border-radius: var(--radius-md);
-            border: 1px solid var(--sigma-muted-border); font-size: 0.8rem; color: var(--text-body); line-height: 1.6;
+            background: var(--sigma-subtle); padding: 18px; border-radius: var(--radius-xl);
+            border: 1px solid var(--sigma-muted-border); font-size: 0.85rem; color: var(--text-body); line-height: 1.6;
         }
-        .terms-box h4 { font-size: 0.85rem; color: var(--text-heading); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-        .terms-box h4 svg { width: 16px; height: 16px; stroke: var(--sigma-info-dark); fill: none; stroke-width: 2; }
+        .terms-box h4 { font-size: 0.9rem; color: var(--text-heading); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; font-weight: 800; }
+        .terms-box h4 svg { width: 18px; height: 18px; stroke: var(--sigma-info-dark); fill: none; stroke-width: 2.2; }
 
         /* Payment Methods Grid */
-        .gateway-grid { display: flex; flex-direction: column; gap: 12px; }
+        .gateway-grid { display: flex; flex-direction: column; gap: 16px; }
         .gateway-card {
             display: flex; align-items: center; gap: 16px; padding: 16px 20px;
             border-radius: var(--radius-xl); border: 2px solid var(--sigma-muted-border);
             background: var(--sigma-surface); cursor: pointer; transition: var(--transition-bounce);
         }
         .gateway-card:active { transform: scale(0.98); }
-        .gateway-card.selected { border-color: var(--sigma-primary); background: rgba(11, 19, 43, 0.02); box-shadow: var(--shadow-sm); }
+        .gateway-card.selected { border-color: var(--sigma-primary); background: rgba(11, 19, 43, 0.03); box-shadow: var(--shadow-sm); }
         
+        /* Updated Icon Box for Real Images (EasyPaisa etc) */
         .gw-icon-box {
-            width: 44px; height: 44px; border-radius: 12px; background: var(--sigma-subtle);
-            display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--sigma-muted-border);
+            width: 50px; height: 50px; border-radius: 14px; background: white;
+            display: flex; align-items: center; justify-content: center; overflow: hidden; 
+            border: 1px solid var(--sigma-input-border); padding: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
-        .gw-icon-box img { width: 100%; height: 100%; object-fit: cover; }
-        .gw-icon-box svg { width: 22px; height: 22px; stroke: var(--text-heading); fill: none; stroke-width: 2; }
+        .gw-icon-box img { width: 100%; height: 100%; object-fit: contain; } /* Ensure full logo is visible */
+        .gw-icon-box svg { width: 26px; height: 26px; stroke: var(--text-heading); fill: none; stroke-width: 1.8; }
         
         .gw-info { flex: 1; }
-        .gw-info b { display: block; font-size: 1rem; font-weight: 800; color: var(--text-heading); }
-        .gw-info small { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+        .gw-info b { display: block; font-size: 1.05rem; font-weight: 800; color: var(--text-heading); }
+        .gw-info small { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
         
         .gw-radio {
-            width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--sigma-input-border);
+            width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--sigma-input-border);
             display: flex; align-items: center; justify-content: center; transition: 0.2s; background: white;
         }
         .gw-radio::after {
-            content: ''; width: 12px; height: 12px; border-radius: 50%; background: var(--sigma-primary);
+            content: ''; width: 14px; height: 14px; border-radius: 50%; background: var(--sigma-primary);
             transform: scale(0); transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .gateway-card.selected .gw-radio { border-color: var(--sigma-primary); }
         .gateway-card.selected .gw-radio::after { transform: scale(1); }
 
         .btn-sheet-submit {
-            width: 100%; height: 56px; border-radius: var(--radius-xl);
+            width: 100%; height: 60px; border-radius: var(--radius-xl);
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white; font-size: 1.05rem; font-weight: 800; display: flex;
+            color: white; font-size: 1.1rem; font-weight: 800; display: flex;
             align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
-            box-shadow: 0 8px 24px rgba(11, 19, 43, 0.25); transition: var(--transition-bounce);
+            box-shadow: 0 10px 25px rgba(11, 19, 43, 0.3); transition: var(--transition-bounce);
         }
-        .btn-sheet-submit:active { transform: scale(0.96); box-shadow: 0 4px 12px rgba(11, 19, 43, 0.2); }
+        .btn-sheet-submit:active { transform: scale(0.96); box-shadow: 0 6px 15px rgba(11, 19, 43, 0.25); }
         .btn-sheet-submit:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
         
         .spinner {
-            width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.3);
+            width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3);
             border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none;
         }
         .btn-sheet-submit.loading .spinner { display: block; }
         .btn-sheet-submit.loading span { display: none; }
 
         .security-badge {
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-align: center; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-align: center; margin-top: 12px;
         }
-        .security-badge svg { width: 14px; height: 14px; stroke: var(--sigma-accent-dark); fill: none; stroke-width: 2.5; }
+        .security-badge svg { width: 16px; height: 16px; stroke: var(--sigma-accent-dark); fill: none; stroke-width: 2.5; }
 
         /* ==========================================================================
            7. NATIVE MOBILE DOCK (EXACTLY 3 BUTTONS AS REQUESTED)
@@ -469,8 +475,8 @@
         /* Toast */
         .toast {
             position: fixed; top: 24px; left: 50%; transform: translate(-50%, -20px) scale(0.9);
-            background: var(--sigma-primary); color: white; padding: 14px 24px;
-            border-radius: var(--radius-pill); font-size: 0.9rem; font-weight: 700;
+            background: var(--sigma-primary); color: white; padding: 14px 28px;
+            border-radius: var(--radius-pill); font-size: 0.95rem; font-weight: 700;
             box-shadow: var(--shadow-float); z-index: var(--z-toast); opacity: 0;
             visibility: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px;
         }
@@ -494,7 +500,6 @@
         <symbol id="icon-home" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></symbol>
         <symbol id="icon-user" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
         <symbol id="icon-bell" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path stroke-linecap="round" stroke-linejoin="round" d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
-        <symbol id="icon-layers" viewBox="0 0 24 24"><polygon stroke-linecap="round" stroke-linejoin="round" points="12 2 2 7 12 12 22 7 12 2"/><polyline stroke-linecap="round" stroke-linejoin="round" points="2 12 12 17 22 12"/><polyline stroke-linecap="round" stroke-linejoin="round" points="2 17 12 22 22 17"/></symbol>
         <symbol id="icon-shield" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
         <symbol id="icon-trend" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline stroke-linecap="round" stroke-linejoin="round" points="17 6 23 6 23 12"/></symbol>
         <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><polyline stroke-linecap="round" stroke-linejoin="round" points="12 6 12 12 16 14"/></symbol>
@@ -533,32 +538,24 @@
             </div>
 
             <!-- Optional Category Filters (Configurable) -->
-            <div class="filter-scroll" id="categoryFilters" style="display: none;">
+            <div class="filter-scroll" id="categoryFilters">
                 <button class="filter-pill active">All Plans</button>
                 <button class="filter-pill">Featured</button>
                 <button class="filter-pill">High Yield</button>
+                <button class="filter-pill">Starter</button>
             </div>
 
             <!-- Plans Render Container -->
             <div class="plan-list-container" id="plansContainer">
                 <!-- Initial Skeletons -->
-                <div class="plan-card skeleton-card">
-                    <div class="plan-top">
-                        <div class="skel-icon skeleton"></div>
-                        <div class="plan-title-area"><div class="skel-text skeleton"></div><div class="skel-text skeleton" style="width: 80%; margin-top: 6px;"></div></div>
+                <div class="skeleton-card">
+                    <div class="skel-hero skeleton"></div>
+                    <div class="skel-body">
+                        <div class="skel-text skeleton"></div>
+                        <div class="skel-text skeleton" style="width: 50%;"></div>
+                        <div class="skel-grid skeleton"></div>
+                        <div class="skel-btn skeleton"></div>
                     </div>
-                    <div class="skel-price skeleton"></div>
-                    <div class="skel-grid skeleton"></div>
-                    <div class="skel-btn skeleton"></div>
-                </div>
-                <div class="plan-card skeleton-card">
-                    <div class="plan-top">
-                        <div class="skel-icon skeleton"></div>
-                        <div class="plan-title-area"><div class="skel-text skeleton"></div><div class="skel-text skeleton" style="width: 80%; margin-top: 6px;"></div></div>
-                    </div>
-                    <div class="skel-price skeleton"></div>
-                    <div class="skel-grid skeleton"></div>
-                    <div class="skel-btn skeleton"></div>
                 </div>
             </div>
 
@@ -573,7 +570,7 @@
         </a>
 
         <!-- Central Crest Button (Plans - Active Page) -->
-        <a href="plans.html" class="dock-crest-btn" aria-label="Available Portfolios">
+        <a href="plans.html" class="dock-crest-btn" aria-label="Available Portfolios" onclick="appController.logAction('dock_plans', 'Opened investment plans from mobile dock')">
             <img src="assets/logo.png" alt="Sigma Crest" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/></svg>'">
         </a>
 
@@ -607,16 +604,16 @@
                     </div>
                     <div class="detail-divider"></div>
                     <div class="detail-row">
-                        <span>Daily Return (<span class="font-urdu">روزانہ منافع</span>)</span>
+                        <span><svg><use href="#icon-trend"/></svg> Daily Return (<span class="font-urdu">روزانہ منافع</span>)</span>
                         <strong class="font-mono text-accent" id="uiDetailDaily">Rs. 0</strong>
                     </div>
                     <div class="detail-divider"></div>
                     <div class="detail-row">
-                        <span>Term Duration</span>
+                        <span><svg><use href="#icon-clock"/></svg> Term Duration</span>
                         <strong id="uiDetailDuration">0 Days</strong>
                     </div>
                     <div class="detail-divider"></div>
-                    <div class="detail-row total" style="margin-top: 8px;">
+                    <div class="detail-row total" style="margin-top: 10px;">
                         <span>Projected Total (<span class="font-urdu">کل منافع</span>)</span>
                         <strong id="uiDetailTotal">Rs. 0</strong>
                     </div>
@@ -628,10 +625,10 @@
                 </div>
 
                 <button class="btn-sheet-submit" onclick="appController.proceedToPaymentMethods()" id="cmsBtnContinue">
-                    Initiate Deposit <svg style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.5;margin-left:4px;"><use href="#icon-zap"/></svg>
+                    Initiate Deposit <svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2.5;margin-left:6px;"><use href="#icon-zap"/></svg>
                 </button>
                 
-                <div class="security-badge"><svg><use href="#icon-shield"/></svg> Assured Authenticity & Secure Ledger</div>
+                <div class="security-badge"><svg><use href="#icon-shield"/></svg> Assured Authenticity & Secure Ledger Verification</div>
             </div>
         </div>
     </div>
@@ -645,7 +642,7 @@
             <div class="sheet-header">
                 <div>
                     <h3 id="cmsPaymentMethodTitle">Select Funding Source</h3>
-                    <p>Payable Amount: <strong class="text-accent font-mono" id="uiPayableAmount">Rs. 0</strong></p>
+                    <p>Payable Amount: <strong class="text-accent font-mono" style="font-size: 1.1rem;" id="uiPayableAmount">Rs. 0</strong></p>
                 </div>
                 <button class="sheet-close-btn" onclick="appController.closeSheet('sheetPaymentMethod')"><svg><use href="#icon-x"/></svg></button>
             </div>
@@ -653,7 +650,7 @@
                 
                 <div class="gateway-grid" id="gatewayListContainer">
                     <!-- Methods injected dynamically via JS -->
-                    <div style="padding: 20px; text-align: center; color: var(--text-light); font-size: 0.9rem;">
+                    <div style="padding: 30px; text-align: center; color: var(--text-light); font-size: 0.95rem;">
                         Securely connecting to payment gateways...
                     </div>
                 </div>
@@ -670,7 +667,7 @@
 
     <!-- TOAST COMPONENT -->
     <div class="toast" id="toastBox">
-        <svg style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg>
+        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg>
         <span id="toastMsg">Action successful</span>
     </div>
 
@@ -687,22 +684,22 @@
             let currentSelectedPlan = null;
             let currentSelectedMethodId = null;
 
-            // --- Default Request Implementation Data (If Firebase is empty/unconfigured) ---
-            // The prompt requested a specific translated table. This acts as the default blueprint.
+            // --- Real World Blueprint Plans (With Featured logic & Themes) ---
             const defaultBlueprintPlans = [
-                { id: "plan_01", order: 1, name: "Plan 01 / Sigma Bronze", desc: "Starter portfolio optimized for immediate access and steady short-term growth.", price: 1000, daily: 450, total: 11250, duration: 25, isFeatured: false },
-                { id: "plan_02", order: 2, name: "Plan 02 / Sigma Silver", desc: "Enhanced daily yield with balanced risk metrics.", price: 2300, daily: 1035, total: 25875, duration: 25, isFeatured: false },
-                { id: "plan_03", order: 3, name: "Plan 03 / Sigma Gold", desc: "A robust medium-tier option for consistent wealth compounding.", price: 6000, daily: 2100, total: 52500, duration: 25, isFeatured: true },
-                { id: "plan_04", order: 4, name: "Plan 04 / Sigma Platinum", desc: "Advanced portfolio offering high liquidity and premium returns.", price: 14000, daily: 4900, total: 122500, duration: 25, isFeatured: false },
-                { id: "plan_05", order: 5, name: "Plan 05 / Sigma Diamond", desc: "Designed for serious investors demanding top-tier results.", price: 28000, daily: 9800, total: 245000, duration: 25, isFeatured: false },
-                { id: "plan_06", order: 6, name: "Plan 06 / Sigma Master", desc: "Maximum scale algorithmic portfolio with elite benefits.", price: 46000, daily: 16100, total: 402500, duration: 25, isFeatured: false },
-                { id: "plan_07", order: 7, name: "Plan 07 / Sigma Grandmaster", desc: "The ultimate institutional-grade investment tier.", price: 60000, daily: 21000, total: 525000, duration: 25, isFeatured: true }
+                { id: "plan_01", order: 1, name: "Plan 01 / Sigma Bronze", desc: "Starter portfolio optimized for immediate access and steady short-term growth.", price: 1000, daily: 450, total: 11250, duration: 25, isFeatured: true, theme: "theme-bronze" },
+                { id: "plan_02", order: 2, name: "Plan 02 / Sigma Silver", desc: "Enhanced daily yield with balanced risk metrics.", price: 2300, daily: 1035, total: 25875, duration: 25, isFeatured: false, theme: "theme-silver" },
+                { id: "plan_03", order: 3, name: "Plan 03 / Sigma Gold", desc: "A robust medium-tier option for consistent wealth compounding.", price: 6000, daily: 2100, total: 52500, duration: 25, isFeatured: true, theme: "theme-gold" },
+                { id: "plan_04", order: 4, name: "Plan 04 / Sigma Platinum", desc: "Advanced portfolio offering high liquidity and premium returns.", price: 14000, daily: 4900, total: 122500, duration: 25, isFeatured: false, theme: "theme-platinum" },
+                { id: "plan_05", order: 5, name: "Plan 05 / Sigma Diamond", desc: "Designed for serious investors demanding top-tier results.", price: 28000, daily: 9800, total: 245000, duration: 25, isFeatured: true, theme: "theme-diamond" },
+                { id: "plan_06", order: 6, name: "Plan 06 / Sigma Master", desc: "Maximum scale algorithmic portfolio with elite benefits.", price: 46000, daily: 16100, total: 402500, duration: 25, isFeatured: false, theme: "theme-master" },
+                { id: "plan_07", order: 7, name: "Plan 07 / Sigma Grandmaster", desc: "The ultimate institutional-grade investment tier.", price: 60000, daily: 21000, total: 525000, duration: 25, isFeatured: false, theme: "theme-grandmaster" }
             ];
 
+            // --- Real World Payment Methods (Using assets/pay/...) ---
             const defaultPaymentMethods = [
-                { id: "pm_easypaisa", name: "EasyPaisa", iconType: "svg", iconData: "#icon-wallet", desc: "Instant mobile wallet transfer" },
-                { id: "pm_jazzcash", name: "JazzCash", iconType: "svg", iconData: "#icon-wallet", desc: "Secure JazzCash account transfer" },
-                { id: "pm_bank", name: "Bank Transfer", iconType: "svg", iconData: "#icon-bank", desc: "Direct IBFT to corporate account" }
+                { id: "pm_easypaisa", name: "EasyPaisa", iconType: "img", iconUrl: "assets/pay/easypaisa.png", desc: "Instant mobile wallet transfer" },
+                { id: "pm_jazzcash", name: "JazzCash", iconType: "img", iconUrl: "assets/pay/jazzcash.png", desc: "Secure JazzCash account transfer" },
+                { id: "pm_bank", name: "Bank Transfer", iconType: "img", iconUrl: "assets/pay/bank.png", desc: "Direct IBFT to corporate account" }
             ];
 
             // --- DOM Elements ---
@@ -756,70 +753,67 @@
             // --- Rendering Logic ---
             const renderPlans = (plansArray) => {
                 if (!dom.plansContainer) return;
-                dom.plansContainer.innerHTML = ''; // Clear skeletons
+                dom.plansContainer.innerHTML = ''; 
 
                 if (plansArray.length === 0) {
                     dom.plansContainer.innerHTML = `
                         <div style="text-align:center; padding: 40px 20px; color: var(--text-muted); background: var(--sigma-surface); border-radius: var(--radius-xl); border: 1px dashed var(--sigma-muted-border);">
                             <svg style="width:48px;height:48px;stroke:currentColor;fill:none;stroke-width:1.5;margin-bottom:16px;"><use href="#icon-pie"/></svg>
                             <h3>No Portfolios Available</h3>
-                            <p style="font-size: 0.9rem; margin-top: 8px;">Please check back later or contact support.</p>
+                            <p style="font-size: 0.95rem; margin-top: 8px;">Please check back later or contact support.</p>
                         </div>
                     `;
                     return;
                 }
 
                 plansArray.forEach((plan, index) => {
-                    // Staggered animation delay
                     const delay = index * 0.1;
-                    
                     const card = document.createElement('article');
                     card.className = `plan-card ${plan.isFeatured ? 'featured' : ''}`;
                     card.style.animationDelay = `${delay}s`;
-                    
-                    // Click handler to open details
                     card.onclick = () => openPlanDetails(plan.id);
 
                     const featuredHtml = plan.isFeatured ? `<div class="featured-badge">Recommended</div>` : '';
-                    const iconHtml = `<svg><use href="${plan.isFeatured ? '#icon-shield' : '#icon-layers'}"/></svg>`;
+                    const themeClass = plan.theme || 'theme-platinum'; // Fallback theme
 
                     card.innerHTML = `
-                        ${featuredHtml}
-                        <div class="plan-top">
-                            <div class="plan-icon-box">${iconHtml}</div>
-                            <div class="plan-title-area">
-                                <h2>${plan.name}</h2>
-                                <p>${plan.desc}</p>
+                        <div class="plan-card-hero ${themeClass}">
+                            ${featuredHtml}
+                            <div class="sim-chip"></div>
+                            <div class="plan-hero-content">
+                                <h2>${plan.name.split(' / ')[0]}</h2>
+                                <div class="plan-price-display">
+                                    <span class="currency">Rs.</span>
+                                    <span class="amount font-mono">${Number(plan.price).toLocaleString('en-PK')}</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="plan-price-row">
-                            <span class="currency">Rs.</span>
-                            <span class="amount font-mono">${Number(plan.price).toLocaleString('en-PK')}</span>
-                            <span class="label">Deposit</span>
-                        </div>
+                        <div class="plan-card-body">
+                            <p class="plan-desc">${plan.desc}</p>
+                            
+                            <div class="plan-metrics-grid">
+                                <div class="metric-item">
+                                    <small><svg><use href="#icon-trend"/></svg> Daily Yield</small>
+                                    <strong class="font-mono text-accent">Rs. ${Number(plan.daily).toLocaleString('en-PK')}</strong>
+                                    <span class="metric-urdu-label">روزانہ منافع</span>
+                                </div>
+                                <div class="metric-item" style="border-left: 1px solid var(--sigma-input-border); border-right: 1px solid var(--sigma-input-border); padding: 0 10px;">
+                                    <small><svg><use href="#icon-clock"/></svg> Term</small>
+                                    <strong>${plan.duration} Days</strong>
+                                    <span class="metric-urdu-label">مدت</span>
+                                </div>
+                                <div class="metric-item">
+                                    <small><svg><use href="#icon-wallet"/></svg> Total ROI</small>
+                                    <strong class="font-mono">Rs. ${Number(plan.total).toLocaleString('en-PK')}</strong>
+                                    <span class="metric-urdu-label">کل منافع</span>
+                                </div>
+                            </div>
 
-                        <div class="plan-metrics-grid">
-                            <div class="metric-item">
-                                <small><svg><use href="#icon-trend"/></svg> Daily Yield</small>
-                                <strong class="font-mono text-accent">Rs. ${Number(plan.daily).toLocaleString('en-PK')}</strong>
-                                <span class="metric-urdu-label">روزانہ منافع</span>
-                            </div>
-                            <div class="metric-item" style="border-left: 1px solid var(--sigma-input-border); border-right: 1px solid var(--sigma-input-border); padding: 0 8px;">
-                                <small><svg><use href="#icon-clock"/></svg> Term</small>
-                                <strong>${plan.duration} Days</strong>
-                                <span class="metric-urdu-label">مدت</span>
-                            </div>
-                            <div class="metric-item">
-                                <small><svg><use href="#icon-wallet"/></svg> Total ROI</small>
-                                <strong class="font-mono">Rs. ${Number(plan.total).toLocaleString('en-PK')}</strong>
-                                <span class="metric-urdu-label">کل منافع</span>
-                            </div>
+                            <button class="btn-plan-action">
+                                <svg><use href="#icon-zap"/></svg> View Portfolio Details
+                            </button>
                         </div>
-
-                        <button class="btn-plan-action">
-                            <svg><use href="#icon-zap"/></svg> View Portfolio Details
-                        </button>
                     `;
                     dom.plansContainer.appendChild(card);
                 });
@@ -830,7 +824,7 @@
                 dom.gatewayListContainer.innerHTML = '';
 
                 if (methodsArray.length === 0) {
-                    dom.gatewayListContainer.innerHTML = `<p style="text-align:center; color: var(--sigma-danger-dark); font-weight: 700; padding: 20px;">No payment gateways currently active.</p>`;
+                    dom.gatewayListContainer.innerHTML = `<p style="text-align:center; color: var(--sigma-danger-dark); font-weight: 800; padding: 24px;">No payment gateways currently active.</p>`;
                     return;
                 }
 
@@ -841,7 +835,8 @@
 
                     let iconVisual = `<svg><use href="#icon-wallet"/></svg>`;
                     if (method.iconType === 'img' && method.iconUrl) {
-                        iconVisual = `<img src="${method.iconUrl}" alt="${method.name}">`;
+                        // Fallback logic incase img fails to load
+                        iconVisual = `<img src="${method.iconUrl}" alt="${method.name}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' viewBox=\\\'0 0 24 24\\\'><path d=\\\'M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4M4 6v12c0 1.1.9 2 2 2h14v-4M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z\\\' stroke=\\\'%230F172A\\\' fill=\\\'none\\\' stroke-width=\\\'2\\\'/></svg>'">`;
                     } else if (method.iconData) {
                         iconVisual = `<svg><use href="${method.iconData}"/></svg>`;
                     }
@@ -864,7 +859,6 @@
                 currentSelectedPlan = loadedPlans.find(p => p.id === planId);
                 if (!currentSelectedPlan) return;
 
-                // Populate Sheet
                 document.getElementById('uiDetailName').textContent = currentSelectedPlan.name;
                 document.getElementById('uiDetailPrice').textContent = "Rs. " + Number(currentSelectedPlan.price).toLocaleString('en-PK');
                 document.getElementById('uiDetailDaily').textContent = "Rs. " + Number(currentSelectedPlan.daily).toLocaleString('en-PK');
@@ -879,19 +873,17 @@
             const proceedToPaymentMethods = () => {
                 if (!currentSelectedPlan) return;
                 
-                // Close Details, Open Methods
                 closeSheet('sheetPlanDetails');
                 setTimeout(() => {
                     document.getElementById('uiPayableAmount').textContent = "Rs. " + Number(currentSelectedPlan.price).toLocaleString('en-PK');
                     
-                    // Reset Selection
                     currentSelectedMethodId = null;
                     if(dom.btnConfirmPayment) dom.btnConfirmPayment.disabled = true;
                     document.querySelectorAll('.gateway-card').forEach(c => c.classList.remove('selected'));
 
                     openSheet('sheetPaymentMethod');
                     logAction('initiated_deposit', `Initiated deposit flow for ${currentSelectedPlan.name}`);
-                }, 300); // Wait for transition
+                }, 350); 
             };
 
             const selectPaymentMethod = (methodId, elementCard) => {
@@ -903,7 +895,7 @@
                 haptic(15);
             };
 
-            // --- HANDOFF TO MANUAL PAYMENT PAGE (As Required by Prompt) ---
+            // --- HANDOFF TO MANUAL PAYMENT PAGE (Strict Architecture Contract) ---
             const initiateManualPayment = () => {
                 if (!currentSelectedPlan || !currentSelectedMethodId) {
                     toast("Please select a payment method.", true);
@@ -920,7 +912,7 @@
 
                 logAction('proceed_to_payment', `Proceeding to manual payment via ${selectedMethod.name}`);
 
-                // Construct Secure Handoff State (Using Session Storage as a secure browser enclave)
+                // Secure Hand-off via SessionStorage Enclave
                 const paymentContract = {
                     planId: currentSelectedPlan.id,
                     planName: currentSelectedPlan.name,
@@ -928,13 +920,12 @@
                     methodId: selectedMethod.id,
                     methodName: selectedMethod.name,
                     timestamp: Date.now(),
-                    requestSignature: Math.random().toString(36).substring(2, 15) // CSRF/Anti-replay mechanism
+                    requestSignature: Math.random().toString(36).substring(2, 15) // Anti-replay
                 };
 
-                // Store contract
                 sessionStorage.setItem('sigma_pending_payment_contract', JSON.stringify(paymentContract));
 
-                // Simulate slight network delay for realism, then redirect
+                // Proceed with realistic network delay
                 setTimeout(() => {
                     window.location.href = 'manual-payment.html';
                 }, 800);
@@ -948,7 +939,7 @@
                     const cms = doc.data();
                     if(cms.pageTitle) document.getElementById('cmsPageTitle').textContent = cms.pageTitle;
                     if(cms.pageSubtitle) document.getElementById('cmsPageSubtitle').textContent = cms.pageSubtitle;
-                    if(cms.btnContinue) document.getElementById('cmsBtnContinue').innerHTML = `${cms.btnContinue} <svg style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.5;margin-left:4px;"><use href="#icon-zap"/></svg>`;
+                    if(cms.btnContinue) document.getElementById('cmsBtnContinue').innerHTML = `${cms.btnContinue} <svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2.5;margin-left:6px;"><use href="#icon-zap"/></svg>`;
                 });
             };
 
@@ -956,19 +947,17 @@
                 // 1. Listen to Plans Configuration
                 db.collection('settings').doc('plans_config').onSnapshot(doc => {
                     if (doc.exists && doc.data().plans && Array.isArray(doc.data().plans)) {
-                        // Filter active plans and sort by configured order
                         loadedPlans = doc.data().plans
                             .filter(p => p.isActive !== false)
                             .sort((a, b) => (a.order || 99) - (b.order || 99));
                         
-                        if(loadedPlans.length === 0) loadedPlans = defaultBlueprintPlans; // Safe Fallback
+                        if(loadedPlans.length === 0) loadedPlans = defaultBlueprintPlans;
                     } else {
-                        // Use default blueprint if document missing
                         loadedPlans = defaultBlueprintPlans;
                     }
                     renderPlans(loadedPlans);
                 }, err => {
-                    console.error("Failed to load plans from CMS:", err);
+                    console.error("Failed to load plans:", err);
                     loadedPlans = defaultBlueprintPlans;
                     renderPlans(loadedPlans);
                 });
@@ -986,7 +975,7 @@
                     }
                     renderPaymentMethods(loadedMethods);
                 }, err => {
-                    console.error("Failed to load methods from CMS:", err);
+                    console.error("Failed to load methods:", err);
                     loadedMethods = defaultPaymentMethods;
                     renderPaymentMethods(loadedMethods);
                 });
@@ -1008,7 +997,6 @@
                     }
                     authUser = user;
 
-                    // Identity Population for Dock
                     if (user.photoURL) {
                         const dockAvatar = document.getElementById('dockAvatarContainer');
                         if (dockAvatar) dockAvatar.innerHTML = `<img src="${user.photoURL}" alt="User Avatar" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer">`;
@@ -1017,12 +1005,10 @@
             };
 
             const init = () => {
-                // Event Delegation for Overlays
                 document.querySelectorAll('.overlay').forEach(ov => {
                     ov.addEventListener('click', e => { if (e.target === ov) closeSheet(ov.id); });
                 });
 
-                // Network Monitoring
                 window.addEventListener('offline', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'block'; });
                 window.addEventListener('online', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'none'; toast('Connection verified'); });
 
@@ -1040,7 +1026,6 @@
 
         })();
 
-        // Bootstrap App
         document.addEventListener('DOMContentLoaded', appController.init);
 
     </script>
