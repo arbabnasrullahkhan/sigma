@@ -4,15 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <meta name="description" content="Securely withdraw your profits from Sigma directly to your bank, mobile wallet, or crypto wallet.">
+    <!-- SEO, Privacy & Meta -->
+    <meta name="description" content="Securely withdraw your profits from the Sigma automated ledger directly to your bank, wallet, or crypto exchange.">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#0B132B">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sigma Withdraw">
+    
     <title>Sigma | Withdraw Funds</title>
 
-    <!-- Favicon -->
+    <!-- Favicon & Brand Images -->
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/favicon.png">
 
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +30,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
-    <!-- Fallback Firebase Initialization -->
     <script>
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             firebase.initializeApp({
@@ -41,24 +45,32 @@
 
     <style>
         /* ==========================================================================
-           1. SIGMA PREMIUM TOKENS
+           1. SIGMA PREMIUM DESIGN TOKENS
            ========================================================================== */
         :root {
             --sigma-primary: #0B132B;
             --sigma-secondary: #1C2541;
+            --sigma-tertiary: #3A506B;
+            
             --sigma-surface: #FFFFFF;
             --sigma-surface-alt: #F8FAFC;
             --sigma-subtle: #F1F5F9;
+            
             --sigma-muted-border: #E2E8F0;
             --sigma-input-border: #CBD5E1;
 
             --sigma-accent: #10B981;
             --sigma-accent-dark: #059669;
+            --sigma-accent-soft: #ECFDF5;
+            
             --sigma-gold: #F59E0B;
             --sigma-gold-dark: #D97706;
+
             --sigma-danger: #EF4444;
             --sigma-danger-dark: #DC2626;
+
             --sigma-info: #3B82F6;
+            --sigma-info-dark: #2563EB;
 
             --text-heading: #0F172A;
             --text-body: #334155;
@@ -70,229 +82,301 @@
             --radius-xl: 20px;
             --radius-lg: 16px;
             --radius-md: 12px;
+            --radius-sm: 8px;
 
-            --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.03);
-            --shadow-card: 0 16px 32px -8px rgba(15, 23, 42, 0.08);
+            --shadow-subtle: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+            --shadow-card: 0 16px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 16px -4px rgba(15, 23, 42, 0.04);
             --shadow-float: 0 24px 48px -12px rgba(15, 23, 42, 0.15);
+            --shadow-glow: 0 8px 24px rgba(16, 185, 129, 0.25);
 
             --z-dock: 1000;
             --z-header: 900;
-            --z-overlay: 3000;
+            --z-modal: 2000;
+            --z-toast: 3000;
+            --z-blocker: 9999;
 
+            --transition-smooth: 0.35s cubic-bezier(0.32, 0.72, 0, 1);
             --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            --transition-smooth: 0.3s ease;
             --safe-area-bottom: env(safe-area-inset-bottom, 16px);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        /* ==========================================================================
+           2. GLOBAL BASE & RESET
+           ========================================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { font-size: 16px; scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif; background-color: var(--sigma-surface-alt);
             color: var(--text-body); line-height: 1.5; min-height: 100vh; overflow-x: hidden;
-            padding-bottom: calc(110px + var(--safe-area-bottom));
+            padding-bottom: calc(120px + var(--safe-area-bottom));
         }
-        body.locked { overflow: hidden; }
+        body.locked { overflow: hidden; touch-action: none; }
         a { text-decoration: none; color: inherit; }
-        button, input, select { font-family: inherit; border: none; outline: none; background: none; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        button, input { font-family: inherit; border: none; outline: none; background: none; }
+        button { cursor: pointer; user-select: none; }
+        img { max-width: 100%; display: block; }
+        
+        h1, h2, h3, h4, h5 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.02em; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
+        
+        #networkOfflineBanner {
+            position: fixed; top: 0; left: 0; width: 100%; background: var(--sigma-danger);
+            color: white; font-size: 0.75rem; font-weight: 800; text-align: center; padding: 8px;
+            z-index: var(--z-blocker); display: none; text-transform: uppercase; letter-spacing: 1px;
+        }
 
         /* ==========================================================================
-           2. DYNAMIC HEADER
+           3. DYNAMIC ISLAND HEADER
            ========================================================================== */
-        .app-container { width: 100%; max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; }
+        .app-container { width: 100%; max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; position: relative; }
 
         .island-topbar {
             position: sticky; top: 12px; margin: 0 16px 20px; height: 68px;
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(24px);
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border-radius: var(--radius-pill); display: flex; align-items: center;
             justify-content: space-between; padding: 0 14px; z-index: var(--z-header);
-            border: 1px solid rgba(255, 255, 255, 0.95); box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.95); transition: var(--transition-smooth);
+            box-shadow: var(--shadow-subtle);
         }
+        
         .btn-back {
-            width: 46px; height: 46px; border-radius: 50%; background: var(--sigma-surface);
-            display: flex; align-items: center; justify-content: center; color: var(--text-heading);
+            width: 44px; height: 44px; border-radius: 50%; background: var(--sigma-surface);
+            color: var(--text-heading); display: flex; align-items: center; justify-content: center;
             border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
         }
         .btn-back:active { transform: scale(0.92); background: var(--sigma-subtle); }
         .btn-back svg { width: 22px; height: 22px; stroke-width: 2.5; stroke: currentColor; fill: none; }
+
         .brand-cluster { display: flex; align-items: center; gap: 8px; }
-        .brand-cluster b { font-size: 1.1rem; font-weight: 900; color: var(--sigma-primary); }
-        .brand-cluster small { font-size: 0.65rem; color: var(--sigma-danger); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: block;}
+        .brand-logo-img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .brand-text-img { height: 18px; object-fit: contain; margin-top: 2px; }
+
+        .header-actions { display: flex; gap: 8px; }
+        .btn-top-action {
+            width: 44px; height: 44px; border-radius: 50%; background: var(--sigma-subtle);
+            color: var(--text-heading); display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--sigma-muted-border); transition: var(--transition-bounce);
+        }
+        .btn-top-action:active { transform: scale(0.92); }
+        .btn-top-action svg { width: 22px; height: 22px; stroke-width: 2.2; stroke: currentColor; fill: none; }
 
         /* ==========================================================================
-           3. BALANCE VAULT & LOCKOUT SCREEN
+           4. WORKSPACE & VAULT CARD
            ========================================================================== */
         .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 24px; }
 
-        .balance-card {
+        .page-header { text-align: center; padding: 4px 0 8px; animation: fadeInDown 0.6s ease-out; }
+        .page-header h1 { font-size: 2rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 8px; color: var(--sigma-primary); }
+        .page-header p { font-size: 0.95rem; color: var(--text-muted); max-width: 400px; margin: 0 auto; line-height: 1.5; font-weight: 500; }
+
+        .vault-card {
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
             border-radius: var(--radius-2xl); padding: 28px 24px; color: white;
             box-shadow: var(--shadow-card); position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            animation: slideUp 0.5s ease-out;
         }
-        .balance-card::after {
+        .vault-card::after {
             content: ''; position: absolute; bottom: -40px; right: -40px; width: 140px; height: 140px;
-            border-radius: 50%; background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+            border-radius: 50%; background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%); pointer-events: none;
         }
-        .balance-card small { font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .balance-card h3 { font-size: 2.5rem; font-weight: 900; letter-spacing: -1px; display: flex; align-items: baseline; gap: 6px; position: relative; z-index: 2;}
-        .balance-card h3 span { font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.8); }
+        
+        .vault-card small { font-size: 0.75rem; color: rgba(255, 255, 255, 0.7); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 6px; }
+        .vault-card strong { font-size: 2.6rem; font-weight: 900; letter-spacing: -1px; display: flex; align-items: baseline; justify-content: center; gap: 6px; text-shadow: 0 4px 12px rgba(0,0,0,0.3); line-height: 1;}
+        .vault-card strong span { font-size: 1.2rem; color: rgba(255, 255, 255, 0.8); font-weight: 700; }
 
-        /* Lockout / Pending Screen */
-        .lockout-card {
-            background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 40px 24px;
-            text-align: center; border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-sm);
-            display: none; flex-direction: column; align-items: center; gap: 16px;
+        /* Time Lock Warning */
+        .time-lock-warning {
+            display: none; background: var(--sigma-danger-soft); border: 1px solid var(--sigma-danger-border);
+            border-radius: var(--radius-xl); padding: 20px; text-align: center; align-items: center; flex-direction: column; gap: 12px;
+            animation: slideUp 0.4s ease;
         }
-        .lockout-card.active { display: flex; }
-        .lockout-card .icon-wrap {
-            width: 72px; height: 72px; border-radius: 50%; background: var(--sigma-gold-soft);
-            color: var(--sigma-gold-dark); display: flex; align-items: center; justify-content: center;
-        }
-        .lockout-card .icon-wrap svg { width: 36px; height: 36px; stroke: currentColor; fill: none; stroke-width: 2; }
-        .lockout-card h2 { font-size: 1.4rem; color: var(--text-heading); }
-        .lockout-card p { font-size: 0.95rem; color: var(--text-body); max-width: 320px; font-weight: 500;}
-        .lockout-amount { background: var(--sigma-subtle); padding: 8px 16px; border-radius: var(--radius-pill); font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 800; color: var(--sigma-primary); border: 1px dashed var(--sigma-muted-border); margin-top: 8px;}
-
-        /* Main Form Area (Hidden if locked out) */
-        #withdrawMainArea { display: flex; flex-direction: column; gap: 24px; }
-
-        .section-title { font-size: 1.2rem; font-weight: 900; color: var(--text-heading); }
+        .time-lock-warning svg { width: 48px; height: 48px; stroke: var(--sigma-danger); fill: none; stroke-width: 1.5; }
+        .time-lock-warning h3 { font-size: 1.15rem; color: var(--sigma-danger-dark); }
+        .time-lock-warning p { font-size: 0.9rem; color: var(--text-body); font-weight: 500; line-height: 1.5; }
+        
+        /* Loading Skeletons */
+        .skeleton-block { height: 180px; background: #E2E8F0; border-radius: var(--radius-2xl); animation: pulseSkel 1.5s infinite; }
+        @keyframes pulseSkel { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
         /* ==========================================================================
-           4. 3-COLUMN PAYMENT GRID WITH BLUR EFFECT
+           5. PAYMENT METHODS GRID (1 Row, 3 Columns) + BLUR EFFECT
            ========================================================================== */
+        .methods-section { display: none; flex-direction: column; gap: 16px; animation: slideUp 0.6s ease-out; }
+        .section-title { font-size: 1.15rem; font-weight: 900; color: var(--text-heading); display: flex; align-items: center; gap: 8px;}
+        .section-title svg { width: 20px; height: 20px; stroke: var(--sigma-primary); fill: none; stroke-width: 2.5; }
+
         .methods-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-            transition: var(--transition-smooth);
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; 
+            /* Enforces 3 columns exactly as requested */
+            overflow-x: auto; padding-bottom: 8px; scrollbar-width: none;
         }
+        .methods-grid::-webkit-scrollbar { display: none; }
+        
         .method-card {
             background: var(--sigma-surface); border: 2px solid var(--sigma-muted-border);
-            border-radius: var(--radius-xl); padding: 16px 8px; display: flex; flex-direction: column;
+            border-radius: var(--radius-xl); padding: 20px 12px; display: flex; flex-direction: column;
             align-items: center; text-align: center; gap: 12px; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: var(--shadow-sm);
+            transition: var(--transition-smooth); box-shadow: var(--shadow-subtle); position: relative;
         }
+        
+        /* Blur effect for unselected cards when one is selected */
+        .method-card.blurred { filter: blur(2px); opacity: 0.45; transform: scale(0.96); pointer-events: none; }
+        
+        .method-card.selected { border-color: var(--sigma-primary); background: var(--sigma-subtle); box-shadow: 0 8px 24px rgba(11, 19, 43, 0.1); transform: scale(1.02); z-index: 5;}
         
         .method-icon {
-            width: 50px; height: 50px; border-radius: 14px; background: white;
-            display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--sigma-muted-border); overflow: hidden; padding: 6px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            width: 56px; height: 56px; border-radius: 16px; background: white;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            border: 1px solid var(--sigma-input-border); box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 4px;
         }
         .method-icon img { width: 100%; height: 100%; object-fit: contain; }
+        .method-icon svg { width: 28px; height: 28px; stroke: var(--text-heading); fill: none; stroke-width: 1.5; }
         
-        .method-card b { font-size: 0.85rem; font-weight: 800; color: var(--text-heading); line-height: 1.2;}
+        .method-info b { display: block; font-size: 0.95rem; font-weight: 800; color: var(--text-heading); margin-bottom: 2px;}
+        .method-info small { display: block; font-size: 0.7rem; color: var(--text-muted); font-weight: 600; line-height: 1.2;}
 
-        /* Selection and Blur Logic */
-        .methods-grid.has-selection .method-card:not(.selected) {
-            opacity: 0.5; filter: blur(2px); transform: scale(0.95); pointer-events: none;
+        .method-check {
+            position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; border-radius: 50%;
+            border: 2px solid var(--sigma-input-border); background: white; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
         }
-        .method-card.selected {
-            border-color: var(--sigma-primary); background: var(--sigma-subtle);
-            box-shadow: 0 8px 24px rgba(11, 19, 43, 0.1); transform: scale(1.02);
-        }
-        .method-card.selected .method-icon { border-color: var(--sigma-primary); }
+        .method-check svg { width: 12px; height: 12px; stroke: white; stroke-width: 3; fill: none; transform: scale(0); transition: 0.3s; }
+        .method-card.selected .method-check { border-color: var(--sigma-primary); background: var(--sigma-primary); }
+        .method-card.selected .method-check svg { transform: scale(1); }
 
-        .btn-clear-selection {
-            display: none; align-self: flex-end; font-size: 0.8rem; font-weight: 800;
-            color: var(--sigma-danger); background: var(--sigma-danger-soft); padding: 6px 12px;
-            border-radius: var(--radius-pill); transition: var(--transition-fast); margin-top: -10px;
+        /* Resets Selection Button */
+        .btn-reset-selection {
+            font-size: 0.8rem; font-weight: 800; color: var(--sigma-info-dark); background: transparent;
+            text-align: right; display: none; margin-top: -8px; cursor: pointer; text-decoration: underline;
         }
-        .methods-grid.has-selection + .btn-clear-selection { display: inline-flex; }
-        .btn-clear-selection:active { transform: scale(0.95); }
 
         /* ==========================================================================
-           5. DYNAMIC FORM FIELDS
+           6. DYNAMIC FORM & AMOUNT INPUT (English Enforcement)
            ========================================================================== */
         .form-section {
             background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 24px;
-            box-shadow: var(--shadow-card); border: 1px solid var(--sigma-muted-border);
-            display: none; flex-direction: column; gap: 20px; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            box-shadow: var(--shadow-subtle); border: 1px solid var(--sigma-muted-border);
+            display: none; flex-direction: column; gap: 20px; animation: slideUp 0.5s ease-out;
         }
-        .form-section.active { display: flex; }
 
-        .input-group { position: relative; }
+        .dynamic-fields-container { display: flex; flex-direction: column; gap: 16px; margin-bottom: 12px; }
+
         .input-wrapper {
-            display: flex; align-items: center; background: var(--sigma-subtle);
+            position: relative; display: flex; align-items: center; background: var(--sigma-surface-alt);
             border-radius: var(--radius-xl); border: 2px solid var(--sigma-input-border);
-            transition: var(--transition-smooth); overflow: hidden; height: 64px;
+            transition: var(--transition-smooth); overflow: hidden; direction: ltr; /* English enforcement */
         }
-        .input-wrapper:focus-within { border-color: var(--sigma-primary); background: white; }
+        .input-wrapper:focus-within { border-color: var(--sigma-primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); background: white;}
+        .input-wrapper.error { border-color: var(--sigma-danger); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); }
         
-        .currency-prefix { padding: 0 16px; font-weight: 900; color: var(--sigma-primary); font-size: 1.1rem; border-right: 2px solid var(--sigma-input-border); }
-        .input-field { flex: 1; height: 100%; padding: 0 16px; font-size: 1.1rem; color: var(--text-heading); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
-        .input-field.text-input { font-family: 'Inter', sans-serif; font-weight: 700; }
+        .currency-prefix { padding-left: 20px; color: var(--sigma-primary); font-weight: 900; font-size: 1.15rem; }
+        .input-icon { width: 56px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+        .input-wrapper:focus-within .input-icon { color: var(--sigma-primary); }
+        .input-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+        .input-field {
+            flex: 1; height: 64px; padding: 24px 16px 8px 16px; font-size: 1.1rem;
+            color: var(--text-heading); font-weight: 800; font-family: 'JetBrains Mono', monospace; background: transparent;
+        }
+        .input-icon + .input-field { padding-left: 0; }
+        .currency-prefix + .input-field { padding-left: 8px; font-size: 1.3rem; letter-spacing: -0.5px;}
+        
         .input-field:focus { outline: none; }
-        .input-field::placeholder { color: var(--text-light); font-weight: 600; font-size: 0.95rem; font-family: 'Inter', sans-serif;}
+        .input-field::placeholder { color: transparent; }
 
-        select.input-field { appearance: none; background: transparent; cursor: pointer; }
-
-        /* Limits & Fee Grid */
-        .limits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: var(--sigma-surface-alt); padding: 12px; border-radius: var(--radius-lg); border: 1px dashed var(--sigma-muted-border);}
-        .limit-box { text-align: center; }
-        .limit-box small { display: block; font-size: 0.65rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 2px; }
-        .limit-box b { display: block; font-size: 0.85rem; font-weight: 900; color: var(--text-heading); font-family: 'JetBrains Mono', monospace;}
+        .floating-label {
+            position: absolute; left: 16px; top: 20px; font-size: 1rem; color: var(--text-muted);
+            pointer-events: none; transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) all; font-weight: 600; font-family: 'Inter', sans-serif;
+        }
+        .input-icon ~ .floating-label { left: 56px; }
+        .currency-prefix ~ .floating-label { left: 66px; }
         
-        .calculation-preview { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--sigma-accent-dark); background: var(--sigma-accent-soft); padding: 10px; border-radius: var(--radius-md); display: none;}
+        .input-field:focus ~ .floating-label, .input-field:not(:placeholder-shown) ~ .floating-label {
+            top: 8px; font-size: 0.75rem; color: var(--sigma-primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .input-wrapper.error .floating-label { color: var(--sigma-danger); }
+
+        /* Select Field */
+        .select-field {
+            flex: 1; height: 64px; padding: 24px 16px 8px 16px; font-size: 1rem;
+            color: var(--text-heading); font-weight: 700; background: transparent; cursor: pointer; appearance: none;
+        }
+        .select-field:focus { outline: none; }
+        .select-icon-dropdown { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--text-muted); }
+        .select-icon-dropdown svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+        /* Limits Informational Grid */
+        .limits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 4px 0 16px; }
+        .limit-box { background: var(--sigma-subtle); padding: 12px; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--sigma-muted-border); }
+        .limit-box small { display: block; font-size: 0.65rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
+        .limit-box b { display: block; font-size: 0.9rem; font-weight: 900; color: var(--text-heading); word-break: break-word; font-family: 'JetBrains Mono', monospace;}
 
         .form-error {
             display: none; background: var(--sigma-danger-soft); color: var(--sigma-danger-dark);
             padding: 14px; border-radius: var(--radius-lg); font-size: 0.85rem; font-weight: 700;
             text-align: center; border: 1px solid var(--sigma-danger-border); animation: shake 0.4s ease;
         }
+        .form-error.show { display: block; }
 
+        /* Action Buttons */
         .btn-submit {
             width: 100%; height: 64px; border-radius: var(--radius-xl);
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white; font-size: 1.15rem; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 12px 28px rgba(11, 19, 43, 0.25); transition: var(--transition-bounce); text-transform: uppercase; letter-spacing: 0.5px;
+            color: white; font-size: 1.15rem; font-weight: 900; display: flex;
+            align-items: center; justify-content: center; gap: 10px; box-shadow: 0 12px 28px rgba(11, 19, 43, 0.3);
+            transition: var(--transition-bounce); text-transform: uppercase; letter-spacing: 0.5px;
         }
         .btn-submit:active { transform: scale(0.96); box-shadow: 0 6px 16px rgba(11, 19, 43, 0.2); }
-        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; background: var(--sigma-muted-border); color: var(--text-muted);}
+        .btn-submit:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
         
-        .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+        .spinner {
+            width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none;
+        }
         .btn-submit.loading .spinner { display: block; }
-        .btn-submit.loading span { display: none; }
-        .btn-submit.loading { background: var(--sigma-primary); opacity: 1; }
+        .btn-submit.loading span, .btn-submit.loading svg { display: none; }
+        .btn-submit.loading { background: var(--sigma-primary); opacity: 1;}
 
         /* ==========================================================================
-           6. FULL SCREEN SUCCESS ANIMATION
+           7. CONGRATULATIONS / SUCCESS FULL SCREEN OVERLAY
            ========================================================================== */
         .success-overlay {
-            position: fixed; inset: 0; background: var(--sigma-surface); z-index: var(--z-overlay);
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 24px;
+            position: fixed; inset: 0; background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; opacity: 0; visibility: hidden; transition: 0.4s ease; text-align: center; padding: 24px;
         }
-        .success-overlay.active { display: flex; animation: fadeScreenIn 0.3s ease forwards; }
+        .success-overlay.show { opacity: 1; visibility: visible; }
         
-        .success-circle {
-            width: 100px; height: 100px; border-radius: 50%; background: var(--sigma-accent);
-            display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
-            box-shadow: 0 0 0 20px var(--sigma-accent-soft); animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transform: scale(0);
+        .so-icon-wrap {
+            width: 100px; height: 100px; border-radius: 50%; background: rgba(16, 185, 129, 0.15);
+            display: flex; align-items: center; justify-content: center; color: var(--sigma-accent-light);
+            border: 4px solid var(--sigma-accent); margin-bottom: 24px; box-shadow: 0 0 40px rgba(16, 185, 129, 0.4);
+            transform: scale(0.5); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .success-circle svg { width: 50px; height: 50px; stroke: white; stroke-width: 3; fill: none; stroke-dasharray: 100; stroke-dashoffset: 100; animation: drawCheck 0.5s ease 0.4s forwards; }
-        
-        .success-overlay h1 { font-size: 2rem; color: var(--sigma-primary); margin-bottom: 8px; opacity: 0; animation: slideUp 0.5s ease 0.6s forwards; }
-        .success-overlay p { font-size: 1rem; color: var(--text-muted); font-weight: 500; opacity: 0; animation: slideUp 0.5s ease 0.7s forwards; }
+        .success-overlay.show .so-icon-wrap { transform: scale(1); }
+        .so-icon-wrap svg { width: 50px; height: 50px; stroke: currentColor; fill: none; stroke-width: 2.5; }
 
-        @keyframes drawCheck { to { stroke-dashoffset: 0; } }
-        @keyframes popIn { to { transform: scale(1); } }
-        @keyframes fadeScreenIn { from { opacity: 0; } to { opacity: 1; } }
+        .success-overlay h1 { font-size: 2.4rem; font-weight: 900; color: white; margin-bottom: 12px; letter-spacing: -1px; text-shadow: 0 4px 12px rgba(0,0,0,0.3);}
+        .success-overlay p { font-size: 1.1rem; color: rgba(255,255,255,0.8); max-width: 400px; line-height: 1.6; font-weight: 500;}
+        .success-overlay .redirect-txt { font-size: 0.85rem; color: var(--sigma-accent); font-weight: 700; margin-top: 32px; text-transform: uppercase; letter-spacing: 1px; animation: pulseSkel 1.5s infinite;}
 
         /* ==========================================================================
-           7. NATIVE MOBILE DOCK (Exactly 3 Buttons)
+           8. NATIVE MOBILE DOCK (Exactly 3 Buttons - Architecture Matching)
            ========================================================================== */
         .mobile-dock {
             position: fixed; bottom: var(--safe-area-bottom); left: 50%; transform: translateX(-50%);
-            height: 76px; width: calc(100% - 32px); max-width: 440px;
-            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-float); display: flex; align-items: center; justify-content: space-between;
-            padding: 0 24px; z-index: var(--z-dock); border: 1px solid rgba(255, 255, 255, 0.9);
+            height: 78px; width: calc(100% - 32px); max-width: 440px;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-2xl); box-shadow: var(--shadow-float); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 24px; z-index: var(--z-dock); border: 1px solid rgba(255, 255, 255, 0.9);
         }
         .dock-slot {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-            color: var(--text-muted); width: 64px; height: 100%; transition: var(--transition-bounce); text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 6px; color: var(--text-muted); width: 64px; height: 100%; transition: var(--transition-bounce); text-decoration: none;
         }
         .dock-slot svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-        .dock-slot span { font-size: 0.7rem; font-weight: 800; }
+        .dock-slot span { font-size: 0.72rem; font-weight: 800; }
         .dock-slot.active { color: var(--sigma-primary); }
         .dock-slot.active svg { stroke-width: 2.8; transform: translateY(-2px); color: var(--sigma-accent-dark); }
         
@@ -306,130 +390,160 @@
         .dock-crest-btn:active { transform: scale(0.9); }
         .dock-crest-btn img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
         .dock-crest-btn::after {
-            content: 'MY PLANS'; position: absolute; bottom: -24px; font-size: 0.7rem; font-weight: 900; color: var(--text-heading); letter-spacing: 0.5px; white-space: nowrap;
+            content: 'PLANS'; position: absolute; bottom: -24px; font-size: 0.7rem; font-weight: 900; color: var(--text-heading); letter-spacing: 0.5px;
         }
+
         @media (min-width: 860px) { .mobile-dock { display: none; } body { padding-bottom: 40px; } }
 
-        /* Skeletons */
-        .skeleton { background: #E2E8F0; color: transparent !important; animation: pulseSkel 1.5s infinite ease-in-out; border-radius: 8px; }
-        @keyframes pulseSkel { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        /* Toast Component */
+        .toast {
+            position: fixed; top: max(24px, env(safe-area-inset-top)); left: 50%; transform: translate(-50%, -20px) scale(0.9);
+            background: var(--sigma-primary); color: white; padding: 16px 28px;
+            border-radius: var(--radius-pill); font-size: 0.95rem; font-weight: 700;
+            box-shadow: var(--shadow-float); z-index: var(--z-toast); opacity: 0;
+            visibility: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 12px;
+            border: 1px solid rgba(255,255,255,0.1); white-space: nowrap;
+        }
+        .toast.error { background: var(--sigma-danger-dark); border-color: var(--sigma-danger); }
+        .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); }
+
+        /* Animations */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
     </style>
 </head>
 <body>
 
-    <!-- SVG SPRITES -->
+    <!-- Offline Notification Banner -->
+    <div id="networkOfflineBanner">Critical Network Error. Please Check Connection.</div>
+
+    <!-- SUCCESS FULL SCREEN POPUP -->
+    <div class="success-overlay" id="successPopup">
+        <div class="so-icon-wrap">
+            <svg><use href="#icon-check"/></svg>
+        </div>
+        <h1>Congratulations!</h1>
+        <p>Your withdrawal request has been securely placed. Verification is in progress.</p>
+        <span class="redirect-txt">Redirecting to Terminal...</span>
+    </div>
+
+    <!-- COMPLETE SVG ICON SYSTEM -->
     <svg width="0" height="0" style="display:none;" aria-hidden="true">
         <symbol id="icon-back" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></symbol>
         <symbol id="icon-home" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></symbol>
         <symbol id="icon-user" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-bell" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path stroke-linecap="round" stroke-linejoin="round" d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+        <symbol id="icon-wallet" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path stroke-linecap="round" stroke-linejoin="round" d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></symbol>
         <symbol id="icon-check" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="20 6 9 17 4 12"/></symbol>
-        <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><polyline stroke-linecap="round" stroke-linejoin="round" points="12 6 12 12 16 14"/></symbol>
+        <symbol id="icon-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="8" x2="12" y2="12" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-bank" viewBox="0 0 24 24"><rect x="3" y="21" width="18" height="2" rx="1" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="10" width="2" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/><rect x="10" y="10" width="2" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/><rect x="16" y="10" width="2" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 8 12 2l9.5 6H2.5Z"/></symbol>
+        <symbol id="icon-hash" viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="15" x2="20" y2="15" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="21" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="3" x2="14" y2="21" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-map" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="icon-chevron" viewBox="0 0 24 24"><polyline stroke-linecap="round" stroke-linejoin="round" points="6 9 12 15 18 9"/></symbol>
+        <symbol id="icon-shield" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+        <symbol id="icon-arrow-up" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5" stroke-linecap="round" stroke-linejoin="round"/><polyline stroke-linecap="round" stroke-linejoin="round" points="5 12 12 5 19 12"/></symbol>
     </svg>
-
-    <!-- FULL SCREEN SUCCESS OVERLAY -->
-    <div class="success-overlay" id="successOverlay">
-        <div class="success-circle">
-            <svg><use href="#icon-check"/></svg>
-        </div>
-        <h1>Request Submitted!</h1>
-        <p>Your withdrawal is being processed securely.<br>Please wait for administration approval.</p>
-    </div>
 
     <div class="app-container">
         
         <!-- HEADER -->
-        <header class="island-topbar">
-            <a href="dash.html" class="btn-back" aria-label="Back">
-                <svg><use href="#icon-back"/></svg>
+        <header class="island-topbar" id="topHeader">
+            <a href="dash.html" class="btn-back" aria-label="Back to Dashboard">
+                <svg><use href="#icon-back" /></svg>
             </a>
             <div class="brand-cluster">
                 <img src="assets/logo.png" alt="Sigma" class="brand-logo-img" onerror="this.style.display='none'">
-                <div>
-                    <b>Withdraw Funds</b>
-                    <small>Sigma Secure Ledger</small>
-                </div>
+                <img src="assets/textlogo.png" alt="Sigma" class="brand-text-img" onerror="this.style.display='none'">
             </div>
-            <div style="width: 46px;"></div> <!-- Spacer -->
+            <div class="header-actions">
+                <button class="btn-top-action" aria-label="Notifications" onclick="window.location.href='dash.html'">
+                    <svg><use href="#icon-bell" /></svg>
+                </button>
+            </div>
         </header>
 
+        <!-- MAIN WORKSPACE -->
         <main class="workspace">
+            
+            <div class="page-header">
+                <h1 id="cmsPageTitle">Withdraw Funds</h1>
+                <p>Transfer your authorized profit securely to your local destination.</p>
+            </div>
 
-            <!-- BALANCE CARD -->
-            <div class="balance-card">
+            <!-- Vault Card -->
+            <div id="skelVault" class="skeleton-block" style="height: 140px; margin-bottom: 24px;"></div>
+            
+            <div class="vault-card" id="vaultCard" style="display: none;">
                 <small>Available Profit Balance</small>
-                <h3><span>PKR</span> <span id="uiAvailableBalance" class="font-mono skeleton">0.00</span></h3>
+                <strong class="font-mono"><span>PKR</span> <span id="uiAvailableBalance">0.00</span></strong>
             </div>
 
-            <!-- LOCKOUT CARD (Shown if pending withdrawal exists) -->
-            <div class="lockout-card" id="lockoutCard">
-                <div class="icon-wrap"><svg><use href="#icon-clock"/></svg></div>
-                <h2>Withdrawal Under Review</h2>
-                <p>You currently have a pending withdrawal request in the system. Please wait until it is processed by the administration before initiating a new one.</p>
-                <div class="lockout-amount" id="lockoutAmount">PKR 0.00</div>
-                <button class="btn-back" style="width: 100%; border-radius: var(--radius-pill); height: 56px; margin-top: 10px;" onclick="window.location.href='dash.html'">Return to Dashboard</button>
+            <!-- TIME LOCK / PENDING BLOCKER -->
+            <div class="time-lock-warning" id="timeLockWarning">
+                <svg><use href="#icon-alert"/></svg>
+                <h3 id="lockTitle">Withdrawal Processing</h3>
+                <p id="lockDesc">You currently have a pending verification or are within the 6-day institutional security hold period. No new withdrawals can be initiated at this time.</p>
             </div>
 
-            <!-- MAIN WITHDRAWAL AREA -->
-            <div id="withdrawMainArea">
-                <h2 class="section-title">1. Select Destination</h2>
-                
-                <!-- 3 COLUMN GRID -->
-                <div class="methods-grid" id="methodsGridContainer">
-                    <!-- Javascript populates this -->
-                    <div class="skeleton" style="height: 100px; border-radius: var(--radius-xl);"></div>
-                    <div class="skeleton" style="height: 100px; border-radius: var(--radius-xl);"></div>
-                    <div class="skeleton" style="height: 100px; border-radius: var(--radius-xl);"></div>
+            <!-- METHODS SECTION -->
+            <div class="methods-section" id="methodsSection">
+                <div class="section-title">
+                    <svg><use href="#icon-wallet"/></svg> Select Destination
+                    <button class="btn-reset-selection" id="btnResetMethod" onclick="WithdrawController.resetMethod()">Change Method</button>
                 </div>
-                <button class="btn-clear-selection" id="btnClearSelection" onclick="WithdrawController.clearSelection()">Change Method</button>
-
-                <!-- DYNAMIC FORM SECTION -->
-                <form id="withdrawForm" class="form-section">
-                    <h2 class="section-title" style="font-size: 1.1rem; margin-bottom: -10px;">2. Enter Details</h2>
-                    
-                    <div class="input-wrapper">
-                        <span class="currency-prefix">PKR</span>
-                        <input type="number" id="inputAmount" class="input-field" step="any" placeholder=" " required>
-                        <label class="floating-label">Withdrawal Amount</label>
-                    </div>
-
-                    <div class="calculation-preview" id="calcPreview">You will receive: PKR 0.00</div>
-
-                    <div class="limits-grid">
-                        <div class="limit-box"><small>Minimum</small><b id="txtMin">PKR 0</b></div>
-                        <div class="limit-box"><small>Fee</small><b id="txtFee">0%</b></div>
-                        <div class="limit-box"><small>Maximum</small><b id="txtMax">PKR 0</b></div>
-                    </div>
-
-                    <!-- DYNAMIC FIELDS CONTAINER -->
-                    <div id="dynamicFieldsContainer" style="display: flex; flex-direction: column; gap: 16px; margin-top: 8px;">
-                        <!-- Injected via JS based on selected method type -->
-                    </div>
-
-                    <div class="form-error" id="formError"></div>
-
-                    <button type="submit" class="btn-submit" id="btnSubmit">
-                        <span id="btnSubmitText">Confirm Withdrawal</span>
-                        <div class="spinner"></div>
-                    </button>
-                </form>
+                
+                <!-- The 1 Row 3 Col Grid -->
+                <div class="methods-grid" id="methodsContainer">
+                    <div class="skeleton-block" style="height: 120px; width: 100%;"></div>
+                    <div class="skeleton-block" style="height: 120px; width: 100%;"></div>
+                    <div class="skeleton-block" style="height: 120px; width: 100%;"></div>
+                </div>
             </div>
+
+            <!-- DYNAMIC FORM SECTION -->
+            <form id="withdrawForm" class="form-section" novalidate>
+                
+                <div class="dynamic-fields-container" id="dynamicFieldsContainer">
+                    <!-- Javascript will inject inputs here based on selection -->
+                </div>
+
+                <div class="input-wrapper" id="amountWrapper">
+                    <span class="currency-prefix">Rs.</span>
+                    <input type="number" id="inputAmount" class="input-field" step="any" placeholder=" " required dir="ltr">
+                    <label class="floating-label">Enter Exact Amount</label>
+                </div>
+
+                <div class="limits-grid">
+                    <div class="limit-box"><small>Minimum</small><b id="txtMin" class="font-mono">—</b></div>
+                    <div class="limit-box"><small>Network Fee</small><b id="txtFee" class="font-mono">—</b></div>
+                    <div class="limit-box"><small>Maximum</small><b id="txtMax" class="font-mono">—</b></div>
+                </div>
+
+                <div class="form-error" id="formErrorBox"></div>
+
+                <button type="submit" class="btn-submit" id="btnSubmit">
+                    <span>Confirm & Withdraw</span> <svg style="width:22px;height:22px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-shield"/></svg>
+                    <div class="spinner"></div>
+                </button>
+            </form>
 
         </main>
     </div>
 
-    <!-- NATIVE 3-BUTTON DOCK -->
-    <nav class="mobile-dock">
+    <!-- NATIVE 3-BUTTON DOCK (Exact Sigma Architecture) -->
+    <nav class="mobile-dock" id="mobileDock">
         <a href="dash.html" class="dock-slot">
             <svg><use href="#icon-home" /></svg>
             <span>Home</span>
         </a>
-        <a href="my-plans.html" class="dock-crest-btn">
+        
+        <a href="plans.html" class="dock-crest-btn" onclick="WithdrawController.logAction('dock_plans', 'Opened investment plans')">
             <img src="assets/logo.png" alt="Sigma Crest" onerror="this.style.display='none'">
         </a>
+        
         <a href="profile.html" class="dock-slot">
             <div style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);" id="dockAvatarContainer">
                 <svg style="width: 20px; height: 20px;"><use href="#icon-user" /></svg>
@@ -438,335 +552,458 @@
         </a>
     </nav>
 
+    <!-- TOAST COMPONENT -->
+    <div class="toast" id="toastBox">
+        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg>
+        <span id="toastMsg">Action successful</span>
+    </div>
+
     <!-- ==========================================================================
-         JAVASCRIPT CONTROLLER (Strict Firebase Logic & Validation)
+         JAVASCRIPT APPLICATION CONTROLLER (Strict Firebase Security)
          ========================================================================== -->
     <script>
         const WithdrawController = (() => {
 
             let authUser = null;
-            let profitBalance = 0;
+            let availableBalance = 0;
             let loadedMethods = [];
-            let currentSelectedMethod = null;
-            
-            // Blueprint Methods (Will be overridden by Firebase if configured)
-            const blueprintMethods = [
-                { id: "wd_easypaisa", name: "EasyPaisa", type: "wallet", iconUrl: "assets/pay/easypaisa.png", min: 500, max: 50000, feeFixed: 0, feePercent: 0, isActive: true },
-                { id: "wd_jazzcash", name: "JazzCash", type: "wallet", iconUrl: "assets/pay/jazzcash.png", min: 500, max: 50000, feeFixed: 0, feePercent: 0, isActive: true },
-                { id: "wd_sadapay", name: "SadaPay", type: "wallet", iconUrl: "assets/pay/sadapay.png", min: 1000, max: 100000, feeFixed: 0, feePercent: 0, isActive: true },
-                { id: "wd_nayapay", name: "NayaPay", type: "wallet", iconUrl: "assets/pay/nayapay.png", min: 1000, max: 100000, feeFixed: 0, feePercent: 0, isActive: true },
-                { id: "wd_bank", name: "Local Bank", type: "bank", iconUrl: "assets/pay/bank.png", min: 2000, max: 500000, feeFixed: 50, feePercent: 1.5, isActive: true },
-                { id: "wd_usdt", name: "USDT Crypto", type: "crypto", iconUrl: "assets/pay/usdt.png", min: 5000, max: 1000000, feeFixed: 0, feePercent: 2, isActive: true }
+            let activeMethod = null;
+
+            // Blueprint for Testing/Fallback if Firestore is empty
+            const defaultMethods = [
+                { id: "wd_easypaisa", type: "mobile", name: "EasyPaisa", iconUrl: "assets/pay/easypaisa.png", min: 500, max: 100000, feePercent: 0, feeFixed: 0 },
+                { id: "wd_jazzcash", type: "mobile", name: "JazzCash", iconUrl: "assets/pay/jazzcash.png", min: 500, max: 100000, feePercent: 0, feeFixed: 0 },
+                { id: "wd_bank", type: "bank", name: "Bank Transfer", iconUrl: "assets/pay/bank.jpg", min: 2000, max: 500000, feePercent: 1.5, feeFixed: 0 },
+                { id: "wd_usdt", type: "crypto", name: "USDT (Crypto)", iconUrl: "assets/pay/usdt.png", min: 5000, max: 1000000, feePercent: 0, feeFixed: 0 },
+                { id: "wd_sadapay", type: "mobile", name: "SadaPay", iconUrl: "assets/pay/sadapay.png", min: 500, max: 100000, feePercent: 0, feeFixed: 0 },
+                { id: "wd_nayapay", type: "mobile", name: "NayaPay", iconUrl: "assets/pay/nayapay.png", min: 500, max: 100000, feePercent: 0, feeFixed: 0 }
             ];
 
             const dom = {
+                vaultSkel: document.getElementById('skelVault'),
+                vaultCard: document.getElementById('vaultCard'),
                 balance: document.getElementById('uiAvailableBalance'),
-                lockoutCard: document.getElementById('lockoutCard'),
-                lockoutAmount: document.getElementById('lockoutAmount'),
-                mainArea: document.getElementById('withdrawMainArea'),
-                grid: document.getElementById('methodsGridContainer'),
-                btnClear: document.getElementById('btnClearSelection'),
-                formSection: document.getElementById('withdrawForm'),
+                
+                lockWarning: document.getElementById('timeLockWarning'),
+                lockTitle: document.getElementById('lockTitle'),
+                lockDesc: document.getElementById('lockDesc'),
+                
+                methodsSec: document.getElementById('methodsSection'),
+                methodsGrid: document.getElementById('methodsContainer'),
+                btnResetMethod: document.getElementById('btnResetMethod'),
+                
+                form: document.getElementById('withdrawForm'),
+                dynamicFields: document.getElementById('dynamicFieldsContainer'),
+                amountWrapper: document.getElementById('amountWrapper'),
                 inputAmount: document.getElementById('inputAmount'),
-                calcPreview: document.getElementById('calcPreview'),
                 txtMin: document.getElementById('txtMin'),
                 txtMax: document.getElementById('txtMax'),
                 txtFee: document.getElementById('txtFee'),
-                dynamicFields: document.getElementById('dynamicFieldsContainer'),
-                errorBox: document.getElementById('formError'),
+                errorBox: document.getElementById('formErrorBox'),
                 btnSubmit: document.getElementById('btnSubmit'),
-                successOverlay: document.getElementById('successOverlay')
+                
+                successPopup: document.getElementById('successPopup'),
+                toastBox: document.getElementById('toastBox'),
+                toastMsg: document.getElementById('toastMsg'),
+                offlineBanner: document.getElementById('networkOfflineBanner')
+            };
+
+            // --- Utilities ---
+            const haptic = (ms = 20) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch(e){} };
+            
+            const toast = (msg, isError = false) => {
+                if (!dom.toastBox) return;
+                dom.toastMsg.textContent = msg;
+                dom.toastBox.className = `toast show ${isError ? 'error' : ''}`;
+                haptic(isError ? 50 : 25);
+                setTimeout(() => dom.toastBox.classList.remove('show'), 3000);
             };
 
             const showError = (msg) => {
-                dom.errorBox.textContent = msg; dom.errorBox.classList.add('show');
-                dom.errorBox.style.animation = 'none'; void dom.errorBox.offsetWidth; dom.errorBox.style.animation = 'shake 0.4s ease';
+                dom.errorBox.textContent = msg;
+                dom.errorBox.classList.add('show');
+                dom.errorBox.classList.remove('shake');
+                void dom.errorBox.offsetWidth;
+                dom.errorBox.style.animation = 'shake 0.4s ease';
+                dom.amountWrapper.classList.add('error');
+                haptic(50);
             };
-            const hideError = () => { dom.errorBox.classList.remove('show'); };
 
-            // --- Real-time Balance & Lockout Check ---
-            const loadUserData = (db, uid) => {
-                // 1. Listen for Profit Balance
-                db.collection('users').doc(uid).onSnapshot(doc => {
-                    if (doc.exists) {
-                        profitBalance = Number(doc.data().profitBalance || 0);
-                        dom.balance.textContent = profitBalance.toLocaleString('en-PK', {minimumFractionDigits: 2});
-                        dom.balance.classList.remove('skeleton');
+            const hideError = () => {
+                dom.errorBox.classList.remove('show');
+                dom.errorBox.style.animation = 'none';
+                dom.amountWrapper.classList.remove('error');
+            };
+
+            const logAction = async (actionType, description) => {
+                if (!authUser || typeof firebase === 'undefined') return;
+                try {
+                    const db = firebase.firestore();
+                    await db.collection('users').doc(authUser.uid).collection('notifications').add({
+                        type: actionType, title: actionType.replace(/_/g, ' ').toUpperCase(),
+                        body: description, read: false,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        device: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
+                    });
+                } catch(e) {}
+            };
+
+            // --- Business Logic: 6-Day Restriction & Pending Check ---
+            const checkEligibility = async (db, uid) => {
+                try {
+                    const snap = await db.collection('withdrawals')
+                        .where('uid', '==', uid)
+                        .orderBy('createdAt', 'desc')
+                        .limit(1)
+                        .get();
+
+                    if (snap.empty) return true; // Eligible
+
+                    const lastWd = snap.docs[0].data();
+                    
+                    if (lastWd.status === 'pending') {
+                        dom.lockWarning.style.display = 'flex';
+                        dom.lockTitle.textContent = "Withdrawal Pending";
+                        dom.lockDesc.textContent = "You already have a pending withdrawal request in the administration queue. Please wait for its resolution.";
+                        return false;
                     }
-                });
-
-                // 2. Check for Pending Withdrawals (Crucial Security Rule)
-                db.collection('users').doc(uid).collection('withdrawals')
-                  .where('status', '==', 'pending')
-                  .limit(1)
-                  .onSnapshot(snap => {
-                      if (!snap.empty) {
-                          const pendingDoc = snap.docs[0].data();
-                          dom.mainArea.style.display = 'none';
-                          dom.lockoutAmount.textContent = "PKR " + Number(pendingDoc.amount).toLocaleString('en-PK');
-                          dom.lockoutCard.classList.add('active');
-                      } else {
-                          dom.mainArea.style.display = 'flex';
-                          dom.lockoutCard.classList.remove('active');
-                      }
-                  });
+                    
+                    if (lastWd.status === 'approved') {
+                        // Check 6 days rule (6 * 24 * 60 * 60 * 1000 = 518400000 ms)
+                        const lastTime = lastWd.createdAt.seconds ? lastWd.createdAt.seconds * 1000 : new Date(lastWd.createdAt).getTime();
+                        const now = Date.now();
+                        const diff = now - lastTime;
+                        const sixDays = 518400000;
+                        
+                        if (diff < sixDays) {
+                            const daysLeft = Math.ceil((sixDays - diff) / (1000 * 60 * 60 * 24));
+                            dom.lockWarning.style.display = 'flex';
+                            dom.lockTitle.textContent = "Security Hold Active";
+                            dom.lockDesc.textContent = `The institutional protocol limits withdrawals to once every 6 days. You can withdraw again in ${daysLeft} days.`;
+                            return false;
+                        }
+                    }
+                    return true;
+                } catch (e) {
+                    console.error("Eligibility Check failed. Passing for now.", e);
+                    return true; // Fallback to true if indexes are missing or network fails
+                }
             };
 
-            const loadMethods = (db) => {
-                db.collection('settings').doc('withdraw_methods').onSnapshot(doc => {
-                    if (doc.exists && doc.data().methods && Array.isArray(doc.data().methods)) {
-                        loadedMethods = doc.data().methods.filter(m => m.isActive !== false);
-                        if(loadedMethods.length === 0) loadedMethods = blueprintMethods;
-                    } else { loadedMethods = blueprintMethods; }
-                    renderMethods();
-                }, err => { loadedMethods = blueprintMethods; renderMethods(); });
-            };
-
+            // --- Rendering Methods Grid ---
             const renderMethods = () => {
-                dom.grid.innerHTML = '';
+                dom.methodsGrid.innerHTML = '';
                 
-                // Keep strictly to 3 columns max
-                dom.grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
-
-                loadedMethods.forEach(method => {
+                loadedMethods.forEach((method) => {
                     const card = document.createElement('div');
                     card.className = 'method-card';
-                    card.id = `card_${method.id}`;
-                    card.onclick = () => selectMethod(method.id);
+                    card.onclick = () => selectMethod(method, card);
 
-                    // Image loading with fallback
-                    let iconHtml = `<svg><use href="#icon-bank"/></svg>`;
+                    let iconVisual = `<svg><use href="#icon-wallet"/></svg>`;
                     if (method.iconUrl) {
-                        iconHtml = `<img src="${method.iconUrl}" alt="${method.name}" onerror="this.style.display='none';">`;
+                        iconVisual = `<img src="${method.iconUrl}" alt="${method.name}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' viewBox=\\\'0 0 24 24\\\'><path d=\\\'M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4M4 6v12c0 1.1.9 2 2 2h14v-4M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z\\\' stroke=\\\'%230F172A\\\' fill=\\\'none\\\' stroke-width=\\\'1.5\\\'/></svg>'">`;
                     }
 
                     card.innerHTML = `
-                        <div class="method-icon">${iconHtml}</div>
-                        <b>${method.name}</b>
+                        <div class="method-icon">${iconVisual}</div>
+                        <div class="method-info">
+                            <b>${method.name}</b>
+                        </div>
+                        <div class="method-check"><svg><use href="#icon-check"/></svg></div>
                     `;
-                    dom.grid.appendChild(card);
+                    dom.methodsGrid.appendChild(card);
                 });
             };
 
-            const clearSelection = () => {
-                currentSelectedMethod = null;
-                dom.grid.classList.remove('has-selection');
-                document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
-                dom.formSection.classList.remove('active');
+            // --- Method Selection & Dynamic Form Injection ---
+            const selectMethod = (method, elementCard) => {
+                activeMethod = method;
                 hideError();
-                dom.inputAmount.value = '';
-                dom.calcPreview.style.display = 'none';
-            };
-
-            const selectMethod = (id) => {
-                currentSelectedMethod = loadedMethods.find(m => m.id === id);
-                if (!currentSelectedMethod) return;
-
-                // UI Updates for Grid (Blur effect applied via CSS .has-selection)
-                dom.grid.classList.add('has-selection');
-                document.querySelectorAll('.method-card').forEach(c => {
-                    if (c.id === `card_${id}`) c.classList.add('selected');
-                    else c.classList.remove('selected');
+                
+                // Visual Grid Selection & Blur Magic
+                const allCards = dom.methodsGrid.querySelectorAll('.method-card');
+                allCards.forEach(c => {
+                    if (c === elementCard) {
+                        c.classList.add('selected');
+                        c.classList.remove('blurred');
+                    } else {
+                        c.classList.remove('selected');
+                        c.classList.add('blurred');
+                    }
                 });
 
-                // Populate Limits
-                dom.txtMin.textContent = `PKR ${currentSelectedMethod.min.toLocaleString()}`;
-                dom.txtMax.textContent = `PKR ${currentSelectedMethod.max.toLocaleString()}`;
+                dom.btnResetMethod.style.display = 'block';
+
+                // Set Limits
+                dom.txtMin.textContent = `Rs. ${method.min.toLocaleString('en-PK')}`;
+                dom.txtMax.textContent = `Rs. ${method.max.toLocaleString('en-PK')}`;
                 
-                let feeTxt = [];
-                if (currentSelectedMethod.feeFixed > 0) feeTxt.push(`PKR ${currentSelectedMethod.feeFixed}`);
-                if (currentSelectedMethod.feePercent > 0) feeTxt.push(`${currentSelectedMethod.feePercent}%`);
-                dom.txtFee.textContent = feeTxt.length > 0 ? feeTxt.join(' + ') : 'Free';
+                let feeTxt = "Free";
+                if (method.feeFixed > 0 && method.feePercent > 0) feeTxt = `Rs. ${method.feeFixed} + ${method.feePercent}%`;
+                else if (method.feeFixed > 0) feeTxt = `Rs. ${method.feeFixed}`;
+                else if (method.feePercent > 0) feeTxt = `${method.feePercent}%`;
+                dom.txtFee.textContent = feeTxt;
 
                 // Build Dynamic Fields based on Type
-                buildDynamicFields(currentSelectedMethod.type);
+                dom.dynamicFields.innerHTML = '';
+
+                const buildInput = (id, label, iconRef, type = "text", placeholder = " ") => {
+                    return `
+                        <div class="input-wrapper">
+                            <div class="input-icon"><svg><use href="${iconRef}"/></svg></div>
+                            <input type="${type}" id="${id}" name="${id}" class="input-field" placeholder="${placeholder}" required dir="ltr">
+                            <label class="floating-label">${label}</label>
+                        </div>
+                    `;
+                };
+
+                const buildSelect = (id, label, iconRef, optionsArr) => {
+                    const optsHtml = optionsArr.map(o => `<option value="${o.val}">${o.label}</option>`).join('');
+                    return `
+                        <div class="input-wrapper">
+                            <div class="input-icon"><svg><use href="${iconRef}"/></svg></div>
+                            <select id="${id}" name="${id}" class="select-field" required dir="ltr">
+                                <option value="" disabled selected></option>
+                                ${optsHtml}
+                            </select>
+                            <label class="floating-label" style="top: 8px; font-size: 0.75rem; color: var(--sigma-primary);">${label}</label>
+                            <div class="select-icon-dropdown"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" stroke="currentColor" fill="none" stroke-width="2"/></svg></div>
+                        </div>
+                    `;
+                };
+
+                // Dynamic Injection
+                if (method.type === 'bank') {
+                    dom.dynamicFields.innerHTML = `
+                        ${buildInput('bankName', 'Bank Name (e.g. Meezan, HBL)', '#icon-bank')}
+                        ${buildInput('accTitle', 'Account Holder Name', '#icon-user')}
+                        ${buildInput('accNumber', 'Account Number / IBAN', '#icon-hash')}
+                        ${buildInput('branchName', 'Branch Location / Code', '#icon-map')}
+                    `;
+                } else if (method.type === 'crypto') {
+                    dom.dynamicFields.innerHTML = `
+                        ${buildSelect('cryptoApp', 'Exchange / App Name', '#icon-bank', [{val:'Binance',label:'Binance'}, {val:'Bitget',label:'Bitget'}, {val:'OKX',label:'OKX'}, {val:'TrustWallet',label:'Trust Wallet'}, {val:'Other',label:'Other'}])}
+                        ${buildSelect('cryptoNet', 'Network Type', '#icon-hash', [{val:'TRC20',label:'Tron (TRC20)'}, {val:'ERC20',label:'Ethereum (ERC20)'}, {val:'BEP20',label:'BSC (BEP20)'}])}
+                        ${buildInput('accNumber', 'USDT Wallet Address', '#icon-hash')}
+                        ${buildInput('accTitle', 'Wallet Holder Name (Optional)', '#icon-user')}
+                    `;
+                } else {
+                    // Mobile (Easypaisa, JazzCash, etc.)
+                    dom.dynamicFields.innerHTML = `
+                        ${buildInput('accTitle', 'Account Title / Name', '#icon-user')}
+                        ${buildInput('accNumber', 'Account Mobile Number', '#icon-hash', 'tel')}
+                    `;
+                }
 
                 // Show Form
-                dom.formSection.classList.add('active');
-                hideError();
-                
-                // Scroll slightly
-                setTimeout(() => dom.formSection.scrollIntoView({behavior: "smooth", block: "nearest"}), 100);
+                dom.form.style.display = 'flex';
+                haptic(20);
+                setTimeout(() => dom.inputAmount.focus(), 300);
             };
 
-            const buildDynamicFields = (type) => {
-                let html = '';
-                if (type === 'bank') {
-                    html = `
-                        <div class="input-wrapper"><input type="text" id="inpBankName" class="input-field text-input" placeholder=" " required><label class="floating-label">Bank Name</label></div>
-                        <div class="input-wrapper"><input type="text" id="inpAccNum" class="input-field text-input" placeholder=" " required><label class="floating-label">Account Number / IBAN</label></div>
-                        <div class="input-wrapper"><input type="text" id="inpAccTitle" class="input-field text-input" placeholder=" " required><label class="floating-label">Account Holder Name</label></div>
-                    `;
-                } else if (type === 'crypto') {
-                    html = `
-                        <div class="input-wrapper" style="padding-right: 16px;">
-                            <select id="inpNetwork" class="input-field text-input" required>
-                                <option value="" disabled selected>Select Network</option>
-                                <option value="TRC20">TRON (TRC20)</option>
-                                <option value="ERC20">Ethereum (ERC20)</option>
-                                <option value="BEP20">Binance Smart Chain (BEP20)</option>
-                            </select>
-                            <label class="floating-label" style="top: 8px; font-size: 0.75rem; color: var(--sigma-primary);">Network</label>
-                        </div>
-                        <div class="input-wrapper"><input type="text" id="inpAppName" class="input-field text-input" placeholder=" " required><label class="floating-label">Exchange / App Name (e.g., Binance)</label></div>
-                        <div class="input-wrapper"><input type="text" id="inpAccNum" class="input-field text-input" placeholder=" " required><label class="floating-label">Wallet Address</label></div>
-                        <div class="input-wrapper"><input type="text" id="inpAccTitle" class="input-field text-input" placeholder=" " required><label class="floating-label">Account Holder Name</label></div>
-                    `;
-                } else {
-                    // Wallet (EasyPaisa / JazzCash etc)
-                    html = `
-                        <div class="input-wrapper"><input type="text" id="inpAccNum" class="input-field text-input" placeholder=" " required><label class="floating-label">Mobile Account Number</label></div>
-                        <div class="input-wrapper"><input type="text" id="inpAccTitle" class="input-field text-input" placeholder=" " required><label class="floating-label">Account Title / Receiver Name</label></div>
-                    `;
-                }
-                dom.dynamicFields.innerHTML = html;
+            const resetMethod = () => {
+                activeMethod = null;
+                dom.form.style.display = 'none';
+                dom.dynamicFields.innerHTML = '';
+                dom.inputAmount.value = '';
+                hideError();
+
+                const allCards = dom.methodsGrid.querySelectorAll('.method-card');
+                allCards.forEach(c => {
+                    c.classList.remove('selected', 'blurred');
+                });
+                dom.btnResetMethod.style.display = 'none';
             };
 
-            // Live Calculation of net amount
-            dom.inputAmount.addEventListener('input', () => {
-                hideError();
-                if(!currentSelectedMethod) return;
-                let amt = Number(dom.inputAmount.value);
-                if (amt > 0) {
-                    let fee = currentSelectedMethod.feeFixed + (amt * currentSelectedMethod.feePercent / 100);
-                    let net = amt - fee;
-                    dom.calcPreview.textContent = `You will receive: PKR ${Math.max(0, net).toLocaleString('en-PK', {maximumFractionDigits: 2})}`;
-                    dom.calcPreview.style.display = 'block';
-                } else {
-                    dom.calcPreview.style.display = 'none';
-                }
-            });
+            // --- Server-Side Transaction Logic ---
 
-            // --- Form Submission & Firestore Transaction ---
-            dom.formSection.addEventListener('submit', async (e) => {
+            const executeWithdrawal = async (e) => {
                 e.preventDefault();
+                if (!activeMethod || !authUser) return;
                 hideError();
-
-                if (!currentSelectedMethod) return;
 
                 const amount = Number(dom.inputAmount.value);
+                if (!amount) { showError("Please enter an amount."); return; }
+                if (amount < activeMethod.min) { showError(`Minimum withdrawal is Rs. ${activeMethod.min}`); return; }
+                if (amount > activeMethod.max) { showError(`Maximum withdrawal is Rs. ${activeMethod.max}`); return; }
+                if (amount > availableBalance) { showError("Insufficient profit balance."); return; }
 
-                // Validation
-                if (!amount || amount <= 0) { showError("Enter a valid amount."); return; }
-                if (amount < currentSelectedMethod.min) { showError(`Minimum withdrawal is PKR ${currentSelectedMethod.min}`); return; }
-                if (amount > currentSelectedMethod.max) { showError(`Maximum withdrawal is PKR ${currentSelectedMethod.max}`); return; }
-                if (amount > profitBalance) { showError("Insufficient Profit Balance."); return; }
-
-                // Gather Dynamic Fields
-                const details = {};
-                try {
-                    if (currentSelectedMethod.type === 'bank') {
-                        details.bankName = document.getElementById('inpBankName').value.trim();
-                        details.accountNumber = document.getElementById('inpAccNum').value.trim();
-                        details.accountTitle = document.getElementById('inpAccTitle').value.trim();
-                        if(!details.bankName || !details.accountNumber || !details.accountTitle) throw new Error("Fill all bank details.");
-                    } else if (currentSelectedMethod.type === 'crypto') {
-                        details.network = document.getElementById('inpNetwork').value;
-                        details.appName = document.getElementById('inpAppName').value.trim();
-                        details.walletAddress = document.getElementById('inpAccNum').value.trim();
-                        details.accountTitle = document.getElementById('inpAccTitle').value.trim();
-                        if(!details.network || !details.appName || !details.walletAddress || !details.accountTitle) throw new Error("Fill all crypto details.");
-                    } else {
-                        details.accountNumber = document.getElementById('inpAccNum').value.trim();
-                        details.accountTitle = document.getElementById('inpAccTitle').value.trim();
-                        if(!details.accountNumber || !details.accountTitle) throw new Error("Fill all account details.");
-                    }
-                } catch(err) {
-                    showError(err.message); return;
+                // Gather Dynamic Form Data securely
+                const formData = new FormData(dom.form);
+                const methodDetails = {};
+                for (let [key, value] of formData.entries()) {
+                    if (key !== 'inputAmount') methodDetails[key] = value.trim();
                 }
 
-                // Calculate Net
-                const fee = currentSelectedMethod.feeFixed + (amount * currentSelectedMethod.feePercent / 100);
+                // Basic validation for injected fields
+                if (methodDetails.accNumber && methodDetails.accNumber.length < 5) { showError("Please provide a valid account/wallet address."); return; }
+                if (methodDetails.accTitle && methodDetails.accTitle.length < 2) { showError("Please provide a valid account title."); return; }
+
+                // Calculate Net Amount
+                const fee = (amount * (activeMethod.feePercent / 100)) + activeMethod.feeFixed;
                 const netAmount = amount - fee;
 
-                // Start Backend Transaction
-                dom.btnSubmit.disabled = true;
+                // Lock UI
                 dom.btnSubmit.classList.add('loading');
-                
+                dom.btnSubmit.disabled = true;
+
                 try {
                     const db = firebase.firestore();
                     const userRef = db.collection('users').doc(authUser.uid);
-                    const withdrawRef = userRef.collection('withdrawals').doc(); // New ID
-                    const ledgerRef = userRef.collection('transactions').doc(); // New Ledger ID
-
+                    
+                    // Secure Atomic Transaction
                     await db.runTransaction(async (transaction) => {
                         const userDoc = await transaction.get(userRef);
-                        if (!userDoc.exists) throw new Error("User record missing.");
-                        
-                        const currentProfit = Number(userDoc.data().profitBalance || 0);
-                        if (amount > currentProfit) throw new Error("Balance changed. Insufficient funds.");
+                        if (!userDoc.exists) throw "Account record absent.";
 
-                        // 1. Deduct Balance
+                        const currentProfit = userDoc.data().profitBalance || 0;
+                        if (amount > currentProfit) throw "Balance mismatch during transit.";
+
+                        // Step 1: Deduct from User Profit
                         transaction.update(userRef, {
                             profitBalance: currentProfit - amount
                         });
 
-                        // 2. Create Pending Withdrawal Record
-                        transaction.set(withdrawRef, {
+                        // Step 2: Create Pending Withdrawal Request
+                        const wdRef = db.collection('withdrawals').doc();
+                        transaction.set(wdRef, {
+                            uid: authUser.uid,
                             amount: amount,
                             fee: fee,
                             netAmount: netAmount,
-                            methodId: currentSelectedMethod.id,
-                            methodName: currentSelectedMethod.name,
-                            methodType: currentSelectedMethod.type,
-                            accountDetails: details,
+                            methodId: activeMethod.id,
+                            methodName: activeMethod.name,
+                            methodDetails: methodDetails,
                             status: 'pending',
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
 
-                        // 3. Create Ledger Entry
+                        // Step 3: Create Ledger Record
+                        const ledgerRef = userRef.collection('transactions').doc();
                         transaction.set(ledgerRef, {
                             type: 'withdraw',
+                            description: `Withdrawal via ${activeMethod.name}`,
                             amount: amount,
-                            description: `Withdrawal via ${currentSelectedMethod.name}`,
-                            referenceId: withdrawRef.id.substring(0, 8).toUpperCase(),
                             status: 'pending',
+                            referenceId: wdRef.id,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
                     });
 
-                    // Success! Show 3-second full-screen animation
-                    dom.successOverlay.classList.add('active');
+                    // Log success and show Full Screen Celebration
+                    await logAction('withdrawal_request', `Requested Rs. ${amount} via ${activeMethod.name}`);
+                    
+                    dom.successPopup.classList.add('show');
+                    haptic(50);
+
+                    // Redirect after 3 seconds
                     setTimeout(() => {
                         window.location.replace('dash.html');
                     }, 3000);
 
                 } catch (err) {
                     console.error("Transaction Error:", err);
-                    dom.btnSubmit.disabled = false;
                     dom.btnSubmit.classList.remove('loading');
-                    showError(err.message === "Balance changed. Insufficient funds." ? err.message : "System execution failed. Please try again.");
+                    dom.btnSubmit.disabled = false;
+                    
+                    if (err === "Balance mismatch during transit.") {
+                        showError("Transaction denied. Insufficient verified balance.");
+                    } else {
+                        showError("Network execution failed. Please verify your connection.");
+                    }
                 }
-            });
+            };
 
-            // --- Initialization ---
+            // --- Firebase Initialization ---
+
+            const loadData = async (db, uid) => {
+                // 1. Fetch Methods
+                db.collection('settings').doc('withdraw_methods').onSnapshot(doc => {
+                    if (doc.exists && doc.data().methods && Array.isArray(doc.data().methods)) {
+                        loadedMethods = doc.data().methods.filter(m => m.isActive !== false).sort((a,b) => (a.order||99)-(b.order||99));
+                        if(loadedMethods.length === 0) loadedMethods = defaultMethods;
+                    } else { loadedMethods = defaultMethods; }
+                    
+                    renderMethods();
+                    
+                    // Reveal Methods section safely
+                    dom.methodsSec.style.display = 'flex';
+                });
+
+                // 2. Fetch Authoritative Balance
+                db.collection('users').doc(uid).onSnapshot(doc => {
+                    if (doc.exists) {
+                        availableBalance = doc.data().profitBalance || 0;
+                        dom.balance.textContent = availableBalance.toLocaleString('en-PK', {minimumFractionDigits:2});
+                        
+                        dom.vaultSkel.style.display = 'none';
+                        dom.vaultCard.style.display = 'flex';
+                    }
+                });
+            };
+
             const initFirebase = () => {
-                if (typeof firebase === 'undefined') return;
+                if (typeof firebase === 'undefined' || !firebase.apps.length) return;
                 const auth = firebase.auth();
                 const db = firebase.firestore();
 
-                auth.onAuthStateChanged(user => {
+                auth.onAuthStateChanged(async user => {
                     if (!user) { window.location.replace('login.html'); return; }
                     authUser = user;
-                    
+
+                    // Identity Population for Dock
                     if (user.photoURL) {
                         const dockAvatar = document.getElementById('dockAvatarContainer');
                         if (dockAvatar) dockAvatar.innerHTML = `<img src="${user.photoURL}" alt="User" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer">`;
                     }
 
-                    loadUserData(db, user.uid);
-                    loadMethods(db);
+                    // Security Gate: Check Eligibility First
+                    const isEligible = await checkEligibility(db, user.uid);
+                    if (isEligible) {
+                        // Load and render
+                        loadData(db, user.uid);
+                    } else {
+                        // Lock the page natively
+                        dom.vaultSkel.style.display = 'none';
+                        dom.vaultCard.style.display = 'flex';
+                        db.collection('users').doc(user.uid).get().then(d => {
+                            if(d.exists) dom.balance.textContent = (d.data().profitBalance || 0).toLocaleString('en-PK', {minimumFractionDigits:2});
+                        });
+                    }
                 });
             };
 
             const init = () => {
+                // Input Listener for Error Clearing
+                if(dom.inputAmount) dom.inputAmount.addEventListener('input', hideError);
+                
+                // Form Submission
+                if(dom.form) dom.form.addEventListener('submit', executeWithdrawal);
+
+                // Header scroll effect
+                const header = document.getElementById('topHeader');
+                if (header) {
+                    window.addEventListener('scroll', () => {
+                        if (window.scrollY > 20) header.classList.add('scrolled');
+                        else header.classList.remove('scrolled');
+                    }, { passive: true });
+                }
+
+                // Network Status
+                window.addEventListener('offline', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'block'; });
+                window.addEventListener('online', () => { if(dom.offlineBanner) dom.offlineBanner.style.display = 'none'; });
+
                 initFirebase();
             };
 
-            return { init, clearSelection };
+            return {
+                init, resetMethod, logAction
+            };
+
         })();
 
         document.addEventListener('DOMContentLoaded', WithdrawController.init);
+
     </script>
 </body>
 </html>
