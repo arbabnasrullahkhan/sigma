@@ -1334,22 +1334,22 @@
                         if (doc.exists) {
                             const data = doc.data();
                             if (data.welcome_bonus_enabled === false) {
-                                bonusBanner.style.display = 'none';
+                                if (bonusBanner) bonusBanner.style.display = 'none';
                                 activeBonusAmount = 0;
                             } else if (typeof data.welcome_bonus !== 'undefined') {
                                 activeBonusAmount = Number(data.welcome_bonus) || 0;
-                                bonusAmountText.textContent = `Rs. ${activeBonusAmount}`;
-                                bonusBanner.style.display = activeBonusAmount > 0 ? 'flex' : 'none';
+                                if (bonusAmountText) bonusAmountText.textContent = `Rs. ${activeBonusAmount}`;
+                                if (bonusBanner) bonusBanner.style.display = activeBonusAmount > 0 ? 'flex' : 'none';
                             }
                         } else {
-                            bonusBanner.style.display = 'flex';
+                            if (bonusBanner) bonusBanner.style.display = 'flex';
                         }
                     } catch (e) {
                         console.warn("Using default welcome bonus config:", e);
-                        bonusBanner.style.display = 'flex';
+                        if (bonusBanner) bonusBanner.style.display = 'flex';
                     }
                 } else {
-                    bonusBanner.style.display = 'flex';
+                    if (bonusBanner) bonusBanner.style.display = 'flex';
                 }
             };
             syncWelcomeBonusConfig();
