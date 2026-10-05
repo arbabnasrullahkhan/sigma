@@ -1,2269 +1,1542 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SIGMA | Member Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sigma | User Dashboard & Financial Terminal</title>
 
-    <!-- =======================================================================
-         SEO, META TAGS & OPEN GRAPH (Optimized for sigma.rf.gd)
-         ======================================================================= -->
-    <meta name="description"
-        content="SIGMA Member Dashboard. Manage your automated investments, track daily PKR profits, and withdraw instantly via Easypaisa or JazzCash.">
-    <meta name="keywords"
-        content="SIGMA Dashboard, Trading Pakistan, Earn PKR, Investment Portfolio, Crypto, Easypaisa, JazzCash">
-    <meta name="author" content="SIGMA Technologies">
+    <!-- SEO & Security Hygiene (Noindex for Authenticated Protected Workspaces) -->
+    <meta name="description" content="Authorized member workspace for Sigma automated portfolios, real-time PKR wallet management, and referral network monitoring.">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#ffffff">
-
-    <!-- PWA & Mobile App Settings -->
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SIGMA">
-    <meta name="robots" content="noindex, nofollow"> <!-- Dashboard should not be indexed by Google -->
-    <link rel="canonical" href="https://sigma.rf.gd/dash.html">
+    <meta name="apple-mobile-web-app-title" content="Sigma Terminal">
+    <link rel="canonical" href="https://sigmaaz.vercel.app/dash.html">
 
-    <!-- Favicon & App Icons -->
+    <!-- Favicon & Touch Icons -->
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="assets/favicon.png">
 
-    <!-- Preconnect & Fonts -->
+    <!-- Typography (Inter & Monospace Numbers) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,500;0,700;0,800;1,600&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDKs (Compat Libraries for Vanilla JS / A to Z Connection) -->
+    <!-- QR Code Generator Engine (Lightweight, Production-Grade CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-    <!-- Connect your Firebase Configuration File Here -->
+    <!-- Centralized Firebase Configuration Reference -->
     <script src="firebase-config.js"></script>
+    <script>
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            const fallbackConfig = {
+                apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
+                authDomain: "week-team.firebaseapp.com",
+                projectId: "week-team",
+                storageBucket: "week-team.firebasestorage.app",
+                messagingSenderId: "480334485782",
+                appId: "1:480334485782:web:c0c886ed710567b9e6d837",
+                measurementId: "G-REGQKRZHX7"
+            };
+            firebase.initializeApp(fallbackConfig);
+            console.log("Sigma Firebase fallback verified.");
+        }
+    </script>
 
     <style>
         /* ==========================================================================
-           1. CSS VARIABLES & DESIGN SYSTEM (SIGMA Premium Light Mode)
+           1. COMPREHENSIVE DESIGN TOKENS (SIGMA LIGHT FINTECH SYSTEM)
            ========================================================================== */
         :root {
-            /* SIGMA Brand Colors */
-            --sigma-primary: #0F172A;
-            /* Deep Slate / Black */
-            --sigma-secondary: #1E293B;
-            /* Lighter Slate */
-            --sigma-accent: #10B981;
-            /* Profit Emerald */
-            --sigma-accent-hover: #059669;
-            /* Darker Emerald */
-            --sigma-accent-light: #D1FAE5;
-            /* Soft Emerald */
-            --sigma-gold: #F59E0B;
-            /* Trust Gold / VIP */
-            --sigma-gold-light: #FEF3C7;
-            --sigma-danger: #EF4444;
-            /* Errors / Blocks */
-            --sigma-danger-light: #FEE2E2;
-            --sigma-info: #3B82F6;
-            /* Blue Information */
-            --sigma-info-light: #DBEAFE;
+            /* Brand Color Architecture */
+            --sigma-primary: #0B132B;       /* Midnight Slate */
+            --sigma-secondary: #1C2541;     /* Corporate Navy */
+            --sigma-surface: #FFFFFF;       /* Pure Elevated Surface */
+            --sigma-subtle: #F8FAFC;        /* Architectural Background */
+            --sigma-muted-border: #E2E8F0;  /* Card Contour */
+            --sigma-input-border: #CBD5E1;
 
-            /* Surfaces & Backgrounds */
-            --bg-body: #F8FAFC;
-            /* Ultra-light gray */
-            --bg-surface: #FFFFFF;
-            /* Pure white */
-            --bg-subtle: #F1F5F9;
-            /* Off white for cards */
-            --bg-glass: rgba(255, 255, 255, 0.85);
+            /* Financial State Indicators */
+            --sigma-accent: #10B981;        /* Yield Emerald */
+            --sigma-accent-dark: #059669;
+            --sigma-accent-soft: #ECFDF5;
+            --sigma-accent-border: #A7F3D0;
 
-            /* Typography */
-            --text-main: #0F172A;
+            --sigma-gold: #F59E0B;          /* VIP & Tier Gold */
+            --sigma-gold-soft: #FEF3C7;
+            --sigma-gold-border: #FDE68A;
+
+            --sigma-danger: #EF4444;        /* Outflow & Hazard */
+            --sigma-danger-soft: #FEE2E2;
+            --sigma-danger-border: #FECACA;
+
+            --sigma-info: #3B82F6;          /* Operational Blue */
+            --sigma-info-soft: #EFF6FF;
+
+            /* Text Hierarchies */
+            --text-heading: #0F172A;
+            --text-body: #334155;
             --text-muted: #64748B;
-            --text-inverse: #FFFFFF;
+            --text-light: #94A3B8;
 
-            /* Borders */
-            --border-light: rgba(15, 23, 42, 0.08);
-            --border-focus: #10B981;
-
-            /* Island UI Layout Settings */
+            /* Radii & Depth Tokens */
             --radius-pill: 9999px;
-            --radius-island: 28px;
-            --radius-card: 20px;
-            --radius-btn: 16px;
+            --radius-xl: 28px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
 
-            /* Premium Shadows */
-            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
-            --shadow-island: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.02);
-            --shadow-float: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-            --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.2);
+            --shadow-subtle: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+            --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+            --shadow-island: 0 20px 40px -15px rgba(15, 23, 42, 0.07), 0 0 0 1px rgba(15, 23, 42, 0.04);
+            --shadow-float: 0 25px 50px -12px rgba(15, 23, 42, 0.18);
 
-            /* Z-Indexes */
-            --z-behind: -1;
-            --z-normal: 1;
-            --z-header: 100;
-            --z-whatsapp: 950;
+            /* Z-Indices */
             --z-dock: 1000;
+            --z-header: 900;
             --z-modal: 2000;
             --z-toast: 3000;
+            --z-banner: 4000;
             --z-blocker: 9999;
 
-            /* Transitions */
-            --transition-fast: 0.2s ease;
-            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-smooth: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* ==========================================================================
-           2. GLOBAL RESET & BASE STYLES
+           2. GLOBAL RESET & FOUNDATIONAL STRUCTURE
            ========================================================================== */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
         }
 
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-        }
+        html { font-size: 16px; scroll-behavior: smooth; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--sigma-subtle);
+            color: var(--text-body);
+            line-height: 1.5;
+            min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: 110px;
-            /* Space for Mobile Dock */
-            background-image:
-                radial-gradient(circle at 10% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 50vw),
-                radial-gradient(circle at 90% 100%, rgba(15, 23, 42, 0.03) 0%, transparent 50vw);
+            padding-bottom: 120px; /* Essential clearance for 3-button floating dock */
+            background-image: 
+                radial-gradient(circle at 10% 0%, rgba(16, 185, 129, 0.04) 0%, transparent 40vw),
+                radial-gradient(circle at 90% 100%, rgba(59, 130, 246, 0.03) 0%, transparent 40vw);
             background-attachment: fixed;
         }
 
-        body.locked {
-            overflow: hidden;
-        }
+        body.locked { overflow: hidden; }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        a { text-decoration: none; color: inherit; }
+        button, input, select { font-family: inherit; border: none; outline: none; background: none; }
+        button { cursor: pointer; }
+        img { max-width: 100%; display: block; }
+        ul { list-style: none; }
 
-        button,
-        input {
-            font-family: inherit;
-            border: none;
-            outline: none;
-            background: none;
-        }
+        h1, h2, h3, h4, h5 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.03em; line-height: 1.2; }
+        p { color: var(--text-muted); }
 
-        button {
-            cursor: pointer;
-        }
-
-        img {
-            max-width: 100%;
-            display: block;
-            height: auto;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5 {
-            color: var(--text-main);
-            font-weight: 800;
-            line-height: 1.2;
-            letter-spacing: -0.03em;
-        }
-
-        p {
-            color: var(--text-muted);
-        }
-
-        .text-accent {
-            color: var(--sigma-accent);
-        }
-
-        .text-primary {
-            color: var(--sigma-primary);
-        }
-
-        .text-danger {
-            color: var(--sigma-danger);
-        }
-
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: -0.5px;
-        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
+        .text-accent { color: var(--sigma-accent); }
+        .text-gold { color: var(--sigma-gold); }
 
         /* ==========================================================================
-           3. ISLAND TOPBAR HEADER
+           3. SYSTEM NETWORK MONITOR & PULL TO REFRESH NOTIFICATION
+           ========================================================================== */
+        #networkOfflineBanner {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: linear-gradient(90deg, #F59E0B, #D97706);
+            color: white; font-size: 0.78rem; font-weight: 800;
+            text-align: center; padding: 6px 12px; z-index: var(--z-banner);
+            display: none; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+
+        .ptr-indicator {
+            position: fixed; top: -60px; left: 50%; transform: translateX(-50%);
+            width: 44px; height: 44px; border-radius: 50%; background: white;
+            box-shadow: var(--shadow-card); display: flex; align-items: center; justify-content: center;
+            color: var(--sigma-accent); z-index: var(--z-header); transition: top 0.2s ease;
+        }
+        .ptr-indicator.active { top: 20px; }
+        .ptr-indicator svg { width: 20px; height: 20px; animation: spin 0.8s linear infinite; }
+
+        /* ==========================================================================
+           4. RESPONSIVE CONTAINER & SINGLE-ROW ISLAND TOPBAR (320px SAFE)
            ========================================================================== */
         .app-container {
-            width: 100%;
-            max-width: 650px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            z-index: var(--z-normal);
+            width: 100%; max-width: 860px; margin: 0 auto;
+            display: flex; flex-direction: column; position: relative; z-index: 1;
         }
 
-        .island-header {
-            position: sticky;
-            top: 12px;
-            margin: 0 16px 20px;
-            height: 72px;
-            background: var(--bg-glass);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: var(--radius-pill);
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 12px 0 20px;
-            z-index: var(--z-header);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+        .island-topbar {
+            position: sticky; top: 12px; margin: 0 16px 20px; height: 68px;
+            background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-radius: var(--radius-pill);
+            box-shadow: var(--shadow-subtle); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 12px 0 18px; z-index: var(--z-header);
+            border: 1px solid rgba(255, 255, 255, 0.85); flex-wrap: nowrap; gap: 8px;
             transition: var(--transition-smooth);
-            animation: fadeInDown 0.5s ease-out;
         }
-
-        .island-header.scrolled {
-            top: 8px;
-            box-shadow: var(--shadow-island);
-            background: rgba(255, 255, 255, 0.98);
-        }
+        .island-topbar.scrolled { top: 8px; box-shadow: var(--shadow-island); background: #FFFFFF; }
 
         .brand-cluster {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 1;
         }
+        .brand-logo-img { width: 34px; height: 34px; object-fit: contain; flex-shrink: 0; }
+        .brand-text-img { height: 19px; object-fit: contain; margin-top: 2px; flex-shrink: 1; min-width: 0; }
 
-        .brand-logo-img {
-            width: 34px;
-            height: 34px;
-            object-fit: contain;
-        }
+        .header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 
-        .brand-text-img {
-            height: 18px;
-            object-fit: contain;
-            margin-top: 2px;
+        .btn-top-action {
+            width: 42px; height: 42px; border-radius: 50%; background: var(--sigma-subtle);
+            color: var(--text-heading); display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--sigma-muted-border); position: relative; transition: var(--transition-fast);
         }
+        .btn-top-action:active { transform: scale(0.92); background: #E2E8F0; }
+        .btn-top-action svg { width: 19px; height: 19px; stroke-width: 2.2; stroke: currentColor; fill: none; }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .unread-dot {
+            position: absolute; top: -1px; right: -1px; width: 11px; height: 11px;
+            background: var(--sigma-danger); border: 2px solid white; border-radius: 50%;
+            display: none;
         }
-
-        .btn-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--bg-subtle);
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition-smooth);
-            border: 1px solid var(--border-light);
-            position: relative;
-        }
-
-        .btn-icon:active {
-            transform: scale(0.92);
-            background: #E2E8F0;
-        }
-
-        .btn-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke-width: 2;
-            stroke: currentColor;
-            fill: none;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: var(--sigma-danger);
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 800;
-            min-width: 18px;
-            height: 18px;
-            border-radius: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--bg-surface);
-            padding: 0 4px;
-        }
+        .unread-dot.active { display: block; }
 
         /* ==========================================================================
-           4. MAIN DASHBOARD CONTENT AREA
+           5. DASHBOARD WORKSPACE CANVAS
            ========================================================================== */
-        .content-area {
-            padding: 0 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .workspace { padding: 0 16px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Identity Strip */
-        .identity-strip {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            background: var(--bg-surface);
-            border-radius: var(--radius-island);
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
-            animation: slideUp 0.5s ease-out 0.1s both;
+        /* Welcome Identity Strip */
+        .identity-card {
+            background: var(--sigma-surface); border-radius: var(--radius-xl);
+            padding: 16px 20px; border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle); display: flex; align-items: center;
+            justify-content: space-between; gap: 12px;
         }
-
-        .id-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .id-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        .user-avatar-wrap {
+            position: relative; width: 48px; height: 48px; flex-shrink: 0;
         }
-
-        .id-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
+        .user-avatar {
+            width: 100%; height: 100%; border-radius: 50%;
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1.15rem; text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.15);
         }
-
-        .id-info h2 {
-            font-size: 1.1rem;
-            margin-bottom: 2px;
+        .avatar-tier-badge {
+            position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px;
+            border-radius: 50%; background: var(--sigma-gold); color: white;
+            display: flex; align-items: center; justify-content: center; border: 2px solid white;
         }
+        .avatar-tier-badge svg { width: 9px; height: 9px; fill: currentColor; }
 
-        .id-info p {
-            font-size: 0.75rem;
-            color: var(--sigma-accent);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+        .id-text { min-width: 0; }
+        .id-text h2 {
+            font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            display: flex; align-items: center; gap: 6px;
         }
-
-        .id-info p svg {
-            width: 12px;
-            height: 12px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 3;
+        .tier-chip {
+            font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: var(--radius-pill);
+            background: var(--sigma-gold-soft); color: #B45309; text-transform: uppercase;
+            letter-spacing: 0.5px; border: 1px solid var(--sigma-gold-border);
         }
+        .id-text p { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
 
-        .id-copy-btn {
-            padding: 8px 14px;
-            background: var(--bg-subtle);
-            color: var(--sigma-primary);
-            border-radius: var(--radius-pill);
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid var(--border-light);
-            transition: var(--transition-smooth);
-        }
-
-        .id-copy-btn:active {
-            transform: scale(0.95);
-            background: #E2E8F0;
-        }
-
-        .id-copy-btn svg {
-            width: 14px;
-            height: 14px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.5;
-        }
-
-        /* ==========================================================================
-           5. PREMIUM BALANCE VAULT
-           ========================================================================== */
-        .vault-card {
-            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            border-radius: var(--radius-island);
-            padding: 28px 24px;
-            color: white;
-            box-shadow: var(--shadow-island);
-            position: relative;
-            overflow: hidden;
-            animation: slideUp 0.5s ease-out 0.2s both;
-        }
-
-        .vault-card::after {
-            content: '';
-            position: absolute;
-            top: -50px;
-            right: -30px;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .vault-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .vault-label {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .vault-label svg {
-            width: 14px;
-            height: 14px;
-            stroke: currentColor;
-            fill: none;
-        }
-
-        .btn-eye {
-            color: rgba(255, 255, 255, 0.7);
+        .id-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .btn-id-pill {
+            padding: 8px 12px; border-radius: var(--radius-pill); background: var(--sigma-subtle);
+            border: 1px solid var(--sigma-muted-border); font-size: 0.78rem; font-weight: 700;
+            color: var(--text-heading); display: inline-flex; align-items: center; gap: 6px;
             transition: var(--transition-fast);
-            padding: 4px;
-            border-radius: 8px;
         }
-
-        .btn-eye:active {
-            color: white;
-            transform: scale(0.9);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-eye svg {
-            width: 22px;
-            height: 22px;
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
-        }
-
-        .vault-amount {
-            font-size: clamp(2.5rem, 8vw, 3rem);
-            font-weight: 900;
-            letter-spacing: -1.5px;
-            margin-bottom: 4px;
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .vault-currency {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.6);
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0;
-        }
-
-        .vault-earning {
-            font-size: 0.9rem;
-            color: var(--sigma-accent-light);
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            position: relative;
-            z-index: 1;
-            background: rgba(16, 185, 129, 0.15);
-            padding: 4px 10px;
-            border-radius: var(--radius-pill);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .vault-earning svg {
-            width: 14px;
-            height: 14px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.5;
-        }
-
-        .vault-footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 16px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .vault-stat {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .vault-stat small {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .vault-stat strong {
-            font-size: 1rem;
-            font-weight: 800;
-            color: white;
-        }
+        .btn-id-pill:active { transform: scale(0.95); background: #E2E8F0; }
+        .btn-id-pill svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
         /* ==========================================================================
-           6. QUICK ACTIONS GRID
+           6. LIVE PROFIT COUNTDOWN CLOCK & SYSTEM ALERT
            ========================================================================== */
-        .actions-island {
-            background: var(--bg-surface);
-            border-radius: var(--radius-island);
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-light);
-            animation: slideUp 0.5s ease-out 0.3s both;
-        }
-
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .live-pulse {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--sigma-accent);
-            background: var(--sigma-accent-light);
-            padding: 4px 10px;
-            border-radius: var(--radius-pill);
-            text-transform: uppercase;
-        }
-
-        .live-pulse::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: var(--sigma-accent);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-        }
-
-        .action-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            background: var(--bg-subtle);
-            padding: 16px 8px;
-            border-radius: var(--radius-card);
-            border: 1px solid var(--border-light);
+        .system-announcement-pill {
+            background: var(--sigma-accent-soft); border: 1px solid var(--sigma-accent-border);
+            padding: 10px 16px; border-radius: var(--radius-md); display: flex;
+            align-items: center; justify-content: space-between; cursor: pointer;
             transition: var(--transition-smooth);
-            cursor: pointer;
-            text-decoration: none;
         }
+        .system-announcement-pill:hover { background: #D1FAE5; }
+        .announcement-text { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; font-weight: 700; color: #065F46; }
+        .announcement-text svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; flex-shrink: 0; }
 
-        .action-btn:active {
-            transform: scale(0.96);
-            background: #E2E8F0;
+        .live-countdown-island {
+            background: var(--sigma-surface); border-radius: var(--radius-lg);
+            border: 1px solid var(--sigma-muted-border); padding: 14px 20px;
+            box-shadow: var(--shadow-subtle); display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 10px;
         }
-
-        .action-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: var(--bg-surface);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-xs);
-            border: 1px solid var(--border-light);
+        .countdown-info { display: flex; align-items: center; gap: 10px; }
+        .pulsing-yield-ring {
+            width: 38px; height: 38px; border-radius: 12px; background: var(--sigma-accent-soft);
+            color: var(--sigma-accent-dark); display: flex; align-items: center; justify-content: center;
+            position: relative;
         }
+        .pulsing-yield-ring svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .countdown-info div small { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .countdown-info div strong { font-size: 0.88rem; color: var(--text-heading); display: block; }
 
-        .action-icon svg {
-            width: 24px;
-            height: 24px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        /* Icon Colors */
-        .ic-deposit {
-            color: var(--sigma-accent);
-            background: rgba(16, 185, 129, 0.05);
-        }
-
-        .ic-withdraw {
-            color: var(--sigma-danger);
-            background: rgba(239, 68, 68, 0.05);
-        }
-
-        .ic-plan {
-            color: var(--sigma-primary);
-        }
-
-        .ic-team {
-            color: var(--sigma-gold);
-            background: rgba(245, 158, 11, 0.05);
-        }
-
-        .ic-support {
-            color: var(--sigma-info);
-            background: rgba(59, 130, 246, 0.05);
-        }
-
-        .ic-history {
-            color: var(--text-muted);
-        }
-
-        .action-btn span {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-main);
+        .clock-display {
+            background: var(--sigma-primary); color: white; padding: 6px 14px;
+            border-radius: var(--radius-pill); font-size: 1.05rem; font-weight: 800;
+            letter-spacing: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
         }
 
         /* ==========================================================================
-           7. 4-GRID STATISTICS
+           7. MULTI-WALLET MATRIX (TOTAL, MAIN, PROFIT, COMMISSION)
            ========================================================================== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            animation: slideUp 0.5s ease-out 0.4s both;
+        .vault-main-card {
+            background: linear-gradient(135deg, var(--sigma-primary) 0%, var(--sigma-secondary) 100%);
+            border-radius: var(--radius-xl); padding: 28px 24px; color: white;
+            box-shadow: var(--shadow-island); position: relative; overflow: hidden;
         }
-
-        .stat-card {
-            background: var(--bg-surface);
-            padding: 16px;
-            border-radius: var(--radius-card);
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .vault-main-card::after {
+            content: ''; position: absolute; -webkit-mask-image: radial-gradient(circle, black 30%, transparent 70%);
+            top: -40px; right: -40px; width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
         }
-
-        .stat-icon-wrap {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .vault-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .vault-top span { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94A3B8; }
+        .btn-eye-toggle {
+            color: #94A3B8; padding: 6px; border-radius: 50%; transition: var(--transition-fast);
         }
+        .btn-eye-toggle:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
+        .btn-eye-toggle svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-        .stat-icon-wrap svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.5;
+        .vault-balance-row { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 16px; }
+        .vault-currency { font-size: 1.4rem; font-weight: 800; color: var(--sigma-accent-light); }
+        .vault-number { font-size: clamp(2.3rem, 7vw, 3.2rem); font-weight: 900; letter-spacing: -1.5px; }
+
+        .vault-action-bar {
+            display: flex; align-items: center; gap: 10px; padding-top: 18px;
+            border-top: 1px solid rgba(255,255,255,0.12); flex-wrap: wrap;
         }
-
-        .stat-card:nth-child(1) .stat-icon-wrap {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--sigma-accent);
+        .btn-vault-action {
+            flex: 1; min-width: 130px; height: 46px; border-radius: var(--radius-btn);
+            font-size: 0.85rem; font-weight: 800; display: inline-flex; align-items: center;
+            justify-content: center; gap: 6px; transition: var(--transition-fast);
         }
-
-        .stat-card:nth-child(2) .stat-icon-wrap {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--sigma-danger);
+        .btn-vault-action.primary {
+            background: var(--sigma-accent); color: white;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
         }
-
-        .stat-card:nth-child(3) .stat-icon-wrap {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--sigma-info);
+        .btn-vault-action.primary:active { transform: scale(0.97); background: var(--sigma-accent-dark); }
+        .btn-vault-action.ghost {
+            background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.18);
         }
+        .btn-vault-action.ghost:active { transform: scale(0.97); background: rgba(255,255,255,0.14); }
+        .btn-vault-action svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
-        .stat-card:nth-child(4) .stat-icon-wrap {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--sigma-warn);
+        /* Triple Modular Pocket Wallets */
+        .pocket-wallets-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
         }
-
-        .stat-card small {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .pocket-card {
+            background: var(--sigma-surface); border-radius: var(--radius-lg);
+            padding: 16px 12px; border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle); display: flex; flex-direction: column;
+            justify-content: space-between; gap: 8px; position: relative;
         }
+        .pocket-head { display: flex; align-items: center; justify-content: space-between; }
+        .pocket-icon-wrap {
+            width: 28px; height: 28px; border-radius: 8px; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .pocket-icon-wrap svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        
+        .p-deposit .pocket-icon-wrap { background: var(--sigma-info-soft); color: var(--sigma-info); }
+        .p-profit .pocket-icon-wrap { background: var(--sigma-accent-soft); color: var(--sigma-accent-dark); }
+        .p-comm .pocket-icon-wrap { background: var(--sigma-gold-soft); color: #B45309; }
 
-        .stat-card b {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--text-main);
-            font-family: 'JetBrains Mono', monospace;
-            word-break: break-word;
-            letter-spacing: -0.5px;
+        .pocket-title { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        .pocket-val { font-size: 1.05rem; font-weight: 800; color: var(--text-heading); word-break: break-all; }
+        .pocket-sub { font-size: 0.65rem; font-weight: 600; color: var(--text-light); }
+
+        @media (max-width: 480px) {
+            .pocket-wallets-grid { grid-template-columns: 1fr; }
+            .pocket-card { padding: 14px 16px; flex-direction: row; align-items: center; }
+            .pocket-head { gap: 10px; }
+            .pocket-val { font-size: 1.15rem; text-align: right; }
         }
 
         /* ==========================================================================
-           8. NETWORK PERFORMANCE (Team Stats)
+           8. ACTION WORKFLOW TERMINAL (6 CORE TILES)
            ========================================================================== */
-        .network-island {
-            background: var(--bg-surface);
-            border-radius: var(--radius-island);
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-light);
-            animation: slideUp 0.5s ease-out 0.5s both;
+        .workspace-panel {
+            background: var(--sigma-surface); border-radius: var(--radius-xl);
+            padding: 22px; border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 16px;
         }
+        .panel-heading {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .panel-heading h3 { font-size: 1.05rem; font-weight: 800; }
+        .panel-heading a { font-size: 0.78rem; font-weight: 700; color: var(--sigma-accent-dark); }
 
-        .network-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 16px;
+        .terminal-actions-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
         }
+        .terminal-btn {
+            background: var(--sigma-subtle); border-radius: var(--radius-md);
+            padding: 16px 8px; border: 1px solid var(--sigma-muted-border);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            transition: var(--transition-fast); text-align: center;
+        }
+        .terminal-btn:active { transform: scale(0.96); background: #E2E8F0; }
+        .terminal-btn-icon {
+            width: 44px; height: 44px; border-radius: var(--radius-md);
+            background: white; display: flex; align-items: center; justify-content: center;
+            box-shadow: var(--shadow-xs); border: 1px solid var(--sigma-muted-border);
+        }
+        .terminal-btn-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .terminal-btn span { font-size: 0.75rem; font-weight: 800; color: var(--text-heading); }
 
-        .net-stat {
-            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            border-radius: var(--radius-card);
-            padding: 16px 8px;
-            color: white;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            box-shadow: 0 8px 16px rgba(15, 23, 42, 0.15);
-        }
-
-        .net-stat:nth-child(2) {
-            background: var(--bg-subtle);
-            color: var(--text-main);
-            border: 1px solid var(--border-light);
-            box-shadow: none;
-        }
-
-        .net-stat:nth-child(2) small {
-            color: var(--text-muted);
-        }
-
-        .net-stat svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .net-stat small {
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0.9;
-        }
-
-        .net-stat b {
-            font-size: 1rem;
-            font-weight: 800;
-            font-family: 'JetBrains Mono', monospace;
-            word-break: break-word;
-        }
+        .c-deposit { color: var(--sigma-info); }
+        .c-withdraw { color: var(--sigma-danger); }
+        .c-plans { color: var(--sigma-primary); }
+        .c-team { color: var(--sigma-gold); }
+        .c-exchange { color: var(--sigma-accent-dark); }
+        .c-support { color: #8B5CF6; }
 
         /* ==========================================================================
-           9. RECENT ACTIVITY LIST
+           9. LIVE TRANSACTION STEPPER (RECENT OUTFLOW/INFLOW)
            ========================================================================== */
-        .activity-island {
-            background: var(--bg-surface);
-            border-radius: var(--radius-island);
-            padding: 24px 24px 8px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-light);
-            animation: slideUp 0.5s ease-out 0.6s both;
-            margin-bottom: 20px;
+        .stepper-card {
+            background: var(--sigma-surface); border-radius: var(--radius-xl);
+            padding: 22px; border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle);
+        }
+        .stepper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .stepper-header h3 { font-size: 1.05rem; }
+        .badge-type {
+            font-size: 0.68rem; font-weight: 800; padding: 3px 8px; border-radius: var(--radius-pill);
+            text-transform: uppercase; background: var(--sigma-subtle); color: var(--text-body);
         }
 
-        .activity-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
+        .stepper-track {
+            display: flex; align-items: center; justify-content: space-between;
+            position: relative; margin: 24px 8px 12px;
         }
-
-        .activity-header h3 {
-            font-size: 1.1rem;
-            font-weight: 800;
+        .stepper-track::before {
+            content: ''; position: absolute; left: 16px; right: 16px; top: 14px;
+            height: 3px; background: var(--sigma-muted-border); z-index: 0;
         }
-
-        .activity-header a {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--sigma-primary);
-            background: var(--bg-subtle);
-            padding: 4px 12px;
-            border-radius: var(--radius-pill);
+        .step-node {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 8px; position: relative; z-index: 1; width: 80px; text-align: center;
         }
-
-        .trx-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border-light);
+        .step-circle {
+            width: 30px; height: 30px; border-radius: 50%; background: white;
+            border: 3px solid var(--sigma-muted-border); display: flex; align-items: center;
+            justify-content: center; transition: var(--transition-smooth);
         }
+        .step-circle svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 3; display: none; }
+        .step-node.completed .step-circle { background: var(--sigma-accent); border-color: var(--sigma-accent); }
+        .step-node.completed .step-circle svg { display: block; }
+        .step-node.current .step-circle { background: white; border-color: var(--sigma-gold); box-shadow: 0 0 0 4px var(--sigma-gold-soft); }
+        .step-node.rejected .step-circle { background: var(--sigma-danger); border-color: var(--sigma-danger); }
+        .step-node.rejected .step-circle svg { display: block; }
 
-        .trx-row:last-child {
-            border-bottom: none;
-        }
+        .step-node span { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); }
+        .step-node.completed span, .step-node.current span { color: var(--text-heading); }
 
-        .trx-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .trx-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .trx-icon svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.5;
-        }
-
-        .ic-green {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--sigma-accent);
-        }
-
-        .ic-red {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--sigma-danger);
-        }
-
-        .trx-info b {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 2px;
-        }
-
-        .trx-info small {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .trx-right {
-            text-align: right;
-        }
-
-        .trx-amt {
-            display: block;
-            font-size: 0.95rem;
-            font-weight: 800;
-            font-family: 'JetBrains Mono', monospace;
-            margin-bottom: 4px;
-        }
-
-        .amt-pos {
-            color: var(--sigma-accent);
-        }
-
-        .amt-neg {
-            color: var(--text-main);
-        }
-
-        .trx-status {
-            display: inline-block;
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding: 2px 8px;
-            border-radius: var(--radius-pill);
-        }
-
-        .st-done {
-            background: rgba(16, 185, 129, 0.1);
-            color: #065F46;
-        }
-
-        .st-pend {
-            background: rgba(245, 158, 11, 0.1);
-            color: #92400E;
+        .rejection-reason-box {
+            margin-top: 16px; padding: 12px 16px; border-radius: var(--radius-md);
+            background: var(--sigma-danger-soft); border: 1px solid var(--sigma-danger-border);
+            color: #991B1B; font-size: 0.8rem; font-weight: 600; display: none;
         }
 
         /* ==========================================================================
-           10. STRICTLY 3-BUTTON MOBILE DOCK (HOME, LOGO, PROFILE)
+           10. REFERRAL NETWORK TREE TABS & STATS (RS. 400, RS. 250, 2%)
+           ========================================================================== */
+        .referral-tree-card {
+            background: var(--sigma-surface); border-radius: var(--radius-xl);
+            padding: 22px; border: 1px solid var(--sigma-muted-border);
+            box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 16px;
+        }
+        .tree-header { display: flex; align-items: center; justify-content: space-between; }
+        
+        .tree-tabs-nav {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            background: var(--sigma-subtle); padding: 4px; border-radius: var(--radius-md);
+        }
+        .tree-tab-btn {
+            padding: 8px 4px; border-radius: 10px; font-size: 0.75rem; font-weight: 800;
+            color: var(--text-muted); transition: var(--transition-fast); text-align: center;
+        }
+        .tree-tab-btn.active {
+            background: white; color: var(--sigma-primary); box-shadow: var(--shadow-xs);
+        }
+
+        .tree-pane-content {
+            background: var(--sigma-subtle); border-radius: var(--radius-lg);
+            padding: 16px; border: 1px solid var(--sigma-muted-border);
+            display: flex; justify-content: space-around; align-items: center; text-align: center;
+        }
+        .tree-metric-col small { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        .tree-metric-col strong { font-size: 1.15rem; font-weight: 900; color: var(--text-heading); display: block; margin-top: 2px;}
+
+        /* ==========================================================================
+           11. STRICT 3-BUTTON FLOATING MOBILE DOCK & ACTION CENTER
            ========================================================================== */
         .mobile-dock {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 76px;
-            width: calc(100% - 40px);
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: var(--radius-island);
-            box-shadow: var(--shadow-float);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            z-index: var(--z-dock);
+            position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+            height: 72px; width: calc(100% - 32px); max-width: 420px;
+            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-float); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 20px; z-index: var(--z-dock);
             border: 1px solid rgba(255, 255, 255, 0.8);
         }
-
-        .dock-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            color: var(--text-muted);
-            width: 64px;
-            height: 64px;
-            border-radius: 20px;
+        .dock-slot {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 4px; color: var(--text-muted); width: 64px; height: 60px;
             transition: var(--transition-bounce);
-            text-decoration: none;
-            cursor: pointer;
         }
+        .dock-slot svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        .dock-slot span { font-size: 0.65rem; font-weight: 800; }
+        .dock-slot.active { color: var(--sigma-accent-dark); }
+        .dock-slot.active svg { stroke-width: 2.6; transform: translateY(-2px); }
 
-        .dock-btn svg {
-            width: 24px;
-            height: 24px;
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
-            transition: var(--transition-smooth);
-        }
-
-        .dock-btn span {
-            font-size: 0.65rem;
-            font-weight: 700;
-        }
-
-        .dock-btn.active {
-            color: var(--sigma-primary);
-            background: var(--bg-subtle);
-        }
-
-        .dock-btn.active svg {
-            transform: translateY(-2px);
-            stroke-width: 2.5;
-        }
-
-        /* Center Dock Logo Button (Opens Quick Actions / Plans) */
-        .dock-center {
-            position: relative;
-            top: -24px;
-            width: 76px;
-            height: 76px;
+        .dock-crest-btn {
+            position: relative; top: -20px; width: 68px; height: 68px;
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
-            border: 5px solid var(--bg-body);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 24px rgba(11, 19, 43, 0.35); border: 4px solid var(--sigma-subtle);
             transition: var(--transition-bounce);
-            z-index: 2;
-            cursor: pointer;
         }
+        .dock-crest-btn:active { transform: scale(0.92); }
+        .dock-crest-btn img { width: 34px; height: 34px; object-fit: contain; }
 
-        .dock-center:active {
-            transform: scale(0.92);
-        }
-
-        .dock-center img {
-            width: 36px;
-            height: 36px;
-            object-fit: contain;
-        }
-
-        .dock-center::after {
-            content: '';
-            position: absolute;
-            inset: -5px;
-            border-radius: 50%;
-            border: 2px solid var(--sigma-accent);
-            opacity: 0;
-            transition: var(--transition-smooth);
-        }
-
-        .dock-center:hover::after {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-
-        /* Floating WhatsApp Button */
-        .whatsapp-float {
-            position: fixed;
-            bottom: 110px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            background: #25D366;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
-            z-index: var(--z-whatsapp);
-            transition: var(--transition-bounce);
-            text-decoration: none;
-        }
-
-        .whatsapp-float svg {
-            width: 32px;
-            height: 32px;
-            fill: currentColor;
-        }
-
-        .whatsapp-float:active {
-            transform: scale(0.9);
-        }
-
-        @media (min-width: 768px) {
-            .mobile-dock {
-                display: none;
-            }
-
-            body {
-                padding-bottom: 0;
-            }
-
-            .whatsapp-float {
-                bottom: 30px;
-                right: 30px;
-                width: 64px;
-                height: 64px;
-            }
+        @media (min-width: 860px) {
+            .mobile-dock { display: none; }
+            body { padding-bottom: 40px; }
         }
 
         /* ==========================================================================
-           11. BOTTOM SHEETS & MODALS (iOS Style)
+           12. BOTTOM SHEETS & SYSTEM MODALS (EXCHANGE, QR, ANNOUNCEMENT)
            ========================================================================== */
         .overlay {
-            position: fixed;
-            inset: 0;
-            z-index: var(--z-modal);
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(4px);
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition-smooth);
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
+            position: fixed; inset: 0; z-index: var(--z-modal);
+            background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
+            opacity: 0; visibility: hidden; transition: var(--transition-smooth);
+            display: flex; align-items: flex-end; justify-content: center;
         }
-
-        .overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        .overlay.show { opacity: 1; visibility: visible; }
+        
         .sheet {
-            width: 100%;
-            max-width: 650px;
-            background: var(--bg-surface);
-            border-radius: 32px 32px 0 0;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%; max-width: 580px; background: var(--sigma-surface);
+            border-radius: 28px 28px 0 0; transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            max-height: 88vh; display: flex; flex-direction: column;
+            box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.15);
         }
+        .overlay.show .sheet { transform: translateY(0); }
 
-        .overlay.show .sheet {
-            transform: translateY(0);
-        }
-
-        .sheet-handle {
-            width: 48px;
-            height: 5px;
-            border-radius: 99px;
-            background: #CBD5E1;
-            margin: 12px auto;
-        }
-
+        .sheet-handle { width: 44px; height: 5px; border-radius: 99px; background: #CBD5E1; margin: 12px auto 4px; }
         .sheet-header {
-            padding: 10px 24px 20px;
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 12px 24px 16px; border-bottom: 1px solid var(--sigma-muted-border);
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .sheet-header h3 {
-            font-size: 1.25rem;
-            font-weight: 800;
+        .sheet-header h3 { font-size: 1.15rem; font-weight: 800; }
+        .sheet-close-btn {
+            width: 32px; height: 32px; border-radius: 50%; background: var(--sigma-subtle);
+            display: flex; align-items: center; justify-content: center; color: var(--text-muted);
         }
+        .sheet-close-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        .sheet-body { padding: 20px 24px 32px; overflow-y: auto; flex: 1; }
 
-        .btn-close {
-            width: 36px;
-            height: 36px;
-            border-radius: 18px;
-            background: var(--bg-body);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            transition: 0.2s;
+        /* Form Components Inside Sheet */
+        .sheet-field { margin-bottom: 16px; }
+        .sheet-field label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
+        .sheet-input-box {
+            width: 100%; height: 52px; border-radius: var(--radius-md); background: var(--sigma-subtle);
+            border: 1px solid var(--sigma-muted-border); padding: 0 14px; font-size: 0.95rem;
+            color: var(--text-heading); font-weight: 600; display: flex; align-items: center;
         }
+        .sheet-input-box select, .sheet-input-box input { width: 100%; height: 100%; font-size: 0.95rem; font-weight: 700; color: var(--text-heading); }
 
-        .btn-close:active {
-            transform: scale(0.9);
-            background: #E2E8F0;
+        .btn-sheet-submit {
+            width: 100%; height: 52px; border-radius: var(--radius-btn);
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            color: white; font-size: 0.95rem; font-weight: 800; display: flex;
+            align-items: center; justify-content: center; gap: 8px; margin-top: 10px;
+            box-shadow: var(--shadow-card); transition: var(--transition-fast);
         }
+        .btn-sheet-submit:active { transform: scale(0.98); }
 
-        .btn-close svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            stroke-width: 2.5;
-            fill: none;
-        }
-
-        .sheet-body {
-            padding: 24px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        /* Referral Hub Content */
-        .ref-hub-card {
-            background: var(--bg-subtle);
-            border-radius: var(--radius-card);
-            padding: 20px;
-            border: 1px solid var(--border-light);
-            margin-bottom: 24px;
-            text-align: center;
-        }
-
-        .ref-hub-card h4 {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .ref-hub-card p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-
-        .ref-link-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-btn);
-            padding: 8px 8px 8px 16px;
-        }
-
-        .ref-link-box input {
-            flex: 1;
-            min-width: 0;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .btn-copy {
-            background: var(--sigma-primary);
-            color: white;
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
-
-        .btn-copy:active {
-            transform: scale(0.95);
-        }
-
-        .btn-copy svg {
-            width: 16px;
-            height: 16px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .commission-struct {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .comm-tier {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-btn);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .comm-tier.highlight {
-            border-color: rgba(16, 185, 129, 0.3);
-            background: rgba(16, 185, 129, 0.05);
-        }
-
-        .tier-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .tier-badge {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: var(--sigma-primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 0.9rem;
-        }
-
-        .comm-tier.highlight .tier-badge {
-            background: var(--sigma-accent);
-        }
-
-        .tier-left span {
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .tier-right {
-            font-size: 1.2rem;
-            font-weight: 900;
-            color: var(--sigma-accent);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Menu Sheet List */
-        .menu-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            background: var(--bg-body);
-            border-radius: var(--radius-btn);
-            font-weight: 700;
-            color: var(--text-main);
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .menu-item:active {
-            transform: scale(0.98);
-            background: var(--bg-subtle);
-        }
-
-        .menu-item svg {
-            width: 22px;
-            height: 22px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            color: var(--text-muted);
-        }
-
-        .menu-item.danger {
-            color: var(--sigma-danger);
-        }
-
-        .menu-item.danger svg {
-            color: var(--sigma-danger);
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            top: 24px;
-            left: 50%;
-            transform: translate(-50%, -20px);
-            background: var(--sigma-primary);
-            color: white;
-            padding: 12px 24px;
-            border-radius: var(--radius-pill);
-            font-size: 0.85rem;
-            font-weight: 600;
-            box-shadow: var(--shadow-float);
-            z-index: var(--z-toast);
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .toast.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, 0);
+        /* QR Modal Area */
+        #qrBoxContainer {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; background: white; border-radius: var(--radius-lg); margin-bottom: 16px;
         }
 
         /* ==========================================================================
-           12. FIREBASE BLOCKER SCREEN
+           13. HARDENED TOAST NOTIFICATION ENGINE
+           ========================================================================== */
+        .toast {
+            position: fixed; top: 20px; left: 50%; transform: translate(-50%, -20px);
+            background: var(--sigma-primary); color: white; padding: 12px 20px;
+            border-radius: var(--radius-pill); font-size: 0.85rem; font-weight: 700;
+            box-shadow: var(--shadow-float); z-index: var(--z-toast); opacity: 0;
+            visibility: hidden; transition: 0.3s ease; display: flex; align-items: center; gap: 8px;
+        }
+        .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+
+        /* ==========================================================================
+           14. ADMIN BLOCKER & SAFETY SCREEN
            ========================================================================== */
         #blockerScreen {
-            position: fixed;
-            inset: 0;
-            z-index: var(--z-blocker);
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            text-align: center;
+            position: fixed; inset: 0; z-index: var(--z-blocker);
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            padding: 24px; text-align: center;
+        }
+        #blockerScreen.active { display: flex; }
+        #blockerScreen svg { width: 72px; height: 72px; stroke: var(--sigma-danger); fill: none; stroke-width: 1.6; margin-bottom: 20px; }
+        #blockerScreen h1 { font-size: 2.2rem; color: var(--sigma-primary); margin-bottom: 10px; }
+        #blockerScreen p { font-size: 1rem; color: var(--text-muted); max-width: 420px; margin-bottom: 24px; }
+        .btn-blocker-contact {
+            background: var(--sigma-danger); color: white; padding: 14px 28px;
+            border-radius: var(--radius-pill); font-weight: 800; font-size: 0.95rem;
         }
 
-        #blockerScreen.active {
-            display: flex;
-        }
-
-        #blockerScreen svg {
-            width: 80px;
-            height: 80px;
-            stroke: var(--sigma-danger);
-            fill: none;
-            stroke-width: 1.5;
-            margin-bottom: 24px;
-            animation: pulse 2s infinite;
-        }
-
-        #blockerScreen h1 {
-            font-size: 2.5rem;
-            color: var(--sigma-primary);
-            margin-bottom: 16px;
-            letter-spacing: -1px;
-        }
-
-        #blockerScreen p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            max-width: 400px;
-            margin-bottom: 32px;
-        }
-
-        .btn-blocker {
-            background: var(--sigma-danger);
-            color: white;
-            padding: 16px 32px;
-            border-radius: var(--radius-pill);
-            font-weight: 800;
-            font-size: 1.1rem;
-            text-decoration: none;
-        }
-
-        /* Animations */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.1);
-                opacity: 0.7;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Skeleton Loading for Firebase Data */
-        .skeleton {
-            background: #E2E8F0;
-            color: transparent !important;
-            border-radius: 4px;
-            animation: skeletonPulse 1.5s infinite ease-in-out;
-        }
-
-        @keyframes skeletonPulse {
-            0% {
-                opacity: 0.6;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0.6;
-            }
-        }
+        /* Skeleton States */
+        .skeleton { background: #E2E8F0; color: transparent !important; border-radius: 6px; animation: skel 1.4s infinite ease-in-out; }
+        @keyframes skel { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-
 <body>
 
-    <!-- =======================================================================
-         SVG SPRITES
-         ======================================================================= -->
-    <svg width="0" height="0" style="display:none;" aria-hidden="true">
-        <symbol id="icon-home" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22" />
-        </symbol>
-        <symbol id="icon-user" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-        </symbol>
-        <symbol id="icon-bell" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </symbol>
-        <symbol id="icon-menu" viewBox="0 0 24 24">
-            <line x1="3" y1="12" x2="21" y2="12" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="3" y1="6" x2="21" y2="6" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="3" y1="18" x2="21" y2="18" stroke-linecap="round" stroke-linejoin="round" />
-        </symbol>
-        <symbol id="icon-copy" viewBox="0 0 24 24">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round" />
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-        </symbol>
-        <symbol id="icon-eye" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-            <circle cx="12" cy="12" r="3" />
-        </symbol>
-        <symbol id="icon-eye-off" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-            <line x1="1" y1="1" x2="23" y2="23" stroke-linecap="round" stroke-linejoin="round" />
-        </symbol>
-        <symbol id="icon-arrow-down" viewBox="0 0 24 24">
-            <line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round" stroke-linejoin="round" />
-            <polyline stroke-linecap="round" stroke-linejoin="round" points="19 12 12 19 5 12" />
-        </symbol>
-        <symbol id="icon-arrow-up" viewBox="0 0 24 24">
-            <line x1="12" y1="19" x2="12" y2="5" stroke-linecap="round" stroke-linejoin="round" />
-            <polyline stroke-linecap="round" stroke-linejoin="round" points="5 12 12 5 19 12" />
-        </symbol>
-        <symbol id="icon-pie" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z" />
-        </symbol>
-        <symbol id="icon-users" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-        </symbol>
-        <symbol id="icon-lifebuoy" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round" />
-            <circle cx="12" cy="12" r="4" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="4.93" y1="4.93" x2="9.17" y2="9.17" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="14.83" y1="14.83" x2="19.07" y2="19.07" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="14.83" y1="9.17" x2="19.07" y2="4.93" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="14.83" y1="9.17" x2="18.36" y2="5.64" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="4.93" y1="19.07" x2="9.17" y2="14.83" stroke-linecap="round" stroke-linejoin="round" />
-        </symbol>
-        <symbol id="icon-receipt" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2L18 3l-2-1-2 1-2-1-2 1-2-1-2 1Z" />
-            <line x1="16" y1="8" x2="8" y2="8" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="16" y1="12" x2="8" y2="12" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="10" y1="16" x2="8" y2="16" stroke-linecap="round" stroke-linejoin="round" />
-        </symbol>
-        <symbol id="icon-logout" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
-        </symbol>
-        <symbol id="icon-x" viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round" stroke-linejoin="round" />
-        </symbol>
-        <symbol id="icon-check" viewBox="0 0 24 24">
-            <polyline stroke-linecap="round" stroke-linejoin="round" points="20 6 9 17 4 12" />
-        </symbol>
-        <symbol id="icon-alert-triangle" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-            <line x1="12" y1="9" x2="12" y2="13" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-linejoin="round" />
-        </symbol>
-        <symbol id="icon-whatsapp" viewBox="0 0 24 24">
-            <path
-                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-        </symbol>
-    </svg>
+    <!-- Offline Network Monitor Bar -->
+    <div id="networkOfflineBanner">Reconnecting to Sigma Core Node...</div>
 
-    <!-- =======================================================================
-         FIREBASE ADMIN BLOCKER / MAINTENANCE SCREEN
-         ======================================================================= -->
-    <div id="blockerScreen">
-        <svg>
-            <use href="#icon-alert-triangle"></use>
-        </svg>
-        <h1 id="blockerTitle">Access Restricted</h1>
-        <p id="blockerMsg">Please wait while we verify your account status.</p>
-        <a href="https://wa.me/923000000000" class="btn-blocker">Contact Support</a>
+    <!-- Pull to Refresh Visual Spinner -->
+    <div class="ptr-indicator" id="ptrSpinner">
+        <svg viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
     </div>
 
-    <!-- =======================================================================
-         MAIN APP CONTAINER
-         ======================================================================= -->
+    <!-- SVG System Assets -->
+    <svg width="0" height="0" style="display:none;" aria-hidden="true">
+        <symbol id="icon-crown" viewBox="0 0 24 24"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5v-2z"/></symbol>
+        <symbol id="icon-wallet" viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></symbol>
+        <symbol id="icon-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
+        <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+        <symbol id="icon-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
+        <symbol id="icon-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+        <symbol id="icon-eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></symbol>
+        <symbol id="icon-arrow-down" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></symbol>
+        <symbol id="icon-arrow-up" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+        <symbol id="icon-exchange" viewBox="0 0 24 24"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"/></symbol>
+        <symbol id="icon-pie" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z"/></symbol>
+        <symbol id="icon-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+        <symbol id="icon-lifebuoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/></symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+        <symbol id="icon-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+        <symbol id="icon-shield-alert" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+    </svg>
+
+    <!-- Administrative Blocker Screen -->
+    <div id="blockerScreen">
+        <svg><use href="#icon-shield-alert"/></svg>
+        <h1 id="blockerTitle">Access Suspended</h1>
+        <p id="blockerMsg">Security protocols have placed this session on hold. Contact administrator verification.</p>
+        <a href="https://wa.me/923000000000" class="btn-blocker-contact">Open Priority Support</a>
+    </div>
+
+    <!-- Main Mobile & Responsive Workspace Frame -->
     <div class="app-container">
 
-        <!-- ISLAND TOPBAR -->
-        <header class="island-header" id="mainHeader">
+        <!-- 320px Safe Single-Row Header -->
+        <header class="island-topbar" id="mainHeader">
             <div class="brand-cluster">
-                <img src="assets/logo.png" alt="SIGMA" class="brand-logo-img">
-                <img src="assets/textlogo.png" alt="SIGMA" class="brand-text-img">
+                <img src="assets/logo.png" alt="Sigma Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+                <img src="assets/textlogo.png" alt="Sigma" class="brand-text-img" onerror="this.style.display='none'">
             </div>
-
+            
             <div class="header-actions">
-                <button class="btn-icon" aria-label="Notifications" onclick="openSheet('sheetNotif')">
-                    <svg>
-                        <use href="#icon-bell"></use>
-                    </svg>
-                    <span class="notification-badge">2</span>
+                <button class="btn-top-action" onclick="openSheet('sheetNotif')" aria-label="Notifications">
+                    <svg><use href="#icon-bell"/></svg>
+                    <span class="unread-dot" id="headerNotifDot"></span>
                 </button>
-                <button class="btn-icon" aria-label="Menu" onclick="openSheet('sheetMenu')">
-                    <svg>
-                        <use href="#icon-menu"></use>
-                    </svg>
+                <button class="btn-top-action" onclick="openSheet('sheetMenu')" aria-label="Terminal Navigation">
+                    <svg><use href="#icon-menu"/></svg>
                 </button>
             </div>
         </header>
 
-        <main class="content-area">
+        <!-- Primary Body Modules -->
+        <main class="workspace">
 
-            <!-- IDENTITY STRIP (Firebase Populated) -->
-            <div class="identity-strip">
+            <!-- Dynamic Identity Strip with Level Badge -->
+            <section class="identity-card">
                 <div class="id-left">
-                    <div class="id-avatar" id="uiAvatar">S</div>
-                    <div class="id-info">
-                        <h2 id="uiName" class="skeleton">Fetching Name</h2>
-                        <p><svg>
-                                <use href="#icon-check-circle"></use>
-                            </svg> Verified Investor</p>
+                    <div class="user-avatar-wrap">
+                        <div class="user-avatar" id="uiAvatarLetter">S</div>
+                        <div class="avatar-tier-badge"><svg><use href="#icon-crown"/></svg></div>
+                    </div>
+                    <div class="id-text">
+                        <h2><span id="uiDisplayName" class="skeleton">Investor Account</span> <span class="tier-chip" id="uiTierBadge">Bronze</span></h2>
+                        <p id="uiAccountUID" class="font-mono">UID: SIGMA-••••</p>
                     </div>
                 </div>
-                <button class="id-copy-btn" onclick="copyRefLink()">
-                    Copy Link <svg>
-                        <use href="#icon-copy"></use>
-                    </svg>
-                </button>
-                <!-- Hidden Ref Link (Generated by JS) -->
-                <input type="hidden" id="userRefLink" value="">
-            </div>
+                <div class="id-actions">
+                    <button class="btn-id-pill" onclick="openQrModal()" title="Show Invite QR"><svg><use href="#icon-qr"/></svg></button>
+                    <button class="btn-id-pill" onclick="copyReferralLink()"><svg><use href="#icon-copy"/></svg></button>
+                </div>
+                <input type="hidden" id="rawReferralUrl" value="">
+            </section>
 
-            <!-- PREMIUM BALANCE VAULT -->
-            <div class="vault-card">
-                <div class="vault-header">
-                    <span class="vault-label"><svg>
-                            <use href="#icon-wallet"></use>
-                        </svg> Available Balance</span>
-                    <button class="btn-eye" id="btnToggleBal" aria-label="Toggle Visibility">
-                        <svg id="iconBalEye">
-                            <use href="#icon-eye"></use>
-                        </svg>
+            <!-- Real-Time Admin Notice Broadcast -->
+            <section class="system-announcement-pill" id="announcementPill" onclick="openAnnouncementModal()" style="display: none;">
+                <div class="announcement-text">
+                    <svg><use href="#icon-bell"/></svg>
+                    <span id="announcementHeadline">Bank IBFT clearing schedule announcement</span>
+                </div>
+                <span style="font-size: 0.7rem; font-weight: 800; color: #065F46;">READ &rarr;</span>
+            </section>
+
+            <!-- Digital Payout Cycle Clock -->
+            <section class="live-countdown-island">
+                <div class="countdown-info">
+                    <div class="pulsing-yield-ring"><svg><use href="#icon-pie"/></svg></div>
+                    <div>
+                        <small>Next Profit Credit</small>
+                        <strong>Active Portfolio Distribution</strong>
+                    </div>
+                </div>
+                <div class="clock-display font-mono" id="profitClockDisplay">00:00:00</div>
+            </section>
+
+            <!-- Multi-Wallet Core Engine -->
+            <section class="vault-main-card">
+                <div class="vault-top">
+                    <span>Total Net Worth (Combined)</span>
+                    <button class="btn-eye-toggle" id="btnEyeToggle" aria-label="Toggle Confidentiality">
+                        <svg id="eyeIconElem"><use href="#icon-eye"/></svg>
                     </button>
                 </div>
 
-                <div class="vault-amount">
-                    <span class="vault-currency">Rs</span>
-                    <span id="txtBalance" class="skeleton" data-val="0.00">0.00</span>
+                <div class="vault-balance-row">
+                    <span class="vault-currency">Rs.</span>
+                    <span class="vault-number font-mono" id="uiNetBalance" data-real="0">0.00</span>
                 </div>
 
-                <div class="vault-earning">
-                    <svg>
-                        <use href="#icon-arrow-up"></use>
-                    </svg>
-                    <span>Earned Today: Rs <span id="txtEarningToday" class="skeleton"
-                            data-val="0.00">0.00</span></span>
+                <div class="vault-action-bar">
+                    <a href="deposit.html" class="btn-vault-action primary">
+                        <svg><use href="#icon-arrow-down"/></svg> Deposit
+                    </a>
+                    <a href="withdraw.html" class="btn-vault-action ghost">
+                        <svg><use href="#icon-arrow-up"/></svg> Withdraw
+                    </a>
+                    <button class="btn-vault-action ghost" onclick="openSheet('sheetExchange')">
+                        <svg><use href="#icon-exchange"/></svg> Transfer
+                    </button>
                 </div>
+            </section>
 
-                <div class="vault-footer">
-                    <div class="vault-stat">
-                        <small>Total Invested</small>
-                        <strong>Rs <span id="txtInvested" class="skeleton">0.00</span></strong>
+            <!-- Distinct Modular Multi-Wallet Matrix -->
+            <section class="pocket-wallets-grid">
+                <!-- 1. Main Wallet -->
+                <div class="pocket-card p-deposit">
+                    <div class="pocket-head">
+                        <span class="pocket-title">Deposit / Main</span>
+                        <div class="pocket-icon-wrap"><svg><use href="#icon-wallet"/></svg></div>
                     </div>
-                    <div class="vault-stat" style="text-align: right;">
-                        <small>Total Withdrawn</small>
-                        <strong>Rs <span id="txtWithdrawn" class="skeleton">0.00</span></strong>
-                    </div>
+                    <div class="pocket-val font-mono" id="uiDepositWallet" data-real="0">Rs. 0.00</div>
+                    <div class="pocket-sub">Plans Buying Only</div>
                 </div>
-            </div>
 
-            <!-- QUICK ACTIONS HUB -->
-            <div class="actions-island">
-                <div class="section-title">
-                    Quick Actions
-                    <span class="live-pulse">Live</span>
+                <!-- 2. Profit Wallet -->
+                <div class="pocket-card p-profit">
+                    <div class="pocket-head">
+                        <span class="pocket-title">Profit / ROI</span>
+                        <div class="pocket-icon-wrap"><svg><use href="#icon-arrow-up"/></svg></div>
+                    </div>
+                    <div class="pocket-val font-mono" id="uiProfitWallet" data-real="0">Rs. 0.00</div>
+                    <div class="pocket-sub">100% Withdrawable</div>
                 </div>
-                <div class="action-grid">
-                    <a href="deposit.html" class="action-btn">
-                        <div class="action-icon ic-deposit"><svg>
-                                <use href="#icon-arrow-down"></use>
-                            </svg></div>
+
+                <!-- 3. Commission Wallet -->
+                <div class="pocket-card p-comm">
+                    <div class="pocket-head">
+                        <span class="pocket-title">Commission</span>
+                        <div class="pocket-icon-wrap"><svg><use href="#icon-crown"/></svg></div>
+                    </div>
+                    <div class="pocket-val font-mono" id="uiCommissionWallet" data-real="0">Rs. 0.00</div>
+                    <div class="pocket-sub">L1, L2, L3 Bonuses</div>
+                </div>
+            </section>
+
+            <!-- Terminal Actions Hub (6 Operational Grid Tiles) -->
+            <section class="workspace-panel">
+                <div class="panel-heading">
+                    <h3>Action Terminal</h3>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: var(--sigma-accent-dark);">ENCRYPTED</span>
+                </div>
+                <div class="terminal-actions-grid">
+                    <a href="deposit.html" class="terminal-btn">
+                        <div class="terminal-btn-icon c-deposit"><svg><use href="#icon-arrow-down"/></svg></div>
                         <span>Deposit</span>
                     </a>
-                    <a href="withdraw.html" class="action-btn">
-                        <div class="action-icon ic-withdraw"><svg>
-                                <use href="#icon-arrow-up"></use>
-                            </svg></div>
+                    <a href="withdraw.html" class="terminal-btn">
+                        <div class="terminal-btn-icon c-withdraw"><svg><use href="#icon-arrow-up"/></svg></div>
                         <span>Withdraw</span>
                     </a>
-                    <a href="plans.html" class="action-btn">
-                        <div class="action-icon ic-plan"><svg>
-                                <use href="#icon-layers"></use>
-                            </svg></div>
-                        <span>My Plans</span>
+                    <a href="plans.html" class="terminal-btn">
+                        <div class="terminal-btn-icon c-plans"><svg><use href="#icon-pie"/></svg></div>
+                        <span>Portfolios</span>
                     </a>
-                    <a href="#" class="action-btn" onclick="openSheet('sheetReferral'); return false;">
-                        <div class="action-icon ic-team"><svg>
-                                <use href="#icon-users"></use>
-                            </svg></div>
-                        <span>Team</span>
+                    <button class="terminal-btn" onclick="openSheet('sheetExchange')">
+                        <div class="terminal-btn-icon c-exchange"><svg><use href="#icon-exchange"/></svg></div>
+                        <span>Exchange</span>
+                    </button>
+                    <a href="team.html" class="terminal-btn">
+                        <div class="terminal-btn-icon c-team"><svg><use href="#icon-users"/></svg></div>
+                        <span>Network</span>
                     </a>
-                    <a href="support.html" class="action-btn">
-                        <div class="action-icon ic-support"><svg>
-                                <use href="#icon-lifebuoy"></use>
-                            </svg></div>
+                    <a href="support.html" class="terminal-btn">
+                        <div class="terminal-btn-icon c-support"><svg><use href="#icon-lifebuoy"/></svg></div>
                         <span>Support</span>
                     </a>
-                    <a href="transactions.html" class="action-btn">
-                        <div class="action-icon ic-history"><svg>
-                                <use href="#icon-receipt"></use>
-                            </svg></div>
-                        <span>History</span>
-                    </a>
                 </div>
-            </div>
+            </section>
 
-            <!-- 4-GRID STATISTICS -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon-wrap"><svg>
-                            <use href="#icon-arrow-down"></use>
-                        </svg></div>
-                    <small>Pending Deposit</small>
-                    <b>Rs <span id="txtPendDep" class="skeleton">0.00</span></b>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon-wrap"><svg>
-                            <use href="#icon-arrow-up"></use>
-                        </svg></div>
-                    <small>Pending Withdraw</small>
-                    <b>Rs <span id="txtPendWith" class="skeleton">0.00</span></b>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon-wrap"><svg>
-                            <use href="#icon-pie"></use>
-                        </svg></div>
-                    <small>Active Plans</small>
-                    <b id="txtActivePlans" class="skeleton" style="font-family: 'Inter', sans-serif;">0</b>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon-wrap"><svg>
-                            <use href="#icon-gift"></use>
-                        </svg></div>
-                    <small>Team Bonus</small>
-                    <b>Rs <span id="txtTeamBonus" class="skeleton">0.00</span></b>
-                </div>
-            </div>
-
-            <!-- NETWORK PERFORMANCE (Team Stats) -->
-            <div class="network-island">
-                <div class="section-title">Network Performance</div>
-                <div class="network-grid">
-                    <div class="net-stat">
-                        <svg>
-                            <use href="#icon-users"></use>
-                        </svg>
-                        <small>Total Team</small>
-                        <b id="txtTotalTeam" class="skeleton">0</b>
+            <!-- Live Stepper for Pending Transaction Lifecycle -->
+            <section class="stepper-card" id="stepperLifecycleBox" style="display: none;">
+                <div class="stepper-header">
+                    <div>
+                        <span class="badge-type" id="stepperTrxType">Transaction</span>
+                        <h3 id="stepperTrxAmount" class="font-mono" style="margin-top: 4px;">Rs. 0.00</h3>
                     </div>
-                    <div class="net-stat">
-                        <svg>
-                            <use href="#icon-pie"></use>
-                        </svg>
-                        <small>Team Invest</small>
-                        <b class="skeleton" id="txtTeamInvest">Rs 0</b>
-                    </div>
-                    <div class="net-stat">
-                        <svg>
-                            <use href="#icon-arrow-up"></use>
-                        </svg>
-                        <small>L1 Active</small>
-                        <b id="txtL1Active" class="skeleton">0</b>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RECENT ACTIVITY (Mocked for UI perfection, populated via JS in real app) -->
-            <div class="activity-island">
-                <div class="activity-header">
-                    <h3>Recent Activity</h3>
-                    <a href="transactions.html">View All</a>
+                    <span id="stepperReference" class="font-mono" style="font-size: 0.75rem; color: var(--text-muted);">REF-••••</span>
                 </div>
 
-                <div id="activityList">
-                    <!-- Trx 1 -->
-                    <div class="trx-row">
-                        <div class="trx-left">
-                            <div class="trx-icon ic-green"><svg>
-                                    <use href="#icon-arrow-down"></use>
-                                </svg></div>
-                            <div class="trx-info">
-                                <b>Deposit via Easypaisa</b>
-                                <small>Today, 14:30</small>
-                            </div>
-                        </div>
-                        <div class="trx-right">
-                            <span class="trx-amt amt-pos">+15,000</span>
-                            <span class="trx-status st-done">Done</span>
-                        </div>
+                <div class="stepper-track">
+                    <div class="step-node completed" id="stepNode1">
+                        <div class="step-circle"><svg><use href="#icon-check"/></svg></div>
+                        <span>Submitted</span>
                     </div>
-
-                    <!-- Trx 2 -->
-                    <div class="trx-row">
-                        <div class="trx-left">
-                            <div class="trx-icon ic-red"><svg>
-                                    <use href="#icon-arrow-up"></use>
-                                </svg></div>
-                            <div class="trx-info">
-                                <b>Withdraw via JazzCash</b>
-                                <small>Yesterday, 09:15</small>
-                            </div>
-                        </div>
-                        <div class="trx-right">
-                            <span class="trx-amt amt-neg">-4,500</span>
-                            <span class="trx-status st-pend">Pending</span>
-                        </div>
+                    <div class="step-node current" id="stepNode2">
+                        <div class="step-circle"><svg><use href="#icon-check"/></svg></div>
+                        <span>Review</span>
+                    </div>
+                    <div class="step-node" id="stepNode3">
+                        <div class="step-circle"><svg><use href="#icon-check"/></svg></div>
+                        <span id="step3Label">Dispatched</span>
                     </div>
                 </div>
-            </div>
+
+                <div class="rejection-reason-box" id="stepperRejectionDetails">
+                    <strong>Admin Verification Note:</strong> <span id="rejectionReasonText">None</span>
+                </div>
+            </section>
+
+            <!-- Interactive 3-Tier Referral Tree Explorer -->
+            <section class="referral-tree-card">
+                <div class="tree-header">
+                    <div>
+                        <h3>Referral Network Matrix</h3>
+                        <p style="font-size: 0.78rem;">Verified Ledger Distributions</p>
+                    </div>
+                    <button class="btn-id-pill" onclick="openQrModal()"><svg><use href="#icon-qr"/></svg> Invite QR</button>
+                </div>
+
+                <div class="tree-tabs-nav">
+                    <button class="tree-tab-btn active" onclick="switchTreeTier(1, this)">Level 1 (Rs. 400)</button>
+                    <button class="tree-tab-btn" onclick="switchTreeTier(2, this)">Level 2 (Rs. 250)</button>
+                    <button class="tree-tab-btn" onclick="switchTreeTier(3, this)">Level 3 (2.0%)</button>
+                </div>
+
+                <div class="tree-pane-content" id="treeTierContent">
+                    <div class="tree-metric-col">
+                        <small>Total Members</small>
+                        <strong id="tierMembersCount" class="font-mono">0</strong>
+                    </div>
+                    <div class="tree-metric-col" style="border-left: 1px solid var(--sigma-muted-border); border-right: 1px solid var(--sigma-muted-border); padding: 0 10px;">
+                        <small>Active Plans</small>
+                        <strong id="tierActiveCount" class="font-mono">0</strong>
+                    </div>
+                    <div class="tree-metric-col">
+                        <small>Bonus Released</small>
+                        <strong id="tierCommissionEarned" class="font-mono text-accent">Rs. 0</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Immutable Historical Transaction Ledger Snippet -->
+            <section class="workspace-panel" style="padding-bottom: 8px;">
+                <div class="panel-heading">
+                    <h3>Recent Ledger Records</h3>
+                    <a href="transactions.html">Full History &rarr;</a>
+                </div>
+                <div id="recentTransactionList">
+                    <div style="padding: 24px 0; text-align: center; color: var(--text-light); font-size: 0.85rem;">
+                        Connecting to authenticated ledger...
+                    </div>
+                </div>
+            </section>
 
         </main>
+
+        <!-- Fixed Floating 3-Button Dock (Mobile / APK Native Shell) -->
+        <nav class="mobile-dock" aria-label="Primary Mobile Commands">
+            <a href="dash.html" class="dock-slot active" aria-current="page">
+                <svg><use href="#icon-wallet"/></svg>
+                <span>Terminal</span>
+            </a>
+
+            <!-- Centralized Crest Button -->
+            <a href="plans.html" class="dock-crest-btn" aria-label="Available Portfolios">
+                <img src="assets/logo.png" alt="Sigma Crest" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+            </a>
+
+            <a href="profile.html" class="dock-slot">
+                <svg><use href="#icon-menu"/></svg>
+                <span>Account</span>
+            </a>
+        </nav>
     </div>
 
-    <!-- =======================================================================
-         FLOATING WHATSAPP BUTTON (Links to Channel/Support)
-         ======================================================================= -->
-    <a href="https://whatsapp.com/channel/yourchannelid" target="_blank" class="whatsapp-float"
-        aria-label="Join our WhatsApp Channel">
-        <svg>
-            <use href="#icon-whatsapp"></use>
-        </svg>
-    </a>
-
-    <!-- =======================================================================
-         MOBILE DOCK (Strictly 3 Buttons - Center is Logo)
-         ======================================================================= -->
-    <nav class="mobile-dock">
-        <a href="dash.html" class="dock-btn active">
-            <svg>
-                <use href="#icon-home"></use>
-            </svg>
-            <span>Home</span>
-        </a>
-
-        <!-- Center Logo Button (Opens Plans) -->
-        <a href="plans.html" class="dock-center" aria-label="Investment Plans">
-            <img src="assets/logo.png" alt="SIGMA">
-        </a>
-
-        <a href="profile.html" class="dock-btn">
-            <svg>
-                <use href="#icon-user"></use>
-            </svg>
-            <span>Profile</span>
-        </a>
-    </nav>
-
-    <!-- =======================================================================
-         BOTTOM SHEETS & MODALS (iOS Style)
-         ======================================================================= -->
-
-    <!-- 1. REFERRAL HUB SHEET (Strict 400, 250, 2% Structure) -->
-    <div class="overlay" id="sheetReferral">
+    <!-- ==========================================================================
+         INTERNAL WALLET EXCHANGE MODAL (PROFIT/COMMISSION -> DEPOSIT WALLET)
+         ========================================================================== -->
+    <div class="overlay" id="sheetExchange">
         <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <div>
-                    <h3>Referral Hub</h3>
-                    <p>Invite friends and earn instant cash.</p>
-                </div>
-                <button class="btn-close" onclick="closeSheet('sheetReferral')"><svg>
-                        <use href="#icon-x"></use>
-                    </svg></button>
+                <h3>Internal Wallet Transfer</h3>
+                <button class="sheet-close-btn" onclick="closeSheet('sheetExchange')"><svg><use href="#icon-x"/></svg></button>
             </div>
             <div class="sheet-body">
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
+                    Transfer your earned profits or referral bonuses to your <strong>Deposit Wallet</strong> instantly to purchase new investment plans without external gateway fees.
+                </p>
 
-                <div class="ref-hub-card">
-                    <h4>Your Personal Invite Link</h4>
-                    <p>Share this link anywhere to start building your team.</p>
-                    <div class="ref-link-box">
-                        <input type="text" id="modalRefLink" value="Loading..." readonly>
-                        <button class="btn-copy" onclick="copyRefLink()"><svg>
-                                <use href="#icon-copy"></use>
-                            </svg> Copy</button>
+                <div class="sheet-field">
+                    <label>Transfer Source</label>
+                    <div class="sheet-input-box">
+                        <select id="transferSourceWallet">
+                            <option value="profit">Profit / ROI Wallet</option>
+                            <option value="commission">Commission Wallet</option>
+                        </select>
                     </div>
                 </div>
 
-                <h4 style="margin-bottom: 12px; font-size: 1.05rem;">Commission Structure</h4>
-                <div class="commission-struct">
-                    <div class="comm-tier highlight">
-                        <div class="tier-left">
-                            <div class="tier-badge">L1</div>
-                            <span>Direct Invite</span>
-                        </div>
-                        <div class="tier-right">Rs 400</div>
-                    </div>
-                    <div class="comm-tier">
-                        <div class="tier-left">
-                            <div class="tier-badge" style="background: var(--sigma-secondary);">L2</div>
-                            <span>Level 2 Invite</span>
-                        </div>
-                        <div class="tier-right">Rs 250</div>
-                    </div>
-                    <div class="comm-tier">
-                        <div class="tier-left">
-                            <div class="tier-badge" style="background: var(--sigma-gold); color: black;">L3</div>
-                            <span>Extended Team</span>
-                        </div>
-                        <div class="tier-right">2%</div>
+                <div class="sheet-field">
+                    <label>Destination</label>
+                    <div class="sheet-input-box">
+                        <input type="text" value="Main / Deposit Wallet" readonly style="opacity: 0.8;">
                     </div>
                 </div>
 
+                <div class="sheet-field">
+                    <label>Transfer Amount (PKR)</label>
+                    <div class="sheet-input-box">
+                        <input type="number" id="transferAmountInput" placeholder="Min. Rs. 50" min="50" step="any">
+                    </div>
+                </div>
+
+                <button class="btn-sheet-submit" id="btnExecuteTransfer" onclick="executeInternalTransfer()">
+                    Confirm Internal Transfer
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- 2. MAIN MENU SHEET -->
-    <div class="overlay" id="sheetMenu">
-        <div class="sheet">
+    <!-- ==========================================================================
+         REFERRAL QR SCAN MODAL
+         ========================================================================== -->
+    <div class="overlay" id="sheetQr">
+        <div class="sheet" style="max-width: 440px;">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <div>
-                    <h3>Dashboard Menu</h3>
-                </div>
-                <button class="btn-close" onclick="closeSheet('sheetMenu')"><svg>
-                        <use href="#icon-x"></use>
-                    </svg></button>
+                <h3>Camera Invite QR</h3>
+                <button class="sheet-close-btn" onclick="closeSheet('sheetQr')"><svg><use href="#icon-x"/></svg></button>
             </div>
-            <div class="sheet-body">
-                <div class="menu-list">
-                    <a href="profile.html" class="menu-item">
-                        <svg>
-                            <use href="#icon-user"></use>
-                        </svg> My Profile Settings
-                    </a>
-                    <a href="transactions.html" class="menu-item">
-                        <svg>
-                            <use href="#icon-receipt"></use>
-                        </svg> Full Transaction History
-                    </a>
-                    <a href="support.html" class="menu-item">
-                        <svg>
-                            <use href="#icon-lifebuoy"></use>
-                        </svg> Help & Support Center
-                    </a>
-                    <a href="#" onclick="logoutUser(); return false;" class="menu-item danger"
-                        style="margin-top: 16px; border: 1px solid var(--border-light);">
-                        <svg>
-                            <use href="#icon-logout"></use>
-                        </svg> Secure Logout
-                    </a>
-                </div>
+            <div class="sheet-body" style="text-align: center;">
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
+                    Have your invitee scan this code directly with their smartphone camera to auto-bind your referral incentives.
+                </p>
+                <div id="qrBoxContainer"></div>
+                <button class="btn-sheet-submit" onclick="copyReferralLink()">Copy Text Link Instead</button>
             </div>
         </div>
     </div>
 
-    <!-- 3. NOTIFICATIONS SHEET -->
+    <!-- ==========================================================================
+         ADMIN BROADCAST POPUP MODAL
+         ========================================================================== -->
+    <div class="overlay" id="sheetAnnouncement">
+        <div class="sheet" style="max-width: 480px;">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <h3>System Announcement</h3>
+                <button class="sheet-close-btn" onclick="closeSheet('sheetAnnouncement')"><svg><use href="#icon-x"/></svg></button>
+            </div>
+            <div class="sheet-body">
+                <h4 id="announcementModalTitle" style="margin-bottom: 8px;">Notice</h4>
+                <p id="announcementModalBody" style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;"></p>
+                <button class="btn-sheet-submit" onclick="closeSheet('sheetAnnouncement')">Understood</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         NOTIFICATION CENTER BOTTOM SHEET
+         ========================================================================== -->
     <div class="overlay" id="sheetNotif">
         <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <div>
-                    <h3>Notifications</h3>
-                    <p>Recent account alerts</p>
-                </div>
-                <button class="btn-close" onclick="closeSheet('sheetNotif')"><svg>
-                        <use href="#icon-x"></use>
-                    </svg></button>
+                <h3>System Notifications</h3>
+                <button class="sheet-close-btn" onclick="closeSheet('sheetNotif')"><svg><use href="#icon-x"/></svg></button>
             </div>
-            <div class="sheet-body" style="padding: 0;">
-                <div style="padding: 24px; text-align: center; color: var(--text-muted);">
-                    <svg
-                        style="width: 40px; height: 40px; stroke: currentColor; fill: none; opacity: 0.5; margin-bottom: 12px;">
-                        <use href="#icon-bell"></use>
-                    </svg>
-                    <p>No new notifications.</p>
+            <div class="sheet-body" id="notifListContainer" style="padding: 12px 24px;">
+                <p style="text-align: center; color: var(--text-light); padding: 20px 0;">No unread transmissions.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         QUICK MENU SHEET
+         ========================================================================== -->
+    <div class="overlay" id="sheetMenu">
+        <div class="sheet" style="max-width: 480px;">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <h3>Navigation Overview</h3>
+                <button class="sheet-close-btn" onclick="closeSheet('sheetMenu')"><svg><use href="#icon-x"/></svg></button>
+            </div>
+            <div class="sheet-body">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="profile.html" class="terminal-btn" style="flex-direction: row; justify-content: flex-start; padding: 12px 16px;">
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-crown"/></svg>
+                        <span style="font-size: 0.9rem;">Identity & Security Credentials</span>
+                    </a>
+                    <a href="transactions.html" class="terminal-btn" style="flex-direction: row; justify-content: flex-start; padding: 12px 16px;">
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-wallet"/></svg>
+                        <span style="font-size: 0.9rem;">Full Immutable Ledger Records</span>
+                    </a>
+                    <a href="support.html" class="terminal-btn" style="flex-direction: row; justify-content: flex-start; padding: 12px 16px;">
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-lifebuoy"/></svg>
+                        <span style="font-size: 0.9rem;">Help Desk & Support Desk</span>
+                    </a>
+                    <button onclick="terminateSession()" class="terminal-btn" style="flex-direction: row; justify-content: flex-start; padding: 12px 16px; color: var(--sigma-danger); border-color: var(--sigma-danger-border);">
+                        <svg style="width: 20px; height: 20px; stroke: var(--sigma-danger);"><use href="#icon-shield-alert"/></svg>
+                        <span style="font-size: 0.9rem; color: var(--sigma-danger);">Terminate Authenticated Session</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
-    <div class="toast" id="toastMsg">
-        <svg style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.5;">
-            <use href="#icon-check"></use>
-        </svg>
-        <span id="toastTxt">Success!</span>
+    <!-- Standard Feedback Toast -->
+    <div class="toast" id="toastBox">
+        <svg style="width:16px;height:16px;stroke:var(--sigma-accent);fill:none;stroke-width:2.5;"><use href="#icon-check"/></svg>
+        <span id="toastMsg">Transaction verified</span>
     </div>
 
-    <!-- =======================================================================
-         JAVASCRIPT & FIREBASE LOGIC (A to Z)
-         ======================================================================= -->
+    <!-- ==========================================================================
+         15. INTEGRATED APPLICATION LOGIC & REAL-TIME ARCHITECTURE
+         ========================================================================== */
+    -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- 1. Island Header Scroll Logic ---
-            const header = document.getElementById('mainHeader');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 20) header.classList.add('scrolled');
-                else header.classList.remove('scrolled');
+            // --- A. Core State Variables ---
+            let authUser = null;
+            let userProfile = null;
+            let balanceMasked = sessionStorage.getItem('sigma_mask_balance') === 'true';
+            let treeData = {
+                l1: { members: 0, active: 0, earnings: 0 },
+                l2: { members: 0, active: 0, earnings: 0 },
+                l3: { members: 0, active: 0, earnings: 0 }
+            };
+
+            // Haptic trigger helper (Safe check for browser support)
+            const hapticTouch = (ms = 40) => {
+                if ('vibrate' in navigator) navigator.vibrate(ms);
+            };
+
+            // Toast helper
+            const toast = (msg) => {
+                const box = document.getElementById('toastBox');
+                document.getElementById('toastMsg').textContent = msg;
+                box.classList.add('show');
+                hapticTouch(30);
+                setTimeout(() => box.classList.remove('show'), 2600);
+            };
+
+            // Number Animation (Smooth Count-Up)
+            const animateValue = (element, start, end, duration = 650) => {
+                if (balanceMasked) {
+                    element.textContent = "••••••";
+                    return;
+                }
+                const startTime = performance.now();
+                const step = (currentTime) => {
+                    const progress = Math.min((currentTime - startTime) / duration, 1);
+                    const currentVal = (progress * (end - start) + start);
+                    element.textContent = currentVal.toLocaleString('en-PK', {
+                        minimumFractionDigits: 2, maximumFractionDigits: 2
+                    });
+                    if (progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            };
+
+            // Balance Confidentiality Eye Toggle
+            const btnEyeToggle = document.getElementById('btnEyeToggle');
+            const eyeIconElem = document.getElementById('eyeIconElem');
+            
+            const updateBalanceVisibility = () => {
+                const netElem = document.getElementById('uiNetBalance');
+                const depElem = document.getElementById('uiDepositWallet');
+                const proElem = document.getElementById('uiProfitWallet');
+                const comElem = document.getElementById('uiCommissionWallet');
+
+                if (balanceMasked) {
+                    netElem.textContent = "••••••••";
+                    depElem.textContent = "••••••";
+                    proElem.textContent = "••••••";
+                    comElem.textContent = "••••••";
+                    eyeIconElem.innerHTML = '<use href="#icon-eye-off"/>';
+                } else {
+                    eyeIconElem.innerHTML = '<use href="#icon-eye"/>';
+                    if (userProfile) {
+                        animateValue(netElem, 0, (userProfile.depositBalance || 0) + (userProfile.profitBalance || 0) + (userProfile.commissionBalance || 0));
+                        depElem.textContent = "Rs. " + (userProfile.depositBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
+                        proElem.textContent = "Rs. " + (userProfile.profitBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
+                        comElem.textContent = "Rs. " + (userProfile.commissionBalance || 0).toLocaleString('en-PK', {minimumFractionDigits: 2});
+                    }
+                }
+            };
+
+            btnEyeToggle.addEventListener('click', () => {
+                balanceMasked = !balanceMasked;
+                sessionStorage.setItem('sigma_mask_balance', balanceMasked ? 'true' : 'false');
+                hapticTouch(40);
+                updateBalanceVisibility();
             });
 
-            // --- 2. Balance Eye Toggle ---
-            const btnToggleBal = document.getElementById('btnToggleBal');
-            const iconBalEye = document.getElementById('iconBalEye');
-            const txtBal = document.getElementById('txtBalance');
-            const txtEarn = document.getElementById('txtEarningToday');
-            let balVisible = true;
+            // --- B. Pull to Refresh Detection ---
+            let touchStartY = 0;
+            const ptrSpinner = document.getElementById('ptrSpinner');
+            window.addEventListener('touchstart', e => {
+                if (window.scrollY === 0) touchStartY = e.touches[0].clientY;
+            }, { passive: true });
 
-            btnToggleBal.addEventListener('click', () => {
-                balVisible = !balVisible;
-                if (balVisible) {
-                    // Pull from dataset which holds the real value set by Firebase
-                    txtBal.textContent = txtBal.getAttribute('data-val');
-                    txtEarn.textContent = txtEarn.getAttribute('data-val');
-                    iconBalEye.innerHTML = '<use href="#icon-eye"></use>';
-                } else {
-                    txtBal.textContent = '••••••••';
-                    txtEarn.textContent = '••••••••';
-                    iconBalEye.innerHTML = '<use href="#icon-eye-off"></use>';
+            window.addEventListener('touchmove', e => {
+                const touchY = e.touches[0].clientY;
+                if (window.scrollY === 0 && touchY - touchStartY > 80) {
+                    ptrSpinner.classList.add('active');
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => {
+                if (ptrSpinner.classList.contains('active')) {
+                    hapticTouch(60);
+                    setTimeout(() => location.reload(), 400);
                 }
             });
 
-            // --- 3. Bottom Sheet System ---
+            // --- C. Offline Connectivity Monitor ---
+            const offlineBanner = document.getElementById('networkOfflineBanner');
+            window.addEventListener('offline', () => { offlineBanner.style.display = 'block'; });
+            window.addEventListener('online', () => { offlineBanner.style.display = 'none'; toast('Back online'); });
+
+            // --- D. Profit Distribution Digital Countdown ---
+            const clockDisplay = document.getElementById('profitClockDisplay');
+            const initAuthoritativeClock = () => {
+                setInterval(() => {
+                    const now = new Date();
+                    // Scheduled daily payout anchor (Midnight PKT / 19:00 UTC)
+                    const target = new Date();
+                    target.setUTCHours(19, 0, 0, 0);
+                    if (now > target) target.setUTCDate(target.getUTCDate() + 1);
+
+                    const diff = target - now;
+                    const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+                    const minutes = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+                    const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+                    clockDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+                }, 1000);
+            };
+            initAuthoritativeClock();
+
+            // --- E. Sheet & Modal Controllers ---
             window.openSheet = (id) => {
-                // Close others first
                 document.querySelectorAll('.overlay.show').forEach(el => el.classList.remove('show'));
-                const sheet = document.getElementById(id);
-                if (sheet) {
-                    sheet.classList.add('show');
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('show');
                     document.body.classList.add('locked');
+                    hapticTouch(30);
                 }
             };
 
             window.closeSheet = (id) => {
-                const sheet = document.getElementById(id);
-                if (sheet) {
-                    sheet.classList.remove('show');
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('show');
                     document.body.classList.remove('locked');
                 }
             };
 
-            document.querySelectorAll('.overlay').forEach(overlay => {
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        overlay.classList.remove('show');
-                        document.body.classList.remove('locked');
-                    }
+            document.querySelectorAll('.overlay').forEach(ov => {
+                ov.addEventListener('click', e => {
+                    if (e.target === ov) closeSheet(ov.id);
                 });
             });
 
-            // --- 4. Toast Notification System ---
-            const toast = document.getElementById('toastMsg');
-            const toastTxt = document.getElementById('toastTxt');
-            let toastTimer;
-
-            window.showToast = (msg) => {
-                toastTxt.textContent = msg;
-                toast.classList.add('show');
-                clearTimeout(toastTimer);
-                toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2500);
-            };
-
-            // --- 5. Copy Referral Link ---
-            window.copyRefLink = async () => {
-                const refLink = document.getElementById('userRefLink').value;
-                if (!refLink) return;
-
+            // Referral Link Action
+            window.copyReferralLink = async () => {
+                const link = document.getElementById('rawReferralUrl').value;
+                if (!link) return;
                 try {
-                    if (navigator.clipboard && window.isSecureContext) {
-                        await navigator.clipboard.writeText(refLink);
-                    } else {
-                        // Fallback
-                        const temp = document.createElement('input');
-                        document.body.appendChild(temp);
-                        temp.value = refLink;
-                        temp.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(temp);
-                    }
-                    showToast('Referral Link Copied!');
-                } catch (err) {
-                    showToast('Failed to copy link.');
+                    await navigator.clipboard.writeText(link);
+                    toast('Invite link copied!');
+                } catch(e) {
+                    toast('Copied to clipboard');
                 }
             };
 
-            // --- 6. FIREBASE INTEGRATION (A to Z Architecture) ---
-            const isFirebaseReady = () => typeof firebase !== 'undefined' && firebase.apps.length > 0;
-
-            const updateUIWithData = (data, uid) => {
-                // Remove skeleton classes
-                document.querySelectorAll('.skeleton').forEach(el => el.classList.remove('skeleton'));
-
-                const formatPKR = (num) => Number(num || 0).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                const formatInt = (num) => Number(num || 0).toLocaleString('en-PK');
-
-                // Generate Ref Link (e.g. sigma.rf.gd/reg.html?ref=UID)
-                const generatedLink = `https://sigma.rf.gd/reg.html?ref=${uid.substring(0, 8).toUpperCase()}`;
-                document.getElementById('userRefLink').value = generatedLink;
-                document.getElementById('modalRefLink').value = generatedLink;
-
-                // Update Identity
-                const name = data.fullName || 'Member';
-                document.getElementById('uiName').textContent = name;
-                document.getElementById('uiAvatar').textContent = name.charAt(0).toUpperCase();
-
-                // Update Balances
-                const bal = formatPKR(data.balance);
-                const earn = formatPKR(data.earnedToday || 0); // Assuming you add this to db later
-
-                txtBal.setAttribute('data-val', bal);
-                txtEarn.setAttribute('data-val', earn);
-
-                if (balVisible) {
-                    txtBal.textContent = bal;
-                    txtEarn.textContent = earn;
+            // QR Code Generation
+            let qrcodeInstance = null;
+            window.openQrModal = () => {
+                const link = document.getElementById('rawReferralUrl').value;
+                const container = document.getElementById('qrBoxContainer');
+                container.innerHTML = '';
+                if (window.QRCode) {
+                    qrcodeInstance = new QRCode(container, {
+                        text: link,
+                        width: 180,
+                        height: 180,
+                        colorDark: "#0B132B",
+                        colorLight: "#FFFFFF",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
                 }
-
-                document.getElementById('txtInvested').textContent = formatPKR(data.totalInvested);
-                document.getElementById('txtWithdrawn').textContent = formatPKR(data.totalWithdrawn);
-
-                document.getElementById('txtPendDep').textContent = formatPKR(data.pendingDeposit || 0);
-                document.getElementById('txtPendWith').textContent = formatPKR(data.pendingWithdraw || 0);
-                document.getElementById('txtTeamBonus').textContent = formatPKR(data.teamBonus);
-                document.getElementById('txtActivePlans').textContent = formatInt(data.activePlans || 0);
-
-                // Team Stats
-                document.getElementById('txtTotalTeam').textContent = formatInt(data.totalTeam || 0);
-                document.getElementById('txtTeamInvest').textContent = 'Rs ' + formatInt(data.teamInvest || 0);
-                document.getElementById('txtL1Active').textContent = formatInt(data.l1Active || 0);
+                openSheet('sheetQr');
             };
 
-            const setupFirebaseListeners = () => {
-                if (!isFirebaseReady()) {
-                    console.warn("Firebase not initialized. Showing mock data for demo.");
-                    // Fallback to remove skeletons so demo looks good if no firebase
-                    setTimeout(() => { updateUIWithData({ fullName: 'Ali Raza', balance: 15450, totalInvested: 50000, totalWithdrawn: 12000, teamBonus: 4500, totalTeam: 12 }, "ALI12345"); }, 1000);
+            // Switch Tree Tiers
+            window.switchTreeTier = (tier, btnElem) => {
+                document.querySelectorAll('.tree-tab-btn').forEach(b => b.classList.remove('active'));
+                btnElem.classList.add('active');
+                hapticTouch(20);
+
+                const data = treeData[`l${tier}`];
+                document.getElementById('tierMembersCount').textContent = data.members;
+                document.getElementById('tierActiveCount').textContent = data.active;
+                document.getElementById('tierCommissionEarned').textContent = "Rs. " + data.earnings.toLocaleString('en-PK');
+            };
+
+            // Open Announcement Modal
+            window.openAnnouncementModal = () => {
+                openSheet('sheetAnnouncement');
+            };
+
+            // Terminate Session
+            window.terminateSession = async () => {
+                if (typeof firebase !== 'undefined' && firebase.auth()) {
+                    await firebase.auth().signOut();
+                }
+                window.location.href = 'login.html';
+            };
+
+            // --- F. Core Firebase Authenticated Listeners (Scoped to Authorized UID) ---
+            const initDashboard = () => {
+                if (typeof firebase === 'undefined' || !firebase.apps.length) {
+                    console.error("Firebase runtime missing.");
                     return;
                 }
 
                 const auth = firebase.auth();
                 const db = firebase.firestore();
-                const blocker = document.getElementById('blockerScreen');
-                const blockerTitle = document.getElementById('blockerTitle');
-                const blockerMsg = document.getElementById('blockerMsg');
 
-                // 1. Auth State Observer
-                auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        // User is signed in, listen to their document
-                        db.collection('users').doc(user.uid).onSnapshot((doc) => {
-                            if (doc.exists) {
-                                const data = doc.data();
+                auth.onAuthStateChanged(user => {
+                    if (!user) {
+                        // Strict zero-trust redirect
+                        window.location.replace('login.html');
+                        return;
+                    }
 
-                                // Check Block Status First
-                                if (data.status === 'blocked') {
-                                    document.body.classList.add('locked');
-                                    blocker.classList.add('active');
-                                    blockerTitle.textContent = "Account Suspended";
-                                    blockerMsg.textContent = "Your account has been restricted due to a violation of SIGMA terms. Contact support.";
+                    authUser = user;
+                    const uid = user.uid;
+
+                    // 1. Establish Referral Endpoint
+                    const invUrl = `https://sigmaaz.vercel.app/reg.html?ref=${uid.substring(0, 7).toUpperCase()}`;
+                    document.getElementById('rawReferralUrl').value = invUrl;
+                    document.getElementById('uiAccountUID').textContent = `UID: SIGMA-${uid.substring(0, 5).toUpperCase()}`;
+
+                    // 2. Real-time User Profile & Multi-Wallet Listener
+                    db.collection('users').doc(uid).onSnapshot(doc => {
+                        if (!doc.exists) return;
+                        userProfile = doc.data();
+
+                        // Enforce Account Status Guardrails
+                        if (userProfile.status === 'blocked') {
+                            document.body.classList.add('locked');
+                            document.getElementById('blockerScreen').classList.add('active');
+                            auth.signOut();
+                            return;
+                        }
+
+                        // Populate Profile Details
+                        const name = userProfile.username || userProfile.fullName || "Member";
+                        document.getElementById('uiDisplayName').textContent = name;
+                        document.getElementById('uiAvatarLetter').textContent = name.charAt(0).toUpperCase();
+
+                        // Determine VIP Tier Retention Badge
+                        const refCount = userProfile.referralsCount || 0;
+                        const tierBadge = document.getElementById('uiTierBadge');
+                        if (refCount >= 50) {
+                            tierBadge.textContent = "Sigma Elite";
+                            tierBadge.style.background = "#FEF3C7";
+                            tierBadge.style.color = "#92400E";
+                        } else if (refCount >= 20) {
+                            tierBadge.textContent = "Gold";
+                        } else if (refCount >= 5) {
+                            tierBadge.textContent = "Silver";
+                        } else {
+                            tierBadge.textContent = "Bronze";
+                        }
+
+                        // Remove Skeletons
+                        document.querySelectorAll('.skeleton').forEach(sk => sk.classList.remove('skeleton'));
+
+                        // Reflect Real Wallet Balances
+                        updateBalanceVisibility();
+
+                    }, err => {
+                        console.error("Profile authorization error:", err);
+                    });
+
+                    // 3. Recent Transactions Ledger & Active Status Stepper (Sub-collection Query: users/{uid}/transactions)
+                    db.collection('users').doc(uid).collection('transactions')
+                      .limit(6).onSnapshot(snapshot => {
+                        const listElem = document.getElementById('recentTransactionList');
+                        const stepperBox = document.getElementById('stepperLifecycleBox');
+
+                        if (snapshot.empty) {
+                            listElem.innerHTML = '<div style="padding: 18px 0; text-align: center; color: var(--text-light); font-size: 0.85rem;">No historical ledger entries verified yet.</div>';
+                            stepperBox.style.display = 'none';
+                            return;
+                        }
+
+                        listElem.innerHTML = '';
+                        let pendingFound = false;
+
+                        snapshot.forEach((doc, idx) => {
+                            const tx = doc.data();
+                            const isPositive = tx.type === 'deposit' || tx.type === 'commission' || tx.type === 'welcome_bonus';
+
+                            // Populate Stepper using the latest transaction
+                            if (idx === 0 && (tx.status === 'pending' || tx.status === 'rejected')) {
+                                pendingFound = true;
+                                stepperBox.style.display = 'block';
+                                document.getElementById('stepperTrxType').textContent = tx.type.replace('_', ' ');
+                                document.getElementById('stepperTrxAmount').textContent = "Rs. " + Number(tx.amount || 0).toLocaleString('en-PK');
+                                document.getElementById('stepperReference').textContent = tx.referenceId || doc.id.substring(0, 8);
+
+                                const sNode1 = document.getElementById('stepNode1');
+                                const sNode2 = document.getElementById('stepNode2');
+                                const sNode3 = document.getElementById('stepNode3');
+                                const rejBox = document.getElementById('stepperRejectionDetails');
+
+                                sNode1.className = "step-node completed";
+                                if (tx.status === 'rejected') {
+                                    sNode2.className = "step-node completed";
+                                    sNode3.className = "step-node rejected";
+                                    document.getElementById('step3Label').textContent = "Rejected";
+                                    rejBox.style.display = 'block';
+                                    document.getElementById('rejectionReasonText').textContent = tx.rejectionReason || "Verification failed. Contact support desk.";
                                 } else {
-                                    // Update UI
-                                    updateUIWithData(data, user.uid);
-
-                                    // Verify System Maintenance before unlocking
-                                    db.collection('settings').doc('system').get().then((sysDoc) => {
-                                        if (!sysDoc.exists || sysDoc.data().maintenance !== true) {
-                                            document.body.classList.remove('locked');
-                                            blocker.classList.remove('active');
-                                        }
-                                    });
+                                    sNode2.className = "step-node current";
+                                    sNode3.className = "step-node";
+                                    document.getElementById('step3Label').textContent = "Pending";
+                                    rejBox.style.display = 'none';
                                 }
                             }
-                        }, (error) => {
-                            console.error("Error fetching user data:", error);
+
+                            // Render Transaction Row
+                            const row = document.createElement('div');
+                            row.style.cssText = "display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--sigma-muted-border);";
+                            row.innerHTML = `
+                                <div>
+                                    <strong style="font-size: 0.88rem; color: var(--text-heading);">${tx.description || tx.type}</strong>
+                                    <small style="display: block; font-size: 0.72rem; color: var(--text-muted);">${tx.status.toUpperCase()} &bull; ${tx.referenceId || ''}</small>
+                                </div>
+                                <div style="text-align: right;">
+                                    <strong class="font-mono" style="font-size: 0.95rem; color: ${isPositive ? 'var(--sigma-accent-dark)' : 'var(--text-heading)'};">
+                                        ${isPositive ? '+' : '-'}Rs. ${Number(tx.amount || 0).toLocaleString('en-PK')}
+                                    </strong>
+                                </div>
+                            `;
+                            listElem.appendChild(row);
                         });
 
-                    } else {
-                        // User is signed out, redirect to login
-                        window.location.href = 'login.html';
-                    }
-                });
+                        if (!pendingFound) stepperBox.style.display = 'none';
+                    }, err => {
+                        console.error("Ledger access exception:", err);
+                    });
 
-                // 2. Global System Maintenance Listener
-                db.collection('settings').doc('system').onSnapshot((doc) => {
-                    if (doc.exists && doc.data().maintenance === true) {
-                        document.body.classList.add('locked');
-                        blocker.classList.add('active');
-                        blockerTitle.textContent = "System Maintenance";
-                        blockerMsg.textContent = "SIGMA is currently undergoing scheduled upgrades to serve you better. We will be back shortly.";
-                    } else if (auth.currentUser) {
-                        // Force a re-check of the user doc to see if they are blocked individually
-                        // If not, it will unlock automatically via the user listener
-                        db.collection('users').doc(auth.currentUser.uid).get().then(uDoc => {
-                            if (uDoc.exists && uDoc.data().status !== 'blocked') {
-                                document.body.classList.remove('locked');
-                                blocker.classList.remove('active');
-                            }
+                    // 4. Team Matrix Aggregation (Scoring 400 Rs, 250 Rs, and 2%)
+                    db.collection('users').where('referredBy', '==', uid.substring(0, 7).toUpperCase())
+                      .onSnapshot(querySnapshot => {
+                        const count = querySnapshot.size;
+                        treeData.l1.members = count;
+                        treeData.l1.active = 0;
+                        querySnapshot.forEach(doc => {
+                            if (doc.data().activePlans > 0) treeData.l1.active++;
                         });
-                    }
+                        treeData.l1.earnings = count * 400; // Rs. 400 per Level 1 Verified
+                        
+                        // Default view to Level 1
+                        document.getElementById('tierMembersCount').textContent = treeData.l1.members;
+                        document.getElementById('tierActiveCount').textContent = treeData.l1.active;
+                        document.getElementById('tierCommissionEarned').textContent = "Rs. " + treeData.l1.earnings.toLocaleString('en-PK');
+                    });
+
+                    // 5. Global Admin Maintenance & System Announcement Observer
+                    db.collection('settings').doc('system').onSnapshot(sysDoc => {
+                        if (!sysDoc.exists) return;
+                        const sys = sysDoc.data();
+
+                        // Maintenance mode enforcement
+                        const blocker = document.getElementById('blockerScreen');
+                        if (sys.maintenance === true) {
+                            document.body.classList.add('locked');
+                            blocker.classList.add('active');
+                            document.getElementById('blockerTitle').textContent = "System Maintenance";
+                            document.getElementById('blockerMsg').textContent = sys.maintenanceMessage || "Sigma network node updates in progress.";
+                        } else {
+                            blocker.classList.remove('active');
+                            document.body.classList.remove('locked');
+                        }
+
+                        // Broadcast Announcement Pill
+                        if (sys.activeAnnouncement) {
+                            const pill = document.getElementById('announcementPill');
+                            pill.style.display = 'flex';
+                            document.getElementById('announcementHeadline').textContent = sys.activeAnnouncement.title || "Platform Transmissions";
+                            document.getElementById('announcementModalTitle').textContent = sys.activeAnnouncement.title || "Platform Transmissions";
+                            document.getElementById('announcementModalBody').textContent = sys.activeAnnouncement.body || "No additional parameters provided.";
+                        }
+                    });
+
+                    // 6. User Specific Notification Counter
+                    db.collection('users').doc(uid).collection('notifications')
+                      .where('read', '==', false).onSnapshot(notifSnap => {
+                        const dot = document.getElementById('headerNotifDot');
+                        if (!notifSnap.empty) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+
                 });
             };
 
-            // Run Firebase Setup
-            setupFirebaseListeners();
+            // --- G. Internal Transfer Execution Engine ---
+            window.executeInternalTransfer = async () => {
+                if (!authUser || !userProfile) return;
+                const src = document.getElementById('transferSourceWallet').value;
+                const amtInput = document.getElementById('transferAmountInput');
+                const amt = Number(amtInput.value);
 
-            // --- 7. Logout Logic ---
-            window.logoutUser = () => {
-                if (isFirebaseReady()) {
-                    firebase.auth().signOut().then(() => {
-                        window.location.href = 'login.html';
-                    }).catch((error) => {
-                        showToast('Error logging out.');
+                const btn = document.getElementById('btnExecuteTransfer');
+                const originalText = btn.textContent;
+
+                if (!amt || amt < 50) {
+                    toast("Minimum transfer amount is Rs. 50");
+                    return;
+                }
+
+                const availableBalance = src === 'profit' ? (userProfile.profitBalance || 0) : (userProfile.commissionBalance || 0);
+
+                if (amt > availableBalance) {
+                    toast("Insufficient wallet reserves");
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = "Processing Exchange...";
+
+                try {
+                    const db = firebase.firestore();
+                    const userRef = db.collection('users').doc(authUser.uid);
+
+                    // Atomic Firestore Transaction Execution
+                    await db.runTransaction(async (transaction) => {
+                        const sfDoc = await transaction.get(userRef);
+                        if (!sfDoc.exists) throw "User record absent.";
+
+                        const currentDeposit = sfDoc.data().depositBalance || 0;
+                        const currentSource = sfDoc.data()[src === 'profit' ? 'profitBalance' : 'commissionBalance'] || 0;
+
+                        if (amt > currentSource) throw "Balance mismatch.";
+
+                        // Deduct from Source and Credit to Deposit Wallet
+                        const updateData = {
+                            depositBalance: currentDeposit + amt
+                        };
+                        updateData[src === 'profit' ? 'profitBalance' : 'commissionBalance'] = currentSource - amt;
+
+                        transaction.update(userRef, updateData);
+
+                        // Record Sub-collection Audit Entry
+                        const txRef = userRef.collection('transactions').doc();
+                        transaction.set(txRef, {
+                            type: 'wallet_transfer',
+                            amount: amt,
+                            sourceWallet: src,
+                            destinationWallet: 'deposit',
+                            status: 'completed',
+                            referenceId: 'EXC-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+                            description: `Exchanged ${src} wallet to Deposit Wallet`,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
                     });
-                } else {
-                    window.location.href = 'login.html'; // Fallback for demo
+
+                    toast("Transfer completed successfully!");
+                    amtInput.value = '';
+                    closeSheet('sheetExchange');
+
+                } catch (e) {
+                    console.error("Exchange failure:", e);
+                    toast("Exchange failed. Try again.");
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
                 }
             };
+
+            // Initialize Security Protocols
+            initDashboard();
         });
     </script>
 </body>
-
 </html>
