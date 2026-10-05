@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sigma | Create Account & Start Trading</title>
 
-    <!-- SEO & Metadata (Configured for sigmaaz.vercel.app) -->
+    <!-- SEO & Metadata -->
     <meta name="description" content="Create your Sigma account in seconds. Access automated trading portfolios, daily PKR profits, and instant Easypaisa & JazzCash withdrawals.">
     <meta name="keywords" content="Sigma, Register, Sign Up, Pakistan Trading, Earn PKR, Easypaisa, JazzCash, Automated Investment">
     <meta name="author" content="Sigma Technologies">
@@ -29,10 +29,6 @@
     <meta property="og:title" content="Create Your Sigma Account | Premium Trading Platform">
     <meta property="og:description" content="Join thousands of Pakistani investors generating daily profits with Sigma.">
     <meta property="og:image" content="https://sigmaaz.vercel.app/assets/preview.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Sigma | Create Account">
-    <meta name="twitter:description" content="Automated trading and daily PKR profits. Open your free account now.">
-    <meta name="twitter:image" content="https://sigmaaz.vercel.app/assets/preview.png">
 
     <!-- Preconnect & Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,7 +43,6 @@
     <!-- Connect External Config with Fallback Initialization -->
     <script src="firebase-config.js"></script>
     <script>
-        // Failsafe Initialization
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             const fallbackConfig = {
                 apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
@@ -65,7 +60,7 @@
 
     <style>
         /* ==========================================================================
-           1. CSS VARIABLES & DESIGN SYSTEM (Sigma Theme)
+           1. CSS VARIABLES & SYSTEM (Sigma Theme)
            ========================================================================== */
         :root {
             --sigma-primary: #0F172A;
@@ -104,7 +99,6 @@
 
             --transition-fast: 0.2s ease;
             --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* ==========================================================================
@@ -197,7 +191,8 @@
             display: grid; grid-template-columns: 1fr; gap: 32px; align-items: center; width: 100%;
         }
         @media (min-width: 1024px) {
-            .auth-grid { grid-template-columns: 1.05fr 0.95fr; gap: 48px; }
+            /* Desktop Split: Form on Left (0.95fr), Design on Right (1.05fr) */
+            .auth-grid { grid-template-columns: 0.95fr 1.05fr; gap: 60px; }
         }
 
         /* ==========================================================================
@@ -328,7 +323,7 @@
         .btn-submit:active:not(:disabled) { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        .auth-footer { text-align: center; font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-top: 24px;}
+        .auth-footer { text-align: center; font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-top: 20px;}
         .auth-footer a { color: var(--sigma-primary); font-weight: 800; }
         .auth-footer a:hover { text-decoration: underline; }
 
@@ -468,12 +463,12 @@
                 <form id="regForm" novalidate autocomplete="off">
                     <div class="global-error" id="globalError"></div>
 
-                    <!-- INPUT 1: USERNAME (NO FULL NAME) - STRICTLY 5-9 CHARACTERS, NO @ SYMBOL -->
+                    <!-- INPUT 1: USERNAME (Strictly 5-9 Chars) -->
                     <div class="form-group">
                         <div class="input-wrapper" id="wrapUsername">
                             <div class="input-icon"><svg><use href="#icon-user"></use></svg></div>
                             <input type="text" id="username" class="input-field" placeholder=" " minlength="5" maxlength="9" autocomplete="username" required>
-                            <label class="floating-label">Choose Username</label>
+                            <label class="floating-label">Choose Username (5-9 Chars)</label>
                         </div>
                     </div>
 
@@ -495,8 +490,8 @@
                         </div>
                     </div>
 
-                    <!-- INPUT 4: PASSWORD (NO CONFIRM PASSWORD) -->
-                    <div class="form-group" style="margin-bottom: 12px;">
+                    <!-- INPUT 4: PASSWORD -->
+                    <div class="form-group">
                         <div class="input-wrapper" id="wrapPassword">
                             <div class="input-icon"><svg><use href="#icon-lock"></use></svg></div>
                             <input type="password" id="password" class="input-field" placeholder=" " autocomplete="new-password" minlength="6" required>
@@ -536,7 +531,7 @@
                     </button>
 
                     <!-- Route to Login -->
-                    <div class="auth-footer" style="margin-top: 24px;">
+                    <div class="auth-footer" style="margin-top: 20px;">
                         Already have an account? <a href="login.html">Log In</a>
                     </div>
                 </form>
@@ -667,7 +662,7 @@
             if (referralCodeFromUrl) {
                 const sanitizedCode = referralCodeFromUrl.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 20);
                 if (sanitizedCode) {
-                    hiddenRefCode.value = sanitizedCode; // Value is stored correctly here
+                    hiddenRefCode.value = sanitizedCode; // Bind to hidden input securely
                     refCodeText.textContent = sanitizedCode.toUpperCase();
                     refAlert.style.display = 'flex';
                 }
@@ -695,16 +690,13 @@
                 input.addEventListener('input', clearErrors);
             });
 
-            // STRICT USERNAME LOGIC: 5 to 9 chars, remove everything from @ onwards, alphanumeric lowercase only
+            // Username STRICT Rules: Cut after '@', remove special chars, max 9 length
             inUser.addEventListener('input', (e) => {
                 let val = e.target.value;
                 if(val.includes('@')) {
-                    val = val.split('@')[0]; // Remove @ and everything after
+                    val = val.split('@')[0];
                 }
-                val = val.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().slice(0, 9); // Max 9 chars
-                if (e.target.value !== val) {
-                    e.target.value = val;
-                }
+                e.target.value = val.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase().slice(0, 9);
             });
 
             inMobile.addEventListener('input', (e) => {
@@ -751,20 +743,20 @@
                 }
             });
 
-            // --- 7. User Account Provisioning & Firestore Sync (Fixed Reference Bug) ---
+            // --- 7. User Account Provisioning & Firestore Sync ---
             const provisionAccountProfile = async (user, profileMeta = {}) => {
                 const db = firebase.firestore();
+                // Data Isolation: The document ID is the user's unique UID.
                 const userRef = db.collection('users').doc(user.uid);
                 
-                // Do NOT throw here so the redirect always happens even if Firestore rules are not fully setup yet.
                 try {
                     const doc = await userRef.get();
                     if (!doc.exists) {
                         const assignedBonus = activeBonusAmount;
-                        const assignedUsername = (profileMeta.username || inUser.value.trim() || user.email.split('@')[0]).toLowerCase();
+                        const assignedUsername = profileMeta.username || inUser.value.trim().toLowerCase();
                         const inviterCode = hiddenRefCode.value || null;
 
-                        // Create User Document
+                        // Create User Document (Strict Isolation)
                         await userRef.set({
                             uid: user.uid,
                             username: assignedUsername,
@@ -785,7 +777,7 @@
 
                         // Welcome Bonus Ledger Entry
                         if (assignedBonus > 0) {
-                            await db.collection('users').doc(user.uid).collection('transactions').add({
+                            await userRef.collection('transactions').add({
                                 type: 'welcome_bonus',
                                 amount: assignedBonus,
                                 currency: 'PKR',
@@ -797,11 +789,14 @@
                         }
                     }
                 } catch (firestoreError) {
-                    console.error("Firestore Profile Sync Error (Proceeding to dashboard anyway):", firestoreError);
+                    console.error("Firestore Profile Sync Error:", firestoreError);
+                    if(firestoreError.message.includes("Missing or insufficient permissions")) {
+                        console.warn("Dev Note: Update your Firestore Security Rules to allow writes.");
+                    }
                 }
             };
 
-            // --- 8. Registration Form Submission (Strict 4 Fields) ---
+            // --- 8. Registration Form Submission (Strict 4 Fields & Redirect) ---
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 clearErrors();
@@ -811,8 +806,8 @@
                 const mobile = inMobile.value.trim();
                 const password = inPwd.value;
 
-                // Validation
-                if (!username || username.length < 5) return showError("Username must be between 5 and 9 characters.", "wrapUsername");
+                // Strict Validation
+                if (!username || username.length < 5) return showError("Username must be 5 to 9 characters.", "wrapUsername");
                 if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError("Please enter a valid email address.", "wrapEmail");
                 if (!mobile || mobile.length < 10) return showError("Mobile number must be at least 10 digits.", "wrapMobile");
                 if (!password || password.length < 6) return showError("Password must be at least 6 characters.", "wrapPassword");
@@ -841,10 +836,10 @@
                         console.warn("Username check skipped due to permission rules. Proceeding to auth.");
                     }
 
-                    // 1. Create Firebase Auth User (Will throw if email already exists, which is correct)
+                    // Create Firebase Auth User
                     const userCred = await auth.createUserWithEmailAndPassword(email, password);
 
-                    // 2. Initialize Profile & Ledger Transaction (Failsafe block so redirect is guaranteed)
+                    // Initialize Profile & Ledger Transaction
                     try {
                         await provisionAccountProfile(userCred.user, {
                             username: username,
@@ -852,18 +847,17 @@
                         });
                     } catch(e) {
                         console.error("Firestore sync bypassed. Ensure rules are configured.");
-                        // Proceed to dashboard anyway since account exists.
                     }
 
-                    // 3. Success Feedback & Force Routing
+                    // Success Feedback & Force Routing to Dashboard
                     btnSubmit.classList.remove('loading');
                     btnSubmit.innerHTML = `<span><svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Account Created</span>`;
                     btnSubmit.style.background = 'var(--sigma-accent)';
 
-                    // Use replace to prevent going back to the form
+                    // Use location.replace so the user cannot click "back" to the auth page
                     setTimeout(() => {
                         window.location.replace('dash.html');
-                    }, 800);
+                    }, 500);
 
                 } catch (err) {
                     btnSubmit.disabled = false;
@@ -888,6 +882,7 @@
                     }
                 }
             });
+
         });
     </script>
 </body>
