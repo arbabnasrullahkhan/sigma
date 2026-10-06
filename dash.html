@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 
@@ -9,41 +7,38 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sigma | User Dashboard & Financial Terminal</title>
 
-    <!-- SEO, Social & PWA Metadata -->
+    <!-- SEO, Privacy & PWA Meta -->
     <meta name="description"
-        content="Authorized member workspace for Sigma automated portfolios, real-time PKR wallet management, instant withdrawals, and team network monitoring.">
-    <meta name="keywords" content="Sigma Dashboard, Trading Pakistan, Earn PKR, Easypaisa, JazzCash, Automated Investment Terminal">
+        content="Authorized member workspace for Sigma automated portfolios, real-time PKR wallet management, and referral network monitoring.">
+    <meta name="keywords" content="Sigma Dashboard, Crypto Trading Pakistan, PKR Portfolio, EasyPaisa Withdrawals, JazzCash Investment">
     <meta name="author" content="Sigma Technologies">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#0B132B">
-
-    <!-- Mobile Web App Settings -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sigma Terminal">
-    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-    <link rel="canonical" href="https://sigmaaz.vercel.app/dash">
-
-    <!-- Favicon & Touch Icons -->
-    <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
-    <link rel="apple-touch-icon" href="assets/favicon.png">
+    <link rel="canonical" href="https://sigmaaz.vercel.app/dash.html">
 
     <!-- Open Graph & Social Cards -->
-    <meta property="og:locale" content="en_PK">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sigmaaz.vercel.app/dash">
-    <meta property="og:title" content="Sigma Terminal | Member Workspace">
-    <meta property="og:description" content="Secure dashboard for tracking automated PKR portfolios, instant liquidity, and daily referral earnings.">
-    <meta property="og:site_name" content="Sigma Technologies">
+    <meta property="og:url" content="https://sigmaaz.vercel.app/dash.html">
+    <meta property="og:title" content="Sigma | Member Financial Terminal">
+    <meta property="og:description" content="Access live daily PKR yields, wallet pockets, instant withdrawals, and your referral network.">
+    <meta property="og:site_name" content="Sigma">
     <meta property="og:image" content="https://sigmaaz.vercel.app/assets/preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Sigma | Financial Terminal">
-    <meta name="twitter:description" content="Secure dashboard for daily PKR profits and instant mobile wallet withdrawals.">
+    <meta name="twitter:title" content="Sigma | Member Financial Terminal">
+    <meta name="twitter:description" content="Manage automated PKR investment portfolios and instant withdrawals securely.">
     <meta name="twitter:image" content="https://sigmaaz.vercel.app/assets/preview.png">
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/favicon.png">
 
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -77,24 +72,11 @@
         }
     </script>
 
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FinancialService",
-      "name": "Sigma Terminal",
-      "url": "https://sigmaaz.vercel.app/dash",
-      "logo": "https://sigmaaz.vercel.app/assets/logo.png",
-      "description": "Secure financial terminal for automated portfolios and PKR daily distributions."
-    }
-    </script>
-
     <style>
         /* ==========================================================================
-           1. COMPREHENSIVE DESIGN TOKENS (SIGMA NEXT-GEN PREMIUM FINTECH)
+           1. DESIGN TOKENS (SIGMA NEXT-GEN FINTECH PALETTE)
            ========================================================================== */
         :root {
-            /* Brand Color Architecture */
             --sigma-primary: #0B132B;
             --sigma-secondary: #1C2541;
             --sigma-tertiary: #3A506B;
@@ -128,7 +110,7 @@
 
             --sigma-purple: #8B5CF6;
             --sigma-pink: #F472B6;
-            --sigma-pink-soft: rgba(244, 114, 182, 0.15);
+            --sigma-pink-soft: #FDF2F8;
 
             /* Text Hierarchies */
             --text-heading: #0F172A;
@@ -136,7 +118,7 @@
             --text-muted: #64748B;
             --text-light: #94A3B8;
 
-            /* Radii & Depth Tokens */
+            /* Radii & Depth */
             --radius-pill: 9999px;
             --radius-2xl: 32px;
             --radius-xl: 24px;
@@ -149,7 +131,7 @@
             --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
             --shadow-island: 0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04);
             --shadow-float: 0 25px 50px -12px rgba(15, 23, 42, 0.18);
-            --shadow-glow: 0 0 30px rgba(11, 19, 43, 0.3);
+            --shadow-glow: 0 0 32px rgba(244, 114, 182, 0.15);
 
             /* Z-Indices */
             --z-dock: 1000;
@@ -168,11 +150,9 @@
         }
 
         /* ==========================================================================
-           2. GLOBAL RESET & BASE STYLES
+           2. GLOBAL RESET & BASE
            ========================================================================== */
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -194,11 +174,10 @@
             overflow-x: hidden;
             padding-bottom: calc(105px + var(--safe-area-bottom));
             background-image:
-                radial-gradient(circle at 15% 0%, rgba(16, 185, 129, 0.035) 0%, transparent 45vw),
-                radial-gradient(circle at 85% 100%, rgba(59, 130, 246, 0.025) 0%, transparent 45vw);
+                radial-gradient(circle at 10% 0%, rgba(244, 114, 182, 0.04) 0%, transparent 45vw),
+                radial-gradient(circle at 90% 100%, rgba(16, 185, 129, 0.035) 0%, transparent 45vw);
             background-attachment: fixed;
             background-repeat: no-repeat;
-            background-size: cover;
         }
 
         body.locked {
@@ -211,9 +190,7 @@
             color: inherit;
         }
 
-        button,
-        input,
-        select {
+        button, input, select {
             font-family: inherit;
             border: none;
             outline: none;
@@ -237,19 +214,17 @@
             line-height: 1.2;
         }
 
-        p {
-            color: var(--text-muted);
-        }
+        p { color: var(--text-muted); }
 
         .font-mono {
             font-family: 'JetBrains Mono', monospace;
             font-feature-settings: "tnum" 1;
         }
 
-        .text-accent {
-            color: var(--sigma-accent-dark);
-        }
+        .text-accent { color: var(--sigma-accent-dark); }
+        .text-pink { color: var(--sigma-pink); }
 
+        /* Offline Bar & Pull-To-Refresh */
         #networkOfflineBanner {
             position: fixed;
             top: 0;
@@ -286,10 +261,7 @@
             transition: top 0.2s ease;
         }
 
-        .ptr-indicator.active {
-            top: 20px;
-        }
-
+        .ptr-indicator.active { top: 20px; }
         .ptr-indicator svg {
             width: 22px;
             height: 22px;
@@ -408,9 +380,7 @@
             animation: pulse-dot 2s infinite;
         }
 
-        .unread-dot.active {
-            display: block;
-        }
+        .unread-dot.active { display: block; }
 
         @keyframes pulse-dot {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
@@ -419,7 +389,7 @@
         }
 
         /* ==========================================================================
-           4. WORKSPACE & HIGH-TRUST IDENTITY CARD
+           4. IDENTITY STRIP (PREMIUM COMPACT TRUST ID & USER CODE)
            ========================================================================== */
         .workspace {
             padding: 0 16px;
@@ -431,21 +401,15 @@
         .identity-card {
             background: var(--sigma-surface);
             border-radius: var(--radius-xl);
-            padding: 18px 20px;
+            padding: 16px 20px;
             border: 1px solid var(--sigma-muted-border);
             box-shadow: var(--shadow-subtle);
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .id-top-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            position: relative;
+            overflow: hidden;
         }
 
         .id-left {
@@ -453,22 +417,34 @@
             align-items: center;
             gap: 14px;
             min-width: 0;
+            position: relative;
+            z-index: 2;
         }
 
         .user-avatar-wrap {
             position: relative;
-            width: 52px;
-            height: 52px;
+            width: 54px;
+            height: 54px;
             flex-shrink: 0;
             cursor: pointer;
             transition: var(--transition-bounce);
         }
 
-        .user-avatar-wrap:active {
-            transform: scale(0.92);
+        .user-avatar-wrap:active { transform: scale(0.92); }
+
+        .user-avatar-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sigma-pink), var(--sigma-accent));
+            opacity: 0.4;
+            z-index: 0;
         }
 
         .user-avatar {
+            position: relative;
+            z-index: 1;
             width: 100%;
             height: 100%;
             border-radius: 50%;
@@ -480,7 +456,7 @@
             font-weight: 800;
             font-size: 1.3rem;
             text-transform: uppercase;
-            box-shadow: 0 6px 14px rgba(11, 19, 43, 0.15);
+            box-shadow: 0 6px 14px rgba(11, 19, 43, 0.2);
             overflow: hidden;
             border: 2px solid var(--sigma-surface);
         }
@@ -510,17 +486,15 @@
         }
 
         .avatar-tier-badge svg {
-            width: 11px;
-            height: 11px;
+            width: 10px;
+            height: 10px;
             fill: currentColor;
         }
 
-        .id-text {
-            min-width: 0;
-        }
+        .id-text { min-width: 0; }
 
         .id-text h2 {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -542,123 +516,66 @@
             flex-shrink: 0;
         }
 
-        .verified-account-tag {
+        /* Clean Trust ID Pill */
+        .trust-id-badge {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.72rem;
+            gap: 6px;
+            margin-top: 3px;
+            background: var(--sigma-subtle);
+            border: 1px solid var(--sigma-muted-border);
+            padding: 2px 8px;
+            border-radius: var(--radius-pill);
+            font-size: 0.75rem;
             font-weight: 700;
-            color: var(--sigma-accent-dark);
-            margin-top: 2px;
+            color: var(--text-heading);
         }
 
-        .verified-account-tag svg {
-            width: 12px;
-            height: 12px;
-            stroke: currentColor;
-            stroke-width: 2.5;
-            fill: none;
+        .trust-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--sigma-accent);
+            box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
         }
 
-        /* High-Trust Compact Credentials Cluster (UID + REF) */
-        .user-credentials-cluster {
+        .id-actions {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding-top: 10px;
-            border-top: 1px dashed var(--sigma-muted-border);
-            width: 100%;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
         }
 
-        .cred-pill {
-            flex: 1;
-            min-width: 0;
-            background: var(--sigma-subtle);
-            border: 1px solid var(--sigma-muted-border);
+        .btn-id-pill {
+            padding: 9px 12px;
             border-radius: var(--radius-pill);
-            padding: 8px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 6px;
-            cursor: pointer;
-            transition: var(--transition-fast);
-        }
-
-        .cred-pill:active {
-            background: #E2E8F0;
-            transform: scale(0.97);
-        }
-
-        .cred-data {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            min-width: 0;
-        }
-
-        .cred-data svg {
-            width: 13px;
-            height: 13px;
-            stroke: var(--text-muted);
-            fill: none;
-            stroke-width: 2.2;
-            flex-shrink: 0;
-        }
-
-        .cred-data span {
-            font-size: 0.78rem;
-            font-weight: 800;
-            color: var(--text-heading);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .cred-label-badge {
-            font-size: 0.65rem;
-            font-weight: 800;
-            color: var(--sigma-accent-dark);
-            text-transform: uppercase;
-        }
-
-        .cred-copy-icon {
-            width: 14px;
-            height: 14px;
-            stroke: var(--text-muted);
-            fill: none;
-            stroke-width: 2;
-            flex-shrink: 0;
-        }
-
-        .btn-qr-action {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
             background: var(--sigma-subtle);
             border: 1px solid var(--sigma-muted-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
             color: var(--text-heading);
-            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             transition: var(--transition-bounce);
         }
 
-        .btn-qr-action:active {
-            transform: scale(0.9);
-            background: #E2E8F0;
+        .btn-id-pill:active {
+            transform: scale(0.92);
+            background: var(--sigma-muted-border);
         }
 
-        .btn-qr-action svg {
-            width: 17px;
-            height: 17px;
+        .btn-id-pill svg {
+            width: 16px;
+            height: 16px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2.2;
         }
 
-        /* Announcement Bar */
+        /* Real-Time Announcement Banner */
         .system-announcement-pill {
             background: var(--sigma-accent-soft);
             border: 1px solid var(--sigma-accent-border);
@@ -672,9 +589,7 @@
             box-shadow: var(--shadow-xs);
         }
 
-        .system-announcement-pill:active {
-            transform: translateY(1px);
-        }
+        .system-announcement-pill:active { transform: translateY(1px); }
 
         .announcement-text {
             display: flex;
@@ -695,80 +610,90 @@
         }
 
         /* ==========================================================================
-           5. NEXT-GEN REDESIGNED WALLET CARD WITH LIGHT-PINK AMBIENT TONE
+           5. WALLET CARD (IMPROVED UI + LIGHT PINK GLOW + ENLARGED LOGOS)
            ========================================================================== */
         .vault-main-card {
-            background:
-                radial-gradient(circle at 88% 18%, rgba(244, 114, 182, 0.22) 0%, transparent 52%),
-                radial-gradient(circle at 12% 85%, rgba(16, 185, 129, 0.15) 0%, transparent 48%),
-                linear-gradient(135deg, #0b132b 0%, #151a36 45%, #23162a 100%);
+            background: linear-gradient(135deg, #0b132b 0%, #161c36 40%, #20172e 75%, #131b2e 100%);
             border-radius: var(--radius-2xl);
-            padding: 32px 28px;
+            padding: 34px 28px 28px;
             color: white;
-            box-shadow:
-                0 20px 45px -10px rgba(11, 19, 43, 0.4),
-                0 0 35px -5px rgba(244, 114, 182, 0.18);
-            border: 1px solid rgba(244, 114, 182, 0.26);
+            box-shadow: var(--shadow-island), var(--shadow-glow);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
+            border: 1px solid rgba(244, 114, 182, 0.22);
+        }
+
+        /* Ambient Luxurious Rose-Pink & Emerald Glow Overlays */
+        .vault-main-card::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -30px;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(244, 114, 182, 0.24) 0%, rgba(244, 114, 182, 0.05) 50%, transparent 75%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .vault-main-card::before {
             content: '';
             position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml;utf8,<svg opacity="0.035" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M0 10l10-10 10 10L10 20zM20 30l10-10 10 10-10 10z" fill="white"/></svg>');
+            bottom: -30px;
+            left: -30px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.16) 0%, transparent 70%);
+            border-radius: 50%;
             pointer-events: none;
             z-index: 0;
         }
 
-        /* Enlarged High-Definition Fintech Branding */
+        /* Enlarged Embedded Branding */
         .vault-branding {
             position: absolute;
-            bottom: 22px;
-            right: 22px;
+            bottom: 24px;
+            right: 24px;
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             z-index: 1;
-            pointer-events: none;
         }
 
         .vault-branding img.vault-text-logo {
-            height: 24px;
+            height: 26px; /* Enlarged text logo */
             object-fit: contain;
-            margin-bottom: 4px;
-            filter: brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
-            opacity: 0.95;
+            margin-bottom: 6px;
+            filter: brightness(0) invert(1);
+            opacity: 0.9;
         }
 
         .vault-branding img.vault-icon-logo {
-            height: 64px;
+            height: 64px; /* Enlarged crest logo watermark */
             width: 64px;
             object-fit: contain;
             opacity: 0.22;
-            filter: drop-shadow(0 4px 14px rgba(244, 114, 182, 0.35));
         }
 
-        /* EMV Chip & NFC */
+        /* EMV Chip & NFC Wave */
         .vault-chip-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             z-index: 2;
             position: relative;
         }
 
         .vault-chip-icon {
-            width: 44px;
-            height: 32px;
-            background: linear-gradient(135deg, #FDE68A, #D97706);
+            width: 46px;
+            height: 34px;
+            background: linear-gradient(135deg, #FDE68A 0%, #D97706 100%);
             border-radius: 6px;
-            opacity: 0.95;
             box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
             display: flex;
             align-items: center;
@@ -777,7 +702,7 @@
 
         .vault-chip-icon::after {
             content: '';
-            width: 80%;
+            width: 78%;
             height: 60%;
             border: 1px solid rgba(255, 255, 255, 0.45);
             border-radius: 3px;
@@ -786,7 +711,8 @@
         .vault-nfc-icon {
             width: 26px;
             height: 26px;
-            opacity: 0.75;
+            opacity: 0.85;
+            color: rgba(255, 255, 255, 0.85);
         }
 
         .vault-top-label {
@@ -797,7 +723,20 @@
             color: #CBD5E1;
             z-index: 2;
             position: relative;
-            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .vault-top-label::after {
+            content: 'SECURE LEDGER';
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(244, 114, 182, 0.25);
+            color: #FBCFE8;
+            border: 1px solid rgba(244, 114, 182, 0.4);
+            letter-spacing: 0.8px;
         }
 
         .vault-balance-row {
@@ -806,24 +745,27 @@
             gap: 8px;
             z-index: 2;
             position: relative;
+            margin-top: 2px;
         }
 
         .vault-currency {
             font-size: 1.6rem;
             font-weight: 800;
             color: var(--sigma-accent-light);
-            opacity: 0.95;
         }
 
         .vault-number {
-            font-size: clamp(2.5rem, 8vw, 3.8rem);
+            font-size: clamp(2.4rem, 8vw, 3.6rem);
             font-weight: 900;
             letter-spacing: -1.5px;
             line-height: 1;
-            text-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+            color: #FFFFFF;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
         }
 
-        /* Triple Pocket Matrix */
+        /* ==========================================================================
+           6. TRIPLE POCKET WALLET MATRIX
+           ========================================================================== */
         .pocket-wallets-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -891,7 +833,7 @@
         }
 
         .pocket-title {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 800;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -900,20 +842,18 @@
 
         .pocket-val {
             font-size: 1.15rem;
-            font-weight: 900;
+            font-weight: 800;
             color: var(--text-heading);
             word-break: break-all;
         }
 
         .pocket-sub {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 600;
             color: var(--text-light);
         }
 
-        .pocket-title-mobile {
-            display: none;
-        }
+        .pocket-title-mobile { display: none; }
 
         @media (max-width: 600px) {
             .pocket-wallets-grid {
@@ -929,27 +869,17 @@
                 gap: 16px;
             }
 
-            .pocket-head {
-                display: contents;
-            }
-
-            .pocket-title {
-                display: none;
-            }
-
+            .pocket-head { display: contents; }
+            .pocket-title { display: none; }
             .pocket-details {
                 display: flex;
                 flex-direction: column;
                 flex: 1;
             }
-
-            .pocket-val {
-                font-size: 1.25rem;
-            }
-
+            .pocket-val { font-size: 1.25rem; }
             .pocket-title-mobile {
                 display: block;
-                font-size: 0.75rem;
+                font-size: 0.72rem;
                 font-weight: 700;
                 color: var(--text-muted);
                 text-transform: uppercase;
@@ -957,7 +887,7 @@
         }
 
         /* ==========================================================================
-           6. LIVE 24-HOUR COUNTDOWN TIMER
+           7. 24-HOUR COUNTDOWN ISLAND
            ========================================================================== */
         .live-countdown-island {
             background: var(--sigma-surface);
@@ -1044,7 +974,7 @@
         }
 
         /* ==========================================================================
-           7. SIGNATURE ORBITAL ACTION TERMINAL
+           8. ORBITAL ACTION TERMINAL (ALL BUTTONS USE FULL .html)
            ========================================================================== */
         .orbital-terminal-wrapper {
             background: var(--sigma-surface);
@@ -1067,9 +997,7 @@
             margin-bottom: 30px;
         }
 
-        .orbital-header h3 {
-            font-size: 1.15rem;
-        }
+        .orbital-header h3 { font-size: 1.15rem; }
 
         .orbit-stage {
             position: relative;
@@ -1128,6 +1056,7 @@
 
         .orbit-center-core:active {
             transform: scale(0.92);
+            box-shadow: 0 4px 12px rgba(11, 19, 43, 0.2);
         }
 
         .orbit-center-core::after {
@@ -1192,6 +1121,7 @@
             white-space: nowrap;
         }
 
+        /* 6 Orbital Positions */
         .node-pos-1 { top: 0%; left: 50%; transform: translate(-50%, -50%); }
         .node-pos-2 { top: 25%; left: 93.3%; transform: translate(-50%, -50%); }
         .node-pos-3 { top: 75%; left: 93.3%; transform: translate(-50%, -50%); }
@@ -1199,17 +1129,17 @@
         .node-pos-5 { top: 75%; left: 6.7%; transform: translate(-50%, -50%); }
         .node-pos-6 { top: 25%; left: 6.7%; transform: translate(-50%, -50%); }
 
-        @media (max-width: 380px) {
-            .orbit-stage { display: none; }
-            .orbit-linear-fallback { display: grid !important; }
-        }
-
         .orbit-linear-fallback {
             display: none;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             width: 100%;
             margin-bottom: 20px;
+        }
+
+        @media (max-width: 380px) {
+            .orbit-stage { display: none; }
+            .orbit-linear-fallback { display: grid !important; }
         }
 
         .terminal-btn {
@@ -1228,9 +1158,7 @@
             transition: var(--transition-bounce);
         }
 
-        .terminal-btn:active {
-            transform: scale(0.94);
-        }
+        .terminal-btn:active { transform: scale(0.94); }
 
         .terminal-btn-icon {
             width: 40px;
@@ -1253,7 +1181,7 @@
         }
 
         /* ==========================================================================
-           8. SECONDARY ACTIONS GRID & OFFICIAL VERIFICATION
+           9. SECONDARY ACTIONS GRID & OFFICIAL VERIFICATION PROOFS
            ========================================================================== */
         .secondary-actions-container {
             display: flex;
@@ -1276,14 +1204,14 @@
             gap: 12px;
             padding: 16px;
             border-radius: var(--radius-lg);
-            background: var(--sigma-surface);
+            background: var(--sigma-subtle);
             border: 1px solid var(--sigma-muted-border);
             color: var(--text-heading);
             font-size: 0.9rem;
             font-weight: 800;
             transition: var(--transition-bounce);
             text-decoration: none;
-            box-shadow: var(--shadow-subtle);
+            box-shadow: var(--shadow-xs);
         }
 
         .sec-action-btn:active {
@@ -1295,11 +1223,11 @@
             width: 38px;
             height: 38px;
             border-radius: 10px;
-            background: var(--sigma-subtle);
+            background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--shadow-xs);
+            box-shadow: var(--shadow-sm);
             flex-shrink: 0;
         }
 
@@ -1330,6 +1258,7 @@
 
         .btn-full-wide:active {
             transform: scale(0.97);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .btn-full-wide svg {
@@ -1347,7 +1276,7 @@
         }
 
         /* ==========================================================================
-           9. TRANSACTION STEPPER LIFECYCLE
+           10. TRANSACTION LIFECYCLE STEPPER
            ========================================================================== */
         .stepper-card {
             background: var(--sigma-surface);
@@ -1355,6 +1284,7 @@
             padding: 24px;
             border: 1px solid var(--sigma-muted-border);
             box-shadow: var(--shadow-subtle);
+            margin-bottom: 20px;
             display: none;
         }
 
@@ -1365,9 +1295,7 @@
             margin-bottom: 24px;
         }
 
-        .stepper-header h3 {
-            font-size: 1.1rem;
-        }
+        .stepper-header h3 { font-size: 1.1rem; }
 
         .badge-type {
             font-size: 0.7rem;
@@ -1437,9 +1365,7 @@
             border-color: var(--sigma-accent);
         }
 
-        .step-node.completed .step-circle svg {
-            display: block;
-        }
+        .step-node.completed .step-circle svg { display: block; }
 
         .step-node.current .step-circle {
             background: white;
@@ -1482,7 +1408,7 @@
         }
 
         /* ==========================================================================
-           10. REFERRAL NETWORK TREE & DYNAMIC STATS
+           11. REFERRAL NETWORK TREE & DYNAMIC QR
            ========================================================================== */
         .referral-tree-card {
             background: var(--sigma-surface);
@@ -1560,6 +1486,7 @@
             padding: 12px 16px;
             border-radius: var(--radius-md);
             border: 1px solid var(--sigma-muted-border);
+            margin-top: 4px;
         }
 
         .referral-detailed-stats span {
@@ -1577,7 +1504,7 @@
         }
 
         /* ==========================================================================
-           11. RECENT TRANSACTIONS PANEL
+           12. RECENT LEDGER TRANSACTIONS
            ========================================================================== */
         .workspace-panel {
             background: var(--sigma-surface);
@@ -1670,10 +1597,7 @@
             color: var(--text-muted);
         }
 
-        .tx-amount {
-            text-align: right;
-        }
-
+        .tx-amount { text-align: right; }
         .tx-amount strong {
             display: block;
             font-size: 1.05rem;
@@ -1688,7 +1612,7 @@
         }
 
         /* ==========================================================================
-           12. STRICT 3-BUTTON FLOATING MOBILE DOCK
+           13. STRICT 3-BUTTON FLOATING MOBILE DOCK
            ========================================================================== */
         .mobile-dock {
             position: fixed;
@@ -1738,10 +1662,7 @@
             font-weight: 800;
         }
 
-        .dock-slot.active {
-            color: var(--sigma-primary);
-        }
-
+        .dock-slot.active { color: var(--sigma-primary); }
         .dock-slot.active svg {
             stroke-width: 2.8;
             transform: translateY(-2px);
@@ -1765,10 +1686,7 @@
             margin: 0 8px;
         }
 
-        .dock-crest-btn:active {
-            transform: scale(0.9);
-        }
-
+        .dock-crest-btn:active { transform: scale(0.9); }
         .dock-crest-btn img {
             width: 32px;
             height: 32px;
@@ -1786,22 +1704,17 @@
         }
 
         @media (min-width: 860px) {
-            .mobile-dock {
-                display: none;
-            }
-
-            body {
-                padding-bottom: 40px;
-            }
+            .mobile-dock { display: none; }
+            body { padding-bottom: 40px; }
         }
 
-        /* Configurable WhatsApp Button */
+        /* Floating WhatsApp Button */
         .whatsapp-float {
             position: fixed;
-            bottom: calc(95px + var(--safe-area-bottom));
+            bottom: calc(100px + var(--safe-area-bottom));
             right: 20px;
-            width: 58px;
-            height: 58px;
+            width: 60px;
+            height: 60px;
             background: #25D366;
             color: white;
             border-radius: 50%;
@@ -1816,31 +1729,31 @@
         }
 
         .whatsapp-float svg {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             fill: currentColor;
         }
 
         .whatsapp-float:active {
-            transform: scale(0.88);
+            transform: scale(0.85);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
         }
 
         @media (min-width: 860px) {
             .whatsapp-float {
-                bottom: 35px;
-                right: 35px;
-                width: 64px;
-                height: 64px;
+                bottom: 40px;
+                right: 40px;
+                width: 68px;
+                height: 68px;
             }
-
             .whatsapp-float svg {
-                width: 36px;
-                height: 36px;
+                width: 38px;
+                height: 38px;
             }
         }
 
         /* ==========================================================================
-           13. BOTTOM SHEETS & NOTIFICATIONS
+           14. BOTTOM SHEETS & SYSTEM MODALS
            ========================================================================== */
         .overlay {
             position: fixed;
@@ -1876,9 +1789,7 @@
             z-index: var(--z-modal);
         }
 
-        .overlay.show .sheet {
-            transform: translateY(0);
-        }
+        .overlay.show .sheet { transform: translateY(0); }
 
         .sheet-handle {
             width: 44px;
@@ -1952,8 +1863,10 @@
 
         .btn-sheet-submit:active {
             transform: scale(0.96);
+            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.2);
         }
 
+        /* Activity Center Notifications */
         .notif-feed-item {
             padding: 16px 20px;
             border-radius: var(--radius-xl);
@@ -1968,6 +1881,8 @@
             position: relative;
             overflow: hidden;
         }
+
+        .notif-feed-item:active { transform: scale(0.98); }
 
         .notif-feed-item.unread {
             background: white;
@@ -1984,6 +1899,13 @@
             width: 4px;
             background: var(--sigma-accent);
         }
+
+        .notif-feed-item.pinned {
+            border-color: var(--sigma-gold-border);
+            background: var(--sigma-gold-soft);
+        }
+
+        .notif-feed-item.pinned::before { background: var(--sigma-gold); }
 
         .notif-feed-top {
             display: flex;
@@ -2021,12 +1943,14 @@
         .notif-feed-top strong {
             font-size: 0.95rem;
             color: var(--text-heading);
+            line-height: 1.2;
         }
 
         .notif-feed-top span {
             font-size: 0.7rem;
             color: var(--text-muted);
             font-weight: 700;
+            white-space: nowrap;
         }
 
         .notif-feed-item p {
@@ -2043,9 +1967,11 @@
             color: var(--sigma-info-dark);
             background: transparent;
             border: none;
+            outline: none;
             cursor: pointer;
         }
 
+        /* Premium QR Code Modal */
         .qr-wrapper {
             position: relative;
             display: inline-block;
@@ -2079,6 +2005,12 @@
             object-fit: contain;
         }
 
+        /* Proof Viewer Modal */
+        #sheetProofViewer {
+            max-height: 95vh;
+            height: 95vh;
+        }
+
         .proof-viewer-body {
             display: flex;
             flex-direction: column;
@@ -2095,6 +2027,7 @@
             object-fit: contain;
         }
 
+        /* Toast Component */
         .toast {
             position: fixed;
             top: 24px;
@@ -2123,9 +2056,7 @@
             transform: translate(-50%, 0) scale(1);
         }
 
-        /* ==========================================================================
-           14. ADMIN BLOCKER & SAFETY SCREEN
-           ========================================================================== */
+        /* Admin Blocker Screen */
         #blockerScreen {
             position: fixed;
             inset: 0;
@@ -2140,9 +2071,7 @@
             text-align: center;
         }
 
-        #blockerScreen.active {
-            display: flex;
-        }
+        #blockerScreen.active { display: flex; }
 
         #blockerScreen svg {
             width: 80px;
@@ -2178,9 +2107,7 @@
             transition: var(--transition-bounce);
         }
 
-        .btn-blocker-contact:active {
-            transform: scale(0.95);
-        }
+        .btn-blocker-contact:active { transform: scale(0.95); }
 
         .skeleton {
             background: #E2E8F0;
@@ -2281,9 +2208,6 @@
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
         </symbol>
-        <symbol id="icon-shield" viewBox="0 0 24 24">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </symbol>
         <symbol id="icon-shield-alert" viewBox="0 0 24 24">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             <line x1="12" y1="8" x2="12" y2="12" />
@@ -2314,34 +2238,32 @@
             <polyline points="10 9 9 9 8 9" />
         </symbol>
         <symbol id="icon-file-text" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-            <polyline points="10 9 9 9 8 9" />
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
         </symbol>
     </svg>
 
     <!-- Administrative Blocker Screen -->
     <div id="blockerScreen">
-        <svg>
-            <use href="#icon-shield-alert" />
-        </svg>
+        <svg><use href="#icon-shield-alert" /></svg>
         <h1 id="blockerTitle">Access Suspended</h1>
         <p id="blockerMsg">Security protocols have placed this session on hold. Contact administrator verification.</p>
-        <a href="https://wa.me/923000000000" class="btn-blocker-contact" id="blockerContactBtn">Open Priority Support</a>
+        <a href="https://whatsapp.com/channel/sigma_official" class="btn-blocker-contact" id="blockerContactBtn">Open Priority Support</a>
     </div>
 
-    <!-- Main Workspace Frame -->
+    <!-- Main Mobile & Responsive Workspace Frame -->
     <div class="app-container">
 
-        <!-- Guaranteed Safe Single-Row Header -->
+        <!-- Guaranteed 320px Safe Single-Row Header -->
         <header class="island-topbar" id="mainHeader">
-            <div class="brand-cluster">
+            <a href="index.html" class="brand-cluster">
                 <img src="assets/logo.png" alt="Sigma Logo" class="brand-logo-img"
                     onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
                 <img src="assets/textlogo.png" alt="Sigma" class="brand-text-img" onerror="this.style.display='none'">
-            </div>
+            </a>
 
             <div class="header-actions">
                 <a href="leaderboard.html" class="btn-top-action" aria-label="Leaderboard">
@@ -2349,18 +2271,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </a>
-                <button class="btn-top-action" onclick="appController.openSheet('sheetNotif')"
-                    aria-label="Notifications">
-                    <svg>
-                        <use href="#icon-bell" />
-                    </svg>
+                <button class="btn-top-action" onclick="appController.openSheet('sheetNotif')" aria-label="Notifications">
+                    <svg><use href="#icon-bell" /></svg>
                     <span class="unread-dot" id="headerNotifDot"></span>
                 </button>
-                <button class="btn-top-action" onclick="appController.openSheet('sheetMenu')"
-                    aria-label="Terminal Navigation">
-                    <svg>
-                        <use href="#icon-menu" />
-                    </svg>
+                <button class="btn-top-action" onclick="appController.openSheet('sheetMenu')" aria-label="Terminal Navigation">
+                    <svg><use href="#icon-menu" /></svg>
                 </button>
             </div>
         </header>
@@ -2368,71 +2284,46 @@
         <!-- Primary Body Modules -->
         <main class="workspace">
 
-            <!-- High-Trust Compact Identity & Credentials Card -->
+            <!-- Dynamic Identity Strip with Trustworthy & Compact UID -->
             <section class="identity-card">
-                <div class="id-top-row">
-                    <div class="id-left">
-                        <div class="user-avatar-wrap" onclick="window.location.href='profile.html'" title="Open Profile">
-                            <div class="user-avatar" id="uiAvatarWrap">
-                                <span id="uiAvatarLetter" class="skeleton">S</span>
-                            </div>
-                            <div class="avatar-tier-badge" title="Account Tier"><svg>
-                                    <use href="#icon-crown" />
-                                </svg></div>
+                <div class="id-left">
+                    <div class="user-avatar-wrap" onclick="window.location.href='profile.html'" title="Open Profile">
+                        <div class="user-avatar" id="uiAvatarWrap">
+                            <span id="uiAvatarLetter" class="skeleton">S</span>
                         </div>
-                        <div class="id-text">
-                            <h2><span id="uiDisplayName" class="skeleton">Investor</span> <span class="tier-chip"
-                                    id="uiTierBadge">Bronze</span></h2>
-                            <div class="verified-account-tag">
-                                <svg><use href="#icon-check"/></svg> Verified Member
-                            </div>
-                        </div>
+                        <div class="avatar-tier-badge" title="Account Tier"><svg><use href="#icon-crown" /></svg></div>
                     </div>
-                    <button class="btn-qr-action" onclick="appController.openQrModal()" title="Show Invite QR"><svg>
-                            <use href="#icon-qr" />
-                        </svg></button>
-                </div>
-
-                <!-- Sleek High-Trust Credentials Cluster (Compact UID + Ref Code with Instant Copy) -->
-                <div class="user-credentials-cluster">
-                    <div class="cred-pill" onclick="appController.copyText('uiAccountUID', 'User ID')">
-                        <div class="cred-data">
-                            <svg><use href="#icon-shield"/></svg>
-                            <span id="uiAccountUID" class="font-mono">UID: #SIG-••••</span>
+                    <div class="id-text">
+                        <h2>
+                            <span id="uiDisplayName" class="skeleton">Investor</span> 
+                            <span class="tier-chip" id="uiTierBadge">Bronze</span>
+                        </h2>
+                        <div class="trust-id-badge font-mono">
+                            <span class="trust-dot"></span>
+                            <span id="uiAccountUID">SIG-â€¢â€¢â€¢â€¢</span>
                         </div>
-                        <svg class="cred-copy-icon"><use href="#icon-copy"/></svg>
-                    </div>
-
-                    <div class="cred-pill" onclick="appController.copyReferralLink()">
-                        <div class="cred-data">
-                            <span class="cred-label-badge">REF:</span>
-                            <span id="uiReferralShortCode" class="font-mono">SIG-••••</span>
-                        </div>
-                        <svg class="cred-copy-icon"><use href="#icon-copy"/></svg>
                     </div>
                 </div>
-
+                <div class="id-actions">
+                    <button class="btn-id-pill" onclick="appController.openQrModal()" title="Show Invite QR"><svg><use href="#icon-qr" /></svg></button>
+                    <button class="btn-id-pill" onclick="appController.copyReferralLink()" title="Copy Link"><svg><use href="#icon-copy" /></svg></button>
+                </div>
                 <input type="hidden" id="rawReferralUrl" value="">
             </section>
 
             <!-- Real-Time Admin Notice Broadcast -->
-            <section class="system-announcement-pill" id="announcementPill"
-                onclick="appController.openAnnouncementModal()" style="display: none;">
+            <section class="system-announcement-pill" id="announcementPill" onclick="appController.openAnnouncementModal()" style="display: none;">
                 <div class="announcement-text">
-                    <svg>
-                        <use href="#icon-bell" />
-                    </svg>
+                    <svg><use href="#icon-bell" /></svg>
                     <span id="announcementHeadline">Platform Transmissions</span>
                 </div>
                 <span style="font-size: 0.75rem; font-weight: 800; color: #065F46;">READ &rarr;</span>
             </section>
 
-            <!-- Next-Gen Wallet Card with Light-Pink Ambient Tone & Enlarged Logos -->
+            <!-- Redesigned Wallet Card (Enlarged Logos + Subtle Light Pink Sheen + High Contrast) -->
             <section class="vault-main-card">
-                <!-- Enlarged Branding -->
                 <div class="vault-branding">
-                    <img src="assets/textlogo.png" alt="SIGMA" class="vault-text-logo"
-                        onerror="this.style.display='none'">
+                    <img src="assets/textlogo.png" alt="SIGMA" class="vault-text-logo" onerror="this.style.display='none'">
                     <img src="assets/logo.png" alt="" class="vault-icon-logo" onerror="this.style.display='none'">
                 </div>
 
@@ -2451,15 +2342,13 @@
                 </div>
             </section>
 
-            <!-- Distinct Modular Multi-Wallet Matrix -->
+            <!-- Triple Pocket Multi-Wallet Matrix -->
             <section class="pocket-wallets-grid">
-                <!-- 1. Main Wallet -->
+                <!-- 1. Deposit / Main Wallet -->
                 <div class="pocket-card p-deposit">
                     <div class="pocket-head">
                         <span class="pocket-title" id="cmsWalletDepositTitle">Deposit / Main</span>
-                        <div class="pocket-icon-wrap"><svg>
-                                <use href="#icon-wallet" />
-                            </svg></div>
+                        <div class="pocket-icon-wrap"><svg><use href="#icon-wallet" /></svg></div>
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Deposit</span>
@@ -2468,13 +2357,11 @@
                     </div>
                 </div>
 
-                <!-- 2. Profit Wallet -->
+                <!-- 2. Profit / ROI Wallet -->
                 <div class="pocket-card p-profit">
                     <div class="pocket-head">
                         <span class="pocket-title" id="cmsWalletProfitTitle">Profit / ROI</span>
-                        <div class="pocket-icon-wrap"><svg>
-                                <use href="#icon-arrow-up" />
-                            </svg></div>
+                        <div class="pocket-icon-wrap"><svg><use href="#icon-arrow-up" /></svg></div>
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Profit</span>
@@ -2487,9 +2374,7 @@
                 <div class="pocket-card p-comm">
                     <div class="pocket-head">
                         <span class="pocket-title" id="cmsWalletCommissionTitle">Commission</span>
-                        <div class="pocket-icon-wrap"><svg>
-                                <use href="#icon-crown" />
-                            </svg></div>
+                        <div class="pocket-icon-wrap"><svg><use href="#icon-crown" /></svg></div>
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Commission</span>
@@ -2499,12 +2384,10 @@
                 </div>
             </section>
 
-            <!-- Exact 24-Hour Purchase-Timestamp Countdown Engine -->
+            <!-- Exact 24-Hour Plan Timestamp Countdown Engine -->
             <section class="live-countdown-island">
                 <div class="countdown-info">
-                    <div class="pulsing-yield-ring"><svg>
-                            <use href="#icon-pie" />
-                        </svg></div>
+                    <div class="pulsing-yield-ring"><svg><use href="#icon-pie" /></svg></div>
                     <div>
                         <small id="cmsCountdownKicker">Next Profit Credit</small>
                         <strong id="cmsCountdownPlan">No Active Cycle</strong>
@@ -2513,16 +2396,13 @@
                 <div class="clock-display font-mono" id="profitClockDisplay">00:00:00</div>
             </section>
 
-            <!-- Signature Circular Orbital Action Terminal (All .html URLs) -->
+            <!-- Signature Circular Orbital Action Terminal -->
             <section class="orbital-terminal-wrapper">
                 <div class="orbital-header">
                     <h3 id="cmsTerminalTitle">Command Center</h3>
-                    <span
-                        style="font-size: 0.75rem; font-weight: 800; color: var(--sigma-accent-dark); letter-spacing: 1px;">ORBITAL
-                        MATRIX</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--sigma-accent-dark); letter-spacing: 1px;">ORBITAL MATRIX</span>
                 </div>
 
-                <!-- Radial Circular Hub Interface -->
                 <div class="orbit-stage">
                     <div class="orbit-ring"></div>
                     <div class="orbit-ring-inner"></div>
@@ -2534,47 +2414,34 @@
                             onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
                     </div>
 
-                    <!-- 6 Equidistant Orbiting Nodes (.html Links) -->
-                    <a href="plans.html" class="orbit-node node-pos-1"
-                        onclick="appController.logAction('deposit_node', 'Opened deposit/plans via terminal')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-info-dark);"><svg>
-                                <use href="#icon-arrow-down" />
-                            </svg></div>
+                    <!-- 6 Orbital Nodes Pointing Strictly to Full .html Routes -->
+                    <a href="plans.html" class="orbit-node node-pos-1" onclick="appController.logAction('deposit_node', 'Opened deposit/plans via terminal')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-info-dark);"><svg><use href="#icon-arrow-down" /></svg></div>
                         <span>Deposit</span>
                     </a>
-                    <a href="assets/sigma.apk" download class="orbit-node node-pos-2"
-                        onclick="appController.logAction('app_download_node', 'Initiated App Download')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-purple);"><svg>
-                                <use href="#icon-download" />
-                            </svg></div>
+
+                    <a href="assets/sigma.apk" download class="orbit-node node-pos-2" onclick="appController.logAction('app_download_node', 'Initiated App Download')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-purple);"><svg><use href="#icon-download" /></svg></div>
                         <span>App (APK)</span>
                     </a>
-                    <a href="my-plans.html" class="orbit-node node-pos-3"
-                        onclick="appController.logAction('my_plans_node', 'Navigated to my plans')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg>
-                                <use href="#icon-pie" />
-                            </svg></div>
+
+                    <a href="my-plans.html" class="orbit-node node-pos-3" onclick="appController.logAction('my_plans_node', 'Navigated to my plans')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg><use href="#icon-pie" /></svg></div>
                         <span>My Plans</span>
                     </a>
-                    <a href="withdraw.html" class="orbit-node node-pos-4"
-                        onclick="appController.logAction('withdraw_node', 'Opened withdraw via terminal')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-danger-dark);"><svg>
-                                <use href="#icon-arrow-up" />
-                            </svg></div>
+
+                    <a href="withdraw.html" class="orbit-node node-pos-4" onclick="appController.logAction('withdraw_node', 'Opened withdraw via terminal')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-danger-dark);"><svg><use href="#icon-arrow-up" /></svg></div>
                         <span>Withdraw</span>
                     </a>
-                    <a href="team.html" class="orbit-node node-pos-5"
-                        onclick="appController.logAction('network_node', 'Viewed network tree')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-gold-dark);"><svg>
-                                <use href="#icon-users" />
-                            </svg></div>
+
+                    <a href="team.html" class="orbit-node node-pos-5" onclick="appController.logAction('network_node', 'Viewed network tree')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-users" /></svg></div>
                         <span>Network</span>
                     </a>
-                    <a href="support.html" class="orbit-node node-pos-6"
-                        onclick="appController.logAction('support_node', 'Opened support desk')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg>
-                                <use href="#icon-message" />
-                            </svg></div>
+
+                    <a href="support.html" class="orbit-node node-pos-6" onclick="appController.logAction('support_node', 'Opened support desk')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-message" /></svg></div>
                         <span>Support</span>
                     </a>
                 </div>
@@ -2582,87 +2449,64 @@
                 <!-- Fallback Grid for Ultra-Narrow Viewports (<380px) -->
                 <div class="orbit-linear-fallback">
                     <a href="plans.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-info-dark);"><svg>
-                                <use href="#icon-arrow-down" />
-                            </svg></div><span>Deposit</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-info-dark);"><svg><use href="#icon-arrow-down" /></svg></div><span>Deposit</span>
                     </a>
                     <a href="assets/sigma.apk" download class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-purple);"><svg>
-                                <use href="#icon-download" />
-                            </svg></div><span>App (APK)</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-purple);"><svg><use href="#icon-download" /></svg></div><span>App (APK)</span>
                     </a>
                     <a href="my-plans.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-primary);"><svg>
-                                <use href="#icon-pie" />
-                            </svg></div><span>My Plans</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-primary);"><svg><use href="#icon-pie" /></svg></div><span>My Plans</span>
                     </a>
                     <a href="withdraw.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-danger-dark);"><svg>
-                                <use href="#icon-arrow-up" />
-                            </svg></div><span>Withdraw</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-danger-dark);"><svg><use href="#icon-arrow-up" /></svg></div><span>Withdraw</span>
                     </a>
                     <a href="team.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-gold-dark);"><svg>
-                                <use href="#icon-users" />
-                            </svg></div><span>Network</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-users" /></svg></div><span>Network</span>
                     </a>
                     <a href="support.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg>
-                                <use href="#icon-message" />
-                            </svg></div><span>Support</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-message" /></svg></div><span>Support</span>
                     </a>
                 </div>
             </section>
 
-            <!-- Secondary Actions Grid (.html Links) -->
+            <!-- Secondary Actions Grid (Transactions & Leaderboard) -->
             <section class="secondary-actions-container">
                 <div class="secondary-actions-grid">
                     <a href="transactions.html" class="sec-action-btn">
-                        <div class="sec-action-icon" style="color: var(--sigma-secondary);"><svg>
-                                <use href="#icon-receipt" />
-                            </svg></div>
+                        <div class="sec-action-icon" style="color: var(--sigma-secondary);"><svg><use href="#icon-receipt" /></svg></div>
                         Transactions
                     </a>
                     <a href="leaderboard.html" class="sec-action-btn">
-                        <div class="sec-action-icon" style="color: var(--sigma-gold-dark);"><svg>
-                                <use href="#icon-trophy" />
-                            </svg></div>
+                        <div class="sec-action-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-trophy" /></svg></div>
                         Leaderboard
                     </a>
                 </div>
 
-                <!-- Official Verification Documents Container -->
+                <!-- Official Verification Dynamically Injected Button -->
                 <div id="proofsGridContainer"></div>
             </section>
 
-            <!-- 3-Step Stepper for Active Transaction Lifecycle -->
-            <section class="stepper-card" id="stepperLifecycleBox">
+            <!-- Transaction Lifecycle Stepper -->
+            <section class="stepper-card" id="stepperLifecycleBox" style="display: none;">
                 <div class="stepper-header">
                     <div>
                         <span class="badge-type" id="stepperTrxType">Transaction</span>
                         <h3 id="stepperTrxAmount" class="font-mono" style="margin-top: 6px;">Rs. 0.00</h3>
                     </div>
-                    <span id="stepperReference" class="font-mono"
-                        style="font-size: 0.8rem; color: var(--text-muted);">REF-••••</span>
+                    <span id="stepperReference" class="font-mono" style="font-size: 0.8rem; color: var(--text-muted);">REF-â€¢â€¢â€¢â€¢</span>
                 </div>
 
                 <div class="stepper-track">
                     <div class="step-node completed" id="stepNode1">
-                        <div class="step-circle"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
+                        <div class="step-circle"><svg><use href="#icon-check" /></svg></div>
                         <span>Submitted</span>
                     </div>
                     <div class="step-node current" id="stepNode2">
-                        <div class="step-circle"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
+                        <div class="step-circle"><svg><use href="#icon-check" /></svg></div>
                         <span>Review</span>
                     </div>
                     <div class="step-node" id="stepNode3">
-                        <div class="step-circle"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
+                        <div class="step-circle"><svg><use href="#icon-check" /></svg></div>
                         <span id="step3Label">Processed</span>
                     </div>
                 </div>
@@ -2672,21 +2516,18 @@
                 </div>
             </section>
 
-            <!-- Configurable Referral Network Matrix -->
+            <!-- Referral Network Tree Matrix -->
             <section class="referral-tree-card">
                 <div class="tree-header">
                     <div>
                         <h3 id="cmsNetworkMatrixTitle">Referral Network Matrix</h3>
                         <p style="font-size: 0.8rem; margin-top: 2px;">Verified Ledger Distributions</p>
                     </div>
-                    <button class="btn-id-pill" onclick="appController.openQrModal()"><svg>
-                            <use href="#icon-qr" />
-                        </svg> Invite</button>
+                    <button class="btn-id-pill" onclick="appController.openQrModal()"><svg><use href="#icon-qr" /></svg> Invite</button>
                 </div>
 
                 <div class="tree-tabs-nav">
-                    <button class="tree-tab-btn active" id="btnTier1"
-                        onclick="appController.switchTreeTier(1, this)">Level 1</button>
+                    <button class="tree-tab-btn active" id="btnTier1" onclick="appController.switchTreeTier(1, this)">Level 1</button>
                     <button class="tree-tab-btn" id="btnTier2" onclick="appController.switchTreeTier(2, this)">Level 2</button>
                     <button class="tree-tab-btn" id="btnTier3" onclick="appController.switchTreeTier(3, this)">Level 3</button>
                 </div>
@@ -2696,8 +2537,7 @@
                         <small>Total Members</small>
                         <strong id="tierMembersCount" class="font-mono">0</strong>
                     </div>
-                    <div class="tree-metric-col"
-                        style="border-left: 1px solid var(--sigma-input-border); border-right: 1px solid var(--sigma-input-border); padding: 0 16px;">
+                    <div class="tree-metric-col" style="border-left: 1px solid var(--sigma-input-border); border-right: 1px solid var(--sigma-input-border); padding: 0 16px;">
                         <small>Active Plans</small>
                         <strong id="tierActiveCount" class="font-mono">0</strong>
                     </div>
@@ -2713,7 +2553,7 @@
                 </div>
             </section>
 
-            <!-- Recent Ledger Records -->
+            <!-- Historical Ledger Records -->
             <section class="workspace-panel" style="padding-bottom: 8px;">
                 <div class="panel-heading">
                     <h3 id="cmsRecentLedgerTitle">Recent Ledger Records</h3>
@@ -2729,16 +2569,14 @@
         </main>
     </div>
 
-    <!-- 3-Button Single Row Native Mobile Dock (.html Links) -->
+    <!-- 3-Button Single Row Floating Mobile Dock -->
     <nav class="mobile-dock" aria-label="Primary Mobile Commands">
         <a href="dash.html" class="dock-slot active" aria-current="page">
-            <svg>
-                <use href="#icon-home" />
-            </svg>
+            <svg><use href="#icon-home" /></svg>
             <span>Home</span>
         </a>
 
-        <!-- Central Crest Button (Plans) -->
+        <!-- Central Crest Button pointing directly to plans.html -->
         <a href="plans.html" class="dock-crest-btn" aria-label="Available Portfolios"
             onclick="appController.logAction('dock_plans', 'Opened investment plans from mobile dock')">
             <img src="assets/logo.png" alt="Sigma Crest"
@@ -2748,15 +2586,13 @@
         <a href="profile.html" class="dock-slot">
             <div style="width: 26px; height: 26px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);"
                 id="dockAvatarContainer">
-                <svg style="width: 18px; height: 18px;">
-                    <use href="#icon-user" />
-                </svg>
+                <svg style="width: 18px; height: 18px;"><use href="#icon-user" /></svg>
             </div>
             <span>Profile</span>
         </a>
     </nav>
 
-    <!-- Floating WhatsApp Channel Button -->
+    <!-- WhatsApp Floating Action -->
     <a href="https://whatsapp.com/channel/sigma_official" target="_blank" class="whatsapp-float"
         id="btnFloatingWhatsApp" aria-label="WhatsApp Priority Support"
         onclick="appController.logAction('whatsapp_click', 'Clicked floating WhatsApp channel support')"
@@ -2767,19 +2603,17 @@
         </svg>
     </a>
 
-    <!-- QR Code Modal -->
+    <!-- Invite QR Modal -->
     <div class="overlay" id="sheetQr">
         <div class="sheet" style="max-width: 460px;">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>Personal Invite Code</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetQr')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetQr')"><svg><use href="#icon-x" /></svg></button>
             </div>
             <div class="sheet-body" style="text-align: center;">
                 <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;">
-                    Scan with any smartphone camera to automatically bind your referral network.
+                    Scan with any mobile camera to securely bind your referral tree.
                 </p>
                 <div class="qr-wrapper">
                     <div id="qrBoxContainer"></div>
@@ -2791,74 +2625,59 @@
 
                 <div style="margin-top: 24px; display: flex; gap: 12px; flex-direction: column;">
                     <button class="btn-sheet-submit" onclick="appController.copyReferralLink()">
-                        <svg style="width:18px;height:18px;fill:none;stroke:white;stroke-width:2;">
-                            <use href="#icon-copy" />
-                        </svg> Copy Personal Link
+                        <svg style="width:18px;height:18px;fill:none;stroke:white;stroke-width:2;"><use href="#icon-copy" /></svg> Copy Unique URL
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Official Documents Lightbox Modal -->
+    <!-- Official Proofs Viewer Modal -->
     <div class="overlay" id="sheetProofViewer">
         <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <h3>Official Verification Document</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetProofViewer')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <h3>Official Document</h3>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetProofViewer')"><svg><use href="#icon-x" /></svg></button>
             </div>
             <div class="sheet-body proof-viewer-body">
                 <img id="proofViewerImg" src="" alt="Official Document" class="proof-viewer-img">
-                <p id="proofViewerDesc"
-                    style="text-align: center; color: var(--text-muted); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">
-                </p>
-                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetProofViewer')">Close Document</button>
+                <p id="proofViewerDesc" style="text-align: center; color: var(--text-muted); font-size: 0.9rem; max-width: 400px; margin: 0 auto;"></p>
+                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetProofViewer')">Close Viewer</button>
             </div>
         </div>
     </div>
 
-    <!-- Admin Announcement Modal -->
+    <!-- System Announcement Modal -->
     <div class="overlay" id="sheetAnnouncement">
         <div class="sheet" style="max-width: 480px;">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>System Announcement</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetAnnouncement')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetAnnouncement')"><svg><use href="#icon-x" /></svg></button>
             </div>
             <div class="sheet-body">
                 <h4 id="announcementModalTitle" style="margin-bottom: 12px; font-size: 1.1rem;">Notice</h4>
-                <p id="announcementModalBody"
-                    style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; color: var(--text-body);"></p>
-                <button class="btn-sheet-submit"
-                    onclick="appController.closeSheet('sheetAnnouncement')">Acknowledge</button>
+                <p id="announcementModalBody" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; color: var(--text-body);"></p>
+                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetAnnouncement')">Acknowledge</button>
             </div>
         </div>
     </div>
 
-    <!-- Notification Feed Drawer -->
+    <!-- Activity Center (Notifications) -->
     <div class="overlay" id="sheetNotif">
         <div class="sheet" style="max-height: 95vh; height: 90vh;">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>Activity Center</h3>
                 <div style="display: flex; align-items: center; gap: 16px;">
-                    <button class="mark-all-read-btn" id="btnMarkAllRead" onclick="appController.markAllNotifsRead()"
-                        style="display: none;">Mark all read</button>
-                    <button class="sheet-close-btn" onclick="appController.closeSheet('sheetNotif')"><svg>
-                            <use href="#icon-x" />
-                        </svg></button>
+                    <button class="mark-all-read-btn" id="btnMarkAllRead" onclick="appController.markAllNotifsRead()" style="display: none;">Mark all read</button>
+                    <button class="sheet-close-btn" onclick="appController.closeSheet('sheetNotif')"><svg><use href="#icon-x" /></svg></button>
                 </div>
             </div>
-            <div class="sheet-body" id="notifListContainer"
-                style="padding: 16px 20px; background: var(--sigma-surface);">
+            <div class="sheet-body" id="notifListContainer" style="padding: 16px 20px; background: var(--sigma-surface);">
                 <div style="padding: 40px 0; text-align: center; color: var(--text-light);">
-                    <svg
-                        style="width: 48px; height: 48px; stroke: currentColor; fill: none; stroke-width: 1.5; margin-bottom: 16px;">
+                    <svg style="width: 48px; height: 48px; stroke: currentColor; fill: none; stroke-width: 1.5; margin-bottom: 16px;">
                         <use href="#icon-bell" />
                     </svg>
                     <p>No active notifications recorded in your authenticated history.</p>
@@ -2867,44 +2686,34 @@
         </div>
     </div>
 
-    <!-- Quick Terminal Menu Drawer (.html Links) -->
+    <!-- Terminal Menu Modal -->
     <div class="overlay" id="sheetMenu">
         <div class="sheet" style="max-width: 480px;">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <h3>Terminal Navigation</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetMenu')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <h3>Terminal Menu</h3>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetMenu')"><svg><use href="#icon-x" /></svg></button>
             </div>
             <div class="sheet-body" id="cmsNavMenuWrapper">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <a href="leaderboard.html" class="btn-sheet-submit"
                         style="color: var(--sigma-gold-dark); background: var(--sigma-gold-soft); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-gold-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;">
-                            <use href="#icon-trophy" />
-                        </svg>
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-trophy" /></svg>
                         <span class="cms-nav-label" data-key="navLeaderboard">Global Leaderboard</span>
                     </a>
                     <a href="profile.html" class="btn-sheet-submit"
                         style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;">
-                            <use href="#icon-crown" />
-                        </svg>
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-crown" /></svg>
                         <span class="cms-nav-label" data-key="navProfile">Profile & Settings</span>
                     </a>
                     <a href="transactions.html" class="btn-sheet-submit"
                         style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;">
-                            <use href="#icon-receipt" />
-                        </svg>
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-receipt" /></svg>
                         <span class="cms-nav-label" data-key="navHistory">Transaction History</span>
                     </a>
                     <a href="support.html" class="btn-sheet-submit"
                         style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;">
-                            <use href="#icon-lifebuoy" />
-                        </svg>
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-lifebuoy" /></svg>
                         <span class="cms-nav-label" data-key="navSupport">Help & Support</span>
                     </a>
 
@@ -2912,9 +2721,7 @@
 
                     <button onclick="appController.terminateSession()" class="btn-sheet-submit"
                         style="justify-content: flex-start; padding: 14px 20px; color: var(--sigma-danger-dark); border: 1px solid var(--sigma-danger-border); background: var(--sigma-danger-soft); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px; stroke: var(--sigma-danger-dark);">
-                            <use href="#icon-shield-alert" />
-                        </svg>
+                        <svg style="width: 20px; height: 20px; stroke: var(--sigma-danger-dark);"><use href="#icon-shield-alert" /></svg>
                         <span class="cms-nav-label" data-key="navLogout">Logout Securely</span>
                     </button>
                 </div>
@@ -2922,16 +2729,14 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- Toast Component -->
     <div class="toast" id="toastBox">
-        <svg style="width:18px;height:18px;stroke:var(--sigma-accent-light);fill:none;stroke-width:2.5;">
-            <use href="#icon-check" />
-        </svg>
+        <svg style="width:18px;height:18px;stroke:var(--sigma-accent-light);fill:none;stroke-width:2.5;"><use href="#icon-check" /></svg>
         <span id="toastMsg">Verified</span>
     </div>
 
     <!-- ==========================================================================
-         JAVASCRIPT CONTROLLER (FIREBASE LIVE LEDGER INTEGRATION)
+         JAVASCRIPT ARCHITECTURE & FIREBASE LOGIC
          ========================================================================== -->
     <script>
         const appController = (() => {
@@ -2991,16 +2796,19 @@
                 requestAnimationFrame(step);
             };
 
-            // --- UI Interaction Managers ---
             const updateBalanceVisibility = () => {
                 if (!dom.uiNetBalance) return;
 
                 if (userProfile) {
-                    const total = (userProfile.depositBalance || 0) + (userProfile.profitBalance || 0) + (userProfile.commissionBalance || 0);
+                    const deposit = Number(userProfile.depositBalance || userProfile.balance || 0);
+                    const profit = Number(userProfile.profitBalance || 0);
+                    const comm = Number(userProfile.commissionBalance || 0);
+                    const total = deposit + profit + comm;
+
                     animateValue(dom.uiNetBalance, 0, total);
-                    if (dom.uiDepositWallet) dom.uiDepositWallet.textContent = "Rs. " + (userProfile.depositBalance || 0).toLocaleString('en-PK', { minimumFractionDigits: 2 });
-                    if (dom.uiProfitWallet) dom.uiProfitWallet.textContent = "Rs. " + (userProfile.profitBalance || 0).toLocaleString('en-PK', { minimumFractionDigits: 2 });
-                    if (dom.uiCommissionWallet) dom.uiCommissionWallet.textContent = "Rs. " + (userProfile.commissionBalance || 0).toLocaleString('en-PK', { minimumFractionDigits: 2 });
+                    if (dom.uiDepositWallet) dom.uiDepositWallet.textContent = "Rs. " + deposit.toLocaleString('en-PK', { minimumFractionDigits: 2 });
+                    if (dom.uiProfitWallet) dom.uiProfitWallet.textContent = "Rs. " + profit.toLocaleString('en-PK', { minimumFractionDigits: 2 });
+                    if (dom.uiCommissionWallet) dom.uiCommissionWallet.textContent = "Rs. " + comm.toLocaleString('en-PK', { minimumFractionDigits: 2 });
                 } else {
                     animateValue(dom.uiNetBalance, 0, 0);
                 }
@@ -3053,27 +2861,13 @@
                 });
             };
 
-            // --- Referral & Credentials Engine ---
-            const copyText = async (elementId, label) => {
-                const el = document.getElementById(elementId);
-                if (!el) return;
-                const text = el.innerText.replace(/^[^\w#]+/, '').trim();
-                try {
-                    await navigator.clipboard.writeText(text);
-                    toast(`${label} copied!`);
-                    hapticTouch(25);
-                } catch (e) {
-                    toast('Failed to copy', 2000);
-                }
-            };
-
             const copyReferralLink = async () => {
                 if (!dom.rawReferralUrl) return;
                 const link = dom.rawReferralUrl.value;
                 if (!link) return;
                 try {
                     await navigator.clipboard.writeText(link);
-                    toast('Personal referral link copied!');
+                    toast('Personal invite link copied!');
                     logAction('copy_referral', 'Copied personal referral URL');
                 } catch (e) {
                     toast('Unable to copy. Select link manually.');
@@ -3133,7 +2927,9 @@
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         device: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
                     });
-                } catch (e) { }
+                } catch (e) {
+                    console.warn("Silent failure on action logging:", e);
+                }
             };
 
             const markAllNotifsRead = async () => {
@@ -3152,7 +2948,9 @@
                         await batch.commit();
                         toast(`Marked ${count} items as read.`);
                     }
-                } catch (e) { }
+                } catch (e) {
+                    console.error("Mark read error:", e);
+                }
             };
 
             const terminateSession = async () => {
@@ -3163,7 +2961,6 @@
                 window.location.replace('login.html');
             };
 
-            // --- 24-Hour Plan Timestamp Engine ---
             const startExact24hTimer = (subscribedTimestamp) => {
                 if (clockInterval) clearInterval(clockInterval);
 
@@ -3191,7 +2988,6 @@
                 }, 1000);
             };
 
-            // --- Centralized CMS Configuration Binder ---
             const bindCMS = (db) => {
                 db.collection('settings').doc('cms_dashboard').onSnapshot(doc => {
                     if (!doc.exists) return;
@@ -3229,7 +3025,7 @@
                     safeSetText('btnTier3', `Level 3 (${referralRates.l3_percent}%)`);
                 });
 
-                // Official Proofs
+                // Official FBR / SBP Proofs
                 db.collection('settings').doc('proofs').onSnapshot(doc => {
                     const proofsGrid = document.getElementById('proofsGridContainer');
                     if (!proofsGrid) return;
@@ -3275,7 +3071,7 @@
                         document.body.classList.add('locked');
                         dom.blockerScreen.classList.add('active');
                         safeSetText('blockerTitle', "System Maintenance");
-                        safeSetText('blockerMsg', sys.maintenanceMessage || "Sigma network upgrades in progress. Functionality is temporarily suspended.");
+                        safeSetText('blockerMsg', sys.maintenanceMessage || "Sigma network node updates in progress. Functionality is temporarily suspended.");
                         if (dom.blockerContactBtn && sys.supportUrl) dom.blockerContactBtn.href = sys.supportUrl;
                     } else if (dom.blockerScreen) {
                         dom.blockerScreen.classList.remove('active');
@@ -3293,9 +3089,11 @@
                 });
             };
 
-            // --- Firebase Auth & Live Listeners ---
             const initFirebase = () => {
-                if (typeof firebase === 'undefined' || !firebase.apps.length) return;
+                if (typeof firebase === 'undefined' || !firebase.apps.length) {
+                    console.error("Firebase runtime missing.");
+                    return;
+                }
 
                 const auth = firebase.auth();
                 const db = firebase.firestore();
@@ -3319,20 +3117,18 @@
                         if (dockAvatar) dockAvatar.innerHTML = imgTag;
                     }
 
-                    // Compact High-Trust Slug & URL
-                    const uniqueSlug = user.displayName ? user.displayName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 5) : uid.substring(0, 5).toLowerCase();
-                    const invUrl = `https://sigmaaz.vercel.app/reg.html?ref=${uniqueSlug}`;
+                    // Compact, Trustworthy 5-character User & Referral Code
+                    const compactCode = uid.substring(0, 5).toUpperCase();
+                    const invUrl = `https://sigmaaz.vercel.app/reg.html?ref=SIG-${compactCode}`;
                     if (dom.rawReferralUrl) dom.rawReferralUrl.value = invUrl;
-                    
-                    safeSetText('uiAccountUID', `UID: #SIG-${uid.substring(0, 5).toUpperCase()}`);
-                    safeSetText('uiReferralShortCode', `SIG-${uniqueSlug.toUpperCase()}`);
+                    safeSetText('uiAccountUID', `SIG-${compactCode}`);
 
                     if (!sessionStorage.getItem('sigma_session_logged')) {
                         logAction('login', `Session securely authenticated from ${navigator.platform}`);
                         sessionStorage.setItem('sigma_session_logged', 'true');
                     }
 
-                    // User Profile Real-Time Listener
+                    // Real-Time User Profile Listener
                     db.collection('users').doc(uid).onSnapshot(doc => {
                         if (!doc.exists) return;
                         userProfile = doc.data();
@@ -3341,7 +3137,7 @@
                             document.body.classList.add('locked');
                             dom.blockerScreen.classList.add('active');
                             safeSetText('blockerTitle', "Account Suspended");
-                            safeSetText('blockerMsg', "Your account has been restricted. Contact support desk.");
+                            safeSetText('blockerMsg', "Your account has been restricted due to a policy violation. Please contact support.");
                             auth.signOut();
                             return;
                         }
@@ -3353,7 +3149,7 @@
                         const refCount = userProfile.referralsCount || 0;
                         if (dom.uiTierBadge) {
                             if (refCount >= 50) {
-                                dom.uiTierBadge.textContent = "Sigma Elite";
+                                dom.uiTierBadge.textContent = "Elite";
                                 dom.uiTierBadge.style.background = "#FEF3C7"; dom.uiTierBadge.style.color = "#92400E";
                             } else if (refCount >= 20) {
                                 dom.uiTierBadge.textContent = "Gold";
@@ -3371,7 +3167,7 @@
 
                     }, err => console.error("Profile access error:", err));
 
-                    // Active Plan Timing Listener
+                    // Active Plan Countdown Listener
                     db.collection('users').doc(uid).collection('active_plans')
                         .where('status', '==', 'active')
                         .limit(1)
@@ -3379,7 +3175,7 @@
                             if (!planSnap.empty) {
                                 const activePlan = planSnap.docs[0].data();
                                 safeSetText('cmsCountdownPlan', activePlan.name || "Portfolio Cycle");
-                                startExact24hTimer(activePlan.subscribedAt);
+                                startExact24hTimer(activePlan.activatedAt || activePlan.subscribedAt);
                             } else {
                                 startExact24hTimer(null);
                             }
@@ -3436,7 +3232,7 @@
                             if (dom.btnMarkAllRead) dom.btnMarkAllRead.style.display = hasUnread ? 'block' : 'none';
                         });
 
-                    // Recent Transactions Listener
+                    // Recent Transactions & Stepper Listener
                     db.collection('users').doc(uid).collection('transactions')
                         .orderBy('createdAt', 'desc')
                         .limit(6).onSnapshot(snapshot => {
@@ -3493,7 +3289,7 @@
 
                                 let txSvg = '#icon-receipt';
                                 if (tx.type === 'deposit') txSvg = '#icon-arrow-down';
-                                if (tx.type === 'withdraw') txSvg = '#icon-arrow-up';
+                                if (tx.type === 'withdrawal' || tx.type === 'withdraw') txSvg = '#icon-arrow-up';
 
                                 row.innerHTML = `
                                 <div class="tx-icon ${txIconStr}"><svg><use href="${txSvg}"/></svg></div>
@@ -3514,8 +3310,9 @@
                             if (!pendingFound && dom.stepperLifecycleBox) dom.stepperLifecycleBox.style.display = 'none';
                         });
 
-                    // Referral Matrix Calculation
-                    db.collection('users').where('referredBy', '==', userProfile?.username || uid.substring(0, 5).toLowerCase())
+                    // Referral Network Aggregation (Pending vs Active)
+                    const userSlug = uid.substring(0, 5).toLowerCase();
+                    db.collection('users').where('referredBy', 'in', [userSlug, `sig-${userSlug}`])
                         .onSnapshot(querySnapshot => {
                             const total = querySnapshot.size;
                             treeData.l1.members = total;
@@ -3524,7 +3321,7 @@
 
                             querySnapshot.forEach(doc => {
                                 const u = doc.data();
-                                if (u.activePlans > 0) treeData.l1.active++;
+                                if ((u.totalInvested || 0) > 0 || (u.activePlans || 0) > 0) treeData.l1.active++;
                                 else treeData.l1.pending++;
                             });
 
@@ -3542,7 +3339,7 @@
                 const ids = [
                     'toastBox', 'toastMsg', 'ptrSpinner', 'networkOfflineBanner',
                     'uiNetBalance', 'uiDepositWallet', 'uiProfitWallet', 'uiCommissionWallet',
-                    'uiDisplayName', 'uiAvatarWrap', 'uiAvatarLetter', 'uiTierBadge', 'uiAccountUID', 'uiReferralShortCode',
+                    'uiDisplayName', 'uiAvatarWrap', 'uiAvatarLetter', 'uiTierBadge', 'uiAccountUID',
                     'profitClockDisplay', 'cmsCountdownPlan', 'cmsCountdownKicker',
                     'announcementPill', 'announcementHeadline', 'announcementModalTitle', 'announcementModalBody',
                     'rawReferralUrl', 'qrBoxContainer', 'blockerScreen', 'blockerTitle', 'blockerMsg', 'blockerContactBtn',
@@ -3557,14 +3354,14 @@
                 setupPullToRefresh();
                 setupModalDelegation();
 
-                window.addEventListener('offline', () => { if (dom.networkOfflineBanner) dom.networkOfflineBanner.style.display = 'block'; });
-                window.addEventListener('online', () => { if (dom.networkOfflineBanner) dom.networkOfflineBanner.style.display = 'none'; toast('Connection verified'); });
+                window.addEventListener('offline', () => { if (dom.offlineBanner) dom.offlineBanner.style.display = 'block'; });
+                window.addEventListener('online', () => { if (dom.offlineBanner) dom.offlineBanner.style.display = 'none'; toast('Connection verified'); });
 
                 initFirebase();
             };
 
             return {
-                init, openSheet, closeSheet, copyText, copyReferralLink, openQrModal, switchTreeTier,
+                init, openSheet, closeSheet, copyReferralLink, openQrModal, switchTreeTier,
                 openAnnouncementModal: () => openSheet('sheetAnnouncement'),
                 terminateSession, logAction, markAllNotifsRead, toast
             };
