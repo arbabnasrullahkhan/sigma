@@ -8,9 +8,7 @@
 
     <title>Sigma | Secure Checkout & Proof Verification</title>
 
-    <!-- SEO, Privacy & PWA Metadata -->
-    <meta name="description"
-        content="Submit payment verification proofs and transaction IDs securely for Sigma institutional portfolios.">
+    <meta name="description" content="Submit payment verification proofs and transaction IDs securely for Sigma institutional portfolios.">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#0B132B">
     <meta name="mobile-web-app-capable" content="yes">
@@ -22,9 +20,7 @@
     <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,500;0,700;0,800;1,600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,500;0,700;0,800;1,600&display=swap" rel="stylesheet">
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -95,7 +91,8 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { font-size: 16px; scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', sans-serif; background-color: var(--sigma-surface-alt);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+            background-color: var(--sigma-surface-alt);
             color: var(--text-body); line-height: 1.5; min-height: 100vh; overflow-x: hidden;
             padding-bottom: calc(115px + var(--safe-area-bottom));
         }
@@ -257,7 +254,7 @@
         .upload-preview-card.active { display: flex; }
         .preview-img-box { width: 64px; height: 64px; border-radius: 10px; overflow: hidden; background: var(--sigma-surface-alt); border: 1px solid var(--sigma-muted-border); }
         .preview-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .preview-details flex: 1; min-width: 0;
+        .preview-details { flex: 1; min-width: 0; }
         .preview-details b { display: block; font-size: 0.9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .btn-remove-file {
             width: 36px; height: 36px; border-radius: 50%; background: var(--sigma-danger-soft); color: var(--sigma-danger-dark);
@@ -290,7 +287,6 @@
             padding: 14px; border-radius: var(--radius-lg); font-size: 0.85rem; font-weight: 700; text-align: center;
             border: 1px solid var(--sigma-danger-border); animation: shake 0.4s ease;
         }
-        .form-error-msg.show { display: block; }
 
         .action-footer {
             position: fixed; bottom: calc(20px + var(--safe-area-bottom)); left: 0; right: 0;
@@ -300,7 +296,7 @@
             width: 100%; max-width: 720px; height: 64px; border-radius: var(--radius-xl);
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary)); color: white;
             font-size: 1.15rem; font-weight: 900; display: flex; pointer-events: auto; align-items: center; justify-content: center; gap: 12px;
-            box-shadow: 0 12px 28px rgba(11, 19, 43, 0.3); transition: 0.2s; text-transform: uppercase;
+            box-shadow: 0 12px 28px rgba(11, 19, 43, 0.3); transition: 0.2s; text-transform: uppercase; border: none; cursor: pointer;
         }
         .btn-submit-payment:active { transform: scale(0.96); box-shadow: 0 6px 16px rgba(11, 19, 43, 0.2); }
         .btn-submit-payment:disabled { opacity: 0.65; cursor: not-allowed; }
@@ -318,11 +314,11 @@
             display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
         }
         .success-icon-wrap svg { width: 40px; height: 40px; stroke: currentColor; fill: none; stroke-width: 2.5; }
-        .success-card h2 { font-size: 1.6rem; margin-bottom: 8px; }
+        .success-card h2 { font-size: 1.8rem; margin-bottom: 8px; color: var(--sigma-accent-dark); }
         .req-id-badge {
             display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; padding: 8px 16px;
             background: var(--sigma-surface-alt); border: 1px solid var(--sigma-input-border); border-radius: var(--radius-pill);
-            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 800; color: var(--sigma-primary);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 800; color: var(--sigma-primary); cursor: pointer;
         }
 
         .timeline-container { margin-top: 32px; width: 100%; text-align: left; padding: 0 10px; }
@@ -343,12 +339,6 @@
         .timeline-item.current .tl-indicator { background: white; border-color: var(--sigma-gold); box-shadow: 0 0 0 4px var(--sigma-gold-soft); }
         .timeline-item.current .tl-content b { color: var(--sigma-gold-dark); }
         .timeline-item.rejected .tl-indicator { background: var(--sigma-danger); border-color: var(--sigma-danger); }
-
-        .btn-return-home {
-            width: 100%; height: 56px; border-radius: var(--radius-xl); background: var(--sigma-surface-alt);
-            border: 2px solid var(--sigma-muted-border); color: var(--text-heading); font-size: 1.05rem; font-weight: 800;
-            display: flex; align-items: center; justify-content: center; margin-top: 32px;
-        }
 
         /* Error States & Skeletons */
         .error-state-card {
@@ -380,7 +370,6 @@
 
     <div id="networkOfflineBanner">Critical Network Error. Please Check Connection.</div>
 
-    <!-- SVG ICONS -->
     <svg width="0" height="0" style="display:none;" aria-hidden="true">
         <symbol id="icon-back" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></symbol>
         <symbol id="icon-wallet" viewBox="0 0 24 24">
@@ -399,8 +388,8 @@
     <div class="app-container">
 
         <!-- HEADER -->
-        <header class="island-topbar" id="topHeader">
-            <a href="plans.html" class="btn-back" aria-label="Cancel and return to Plans" id="btnHeaderBack">
+        <header class="island-topbar">
+            <a href="plans.html" class="btn-back" aria-label="Cancel and return to Plans">
                 <svg><use href="#icon-back" /></svg>
             </a>
             <div class="brand-cluster">
@@ -413,9 +402,9 @@
         <main class="workspace">
 
             <!-- STEP INDICATOR -->
-            <div class="step-indicator-wrapper" id="stepIndicator">
+            <div class="step-indicator-wrapper">
                 <div class="step-line">
-                    <div class="step-line-fill" id="stepProgressFill" style="width: 75%;"></div>
+                    <div class="step-line-fill" id="uiStepFill" style="width: 75%;"></div>
                 </div>
                 <div class="step-node completed">
                     <div class="step-circle"><svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:3;"><use href="#icon-check" /></svg></div>
@@ -425,11 +414,11 @@
                     <div class="step-circle"><svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:3;"><use href="#icon-check" /></svg></div>
                     <span>Method</span>
                 </div>
-                <div class="step-node active" id="stepNode3">
+                <div class="step-node active" id="uiStepNode3">
                     <div class="step-circle">3</div>
                     <span>Proof</span>
                 </div>
-                <div class="step-node" id="stepNode4">
+                <div class="step-node" id="uiStepNode4">
                     <div class="step-circle">4</div>
                     <span>Verify</span>
                 </div>
@@ -442,20 +431,20 @@
                 <div class="skel-box skeleton" style="height: 180px;"></div>
             </section>
 
-            <!-- VIEW 2: FATAL ERROR / INVALID CONTEXT -->
+            <!-- VIEW 2: ERROR / EXPIRED CONTEXT -->
             <section class="view-section" id="viewError">
                 <div class="error-state-card">
                     <svg><use href="#icon-alert" /></svg>
-                    <h3 id="uiErrorTitle">Request Invalid</h3>
-                    <p id="uiErrorDesc">The payment session has expired or is invalid. Please return to the portfolio catalog and select your plan again.</p>
+                    <h3 id="uiErrorTitle">Session Expired</h3>
+                    <p id="uiErrorDesc">No verified portfolio checkout session was found. Please return to the portfolio catalog and select your desired tier.</p>
                     <a href="plans.html" style="padding: 14px 32px; background: var(--sigma-subtle); border-radius: 99px; font-weight: 800; color: var(--text-heading); border: 1px solid var(--border-light); margin-top: 10px; text-decoration: none;">Return to Plans</a>
                 </div>
             </section>
 
-            <!-- VIEW 3: MANUAL PAYMENT SUBMISSION FORM -->
+            <!-- VIEW 3: PAYMENT FORM -->
             <section class="view-section" id="viewPaymentForm">
 
-                <!-- 1. Exact Payable Summary Hero -->
+                <!-- Summary -->
                 <div class="summary-hero-card">
                     <span class="sh-kicker">Required Transfer Amount</span>
                     <strong class="sh-amount font-mono"><span>PKR</span><span id="uiPayableAmount">...</span></strong>
@@ -463,31 +452,29 @@
                     <div class="sh-details-row">
                         <span class="sh-plan-name" id="uiPlanName">Loading Plan...</span>
                         <div class="sh-divider"></div>
-                        <span class="sh-method-name" id="uiMethodName"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><use href="#icon-shield" /></svg> Loading Method...</span>
+                        <span class="sh-method-name" id="uiMethodName"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><use href="#icon-shield" /></svg> Verified Gateway</span>
                     </div>
                 </div>
 
-                <!-- 2. Transfer Destination -->
+                <!-- Destination Details -->
                 <div class="destination-card">
                     <div class="dest-header">
                         <div class="dest-icon" id="uiMethodIconContainer">
                             <svg><use href="#icon-wallet" /></svg>
                         </div>
                         <div class="dest-title">
-                            <h3 id="uiMethodTitle">Transfer Details</h3>
-                            <p>Official Corporate Destination</p>
+                            <h3 id="uiMethodTitle">Official Destination</h3>
+                            <p>Authoritative Corporate Account</p>
                         </div>
                     </div>
 
                     <div class="dest-body">
-                        <!-- Dynamic Instructions -->
-                        <div class="instruction-box" id="cmsInstEn" style="font-size:0.85rem; font-weight:500;">
-                            Please transfer the exact required amount to the account below. Take a clear screenshot of the receipt and note down the Transaction ID (TID / Ref No).
+                        <div class="instruction-box">
+                            Please transfer the exact required amount to the account below. Take a clear screenshot of the successful receipt and copy the Transaction ID (TID / Reference Number).
                         </div>
 
-                        <!-- Copyable Data -->
-                        <div class="copy-group" id="uiCopyGroup">
-                            <div class="copy-row" onclick="PaymentController.copyText('valAccTitle', 'Account Title')">
+                        <div class="copy-group">
+                            <div class="copy-row" onclick="ManualPayment.copyText('valAccTitle', 'Account Title')">
                                 <div class="copy-data">
                                     <small>Account Title / Beneficiary Name</small>
                                     <strong id="valAccTitle">...</strong>
@@ -495,7 +482,7 @@
                                 <button class="btn-copy-action" aria-label="Copy Title"><svg><use href="#icon-copy" /></svg></button>
                             </div>
 
-                            <div class="copy-row" onclick="PaymentController.copyText('valAccNumber', 'Account Number')">
+                            <div class="copy-row" onclick="ManualPayment.copyText('valAccNumber', 'Account Number')">
                                 <div class="copy-data">
                                     <small>Account Number / IBAN</small>
                                     <strong id="valAccNumber" class="font-mono">...</strong>
@@ -503,9 +490,9 @@
                                 <button class="btn-copy-action" aria-label="Copy Number"><svg><use href="#icon-copy" /></svg></button>
                             </div>
 
-                            <div class="copy-row" id="rowBankName" style="display: none;" onclick="PaymentController.copyText('valBankName', 'Bank Name')">
+                            <div class="copy-row" id="rowBankName" style="display: none;" onclick="ManualPayment.copyText('valBankName', 'Bank Name')">
                                 <div class="copy-data">
-                                    <small>Bank / Provider Name</small>
+                                    <small>Bank / Clearing Network</small>
                                     <strong id="valBankName">...</strong>
                                 </div>
                                 <button class="btn-copy-action" aria-label="Copy Bank Name"><svg><use href="#icon-copy" /></svg></button>
@@ -514,23 +501,25 @@
                     </div>
                 </div>
 
-                <!-- 3. Proof Upload & TRxID Input -->
-                <div style="display: flex; flex-direction: column; gap: 16px;">
-                    <div class="form-section-title"><svg><use href="#icon-upload" /></svg> Submit Verification Data</div>
+                <!-- Proof Upload & TID Input -->
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <div class="form-section-title">
+                        <svg><use href="#icon-upload" /></svg> Submit Verification Data
+                    </div>
 
-                    <label class="upload-dropzone" id="dropArea">
-                        <input type="file" id="proofFileInput" accept=".jpg,.jpeg,.png,.webp">
+                    <label class="upload-dropzone" id="uiDropArea">
+                        <input type="file" id="inpFile" accept=".jpg,.jpeg,.png,.webp">
                         <div class="upload-prompt-icon"><svg><use href="#icon-file-img" /></svg></div>
                         <div class="upload-prompt-text">
                             <b>Upload Payment Receipt</b>
-                            <small>Tap to select or take a photo</small>
+                            <small>Tap to select image (Max 5MB)</small>
                         </div>
                     </label>
 
-                    <div class="upload-preview-card" id="uploadPreviewCard">
-                        <div class="preview-img-box"><img src="" alt="Proof Preview" id="previewImgElement"></div>
+                    <div class="upload-preview-card" id="uiPreviewCard">
+                        <div class="preview-img-box"><img src="" alt="Proof Preview" id="uiPreviewImg"></div>
                         <div class="preview-details">
-                            <b id="previewFileName">receipt.jpg</b>
+                            <b id="uiPreviewName">receipt.jpg</b>
                             <small style="color:var(--sigma-accent-dark); font-weight:700; display:flex; align-items:center; gap:4px; margin-top:2px;">
                                 <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check" /></svg> 
                                 Image attached securely
@@ -539,423 +528,294 @@
                         <button type="button" class="btn-remove-file" id="btnRemoveFile"><svg><use href="#icon-trash" /></svg></button>
                     </div>
 
-                    <div class="input-wrapper" id="trxIdWrapper">
+                    <div class="input-wrapper" id="uiTrxWrapper">
                         <div class="input-icon"><svg><use href="#icon-hash" /></svg></div>
-                        <input type="text" id="trxIdInput" class="input-field" placeholder=" ">
+                        <input type="text" id="inpTrxId" class="input-field" placeholder=" ">
                         <label class="floating-label">Transaction ID (TID / Ref No)</label>
                     </div>
 
-                    <div class="form-error-msg" id="formErrorBox">Error message here</div>
+                    <div class="form-error-msg" id="uiErrorBox">Error message here</div>
 
-                    <div class="security-warning" style="background:var(--sigma-gold-soft); border:1px solid var(--sigma-gold-border); color:var(--sigma-gold-dark); padding:14px 16px; border-radius:var(--radius-lg); font-size:0.85rem; font-weight:600; display:flex; gap:10px;">
+                    <div style="background:var(--sigma-gold-soft); border:1px solid var(--sigma-gold-border); color:var(--sigma-gold-dark); padding:14px 16px; border-radius:var(--radius-lg); font-size:0.85rem; font-weight:600; display:flex; gap:10px;">
                         <svg style="width:18px;height:18px;stroke:currentColor;fill:none;flex-shrink:0;"><use href="#icon-alert" /></svg>
                         <span>Only submit this request <b>after</b> funds have been successfully transferred. Submitting a fake receipt or duplicate TID will result in immediate system rejection.</span>
                     </div>
                 </div>
-
             </section>
 
-            <!-- VIEW 4: SUCCESS / TIMELINE (Pending Verification) -->
+            <!-- VIEW 4: SUCCESS TIMELINE -->
             <section class="view-section" id="viewSuccessStatus">
-                <div class="success-card" style="background:var(--sigma-surface); border-radius:var(--radius-2xl); padding:40px 24px; text-align:center; border:1px solid var(--border-light); box-shadow:var(--shadow-card);">
-                    <div style="width:80px;height:80px;border-radius:50%;background:var(--sigma-accent-soft);color:var(--sigma-accent-dark);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
-                        <svg style="width:40px;height:40px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check" /></svg>
-                    </div>
-                    <h2 style="font-size:1.6rem; margin-bottom:8px;">Request Submitted</h2>
-                    <p style="font-size:0.95rem; color:var(--text-body); font-weight:500;">Your payment details have been securely transmitted to the administration ledger.</p>
+                <div class="success-card">
+                    <div class="success-icon-wrap"><svg><use href="#icon-check" /></svg></div>
+                    <h2 style="color: var(--sigma-accent-dark);">Congratulations!</h2>
+                    <p style="color: var(--text-heading);">Your payment has been submitted successfully. Thank you so much for trusting this platform.</p>
 
-                    <div style="display:inline-flex; align-items:center; gap:8px; margin-top:16px; padding:8px 16px; background:var(--sigma-surface-alt); border:1px solid var(--input-border); border-radius:99px; font-family:'JetBrains Mono',monospace; font-size:0.85rem; font-weight:800; color:var(--sigma-primary);" onclick="PaymentController.copyText('uiSuccessReqId', 'Request ID')">
-                        ID: <span id="uiSuccessReqId">REQ-XXXXXX</span> <svg style="width:14px;height:14px;cursor:pointer;"><use href="#icon-copy" /></svg>
-                    </div>
-                </div>
-
-                <div class="timeline-container" style="margin-top:32px; padding:0 10px;">
-                    <h3 style="font-size:1rem; font-weight:900; margin-bottom:20px; border-bottom:1px solid var(--border-light); padding-bottom:8px;">Verification Status</h3>
-
-                    <div class="timeline-item completed" style="display:flex; gap:16px; position:relative; padding-bottom:24px;">
-                        <div style="width:24px;height:24px;border-radius:50%;background:var(--sigma-accent);border:2px solid var(--sigma-accent);position:relative;z-index:2;display:flex;align-items:center;justify-content:center;">
-                            <svg style="width:12px;height:12px;stroke:white;stroke-width:3;fill:none;"><use href="#icon-check"/></svg>
-                        </div>
-                        <div style="flex:1; margin-top:2px;">
-                            <b style="display:block; font-size:0.95rem; font-weight:800;">Request Created</b>
-                            <small style="display:block; font-size:0.75rem; color:var(--text-light); font-weight:600;">Plan snapshot and parameters locked.</small>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item completed" style="display:flex; gap:16px; position:relative; padding-bottom:24px;">
-                        <div style="width:24px;height:24px;border-radius:50%;background:var(--sigma-accent);border:2px solid var(--sigma-accent);position:relative;z-index:2;display:flex;align-items:center;justify-content:center;">
-                            <svg style="width:12px;height:12px;stroke:white;stroke-width:3;fill:none;"><use href="#icon-check"/></svg>
-                        </div>
-                        <div style="flex:1; margin-top:2px;">
-                            <b style="display:block; font-size:0.95rem; font-weight:800;">Proof & TID Transmitted</b>
-                            <small style="display:block; font-size:0.75rem; color:var(--text-light); font-weight:600;">Data securely stored in Sigma vaults.</small>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item current" id="tlNodeReview" style="display:flex; gap:16px; position:relative; padding-bottom:24px;">
-                        <div style="width:24px;height:24px;border-radius:50%;background:white;border:2px solid var(--sigma-gold);box-shadow:0 0 0 4px var(--sigma-gold-soft);position:relative;z-index:2;"></div>
-                        <div style="flex:1; margin-top:2px;">
-                            <b style="display:block; font-size:0.95rem; font-weight:800; color:var(--sigma-gold-dark);">Pending Admin Verification</b>
-                            <small style="display:block; font-size:0.75rem; color:var(--text-light); font-weight:600;">Awaiting matching clearance from banking networks.</small>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item" id="tlNodeFinal" style="display:flex; gap:16px; position:relative;">
-                        <div style="width:24px;height:24px;border-radius:50%;background:white;border:2px solid var(--border-light);position:relative;z-index:2;"></div>
-                        <div style="flex:1; margin-top:2px;">
-                            <b id="tlFinalTitle" style="display:block; font-size:0.95rem; font-weight:800; color:var(--text-muted);">Portfolio Activation</b>
-                            <small id="tlFinalDesc" style="display:block; font-size:0.75rem; color:var(--text-light); font-weight:600;">Ledger execution and schedule initialization.</small>
-                        </div>
+                    <div class="req-id-badge" onclick="ManualPayment.copyText('uiSuccessReqId', 'Request ID')">
+                        ID: <span id="uiSuccessReqId">REQ-XXXXXX</span> 
+                        <svg style="width:14px;height:14px;cursor:pointer;"><use href="#icon-copy" /></svg>
                     </div>
                 </div>
 
-                <button onclick="window.location.href='dash.html'" style="width:100%; height:56px; border-radius:var(--radius-xl); background:var(--sigma-surface-alt); border:2px solid var(--border-light); font-weight:800; font-size:1.05rem; margin-top:32px;">Return to Dashboard</button>
+                <div class="timeline-container">
+                    <h3 class="timeline-title">Verification Lifecycle</h3>
+
+                    <div class="timeline-item completed">
+                        <div class="tl-indicator"><svg><use href="#icon-check" /></svg></div>
+                        <div class="tl-content">
+                            <b>Request Registered</b>
+                            <small>Portfolio parameters and deposit locked.</small>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item completed">
+                        <div class="tl-indicator"><svg><use href="#icon-check" /></svg></div>
+                        <div class="tl-content">
+                            <b>Slip & TID Uploaded</b>
+                            <small>Stored in encrypted vaults.</small>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item current">
+                        <div class="tl-indicator"></div>
+                        <div class="tl-content">
+                            <b>Administration Review</b>
+                            <small>Matching bank clearance in progress.</small>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="tl-indicator" style="border-color: var(--border-light);"></div>
+                        <div class="tl-content">
+                            <b style="color: var(--text-muted);">Portfolio Activation</b>
+                            <small>Automated 24h daily yield cycle initialized.</small>
+                        </div>
+                    </div>
+                </div>
             </section>
 
         </main>
     </div>
 
     <!-- ACTION FOOTER -->
-    <div class="action-footer" id="actionFooter" style="display: none; position:fixed; bottom:calc(16px + var(--safe-area-bottom)); left:0; right:0; padding:16px; z-index:900;">
-        <button class="btn-submit-payment" id="btnSubmitPayment" onclick="PaymentController.executeSubmission()" style="width:100%; max-width:600px; margin:0 auto; height:64px; border-radius:var(--radius-xl); background:linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary)); color:white; font-size:1.15rem; font-weight:900; display:flex; align-items:center; justify-content:center; gap:12px; border:none; box-shadow:0 12px 28px rgba(11,19,43,0.3); text-transform:uppercase;">
-            <span id="btnSubmitText">Submit Payment</span> 
-            <svg style="width:24px;height:24px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-shield" /></svg>
-            <div class="spinner" style="width:24px;height:24px;border:3px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite;display:none;"></div>
+    <div class="action-footer" id="uiFooter" style="display: none;">
+        <button class="btn-submit-payment" id="btnSubmitPayment" onclick="ManualPayment.submit()">
+            <span id="btnSubmitText">Submit Verification</span> 
+            <svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2.5;" id="btnSubmitIcon"><use href="#icon-shield" /></svg>
+            <div class="spinner"></div>
         </button>
     </div>
 
-    <!-- TOAST COMPONENT -->
-    <div class="toast" id="toastBox" style="position:fixed; top:24px; left:50%; transform:translate(-50%, -20px); background:var(--sigma-primary); color:white; padding:12px 24px; border-radius:999px; font-weight:700; opacity:0; visibility:hidden; transition:0.3s; display:flex; align-items:center; gap:10px; z-index:3000;">
+    <!-- Notification Toast -->
+    <div class="toast" id="toastBox">
         <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check" /></svg>
         <span id="toastMsg">Action successful</span>
     </div>
 
-    <!-- ==========================================================================
-         JAVASCRIPT APPLICATION CONTROLLER (SMART BASE64 CORS FALLBACK)
-         ========================================================================== -->
     <script>
-        const PaymentController = (() => {
+        const ManualPayment = (() => {
 
-            const STATE = { INIT: 'init', ERROR: 'error', READY: 'ready', SUBMITTING: 'submitting', SUCCESS: 'success' };
-
-            let currentState = STATE.INIT;
             let authUser = null;
-            let paymentContract = null;
             let activeFile = null;
+            let paymentContract = null;
             let authPlanSnapshot = null;
             let authMethodSnapshot = null;
             let finalPayableAmount = 0;
 
             const dom = {
-                views: { loading: document.getElementById('viewLoading'), error: document.getElementById('viewError'), form: document.getElementById('viewPaymentForm'), success: document.getElementById('viewSuccessStatus') },
-                errorCard: { title: document.getElementById('uiErrorTitle'), desc: document.getElementById('uiErrorDesc') },
-                summary: { amount: document.getElementById('uiPayableAmount'), planName: document.getElementById('uiPlanName'), methodName: document.getElementById('uiMethodName') },
-                dest: { iconContainer: document.getElementById('uiMethodIconContainer'), title: document.getElementById('uiMethodTitle'), instEn: document.getElementById('cmsInstEn'), accTitle: document.getElementById('valAccTitle'), accNum: document.getElementById('valAccNumber'), rowBank: document.getElementById('rowBankName'), bankName: document.getElementById('valBankName') },
-                form: { dropArea: document.getElementById('dropArea'), fileInput: document.getElementById('proofFileInput'), previewCard: document.getElementById('uploadPreviewCard'), previewImg: document.getElementById('previewImgElement'), previewName: document.getElementById('previewFileName'), btnRemoveFile: document.getElementById('btnRemoveFile'), trxWrapper: document.getElementById('trxIdWrapper'), trxInput: document.getElementById('trxIdInput'), errorBox: document.getElementById('formErrorBox'), footer: document.getElementById('actionFooter'), btnSubmit: document.getElementById('btnSubmitPayment') },
-                step: { fill: document.getElementById('stepProgressFill'), node3: document.getElementById('stepNode3'), node4: document.getElementById('stepNode4') },
-                toast: { box: document.getElementById('toastBox'), msg: document.getElementById('toastMsg') }
+                views: {
+                    loading: document.getElementById('viewLoading'),
+                    error: document.getElementById('viewError'),
+                    form: document.getElementById('viewPaymentForm'),
+                    success: document.getElementById('viewSuccessStatus')
+                },
+                toastBox: document.getElementById('toastBox'),
+                toastMsg: document.getElementById('toastMsg')
             };
 
             const haptic = (ms = 20) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { } };
 
             const toast = (msg, isError = false) => {
-                if (!dom.toast.box) return;
-                dom.toast.msg.textContent = msg;
-                dom.toast.box.style.background = isError ? 'var(--sigma-danger)' : 'var(--sigma-primary)';
-                dom.toast.box.style.opacity = '1';
-                dom.toast.box.style.visibility = 'visible';
-                dom.toast.box.style.transform = 'translate(-50%, 0)';
+                if (!dom.toastBox) return;
+                dom.toastMsg.textContent = msg;
+                dom.toastBox.style.background = isError ? 'var(--sigma-danger)' : 'var(--sigma-primary)';
+                dom.toastBox.classList.add('show');
                 haptic(isError ? 50 : 25);
-                setTimeout(() => {
-                    dom.toast.box.style.opacity = '0';
-                    dom.toast.box.style.visibility = 'hidden';
-                    dom.toast.box.style.transform = 'translate(-50%, -20px)';
-                }, 3500);
+                setTimeout(() => dom.toastBox.classList.remove('show'), 3000);
             };
 
-            const switchView = (viewId) => {
-                Object.values(dom.views).forEach(v => { if (v) v.style.display = 'none'; });
-                if (dom.views[viewId]) dom.views[viewId].style.display = 'flex';
+            const switchView = (vId) => {
+                Object.values(dom.views).forEach(v => v.style.display = 'none');
+                if (dom.views[vId]) dom.views[vId].style.display = 'flex';
             };
 
-            const showError = (title, message) => {
-                currentState = STATE.ERROR;
-                if (dom.errorCard.title) dom.errorCard.title.textContent = title;
-                if (dom.errorCard.desc) dom.errorCard.desc.textContent = message;
-                if (dom.form.footer) dom.form.footer.style.display = 'none';
+            const showError = (title, desc) => {
+                document.getElementById('uiErrorTitle').textContent = title;
+                document.getElementById('uiErrorDesc').textContent = desc;
+                document.getElementById('uiFooter').style.display = 'none';
                 switchView('error');
             };
 
             const showFormError = (msg) => {
-                if (!dom.form.errorBox) return;
-                dom.form.errorBox.textContent = msg;
-                dom.form.errorBox.style.display = 'block';
-                dom.form.errorBox.style.animation = 'none';
-                void dom.form.errorBox.offsetWidth;
-                dom.form.errorBox.style.animation = 'shake 0.4s ease';
+                const box = document.getElementById('uiErrorBox');
+                box.textContent = msg;
+                box.classList.add('show');
+                box.style.animation = 'none';
+                void box.offsetWidth;
+                box.style.animation = 'shake 0.4s ease';
                 haptic(50);
             };
 
-            const hideFormError = () => {
-                if (dom.form.errorBox) dom.form.errorBox.style.display = 'none';
-                if (dom.form.trxWrapper) dom.form.trxWrapper.style.borderColor = 'var(--border-light)';
-            };
-
             const copyText = async (elementId, label) => {
-                const el = document.getElementById(elementId);
-                if (!el) return;
-                const text = el.innerText.trim();
-                if (text === '...' || text === '') return;
-
+                const text = document.getElementById(elementId).innerText.trim();
+                if (!text || text === '...') return;
                 try {
-                    if (navigator.clipboard && window.isSecureContext) {
-                        await navigator.clipboard.writeText(text);
-                    } else {
-                        const temp = document.createElement('textarea');
-                        temp.value = text; document.body.appendChild(temp);
-                        temp.select(); document.execCommand('copy'); document.body.removeChild(temp);
-                    }
+                    await navigator.clipboard.writeText(text);
                     toast(`${label} securely copied`);
                 } catch (err) {
-                    toast('Failed to copy text', true);
+                    const temp = document.createElement('textarea');
+                    temp.value = text; document.body.appendChild(temp);
+                    temp.select(); document.execCommand('copy'); document.body.removeChild(temp);
+                    toast(`${label} securely copied`);
                 }
             };
 
-            // Seed Payment Methods if missing (Ensures strictly DB-driven data)
-            const seedPaymentMethodsIfEmpty = async (db) => {
-                const docRef = db.collection('settings').doc('payment_methods');
-                const doc = await docRef.get();
-                if (!doc.exists) {
-                    await docRef.set({
-                        methods: [
-                            { id: "pm_easypaisa", name: "EasyPaisa", isActive: true, iconUrl: "assets/pay/easypaisa.png", details: { title: "Sigma Holdings", accNum: "03001234567" } },
-                            { id: "pm_jazzcash", name: "JazzCash", isActive: true, iconUrl: "assets/pay/jazzcash.png", details: { title: "Sigma Holdings", accNum: "03001234567" } },
-                            { id: "pm_bank", name: "Bank Transfer", isActive: true, iconUrl: "assets/pay/bank.png", details: { title: "Sigma Corporate", accNum: "PK30MEZN0000000000", bankName: "Meezan Bank" } }
-                        ]
-                    });
-                }
+            const compressImageToBase64 = (file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = e => {
+                        const img = new Image();
+                        img.src = e.target.result;
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const MAX_WIDTH = 800;
+                            let width = img.width;
+                            let height = img.height;
+                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                            canvas.width = width; canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            resolve(canvas.toDataURL('image/jpeg', 0.6));
+                        };
+                        img.onerror = reject;
+                    };
+                });
             };
 
             const validateContextAndLoadData = async (db) => {
                 try {
                     const rawContract = sessionStorage.getItem('sigma_pending_payment_contract');
-                    if (!rawContract) throw new Error("No secure payment context found. Please initiate from the portfolio catalog.");
+                    if (!rawContract) throw new Error("No active portfolio contract found. Initiate from Plans catalog.");
                     
                     paymentContract = JSON.parse(rawContract);
-                    if (!paymentContract.planId || !paymentContract.methodId) throw new Error("Payment context is corrupted.");
+                    if (!paymentContract.planId || !paymentContract.methodId) throw new Error("Payment context corrupted.");
 
-                    // Auto-seed if needed, then fetch
-                    await seedPaymentMethodsIfEmpty(db);
-
-                    const [planDoc, methodDoc] = await Promise.all([
-                        db.collection('settings').doc('plans_config').get(),
-                        db.collection('settings').doc('payment_methods').get()
-                    ]);
-
-                    const plansConfig = planDoc.exists ? (planDoc.data().plans || []) : [];
+                    const methodDoc = await db.collection('settings').doc('payment_methods').get();
                     const methodsConfig = methodDoc.exists ? (methodDoc.data().methods || []) : [];
-
-                    // Strictly find in DB
                     authMethodSnapshot = methodsConfig.find(m => m.id === paymentContract.methodId);
-                    
-                    // Note: Since x/plans writes to 'plans' collection directly, we must also check 'plans' collection
-                    if (!authPlanSnapshot) {
-                        const directPlanDoc = await db.collection('plans').doc(paymentContract.planId).get();
-                        if(directPlanDoc.exists) {
-                            const dp = directPlanDoc.data();
-                            authPlanSnapshot = { id: directPlanDoc.id, name: dp.name, price: Number(dp.price), duration: Number(dp.durationDays), isActive: dp.status === 'active' };
-                        } else {
-                            authPlanSnapshot = plansConfig.find(p => p.id === paymentContract.planId);
-                        }
+
+                    // Allow robust lookup from both config and database directly
+                    const planDoc = await db.collection('plans').doc(paymentContract.planId).get();
+                    if (planDoc.exists) {
+                        const dp = planDoc.data();
+                        authPlanSnapshot = { id: planDoc.id, name: dp.name, price: Number(dp.price), duration: Number(dp.durationDays), isActive: dp.status === 'active' };
+                    } else {
+                        const pConf = await db.collection('settings').doc('plans_config').get();
+                        const pList = pConf.exists ? (pConf.data().plans || []) : [];
+                        authPlanSnapshot = pList.find(p => p.id === paymentContract.planId);
                     }
 
-                    if (!authPlanSnapshot) throw new Error("The selected portfolio is no longer available in the database.");
-                    if (!authMethodSnapshot) throw new Error("The selected payment method is currently disabled by administration.");
-                    if (authPlanSnapshot.isActive === false) throw new Error("This portfolio has been archived by administration.");
-                    if (authMethodSnapshot.isActive === false) throw new Error("This payment gateway is temporarily disabled.");
-
+                    if (!authPlanSnapshot) throw new Error("Portfolio data unavailable in database.");
+                    if (!authMethodSnapshot) throw new Error("Selected gateway is inactive or invalid.");
+                    
                     finalPayableAmount = Number(authPlanSnapshot.price);
-                    renderPaymentForm();
+
+                    // Render UI
+                    document.getElementById('uiPayableAmount').textContent = finalPayableAmount.toLocaleString('en-PK');
+                    document.getElementById('uiPlanName').textContent = authPlanSnapshot.name.split(' / ')[0];
+                    document.getElementById('uiMethodName').innerHTML = `<svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><use href="#icon-shield"/></svg> ${authMethodSnapshot.name}`;
+                    document.getElementById('uiMethodTitle').textContent = authMethodSnapshot.name;
+
+                    if (authMethodSnapshot.iconUrl) {
+                        document.getElementById('uiMethodIconContainer').innerHTML = `<img src="${authMethodSnapshot.iconUrl}" onerror="this.style.display='none'">`;
+                    }
+
+                    const details = authMethodSnapshot.details || {};
+                    document.getElementById('valAccTitle').textContent = details.title || "N/A";
+                    document.getElementById('valAccNumber').textContent = details.accNum || "N/A";
+
+                    if (details.bankName) {
+                        document.getElementById('rowBankName').style.display = 'flex';
+                        document.getElementById('valBankName').textContent = details.bankName;
+                    }
+
+                    switchView('form');
+                    document.getElementById('uiFooter').style.display = 'flex';
 
                 } catch (err) {
-                    console.error("Context Validation Error:", err);
-                    showError("Context Verification Failed", err.message);
+                    showError("Checkout Invalid", err.message);
                 }
             };
 
-            const renderPaymentForm = () => {
-                if (dom.summary.amount) dom.summary.amount.textContent = finalPayableAmount.toLocaleString('en-PK');
-                if (dom.summary.planName) dom.summary.planName.textContent = authPlanSnapshot.name.split(' / ')[0];
-                if (dom.summary.methodName) dom.summary.methodName.innerHTML = `<svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><use href="#icon-shield"/></svg> ${authMethodSnapshot.name}`;
+            const submit = async () => {
+                const trxInput = document.getElementById('inpTrxId');
+                const rawTrxId = trxInput.value.trim();
 
-                if (dom.dest.title) dom.dest.title.textContent = authMethodSnapshot.name;
-
-                if (dom.dest.iconContainer) {
-                    let iconHtml = `<svg><use href="#icon-wallet"/></svg>`;
-                    if (authMethodSnapshot.iconUrl) {
-                        iconHtml = `<img src="${authMethodSnapshot.iconUrl}" alt="${authMethodSnapshot.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                    <svg style="display:none;"><use href="#icon-wallet"/></svg>`;
-                    }
-                    dom.dest.iconContainer.innerHTML = iconHtml;
-                }
-
-                // STRICTLY DATABASE DRIVEN
-                const details = authMethodSnapshot.details || {};
-                
-                if (dom.dest.accTitle) dom.dest.accTitle.textContent = details.title || "N/A";
-                if (dom.dest.accNum) dom.dest.accNum.textContent = details.accNum || "N/A";
-
-                if (details.bankName) {
-                    if (dom.dest.rowBank) dom.dest.rowBank.style.display = 'flex';
-                    if (dom.dest.bankName) dom.dest.bankName.textContent = details.bankName;
-                } else {
-                    if (dom.dest.rowBank) dom.dest.rowBank.style.display = 'none';
-                }
-
-                currentState = STATE.READY;
-                switchView('form');
-                if (dom.form.footer) dom.form.footer.style.display = 'flex';
-            };
-
-            // Image Selection
-            const handleFileSelect = (file) => {
-                hideFormError();
-                const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
-                if (!validTypes.includes(file.type)) {
-                    showFormError("Invalid file type. Please upload a JPG, PNG, or WEBP image.");
-                    return;
-                }
-                if (file.size > 5 * 1024 * 1024) {
-                    showFormError("File too large. Maximum allowed size is 5MB.");
-                    return;
-                }
-
-                activeFile = file;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    if (dom.form.previewImg) dom.form.previewImg.src = e.target.result;
-                    if (dom.form.previewName) dom.form.previewName.textContent = file.name;
-                    if (dom.form.dropArea) dom.form.dropArea.style.display = 'none';
-                    if (dom.form.previewCard) dom.form.previewCard.style.display = 'flex';
-                };
-                reader.readAsDataURL(file);
-                haptic(15);
-            };
-
-            const clearFile = () => {
-                activeFile = null;
-                if (dom.form.fileInput) dom.form.fileInput.value = '';
-                if (dom.form.previewCard) dom.form.previewCard.style.display = 'none';
-                if (dom.form.previewImg) dom.form.previewImg.src = '';
-                if (dom.form.dropArea) dom.form.dropArea.style.display = 'flex';
-            };
-
-            // SMART BASE64 COMPRESSION FALLBACK
-            const compressImageToBase64 = (file) => {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = event => {
-                        const img = new Image();
-                        img.src = event.target.result;
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            const MAX_WIDTH = 600; // Optimal for Firestore 1MB document limit
-                            const MAX_HEIGHT = 600;
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width > height) {
-                                if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                            } else {
-                                if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                            }
-                            canvas.width = width;
-                            canvas.height = height;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, width, height);
-                            resolve(canvas.toDataURL('image/jpeg', 0.5)); 
-                        };
-                        img.onerror = error => reject(error);
-                    };
-                });
-            };
-
-            const executeSubmission = async () => {
-                if (currentState !== STATE.READY) return;
-                hideFormError();
-
-                const rawTrxId = dom.form.trxInput ? dom.form.trxInput.value.trim() : "";
-
-                if (!activeFile) {
-                    showFormError("Payment receipt missing. Please upload the transaction screenshot.");
-                    return;
-                }
+                if (!activeFile) { showFormError("Upload screenshot of receipt."); return; }
                 if (!rawTrxId || rawTrxId.length < 5) {
-                    if (dom.form.trxWrapper) dom.form.trxWrapper.style.borderColor = 'var(--sigma-danger)';
-                    showFormError("Invalid Transaction ID. Please verify the ID from your payment provider receipt.");
+                    document.getElementById('uiTrxWrapper').style.borderColor = 'var(--sigma-danger)';
+                    showFormError("Enter valid Transaction ID.");
                     return;
                 }
 
                 const normalizedTrxId = rawTrxId.toUpperCase().replace(/[^A-Z0-9]/g, '');
-
+                const btn = document.getElementById('btnSubmitPayment');
+                
                 try {
-                    currentState = STATE.SUBMITTING;
-                    const btnSubmitText = document.getElementById('btnSubmitText');
-                    const spinner = document.querySelector('.btn-submit-payment .spinner');
-                    
-                    if (dom.form.btnSubmit) {
-                        dom.form.btnSubmit.disabled = true;
-                        if(btnSubmitText) btnSubmitText.style.display = 'none';
-                        if(spinner) spinner.style.display = 'block';
-                    }
+                    btn.disabled = true;
+                    btn.classList.add('loading');
 
                     const db = firebase.firestore();
-                    const uid = authUser.uid;
                     const reqId = "REQ-" + Math.random().toString(36).substring(2, 9).toUpperCase();
 
-                    // 1. Strict Uniqueness Check
                     const trxRef = db.collection('transaction_ids').doc(normalizedTrxId);
                     const trxDoc = await trxRef.get();
                     if (trxDoc.exists) throw new Error("DUPLICATE_TRX_ID");
 
-                    // 2. Upload with Smart Fallback (Bypassing Storage entirely to fix CORS)
-                    const proofUrl = await compressImageToBase64(activeFile);
+                    let proofUrl = "";
+                    try {
+                        const storage = firebase.storage();
+                        const ext = activeFile.name.split('.').pop() || 'jpg';
+                        const storageRef = storage.ref().child(`payment_proofs/${authUser.uid}/${reqId}_proof.${ext}`);
+                        const snapshot = await storageRef.put(activeFile);
+                        proofUrl = await snapshot.ref.getDownloadURL();
+                    } catch (e) {
+                        console.warn("Storage CORS bypassed via Base64.");
+                        proofUrl = await compressImageToBase64(activeFile);
+                    }
 
-                    // 3. Construct Immutable Snapshots
-                    const planSnap = { id: authPlanSnapshot.id, name: authPlanSnapshot.name, price: finalPayableAmount, duration: authPlanSnapshot.duration || 0 };
-                    const methodSnap = { id: authMethodSnapshot.id, name: authMethodSnapshot.name };
-
-                    // 4. Execute Atomic Batched Write
                     const batch = db.batch();
 
-                    const requestRef = db.collection('payment_requests').doc(reqId);
-                    batch.set(requestRef, {
-                        uid: uid,
+                    batch.set(db.collection('payment_requests').doc(reqId), {
+                        uid: authUser.uid,
                         planId: authPlanSnapshot.id,
-                        planSnapshot: planSnap,
+                        planSnapshot: authPlanSnapshot,
                         methodId: authMethodSnapshot.id,
-                        methodSnapshot: methodSnap,
+                        methodSnapshot: authMethodSnapshot,
                         amount: finalPayableAmount,
                         trxIdRaw: rawTrxId,
                         trxIdNormalized: normalizedTrxId,
                         proofUrl: proofUrl,
                         status: 'pending_verification',
-                        idempotencyKey: paymentContract.requestSignature,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
 
-                    batch.set(trxRef, {
-                        requestId: reqId,
-                        uid: uid,
-                        claimedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                    batch.set(trxRef, { requestId: reqId, uid: authUser.uid, claimedAt: firebase.firestore.FieldValue.serverTimestamp() });
 
-                    const userTxRef = db.collection('users').doc(uid).collection('transactions').doc();
-                    batch.set(userTxRef, {
+                    batch.set(db.collection('users').doc(authUser.uid).collection('transactions').doc(), {
                         type: 'deposit',
                         requestId: reqId,
-                        description: `Deposit for ${planSnap.name}`,
+                        description: `Deposit for ${authPlanSnapshot.name}`,
                         amount: finalPayableAmount,
                         status: 'pending',
                         referenceId: reqId,
@@ -963,88 +823,81 @@
                     });
 
                     await batch.commit();
-
                     sessionStorage.removeItem('sigma_pending_payment_contract');
-                    transitionToSuccess(reqId);
+
+                    document.getElementById('uiFooter').style.display = 'none';
+                    document.getElementById('uiStepFill').style.width = '100%';
+                    document.getElementById('uiStepNode3').className = 'step-node completed';
+                    document.getElementById('uiStepNode4').className = 'step-node active';
+                    document.getElementById('uiSuccessReqId').textContent = reqId;
+
+                    switchView('success');
+                    haptic(50);
+
+                    // Automatic redirect after exactly 3.5s
+                    setTimeout(() => {
+                        window.location.replace('my-plans.html');
+                    }, 3500);
 
                 } catch (err) {
-                    console.error("Submission Error:", err);
-                    currentState = STATE.READY;
-
-                    const btnSubmitText = document.getElementById('btnSubmitText');
-                    const spinner = document.querySelector('.btn-submit-payment .spinner');
-                    
-                    if (dom.form.btnSubmit) {
-                        dom.form.btnSubmit.disabled = false;
-                        if(btnSubmitText) btnSubmitText.style.display = 'block';
-                        if(spinner) spinner.style.display = 'none';
-                    }
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
 
                     if (err.message === "DUPLICATE_TRX_ID") {
-                        if (dom.form.trxWrapper) dom.form.trxWrapper.style.borderColor = 'var(--sigma-danger)';
-                        showFormError("This Transaction ID has already been submitted in the system. Duplicates are rejected.");
+                        showFormError("This Transaction ID has already been logged. Duplicates rejected.");
                     } else {
-                        showFormError("Network execution failed. Please verify your connection and try again.");
+                        showFormError("Network failure. Please try again.");
                     }
                 }
-            };
-
-            const transitionToSuccess = (reqId) => {
-                currentState = STATE.SUCCESS;
-                if (dom.form.footer) dom.form.footer.style.display = 'none';
-
-                if (dom.step.fill) dom.step.fill.style.width = '100%';
-                if (dom.step.node3) dom.step.node3.className = 'step-node completed';
-                if (dom.step.node4) dom.step.node4.className = 'step-node active';
-
-                if (dom.success.reqId) dom.success.reqId.textContent = reqId;
-
-                switchView('success');
-                haptic(50);
-            };
-
-            const initFirebase = () => {
-                if (typeof firebase === 'undefined' || !firebase.apps.length) return;
-                const auth = firebase.auth();
-                const db = firebase.firestore();
-
-                auth.onAuthStateChanged(user => {
-                    if (!user) {
-                        window.location.replace('login.html');
-                        return;
-                    }
-                    authUser = user;
-                    validateContextAndLoadData(db);
-                });
             };
 
             const init = () => {
-                if (dom.form.fileInput) {
-                    dom.form.fileInput.addEventListener('change', (e) => {
-                        if (e.target.files && e.target.files.length) handleFileSelect(e.target.files[0]);
+                const fInput = document.getElementById('inpFile');
+                fInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        document.getElementById('uiErrorBox').style.display = 'none';
+                        const file = e.target.files[0];
+                        if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) { showFormError("Invalid image."); return; }
+                        if (file.size > 5 * 1024 * 1024) { showFormError("File too large (Max 5MB)."); return; }
+                        activeFile = file;
+                        
+                        const reader = new FileReader();
+                        reader.onload = (ev) => {
+                            document.getElementById('uiPreviewImg').src = ev.target.result;
+                            document.getElementById('previewFileName').textContent = file.name;
+                            document.getElementById('uiDropArea').style.display = 'none';
+                            document.getElementById('uploadPreviewCard').style.display = 'flex';
+                        };
+                        reader.readAsDataURL(file);
+                        haptic(15);
+                    }
+                });
+
+                document.getElementById('btnRemoveFile').addEventListener('click', () => {
+                    activeFile = null;
+                    fInput.value = '';
+                    document.getElementById('uploadPreviewCard').style.display = 'none';
+                    document.getElementById('uiDropArea').style.display = 'flex';
+                });
+
+                document.getElementById('inpTrxId').addEventListener('input', () => {
+                    document.getElementById('uiErrorBox').style.display = 'none';
+                    document.getElementById('uiTrxWrapper').style.borderColor = 'var(--sigma-input-border)';
+                });
+
+                if (typeof firebase !== 'undefined' && firebase.apps.length) {
+                    firebase.auth().onAuthStateChanged(user => {
+                        if (!user) { window.location.replace('login.html'); return; }
+                        authUser = user;
+                        validateContextAndLoadData(firebase.firestore());
                     });
                 }
-                if (dom.form.btnRemoveFile) {
-                    dom.form.btnRemoveFile.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        clearFile();
-                    });
-                }
-                if (dom.form.trxInput) dom.form.trxInput.addEventListener('input', hideFormError);
-                initFirebase();
             };
 
-            return {
-                init,
-                copyText,
-                executeSubmission
-            };
-
+            return { init, copyText, submit };
         })();
 
-        document.addEventListener('DOMContentLoaded', PaymentController.init);
-
+        document.addEventListener('DOMContentLoaded', ManualPayment.init);
     </script>
 </body>
-
 </html>
