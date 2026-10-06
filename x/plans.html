@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sigma Ops | Plans & Portfolios</title>
+    <title>Sigma Ops | Plans & Portfolios Management</title>
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#FFFFFF">
 
@@ -26,7 +26,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="../firebase-config.js"></script>
 
-    <!-- Safe Fallback Initialization -->
+    <!-- Fallback Firebase Initialization -->
     <script>
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             firebase.initializeApp({
@@ -42,7 +42,7 @@
 
     <style>
         /* ==========================================================================
-           1. LIGHT MODE FINTECH DESIGN SYSTEM
+           1. LIGHT MODE FINTECH DESIGN SYSTEM (NO DARK MODE)
            ========================================================================== */
         :root {
             --sigma-primary: #0B132B;
@@ -89,8 +89,6 @@
             --z-dock: 1000;
             --z-drawer: 2000;
             --z-modal: 3000;
-            --z-auth: 9999;
-            --z-toast: 4000;
             --safe-area-bottom: env(safe-area-inset-bottom, 16px);
             --transition: 0.25s ease;
         }
@@ -118,20 +116,37 @@
         }
 
         body.locked { overflow: hidden; }
+
         a { text-decoration: none; color: inherit; }
-        button, input, select { font-family: inherit; border: none; outline: none; background: none; }
+
+        button, input {
+            font-family: inherit;
+            border: none;
+            outline: none;
+            background: none;
+        }
+
         button { cursor: pointer; user-select: none; }
         img { max-width: 100%; display: block; }
-        h1, h2, h3, h4 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.025em; }
+
+        h1, h2, h3, h4 {
+            color: var(--text-heading);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
         p { color: var(--text-muted); }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
 
         /* Loading Auth Overlay */
         #authOverlay {
             position: fixed;
             inset: 0;
             background: var(--sigma-surface);
-            z-index: var(--z-auth);
+            z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -174,8 +189,17 @@
             gap: 10px;
         }
 
-        .brand-logo-img { width: 36px; height: 36px; object-fit: contain; }
-        .brand-text-img { height: 20px; object-fit: contain; margin-top: 2px; }
+        .brand-logo-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .brand-text-img {
+            height: 20px;
+            object-fit: contain;
+            margin-top: 2px;
+        }
 
         .sidebar-scroll {
             padding: 16px 12px;
@@ -212,8 +236,16 @@
             stroke-width: 2;
         }
 
-        .nav-link:hover { background: var(--sigma-subtle); color: var(--sigma-primary); }
-        .nav-link.active { background: var(--sigma-primary); color: white; }
+        .nav-link:hover {
+            background: var(--sigma-subtle);
+            color: var(--sigma-primary);
+        }
+
+        .nav-link.active {
+            background: var(--sigma-primary);
+            color: white;
+        }
+
         .nav-link.active svg { stroke: var(--sigma-accent); }
 
         .nav-badge {
@@ -241,10 +273,13 @@
             transition: var(--transition);
         }
 
-        .sidebar-logout-btn:active { background: var(--sigma-danger); color: white; }
+        .sidebar-logout-btn:active {
+            background: var(--sigma-danger);
+            color: white;
+        }
 
         /* ==========================================================================
-           3. MAIN OPERATIONAL WORKSPACE
+           3. MAIN WORKSPACE
            ========================================================================== */
         .admin-main {
             flex: 1;
@@ -280,214 +315,124 @@
         }
 
         .page-content {
-            padding: 30px 24px;
+            padding: 28px 24px;
             max-width: 1200px;
             width: 100%;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
         }
 
-        /* Toolbar */
-        .toolbar-card {
-            background: var(--sigma-surface);
-            border-radius: var(--radius-xl);
-            padding: 18px 24px;
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-subtle);
+        .toolbar {
             display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
 
-        .toolbar-info h2 {
-            font-size: 1.15rem;
-        }
-
-        .toolbar-info p {
-            font-size: 0.85rem;
-            margin-top: 2px;
-        }
-
-        .btn-primary {
+        .btn-primary-action {
             background: var(--sigma-primary);
             color: white;
-            padding: 14px 24px;
-            border-radius: var(--radius-lg);
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
             font-weight: 800;
-            font-size: 0.95rem;
-            display: inline-flex;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
             align-items: center;
             gap: 8px;
             transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(11, 19, 43, 0.15);
+            box-shadow: 0 4px 12px rgba(11, 19, 43, 0.2);
         }
 
-        .btn-primary:active {
-            transform: scale(0.96);
-            background: var(--sigma-secondary);
-        }
+        .btn-primary-action:hover { background: var(--sigma-secondary); }
 
-        .btn-primary svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.5;
-        }
-
-        /* Plans Grid */
         .plans-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
             gap: 20px;
         }
 
         .plan-card {
             background: var(--sigma-surface);
             border-radius: var(--radius-xl);
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-subtle);
             padding: 24px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--border-light);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
             position: relative;
             overflow: hidden;
             transition: var(--transition);
         }
 
         .plan-card:hover {
-            border-color: var(--sigma-accent);
             box-shadow: var(--shadow-card);
             transform: translateY(-2px);
         }
 
         .plan-card.inactive {
-            background: var(--sigma-surface-alt);
-            border-color: var(--border-light);
-            opacity: 0.85;
+            opacity: 0.55;
+            filter: grayscale(100%);
         }
 
-        .plan-card.inactive::after {
-            content: 'INACTIVE';
-            position: absolute;
-            top: 24px;
-            right: -30px;
-            background: var(--sigma-muted-border);
-            color: var(--text-muted);
-            font-size: 0.65rem;
-            font-weight: 900;
-            padding: 4px 30px;
-            transform: rotate(45deg);
-            letter-spacing: 1px;
-        }
-
-        .plan-header {
+        .plan-card-head {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
         }
 
-        .plan-title-box h3 {
+        .plan-name {
             font-size: 1.15rem;
+            font-weight: 900;
             color: var(--text-heading);
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .plan-title-box .badge-status {
-            font-size: 0.65rem;
-            padding: 3px 8px;
-            border-radius: var(--radius-pill);
-            background: var(--sigma-accent-soft);
-            color: var(--sigma-accent-dark);
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .plan-card.inactive .badge-status {
-            background: var(--border-light);
-            color: var(--text-muted);
+            margin-bottom: 2px;
         }
 
         .plan-price {
-            font-size: 1.45rem;
+            font-size: 1.3rem;
             font-weight: 900;
-            color: var(--sigma-primary);
-            text-align: right;
-            line-height: 1.1;
+            color: var(--sigma-accent-dark);
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .plan-price small {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .plan-metrics {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            background: var(--sigma-subtle);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            border: 1px solid var(--border-light);
-        }
-
-        .metric-row {
+        .plan-metric-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            font-size: 0.88rem;
+            border-bottom: 1px dashed var(--border-light);
+            padding-bottom: 6px;
         }
 
-        .metric-row span {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .metric-row strong {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--text-heading);
-        }
-
-        .metric-row.total strong {
-            color: var(--sigma-accent-dark);
-        }
+        .plan-metric-row span { color: var(--text-muted); font-weight: 600; }
+        .plan-metric-row strong { color: var(--text-heading); font-family: 'JetBrains Mono', monospace; }
 
         .btn-edit-plan {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border-radius: var(--radius-md);
-            background: var(--bg-surface);
-            border: 1px solid var(--border-muted);
-            color: var(--text-heading);
+            font-size: 0.85rem;
             font-weight: 800;
-            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1.5px solid var(--sigma-primary);
+            color: var(--sigma-primary);
+            background: transparent;
             transition: var(--transition);
+            margin-top: 6px;
         }
 
         .btn-edit-plan:hover {
-            background: var(--sigma-subtle);
-            border-color: var(--sigma-primary);
+            background: var(--sigma-primary);
+            color: white;
         }
 
-        /* ==========================================================================
-           4. MODAL SHEET FOR PLAN CONFIGURATION
-           ========================================================================== */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(11, 19, 43, 0.6);
+            background: rgba(11, 19, 43, 0.65);
             backdrop-filter: blur(8px);
             z-index: var(--z-modal);
             display: flex;
@@ -499,22 +444,19 @@
             transition: var(--transition);
         }
 
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
 
         .modal-card {
             background: var(--sigma-surface);
             border-radius: var(--radius-2xl);
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             padding: 28px 24px;
             box-shadow: var(--shadow-float);
             border: 1px solid var(--border-light);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -524,10 +466,8 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid var(--border-light);
-            padding-bottom: 16px;
+            padding-bottom: 14px;
         }
-
-        .modal-head h3 { font-size: 1.25rem; }
 
         .modal-close-btn {
             width: 36px;
@@ -540,127 +480,30 @@
             color: var(--text-muted);
         }
 
-        .modal-close-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.5;
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; font-weight: 800; font-size: 0.82rem; margin-bottom: 6px; color: var(--text-heading); text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-input {
+            width: 100%; padding: 14px 16px; border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-md); font-size: 0.95rem; outline: none; background: var(--sigma-subtle);
+            font-weight: 700; color: var(--text-heading); transition: var(--transition);
         }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            background: var(--sigma-subtle);
-            border: 1px solid var(--border-muted);
-            border-radius: var(--radius-lg);
-            transition: var(--transition);
-            overflow: hidden;
-            width: 100%;
-            margin-bottom: 16px;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: var(--sigma-primary);
-            background: var(--sigma-surface);
-            box-shadow: 0 0 0 3px rgba(11, 19, 43, 0.08);
-        }
-
-        .input-field {
-            flex: 1;
-            height: 56px;
-            padding: 20px 16px 4px 16px;
-            font-size: 1rem;
-            color: var(--text-heading);
-            font-weight: 700;
-        }
-
-        .input-field::placeholder { color: transparent; }
-
-        .floating-label {
-            position: absolute;
-            left: 16px;
-            top: 18px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            pointer-events: none;
-            transition: 0.2s ease all;
-            font-weight: 600;
-        }
-
-        .input-field:focus~.floating-label,
-        .input-field:not(:placeholder-shown)~.floating-label {
-            top: 6px;
-            font-size: 0.68rem;
-            color: var(--sigma-primary);
-            font-weight: 800;
-            text-transform: uppercase;
-        }
+        .form-input:focus { border-color: var(--sigma-accent); background: white; }
 
         .toggle-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 16px;
-            background: var(--sigma-subtle);
-            border-radius: var(--radius-lg);
-            margin-bottom: 16px;
-            border: 1px solid var(--border-muted);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px; background: var(--sigma-surface-alt); border-radius: var(--radius-md);
+            margin-bottom: 16px; border: 1px solid var(--border-light);
         }
 
-        .toggle-text {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-heading);
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--border-muted); transition: .3s; border-radius: 24px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px;
-            left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%;
-        }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #CBD5E1; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--sigma-accent); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        .btn-modal-save {
-            width: 100%;
-            height: 56px;
-            border-radius: var(--radius-lg);
-            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white;
-            font-size: 1.05rem;
-            font-weight: 900;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(11, 19, 43, 0.2);
-            transition: var(--transition);
-        }
-
-        .btn-modal-save:active {
-            transform: scale(0.96);
-            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.1);
-        }
-
-        .btn-modal-save:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
         /* ==========================================================================
-           5. UNIFIED 5-BUTTON ADMIN MOBILE DOCK
+           4. UNIFIED 5-BUTTON ADMIN MOBILE DOCK
            ========================================================================== */
         .admin-mobile-dock {
             display: none;
@@ -679,7 +522,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 16px;
-            z-index: var(--z-dock);
+            z-index: 1000;
             border: 1px solid rgba(255, 255, 255, 0.9);
         }
 
@@ -761,9 +604,23 @@
             stroke-width: 2.2;
         }
 
-        /* ==========================================================================
-           6. UNIFIED DRAWER / MORE MODULES MODAL
-           ========================================================================== */
+        /* Drawer Sheet */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: var(--z-drawer);
+            background: rgba(11, 19, 43, 0.65);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .overlay.show { opacity: 1; visibility: visible; }
+
         .sheet {
             width: 100%;
             max-width: 520px;
@@ -796,6 +653,7 @@
         }
 
         .sheet-header h3 { font-size: 1.2rem; font-weight: 800; }
+
         .sheet-close-btn {
             width: 36px;
             height: 36px;
@@ -829,17 +687,8 @@
             transition: var(--transition);
         }
 
-        .sheet-menu-link:active {
-            background: var(--sigma-subtle);
-            transform: scale(0.98);
-        }
-
-        .sheet-menu-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .sheet-menu-link:active { background: var(--sigma-subtle); transform: scale(0.98); }
+        .sheet-menu-left { display: flex; align-items: center; gap: 12px; }
         .sheet-menu-left svg {
             width: 22px;
             height: 22px;
@@ -848,36 +697,6 @@
             stroke-width: 2;
         }
 
-        /* Toast */
-        .toast {
-            position: fixed;
-            top: 24px;
-            left: 50%;
-            transform: translate(-50%, -20px) scale(0.9);
-            background: var(--sigma-primary);
-            color: white;
-            padding: 14px 28px;
-            border-radius: var(--radius-pill);
-            font-size: 0.95rem;
-            font-weight: 700;
-            box-shadow: var(--shadow-float);
-            z-index: 4000;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toast.error { background: var(--sigma-danger-dark); }
-        .toast.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, 0) scale(1);
-        }
-
-        /* Responsive Breakpoints */
         @media (max-width: 860px) {
             .admin-sidebar { display: none; }
             .admin-main { margin-left: 0; }
@@ -887,6 +706,8 @@
             .page-content { padding: 20px 16px; }
             .plans-grid { grid-template-columns: 1fr; }
         }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 
@@ -984,14 +805,14 @@
             </a>
         </div>
 
-        <button class="sidebar-logout-btn" onclick="PlansController.terminateSession()">
+        <button class="sidebar-logout-btn" onclick="PlansAdminController.terminateSession()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
             Secure Logout
         </button>
     </aside>
 
     <!-- =======================================================================
-         MAIN VIEWPORT CONTENT
+         MAIN VIEWPORT
          ======================================================================= -->
     <main class="admin-main">
         <header class="admin-topbar">
@@ -1000,83 +821,79 @@
                     <img src="../assets/logo.png" alt="Sigma Logo" class="brand-logo-img">
                     <img src="../assets/textlogo.png" alt="Sigma" class="brand-text-img">
                 </div>
-                <h2 style="font-size: 1.15rem; font-weight: 800;" class="desktop-only">Plans Management</h2>
+                <h2 style="font-size: 1.15rem; font-weight: 800;" class="desktop-only">Plans & Portfolios Management</h2>
             </div>
         </header>
 
         <div class="page-content">
-            <div class="toolbar-card">
-                <div class="toolbar-info">
-                    <h2>Active & Inactive Portfolios</h2>
-                    <p>Configure pricing, daily ROI yields, and durations.</p>
-                </div>
-                <button class="btn-primary" onclick="PlansController.openPlanModal()">
-                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <div class="toolbar">
+                <h2 style="font-size: 1.25rem; font-weight: 900;">Configured Tiers</h2>
+                <button class="btn-primary-action" onclick="PlansAdminController.openCreateModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     Create New Plan
                 </button>
             </div>
 
-            <div class="plans-grid" id="plansContainer">
-                <div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">
-                    Loading portfolios from secure ledger...
-                </div>
+            <div class="plans-grid" id="plansGridContainer">
+                <div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-light);">Loading investment plans...</div>
             </div>
         </div>
     </main>
 
-    <!-- =======================================================================
-         PLAN EDITOR MODAL
-         ======================================================================= -->
+    <!-- PLAN EDITOR MODAL -->
     <div class="modal-overlay" id="planModal">
         <div class="modal-card">
             <div class="modal-head">
-                <h3 id="modalTitle">Configure Plan</h3>
-                <button class="modal-close-btn" onclick="PlansController.closePlanModal()">
-                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <h3 id="modalTitle">Create New Plan</h3>
+                <button class="modal-close-btn" onclick="PlansAdminController.closeModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
-            
-            <form id="planForm">
-                <input type="hidden" id="planId">
+
+            <form id="planForm" novalidate>
+                <input type="hidden" id="inpPlanId">
                 
-                <div class="input-wrapper">
-                    <input type="text" id="pName" class="input-field" placeholder=" " required>
-                    <label class="floating-label">Plan Name (e.g. Sigma Alpha)</label>
+                <div class="form-group">
+                    <label class="form-label">Plan Name</label>
+                    <input type="text" id="inpName" class="form-input" placeholder="e.g. Sigma Diamond" required>
                 </div>
-                
-                <div class="input-wrapper">
-                    <input type="number" id="pPrice" class="input-field font-mono" placeholder=" " required>
-                    <label class="floating-label">Principal Price (PKR)</label>
+
+                <div class="form-group">
+                    <label class="form-label">Investment Principal (PKR)</label>
+                    <input type="number" id="inpPrice" class="form-input" placeholder="28000" min="100" required>
                 </div>
-                
-                <div class="input-wrapper">
-                    <input type="number" id="pDaily" class="input-field font-mono" placeholder=" " required>
-                    <label class="floating-label">Daily Yield / ROI (PKR)</label>
+
+                <div class="form-group">
+                    <label class="form-label">Daily Guaranteed ROI (PKR)</label>
+                    <input type="number" id="inpDaily" class="form-input" placeholder="9800" min="1" required>
                 </div>
-                
-                <div class="input-wrapper">
-                    <input type="number" id="pDuration" class="input-field font-mono" placeholder=" " required>
-                    <label class="floating-label">Compounding Duration (Days)</label>
+
+                <div class="form-group">
+                    <label class="form-label">Cycle Duration (Days)</label>
+                    <input type="number" id="inpDuration" class="form-input" placeholder="25" min="1" required>
                 </div>
 
                 <div class="toggle-group">
-                    <span class="toggle-text">Status (Visible to users)</span>
+                    <div>
+                        <b style="font-size: 0.9rem; color: var(--text-heading); display: block;">Plan Visibility Status</b>
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">Active plans appear immediately in user catalog.</small>
+                    </div>
                     <label class="switch">
-                        <input type="checkbox" id="pStatus" checked>
+                        <input type="checkbox" id="inpStatus" checked>
                         <span class="slider"></span>
                     </label>
                 </div>
 
-                <button type="submit" class="btn-modal-save" id="savePlanBtn">
-                    Commit Changes
+                <button type="submit" class="btn-primary-action" style="width: 100%; justify-content: center; height: 54px; margin-top: 8px;" id="btnSavePlan">
+                    Save Plan Configuration
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- ==========================================================================
+    <!-- =======================================================================
          UNIFIED 5-BUTTON ADMIN MOBILE DOCK
-         ========================================================================== -->
+         ======================================================================= -->
     <nav class="admin-mobile-dock">
         <a href="dashboard.html" class="dock-btn">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -1098,26 +915,26 @@
             <span>Users</span>
         </a>
 
-        <button class="dock-btn active" onclick="PlansController.openMenuSheet()">
+        <button class="dock-btn" onclick="PlansAdminController.openMenuSheet()">
             <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             <span>Menu</span>
         </button>
     </nav>
 
-    <!-- UNIFIED DRAWER SHEET FOR ALL OTHER MODULES -->
+    <!-- UNIFIED DRAWER SHEET -->
     <div class="overlay" id="sheetAdminMenu">
         <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>Admin Operations Menu</h3>
-                <button class="sheet-close-btn" onclick="PlansController.closeMenuSheet()">
+                <button class="sheet-close-btn" onclick="PlansAdminController.closeMenuSheet()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
             <div class="sheet-body">
-                <a href="plans.html" class="sheet-menu-link" style="border-color: var(--sigma-primary); background: white;">
+                <a href="plans.html" class="sheet-menu-link" style="background: var(--sigma-primary); color: white;">
                     <div class="sheet-menu-left">
-                        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <svg viewBox="0 0 24 24" style="stroke: var(--sigma-accent);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                         <span>Plans & Portfolios</span>
                     </div>
                     &rarr;
@@ -1174,7 +991,7 @@
 
                 <div style="height: 1px; background: var(--border-light); margin: 6px 0;"></div>
 
-                <button onclick="PlansController.terminateSession()" class="sheet-menu-link" style="color: var(--sigma-danger); background: var(--sigma-danger-soft);">
+                <button onclick="PlansAdminController.terminateSession()" class="sheet-menu-link" style="color: var(--sigma-danger); background: var(--sigma-danger-soft);">
                     <div class="sheet-menu-left">
                         <svg viewBox="0 0 24 24" style="stroke: var(--sigma-danger);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
                         <span>Sign Out of Terminal</span>
@@ -1184,54 +1001,34 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toastBox" style="position:fixed; top:24px; left:50%; transform:translate(-50%,-20px) scale(0.9); background:var(--sigma-primary); color:white; padding:12px 24px; border-radius:var(--radius-pill); font-weight:700; font-size:0.9rem; z-index:var(--z-toast); opacity:0; visibility:hidden; transition:0.3s;">
-        <span id="toastMsg">Success</span>
-    </div>
-
-    <!-- ==========================================================================
-         JAVASCRIPT CONTROLLER
-         ========================================================================== -->
+    <!-- =======================================================================
+         JAVASCRIPT CONTROLLER (FIRESTORE PLANS SYNC & CRUD)
+         ======================================================================= -->
     <script>
-        const PlansController = (() => {
+        const PlansAdminController = (() => {
+
+            let adminUser = null;
+            let loadedPlans = [];
 
             const db = firebase.firestore();
             const auth = firebase.auth();
-            let adminUser = null;
-            let allPlans = [];
 
             const dom = {
                 authOverlay: document.getElementById('authOverlay'),
-                plansContainer: document.getElementById('plansContainer'),
-                planModal: document.getElementById('planModal'),
-                planForm: document.getElementById('planForm'),
+                gridContainer: document.getElementById('plansGridContainer'),
                 menuSheet: document.getElementById('sheetAdminMenu'),
-                sideBadgeDeposits: document.getElementById('sideBadgeDeposits'),
                 dockBadgeDeposits: document.getElementById('dockBadgeDeposits'),
-                toastBox: document.getElementById('toastBox'),
-                toastMsg: document.getElementById('toastMsg')
-            };
 
-            const inputs = {
-                id: document.getElementById('planId'),
-                name: document.getElementById('pName'),
-                price: document.getElementById('pPrice'),
-                daily: document.getElementById('pDaily'),
-                duration: document.getElementById('pDuration'),
-                status: document.getElementById('pStatus'),
-                btn: document.getElementById('savePlanBtn')
-            };
-
-            const toast = (msg) => {
-                dom.toastMsg.textContent = msg;
-                dom.toastBox.style.opacity = '1';
-                dom.toastBox.style.visibility = 'visible';
-                dom.toastBox.style.transform = 'translate(-50%, 0) scale(1)';
-                setTimeout(() => {
-                    dom.toastBox.style.opacity = '0';
-                    dom.toastBox.style.visibility = 'hidden';
-                    dom.toastBox.style.transform = 'translate(-50%, -20px) scale(0.9)';
-                }, 3000);
+                planModal: document.getElementById('planModal'),
+                modalTitle: document.getElementById('modalTitle'),
+                planForm: document.getElementById('planForm'),
+                inpPlanId: document.getElementById('inpPlanId'),
+                inpName: document.getElementById('inpName'),
+                inpPrice: document.getElementById('inpPrice'),
+                inpDaily: document.getElementById('inpDaily'),
+                inpDuration: document.getElementById('inpDuration'),
+                inpStatus: document.getElementById('inpStatus'),
+                btnSavePlan: document.getElementById('btnSavePlan')
             };
 
             const openMenuSheet = () => {
@@ -1249,7 +1046,6 @@
                 window.location.replace('login.html');
             };
 
-            // Verify Auth
             const verifyAdminAccess = () => {
                 auth.onAuthStateChanged(async (user) => {
                     if (user) {
@@ -1280,173 +1076,177 @@
                 });
             };
 
-            // Pending Deposits Badge
             const bindPendingBadge = () => {
                 db.collection('payment_requests').where('status', '==', 'pending_verification').onSnapshot(snap => {
                     const count = snap.size;
                     if (count > 0) {
-                        dom.sideBadgeDeposits.style.display = 'inline-block';
-                        dom.sideBadgeDeposits.textContent = count;
                         dom.dockBadgeDeposits.style.display = 'flex';
                         dom.dockBadgeDeposits.textContent = count;
                     } else {
-                        dom.sideBadgeDeposits.style.display = 'none';
                         dom.dockBadgeDeposits.style.display = 'none';
                     }
                 });
             };
 
-            // Live Plans Data
             const bindRealtimePlans = () => {
-                db.collection('plans').orderBy('price', 'asc').onSnapshot(snap => {
-                    allPlans = [];
-                    snap.forEach(doc => {
-                        allPlans.push({ id: doc.id, ...doc.data() });
+                db.collection('plans').orderBy('price', 'asc').onSnapshot(snapshot => {
+                    loadedPlans = [];
+                    snapshot.forEach(doc => {
+                        loadedPlans.push({ id: doc.id, ...doc.data() });
                     });
-                    renderPlans();
-                }, error => {
-                    console.error("Error fetching plans:", error);
-                    dom.plansContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--sigma-danger);">Failed to securely fetch portfolios.</div>`;
+                    renderPlansGrid();
+                }, err => {
+                    console.error("Plans Query Error:", err);
+                    dom.gridContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:32px; color:var(--sigma-danger);">Unable to load investment plans.</div>`;
                 });
             };
 
-            const renderPlans = () => {
-                if (allPlans.length === 0) {
-                    dom.plansContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">No portfolios exist in the ledger. Create one to begin.</div>`;
+            const renderPlansGrid = () => {
+                if (!dom.gridContainer) return;
+                if (loadedPlans.length === 0) {
+                    dom.gridContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">No investment plans configured in database.</div>`;
                     return;
                 }
 
                 let html = '';
-                allPlans.forEach(p => {
-                    const total = Number(p.dailyROI) * Number(p.durationDays);
-                    const statusClass = p.status === 'active' ? '' : 'inactive';
-                    
-                    let statusBadge = '';
-                    if (p.status === 'active') {
-                        statusBadge = `<div class="badge-status" style="background:var(--sigma-accent-soft); color:var(--sigma-accent-dark); font-size:0.65rem; font-weight:800; padding:4px 10px; border-radius:99px; text-transform:uppercase;">Active</div>`;
-                    } else {
-                        statusBadge = `<div class="badge-status" style="background:var(--sigma-subtle); color:var(--text-muted); font-size:0.65rem; font-weight:800; padding:4px 10px; border-radius:99px; text-transform:uppercase;">Inactive</div>`;
-                    }
+                loadedPlans.forEach(p => {
+                    const isActive = p.status === 'active';
+                    const totalYield = Number(p.dailyROI || 0) * Number(p.durationDays || 0);
 
                     html += `
-                    <div class="plan-card ${statusClass}">
-                        <div class="plan-header">
-                            <div class="plan-title-box">
-                                <h3>${p.name}</h3>
-                                ${statusBadge}
+                        <div class="plan-card ${isActive ? '' : 'inactive'}">
+                            <div class="plan-card-head">
+                                <div>
+                                    <div class="plan-name">${p.name}</div>
+                                    <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 8px; background: ${isActive ? 'var(--sigma-accent-soft)' : 'var(--sigma-subtle)'}; color: ${isActive ? 'var(--sigma-accent-dark)' : 'var(--text-muted)'}; text-transform: uppercase;">
+                                        ${isActive ? 'Active' : 'Inactive'}
+                                    </span>
+                                </div>
+                                <div class="plan-price font-mono">Rs. ${Number(p.price || 0).toLocaleString('en-PK')}</div>
                             </div>
-                            <div class="plan-price">
-                                Rs. ${Number(p.price).toLocaleString('en-PK')}
-                                <small>Principal</small>
-                            </div>
-                        </div>
 
-                        <div class="plan-metrics">
-                            <div class="metric-row">
-                                <span>Daily Yield</span>
-                                <strong class="font-mono">Rs. ${Number(p.dailyROI).toLocaleString('en-PK')}</strong>
+                            <div class="plan-metric-row">
+                                <span>Daily ROI</span>
+                                <strong class="font-mono text-accent">Rs. ${Number(p.dailyROI || 0).toLocaleString('en-PK')}</strong>
                             </div>
-                            <div class="metric-row">
-                                <span>Compounding Term</span>
+                            <div class="plan-metric-row">
+                                <span>Duration</span>
                                 <strong class="font-mono">${p.durationDays} Days</strong>
                             </div>
-                            <div class="metric-row total">
-                                <span>Total Gross Return</span>
-                                <strong class="font-mono">Rs. ${total.toLocaleString('en-PK')}</strong>
+                            <div class="plan-metric-row">
+                                <span>Total Return</span>
+                                <strong class="font-mono">Rs. ${Number(totalYield).toLocaleString('en-PK')}</strong>
                             </div>
+
+                            <button class="btn-edit-plan" onclick="PlansAdminController.openEditModal('${p.id}')">Configure Plan</button>
                         </div>
-                        
-                        <button class="btn-edit-plan" onclick="PlansController.openPlanModal('${p.id}')">Configure Plan Details</button>
-                    </div>
                     `;
                 });
-                dom.plansContainer.innerHTML = html;
+                dom.gridContainer.innerHTML = html;
             };
 
-            const openPlanModal = (id = null) => {
-                dom.planForm.reset();
-                if (id) {
-                    const plan = allPlans.find(p => p.id === id);
-                    if (plan) {
-                        inputs.id.value = plan.id;
-                        inputs.name.value = plan.name;
-                        inputs.price.value = plan.price;
-                        inputs.daily.value = plan.dailyROI;
-                        inputs.duration.value = plan.durationDays;
-                        inputs.status.checked = plan.status === 'active';
-                        document.getElementById('modalTitle').textContent = 'Configure Portfolio';
-                    }
-                } else {
-                    inputs.id.value = '';
-                    inputs.status.checked = true;
-                    document.getElementById('modalTitle').textContent = 'Create New Portfolio';
-                }
-                
+            const openCreateModal = () => {
+                dom.modalTitle.textContent = 'Create New Portfolio Tier';
+                dom.inpPlanId.value = '';
+                dom.inpName.value = '';
+                dom.inpPrice.value = '';
+                dom.inpDaily.value = '';
+                dom.inpDuration.value = '25';
+                dom.inpStatus.checked = true;
                 dom.planModal.classList.add('show');
                 document.body.classList.add('locked');
             };
 
-            const closePlanModal = () => {
+            const openEditModal = (id) => {
+                const plan = loadedPlans.find(p => p.id === id);
+                if (!plan) return;
+
+                dom.modalTitle.textContent = 'Edit Portfolio Tier';
+                dom.inpPlanId.value = plan.id;
+                dom.inpName.value = plan.name || '';
+                dom.inpPrice.value = plan.price || '';
+                dom.inpDaily.value = plan.dailyROI || '';
+                dom.inpDuration.value = plan.durationDays || 25;
+                dom.inpStatus.checked = plan.status === 'active';
+
+                dom.planModal.classList.add('show');
+                document.body.classList.add('locked');
+            };
+
+            const closeModal = () => {
                 dom.planModal.classList.remove('show');
                 document.body.classList.remove('locked');
             };
 
-            const submitPlan = async (e) => {
+            const savePlan = async (e) => {
                 e.preventDefault();
-                inputs.btn.disabled = true;
-                inputs.btn.textContent = 'Processing...';
+                const id = dom.inpPlanId.value;
+                const name = dom.inpName.value.trim();
+                const price = Number(dom.inpPrice.value);
+                const dailyROI = Number(dom.inpDaily.value);
+                const durationDays = Number(dom.inpDuration.value);
+                const status = dom.inpStatus.checked ? 'active' : 'inactive';
 
-                const payload = {
-                    name: inputs.name.value.trim(),
-                    price: Number(inputs.price.value),
-                    dailyROI: Number(inputs.daily.value),
-                    durationDays: Number(inputs.duration.value),
-                    status: inputs.status.checked ? 'active' : 'inactive',
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
+                if (!name || !price || !dailyROI || !durationDays) {
+                    alert("Please complete all required fields.");
+                    return;
+                }
+
+                dom.btnSavePlan.disabled = true;
+                dom.btnSavePlan.textContent = 'Saving Configuration...';
 
                 try {
-                    if (inputs.id.value) {
-                        await db.collection('plans').doc(inputs.id.value).update(payload);
-                        toast("Portfolio updated successfully.");
+                    const payload = {
+                        name,
+                        price,
+                        dailyROI,
+                        durationDays,
+                        status,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    if (id) {
+                        await db.collection('plans').doc(id).update(payload);
                     } else {
                         payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                         await db.collection('plans').add(payload);
-                        toast("New portfolio created successfully.");
                     }
-                    closePlanModal();
-                } catch (error) {
-                    console.error("Ledger Execution Error:", error);
-                    alert("Failed to commit changes. Please verify permissions.");
-                }
 
-                inputs.btn.disabled = false;
-                inputs.btn.textContent = 'Commit Changes';
+                    closeModal();
+                } catch (e) {
+                    console.error("Save plan error:", e);
+                    alert("Failed to save plan. Check database permissions.");
+                } finally {
+                    dom.btnSavePlan.disabled = false;
+                    dom.btnSavePlan.textContent = 'Save Plan Configuration';
+                }
             };
 
             const init = () => {
+                dom.planForm.addEventListener('submit', savePlan);
+                dom.planModal.addEventListener('click', e => {
+                    if (e.target === dom.planModal) closeModal();
+                });
                 dom.menuSheet.addEventListener('click', e => {
                     if (e.target === dom.menuSheet) closeMenuSheet();
                 });
-                dom.planModal.addEventListener('click', e => {
-                    if (e.target === dom.planModal) closePlanModal();
-                });
-                dom.planForm.addEventListener('submit', submitPlan);
 
                 verifyAdminAccess();
             };
 
             return {
                 init,
+                openCreateModal,
+                openEditModal,
+                closeModal,
                 openMenuSheet,
                 closeMenuSheet,
-                terminateSession,
-                openPlanModal,
-                closePlanModal
+                terminateSession
             };
         })();
 
-        document.addEventListener('DOMContentLoaded', PlansController.init);
+        document.addEventListener('DOMContentLoaded', PlansAdminController.init);
     </script>
 </body>
+
 </html>
