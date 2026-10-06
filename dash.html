@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 
@@ -802,2905 +803,941 @@
             text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
         }
 
-        /* ==========================================================================
-           6. TRIPLE POCKET WALLET MATRIX
-           ========================================================================== */
-        .pocket-wallets-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        /* -------------------------------------------------------------------------
+       Card Bottom: Real Authenticated User Details (Name, UID, Validity)
+       ------------------------------------------------------------------------- */
+        .card-user-details-footer {
+            position: relative;
+            z-index: 2;
+            padding-top: 14px;
+            border-top: 1px solid rgba(122, 92, 107, 0.15);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
             gap: 12px;
         }
 
-        .pocket-card {
-            background: var(--sigma-surface);
-            border-radius: var(--radius-lg);
-            padding: 18px 14px;
-            border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle);
+        .card-user-meta {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .card-meta-caption {
+            font-size: 0.62rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #7A5C6B;
+        }
+
+        .card-user-name {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #0F172A;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 220px;
+            text-transform: uppercase;
+        }
+
+        .card-meta-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .card-user-uid {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #2D1F27;
+            letter-spacing: 0.5px;
+        }
+
+        .card-membership-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #6E5363;
+            letter-spacing: 0.4px;
+        }
+    </style>
+
+    <!-- SECTION DOM -->
+    <section class="vault-main-card" id="sigmaVaultMainCard">
+        <!-- Pink Tinted Background Watermark -->
+        <img src="assets/logo.png" alt="" class="card-bg-watermark" onerror="this.style.display='none'">
+
+        <!-- Top Technology & Hardware Row -->
+        <div class="card-top-row">
+            <div class="card-hardware-group">
+                <div class="card-rose-chip" title="Security Smart Chip"></div>
+                <svg class="card-contactless-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.2" stroke-linecap="round">
+                    <path
+                        d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-1.12-2.5-2.5-2.5M11.5 17.5a5.5 5.5 0 0 0 0-11M14.5 20.5a8.5 8.5 0 0 0 0-17" />
+                </svg>
+            </div>
+
+            <div class="card-brand-wrap">
+                <img src="assets/textlogo.png" alt="SIGMA" class="card-brand-text" onerror="this.style.display='none'">
+                <img src="assets/logo.png" alt="" class="card-brand-logo" onerror="this.style.display='none'">
+            </div>
+        </div>
+
+        <!-- Core Balance Area -->
+        <div class="card-body-balance">
+            <div class="card-label-row">
+                <span class="vault-top-label" id="cmsTotalBalanceLabel">Total Net Worth</span>
+            </div>
+
+            <div class="vault-balance-row">
+                <span class="vault-currency">Rs.</span>
+                <!-- Preserves ID for existing Firebase Count-Up Animation -->
+                <span class="vault-number font-mono" id="uiNetBalance">0.00</span>
+            </div>
+        </div>
+
+        <!-- Authentic User Details Footer -->
+        <div class="card-user-details-footer">
+            <div class="card-user-meta">
+                <span class="card-meta-caption">Account Holder</span>
+                <span class="card-user-name" id="cardUserFullName">Investor</span>
+            </div>
+
+            <div class="card-meta-right">
+                <span class="card-meta-caption">Account ID</span>
+                <span class="card-user-uid font-mono" id="cardDisplayUID">SIG-••••</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auto-Sync Script for User Details on this Card -->
+    <script>
+        (function syncCardDetails() {
+            // Observes dashboard identity and syncs real user details straight to this card
+            const syncInterval = setInterval(() => {
+                const srcName = document.getElementById('uiDisplayName');
+                const srcUID = document.getElementById('uiAccountUID');
+                const targetName = document.getElementById('cardUserFullName');
+                const targetUID = document.getElementById('cardDisplayUID');
+                const srcTier = document.getElementById('uiTierBadge');
+                const targetTier = document.getElementById('cardTierBadge');
+
+                if (srcName && targetName && srcName.textContent && !srcName.classList.contains('skeleton')) {
+                    targetName.textContent = srcName.textContent;
+                }
+                if (srcUID && targetUID && srcUID.textContent) {
+                    targetUID.textContent = srcUID.textContent.replace('UID: ', '');
+                }
+                if (srcTier && targetTier && srcTier.textContent) {
+                    targetTier.textContent = srcTier.textContent + ' Verified';
+                }
+            }, 600);
+
+            // Clear interval after 15 seconds once user details are loaded
+            setTimeout(() => clearInterval(syncInterval), 15000);
+        })();
+    </script>
+
+    <!-- =======================================================================
+     SIGMA WALLET ACTION DOCK (DEPOSIT & WITHDRAW - STRICT SINGLE ROW)
+     Place this directly below your Multi-Wallet Card
+     ======================================================================= -->
+    <style>
+        /* Scoped Container directly under wallet card */
+        .sigma-wallet-actions-row {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
+            margin-top: -6px;
+            /* Blends seamlessly right beneath the vault card */
+            margin-bottom: 20px;
+        }
+
+        /* Common Button Surface */
+        .btn-wallet-action {
             position: relative;
-            transition: var(--transition-smooth);
-        }
-
-        .pocket-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-card);
-        }
-
-        .pocket-head {
+            height: 56px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: -0.2px;
+            text-decoration: none;
+            cursor: pointer;
+            user-select: none;
+            overflow: hidden;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.25s ease,
+                filter 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .pocket-icon-wrap {
-            width: 34px;
-            height: 34px;
+        /* Micro Shimmer Light Sweep on Buttons */
+        .btn-wallet-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            transform: skewX(-22deg);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+
+        .btn-wallet-action:hover::before {
+            left: 180%;
+        }
+
+        /* Interactive Physical Depress */
+        .btn-wallet-action:active {
+            transform: scale(0.96) translateY(1px);
+        }
+
+        /* 1. DEPOSIT ACTION (Profit Emerald Engine) */
+        .btn-action-deposit {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 10px 22px -6px rgba(16, 185, 129, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-action-deposit:hover {
+            filter: brightness(1.05);
+            box-shadow: 0 14px 26px -6px rgba(16, 185, 129, 0.55);
+        }
+
+        /* 2. WITHDRAW ACTION (Corporate Velvet / Midnight Gold Contrast) */
+        .btn-action-withdraw {
+            background: linear-gradient(135deg, #0B132B 0%, #1C2541 100%);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 22px -6px rgba(11, 19, 43, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-action-withdraw:hover {
+            filter: brightness(1.15);
+            box-shadow: 0 14px 26px -6px rgba(11, 19, 43, 0.45);
+        }
+
+        /* Icon Housings */
+        .btn-wallet-action .action-ico-wrap {
+            width: 32px;
+            height: 32px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.25s ease;
         }
 
-        .pocket-icon-wrap svg {
+        .btn-action-deposit .action-ico-wrap {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-action-withdraw .action-ico-wrap {
+            background: rgba(239, 68, 68, 0.15);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-wallet-action:hover .action-ico-wrap {
+            transform: scale(1.1);
+        }
+
+        .btn-wallet-action svg {
             width: 18px;
             height: 18px;
             stroke: currentColor;
             fill: none;
-            stroke-width: 2.2;
+            stroke-width: 2.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
-        .p-deposit .pocket-icon-wrap {
-            background: var(--sigma-info-soft);
-            color: var(--sigma-info-dark);
-            border: 1px solid var(--sigma-info-border);
+        /* Status Dot Inside Withdraw */
+        .withdraw-live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 6px #10B981;
+            margin-left: -2px;
         }
 
-        .p-profit .pocket-icon-wrap {
-            background: var(--sigma-accent-soft);
-            color: var(--sigma-accent-dark);
-            border: 1px solid var(--sigma-accent-border);
+        /* Strict Mobile Viewport Safety (320px screen protection) */
+        @media (max-width: 380px) {
+            .sigma-wallet-actions-row {
+                gap: 8px;
+            }
+
+            .btn-wallet-action {
+                height: 50px;
+                font-size: 0.85rem;
+                gap: 6px;
+                border-radius: 14px;
+            }
+
+            .btn-wallet-action .action-ico-wrap {
+                width: 28px;
+                height: 28px;
+                border-radius: 8px;
+            }
+
+            .btn-wallet-action svg {
+                width: 15px;
+                height: 15px;
+            }
+        }
+    </style>
+
+    <!-- SECTION DOM -->
+    <div class="sigma-wallet-actions-row" id="walletActionsSubDock">
+        <!-- 1. Deposit Button -->
+        <a href="plans.html" class="btn-wallet-action btn-action-deposit" id="wBtnDeposit" aria-label="Deposit Funds">
+            <div class="action-ico-wrap">
+                <svg viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+            </div>
+            <span id="wTxtDeposit">Deposit</span>
+        </a>
+
+        <!-- 2. Withdraw Button -->
+        <a href="withdraw.html" class="btn-wallet-action btn-action-withdraw" id="wBtnWithdraw"
+            aria-label="Withdraw Funds">
+            <div class="action-ico-wrap">
+                <svg viewBox="0 0 24 24">
+                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                    <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+            </div>
+            <span id="wTxtWithdraw">Withdraw</span>
+            <div class="withdraw-live-dot" title="24/7 Processing Active"></div>
+        </a>
+    </div>
+
+    <!-- COMPONENT SCRIPTS & REALTIME INTEGRATION -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnDep = document.getElementById('wBtnDeposit');
+            const btnWith = document.getElementById('wBtnWithdraw');
+            const txtDep = document.getElementById('wTxtDeposit');
+            const txtWith = document.getElementById('wTxtWithdraw');
+
+            // 1. Mobile Vibration (Haptic Touch Feedback)
+            const triggerHaptic = (ms = 35) => {
+                if ('vibrate' in navigator) {
+                    try { navigator.vibrate(ms); } catch (e) { }
+                }
+            };
+
+            if (btnDep) btnDep.addEventListener('click', () => triggerHaptic(30));
+            if (btnWith) btnWith.addEventListener('click', () => triggerHaptic(30));
+
+            // 2. Firebase CMS Configuration Listener (Auto-updates without editing HTML)
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                try {
+                    const db = firebase.firestore();
+                    db.collection('settings').doc('cms_dashboard').onSnapshot(doc => {
+                        if (doc.exists) {
+                            const cms = doc.data();
+
+                            // Dynamic Labels Controlled by Admin
+                            if (cms.btnDeposit && txtDep) txtDep.textContent = cms.btnDeposit;
+                            if (cms.btnWithdraw && txtWith) txtWith.textContent = cms.btnWithdraw;
+
+                            // Dynamic Custom Redirect Endpoints if Admin modifies paths
+                            if (cms.urlDeposit && btnDep) btnDep.href = cms.urlDeposit;
+                            if (cms.urlWithdraw && btnWith) btnWith.href = cms.urlWithdraw;
+                        }
+                    }, err => {
+                        console.warn("Wallet action CMS sync offline, using production defaults:", err);
+                    });
+                } catch (err) {
+                    console.warn("Firebase runtime initialization skipped:", err);
+                }
+            }
+        });
+    </script>
+    <!-- Triple Pocket Multi-Wallet Matrix -->
+    <section class="pocket-wallets-grid">
+        <!-- 1. Deposit / Main Wallet -->
+        <div class="pocket-card p-deposit">
+            <div class="pocket-head">
+                <span class="pocket-title" id="cmsWalletDepositTitle">Deposit / Main</span>
+                <div class="pocket-icon-wrap"><svg>
+                        <use href="#icon-wallet" />
+                    </svg></div>
+            </div>
+            <div class="pocket-details">
+                <span class="pocket-title-mobile">Deposit</span>
+                <div class="pocket-val font-mono" id="uiDepositWallet">Rs. 0.00</div>
+                <div class="pocket-sub" id="cmsWalletDepositSub">Plans Buying Only</div>
+            </div>
+        </div>
+
+        <!-- 2. Profit / ROI Wallet -->
+        <div class="pocket-card p-profit">
+            <div class="pocket-head">
+                <span class="pocket-title" id="cmsWalletProfitTitle">Profit / ROI</span>
+                <div class="pocket-icon-wrap"><svg>
+                        <use href="#icon-arrow-up" />
+                    </svg></div>
+            </div>
+            <div class="pocket-details">
+                <span class="pocket-title-mobile">Profit</span>
+                <div class="pocket-val font-mono" id="uiProfitWallet">Rs. 0.00</div>
+                <div class="pocket-sub" id="cmsWalletProfitSub">100% Withdrawable</div>
+            </div>
+        </div>
+
+        <!-- 3. Commission Wallet -->
+        <div class="pocket-card p-comm">
+            <div class="pocket-head">
+                <span class="pocket-title" id="cmsWalletCommissionTitle">Commission</span>
+                <div class="pocket-icon-wrap"><svg>
+                        <use href="#icon-crown" />
+                    </svg></div>
+            </div>
+            <div class="pocket-details">
+                <span class="pocket-title-mobile">Commission</span>
+                <div class="pocket-val font-mono" id="uiCommissionWallet">Rs. 0.00</div>
+                <div class="pocket-sub" id="cmsWalletCommissionSub">Referral Bonuses</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exact 24-Hour Plan Timestamp Countdown Engine -->
+    <section class="live-countdown-island">
+        <div class="countdown-info">
+            <div class="pulsing-yield-ring"><svg>
+                    <use href="#icon-pie" />
+                </svg></div>
+            <div>
+                <small id="cmsCountdownKicker">Next Profit Credit</small>
+                <strong id="cmsCountdownPlan">No Active Cycle</strong>
+            </div>
+        </div>
+        <div class="clock-display font-mono" id="profitClockDisplay">00:00:00</div>
+    </section>
+
+    <!-- Signature Circular Orbital Action Terminal -->
+    <section class="orbital-terminal-wrapper">
+        <div class="orbital-header">
+            <h3 id="cmsTerminalTitle">Command Center</h3>
+            <span
+                style="font-size: 0.75rem; font-weight: 800; color: var(--sigma-accent-dark); letter-spacing: 1px;">ORBITAL
+                MATRIX</span>
+        </div>
+
+        <div class="orbit-stage">
+            <div class="orbit-ring"></div>
+            <div class="orbit-ring-inner"></div>
+
+            <!-- Central Core Hub -->
+            <div class="orbit-center-core"
+                onclick="appController.logAction('core_click', 'Interacted with central orbital hub'); appController.toast('Sigma Core Operational');">
+                <img src="assets/logo.png" alt="Sigma Hub"
+                    onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+            </div>
+
+            <!-- 6 Orbital Nodes Pointing Strictly to Full .html Routes -->
+            <a href="plans.html" class="orbit-node node-pos-1"
+                onclick="appController.logAction('deposit_node', 'Opened deposit/plans via terminal')">
+                <div class="orbit-node-icon" style="color: var(--sigma-info-dark);"><svg>
+                        <use href="#icon-arrow-down" />
+                    </svg></div>
+                <span>Deposit</span>
+            </a>
+
+            <a href="assets/sigma.apk" download class="orbit-node node-pos-2"
+                onclick="appController.logAction('app_download_node', 'Initiated App Download')">
+                <div class="orbit-node-icon" style="color: var(--sigma-purple);"><svg>
+                        <use href="#icon-download" />
+                    </svg></div>
+                <span>App (APK)</span>
+            </a>
+
+            <a href="my-plans.html" class="orbit-node node-pos-3"
+                onclick="appController.logAction('my_plans_node', 'Navigated to my plans')">
+                <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg>
+                        <use href="#icon-pie" />
+                    </svg></div>
+                <span>My Plans</span>
+            </a>
+
+            <a href="withdraw.html" class="orbit-node node-pos-4"
+                onclick="appController.logAction('withdraw_node', 'Opened withdraw via terminal')">
+                <div class="orbit-node-icon" style="color: var(--sigma-danger-dark);"><svg>
+                        <use href="#icon-arrow-up" />
+                    </svg></div>
+                <span>Withdraw</span>
+            </a>
+
+            <a href="team.html" class="orbit-node node-pos-5"
+                onclick="appController.logAction('network_node', 'Viewed network tree')">
+                <div class="orbit-node-icon" style="color: var(--sigma-gold-dark);"><svg>
+                        <use href="#icon-users" />
+                    </svg></div>
+                <span>Network</span>
+            </a>
+
+            <a href="support.html" class="orbit-node node-pos-6"
+                onclick="appController.logAction('support_node', 'Opened support desk')">
+                <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg>
+                        <use href="#icon-message" />
+                    </svg></div>
+                <span>Support</span>
+            </a>
+        </div>
+
+        <!-- Fallback Grid for Ultra-Narrow Viewports (<380px) -->
+        <div class="orbit-linear-fallback">
+            <a href="plans.html" class="terminal-btn">
+                <div class="terminal-btn-icon" style="color: var(--sigma-info-dark);"><svg>
+                        <use href="#icon-arrow-down" />
+                    </svg></div><span>Deposit</span>
+            </a>
+            <a href="assets/sigma.apk" download class="terminal-btn">
+                <div class="terminal-btn-icon" style="color: var(--sigma-purple);"><svg>
+                        <use href="#icon-download" />
+                    </svg></div><span>App (APK)</span>
+            </a>
+            <a href="my-plans.html" class="terminal-btn">
+                <div class="terminal-btn-icon" style="color: var(--sigma-primary);"><svg>
+                        <use href="#icon-pie" />
+                    </svg></div><span>My Plans</span>
+            </a>
+            <a href="withdraw.html" class="terminal-btn">
+                <div class="terminal-btn-icon" style="color: var(--sigma-danger-dark);"><svg>
+                        <use href="#icon-arrow-up" />
+                    </svg></div><span>Withdraw</span>
+            </a>
+            <a href="team.html" class="terminal-btn">
+                <div class="terminal-btn-icon" style="color: var(--sigma-gold-dark);"><svg>
+                        <use href="#icon-users" />
+                    </svg></div><span>Network</span>
+            </a>
+            <a href="support.html" class="terminal-btn">
+                <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg>
+                        <use href="#icon-message" />
+                    </svg></div><span>Support</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Secondary Actions Grid (Transactions & Leaderboard) -->
+    <section class="secondary-actions-container">
+        <div class="secondary-actions-grid">
+            <a href="transactions.html" class="sec-action-btn">
+                <div class="sec-action-icon" style="color: var(--sigma-secondary);"><svg>
+                        <use href="#icon-receipt" />
+                    </svg></div>
+                Transactions
+            </a>
+            <a href="leaderboard.html" class="sec-action-btn">
+                <div class="sec-action-icon" style="color: var(--sigma-gold-dark);"><svg>
+                        <use href="#icon-trophy" />
+                    </svg></div>
+                Leaderboard
+            </a>
+        </div>
+
+        <!-- Official Verification Dynamically Injected Button -->
+        <div id="proofsGridContainer"></div>
+    </section>
+
+    <!-- Transaction Lifecycle Stepper -->
+    <section class="stepper-card" id="stepperLifecycleBox" style="display: none;">
+        <div class="stepper-header">
+            <div>
+                <span class="badge-type" id="stepperTrxType">Transaction</span>
+                <h3 id="stepperTrxAmount" class="font-mono" style="margin-top: 6px;">Rs. 0.00</h3>
+            </div>
+            <span id="stepperReference" class="font-mono"
+                style="font-size: 0.8rem; color: var(--text-muted);">REF-â€¢â€¢â€¢â€¢</span>
+        </div>
+
+        <div class="stepper-track">
+            <div class="step-node completed" id="stepNode1">
+                <div class="step-circle"><svg>
+                        <use href="#icon-check" />
+                    </svg></div>
+                <span>Submitted</span>
+            </div>
+            <div class="step-node current" id="stepNode2">
+                <div class="step-circle"><svg>
+                        <use href="#icon-check" />
+                    </svg></div>
+                <span>Review</span>
+            </div>
+            <div class="step-node" id="stepNode3">
+                <div class="step-circle"><svg>
+                        <use href="#icon-check" />
+                    </svg></div>
+                <span id="step3Label">Processed</span>
+            </div>
+        </div>
+
+        <div class="rejection-reason-box" id="stepperRejectionDetails">
+            <strong>Verification Note:</strong> <span id="rejectionReasonText">None</span>
+        </div>
+    </section>
+
+    <!-- =======================================================================
+     SIGMA OFFICIAL TRUST & SUPPORT HUB (SINGLE ROW)
+     ======================================================================= -->
+    <style>
+        /* Section Container */
+        .sigma-trust-hub {
+            background: var(--bg-surface, #FFFFFF);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        .p-comm .pocket-icon-wrap {
-            background: var(--sigma-gold-soft);
-            color: var(--sigma-gold-dark);
-            border: 1px solid var(--sigma-gold-border);
+        /* Subtle Background Decoration */
+        .sigma-trust-hub::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -20px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+            pointer-events: none;
         }
 
-        .pocket-title {
-            font-size: 0.72rem;
+        .hub-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .hub-header h3 {
+            font-size: 1.05rem;
             font-weight: 800;
-            color: var(--text-muted);
+            color: #0F172A;
+            margin: 0;
+        }
+
+        .hub-header span {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #10B981;
+            background: #D1FAE5;
+            padding: 3px 8px;
+            border-radius: 99px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .pocket-val {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--text-heading);
-            word-break: break-all;
+        /* Strictly 1-Row 3-Column Grid */
+        .trust-action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
         }
 
-        .pocket-sub {
-            font-size: 0.68rem;
-            font-weight: 600;
-            color: var(--text-light);
-        }
-
-        .pocket-title-mobile {
-            display: none;
-        }
-
-        @media (max-width: 600px) {
-            .pocket-wallets-grid {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .pocket-card {
-                padding: 16px 20px;
-                flex-direction: row;
-                align-items: center;
-                justify-content: flex-start;
-                gap: 16px;
-            }
-
-            .pocket-head {
-                display: contents;
-            }
-
-            .pocket-title {
-                display: none;
-            }
-
-            .pocket-details {
-                display: flex;
-                flex-direction: column;
-                flex: 1;
-            }
-
-            .pocket-val {
-                font-size: 1.25rem;
-            }
-
-            .pocket-title-mobile {
-                display: block;
-                font-size: 0.72rem;
-                font-weight: 700;
-                color: var(--text-muted);
-                text-transform: uppercase;
-            }
-        }
-
-        /* ==========================================================================
-           7. 24-HOUR COUNTDOWN ISLAND
-           ========================================================================== */
-        .live-countdown-island {
-            background: var(--sigma-surface);
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--sigma-muted-border);
-            padding: 18px 22px;
-            box-shadow: var(--shadow-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
+        /* Premium Holographic Buttons */
+        .trust-action-btn {
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 8px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 18px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
         }
 
-        .countdown-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            z-index: 2;
-            position: relative;
+        /* The Unique Shimmer/Holographic Effect */
+        .trust-action-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transform: skewX(-20deg);
+            transition: 0.5s;
+            z-index: 1;
         }
 
-        .pulsing-yield-ring {
-            width: 46px;
-            height: 46px;
-            border-radius: 14px;
-            background: var(--sigma-accent-soft);
-            color: var(--sigma-accent-dark);
+        .trust-action-btn:hover::after {
+            left: 150%;
+        }
+
+        .trust-action-btn:hover,
+        .trust-action-btn:active {
+            transform: translateY(-3px);
+            background: #FFFFFF;
+            border-color: #10B981;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .trust-action-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Icons inside buttons */
+        .trust-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            z-index: 2;
         }
 
-        .pulsing-yield-ring::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 18px;
-            border: 2px dashed var(--sigma-accent-border);
-            animation: orbitSpin 10s linear infinite;
-        }
-
-        .pulsing-yield-ring svg {
-            width: 24px;
-            height: 24px;
-            stroke: currentColor;
+        .trust-icon-box svg {
+            width: 22px;
+            height: 22px;
             fill: none;
             stroke-width: 2;
         }
 
-        .countdown-info div {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
+        /* Individual Button Colors */
+        .btn-fbr .trust-icon-box {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+            stroke: #10B981;
         }
 
-        .countdown-info div small {
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
+        .btn-wa .trust-icon-box {
+            background: rgba(37, 211, 102, 0.1);
+            color: #25D366;
         }
 
-        .countdown-info div strong {
-            font-size: 0.95rem;
-            color: var(--text-heading);
+        .btn-wa .trust-icon-box svg {
+            fill: currentColor;
+            stroke: none;
         }
 
-        .clock-display {
-            background: var(--sigma-primary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: var(--radius-pill);
-            font-size: 1.25rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(11, 19, 43, 0.2);
+        .btn-sup .trust-icon-box {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+            stroke: #3B82F6;
+        }
+
+        .trust-action-btn span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #0F172A;
+            white-space: nowrap;
             z-index: 2;
             position: relative;
         }
 
-        /* ==========================================================================
-           8. ORBITAL ACTION TERMINAL (ALL BUTTONS USE FULL .html)
-           ========================================================================== */
-        .orbital-terminal-wrapper {
-            background: var(--sigma-surface);
-            border-radius: var(--radius-2xl);
-            padding: 28px 20px 40px;
-            border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .orbital-header {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-
-        .orbital-header h3 {
-            font-size: 1.15rem;
-        }
-
-        .orbit-stage {
-            position: relative;
-            width: 100%;
-            max-width: 320px;
-            aspect-ratio: 1 / 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .orbit-ring {
+        /* Live Ping for FBR */
+        .live-ping {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            top: -3px;
+            right: -3px;
+            width: 12px;
+            height: 12px;
+            background: #10B981;
+            border: 2px solid #FFF;
             border-radius: 50%;
-            border: 2px dashed rgba(16, 185, 129, 0.2);
-            animation: orbitSpin 60s linear infinite;
+            box-shadow: 0 0 0 rgba(16, 185, 129, 0.6);
+            animation: ping 2s infinite;
+            z-index: 3;
         }
 
-        .orbit-ring-inner {
-            position: absolute;
-            width: 65%;
-            height: 65%;
-            border-radius: 50%;
-            border: 1px solid rgba(15, 23, 42, 0.05);
-        }
-
-        @keyframes orbitSpin {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .orbit-center-core {
-            position: relative;
-            z-index: 10;
-            width: 90px;
-            height: 90px;
-            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 12px 30px rgba(11, 19, 43, 0.35);
-            border: 4px solid var(--sigma-surface);
-            transition: var(--transition-bounce);
-            cursor: pointer;
-        }
-
-        .orbit-center-core img {
-            width: 48px;
-            height: 48px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-        }
-
-        .orbit-center-core:active {
-            transform: scale(0.92);
-            box-shadow: 0 4px 12px rgba(11, 19, 43, 0.2);
-        }
-
-        .orbit-center-core::after {
-            content: '';
-            position: absolute;
-            inset: -8px;
-            border-radius: 50%;
-            border: 2px solid var(--sigma-accent);
-            opacity: 0.3;
-            animation: pulse-dot 3s infinite;
-        }
-
-        .orbit-node {
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            width: 70px;
-            text-align: center;
-            z-index: 15;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .orbit-node-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: var(--sigma-surface);
-            box-shadow: var(--shadow-card);
-            border: 2px solid var(--sigma-muted-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition-bounce);
-        }
-
-        .orbit-node:hover .orbit-node-icon {
-            border-color: var(--sigma-accent);
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: var(--shadow-float);
-        }
-
-        .orbit-node:active .orbit-node-icon {
-            transform: scale(0.9);
-            border-color: var(--sigma-primary);
-        }
-
-        .orbit-node-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.2;
-        }
-
-        .orbit-node span {
-            font-size: 0.72rem;
-            font-weight: 800;
-            color: var(--text-heading);
-            white-space: nowrap;
-        }
-
-        /* 6 Orbital Positions */
-        .node-pos-1 {
-            top: 0%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .node-pos-2 {
-            top: 25%;
-            left: 93.3%;
-            transform: translate(-50%, -50%);
-        }
-
-        .node-pos-3 {
-            top: 75%;
-            left: 93.3%;
-            transform: translate(-50%, -50%);
-        }
-
-        .node-pos-4 {
-            top: 100%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .node-pos-5 {
-            top: 75%;
-            left: 6.7%;
-            transform: translate(-50%, -50%);
-        }
-
-        .node-pos-6 {
-            top: 25%;
-            left: 6.7%;
-            transform: translate(-50%, -50%);
-        }
-
-        .orbit-linear-fallback {
+        /* Full Screen Image Modal */
+        .sigma-proof-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
             display: none;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 380px) {
-            .orbit-stage {
-                display: none;
-            }
-
-            .orbit-linear-fallback {
-                display: grid !important;
-            }
-        }
-
-        .terminal-btn {
-            display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 16px 8px;
-            background: var(--sigma-subtle);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--sigma-muted-border);
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-heading);
-            transition: var(--transition-bounce);
-        }
-
-        .terminal-btn:active {
-            transform: scale(0.94);
-        }
-
-        .terminal-btn-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 4px;
-        }
-
-        .terminal-btn-icon svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.2;
-        }
-
-        /* ==========================================================================
-           9. SECONDARY ACTIONS GRID & OFFICIAL VERIFICATION PROOFS
-           ========================================================================== */
-        .secondary-actions-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .secondary-actions-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            width: 100%;
-        }
-
-        .sec-action-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px;
-            border-radius: var(--radius-lg);
-            background: var(--sigma-subtle);
-            border: 1px solid var(--sigma-muted-border);
-            color: var(--text-heading);
-            font-size: 0.9rem;
-            font-weight: 800;
-            transition: var(--transition-bounce);
-            text-decoration: none;
-            box-shadow: var(--shadow-xs);
-        }
-
-        .sec-action-btn:active {
-            transform: scale(0.96);
-            background: #E2E8F0;
-        }
-
-        .sec-action-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-sm);
-            flex-shrink: 0;
-        }
-
-        .sec-action-icon svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.2;
-        }
-
-        .btn-full-wide {
-            grid-column: 1 / -1;
-            width: 100%;
-            height: 60px;
-            border-radius: var(--radius-xl);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            transition: var(--transition-bounce);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            cursor: pointer;
-        }
-
-        .btn-full-wide:active {
-            transform: scale(0.97);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-full-wide svg {
-            width: 22px;
-            height: 22px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.2;
-        }
-
-        .btn-fbr {
-            background: linear-gradient(135deg, var(--sigma-tertiary), var(--sigma-primary));
-            color: white;
-            border: 2px solid var(--sigma-muted-border);
-        }
-
-        /* ==========================================================================
-           10. TRANSACTION LIFECYCLE STEPPER
-           ========================================================================== */
-        .stepper-card {
-            background: var(--sigma-surface);
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle);
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .stepper-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .stepper-header h3 {
-            font-size: 1.1rem;
-        }
-
-        .badge-type {
-            font-size: 0.7rem;
-            font-weight: 800;
-            padding: 4px 10px;
-            border-radius: var(--radius-pill);
-            text-transform: uppercase;
-            background: var(--sigma-subtle);
-            color: var(--text-body);
-        }
-
-        .stepper-track {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            margin: 24px 12px 12px;
-        }
-
-        .stepper-track::before {
-            content: '';
-            position: absolute;
-            left: 16px;
-            right: 16px;
-            top: 16px;
-            height: 4px;
-            background: var(--sigma-muted-border);
-            z-index: 0;
-            border-radius: 2px;
-        }
-
-        .step-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-            width: 80px;
-            text-align: center;
-        }
-
-        .step-circle {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--sigma-surface);
-            border: 3px solid var(--sigma-muted-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition-smooth);
-            box-shadow: 0 0 0 4px var(--sigma-surface);
-        }
-
-        .step-circle svg {
-            width: 16px;
-            height: 16px;
-            stroke: white;
-            fill: none;
-            stroke-width: 3;
-            display: none;
-        }
-
-        .step-node.completed .step-circle {
-            background: var(--sigma-accent);
-            border-color: var(--sigma-accent);
-        }
-
-        .step-node.completed .step-circle svg {
-            display: block;
-        }
-
-        .step-node.current .step-circle {
-            background: white;
-            border-color: var(--sigma-gold);
-            box-shadow: 0 0 0 6px var(--sigma-gold-soft);
-        }
-
-        .step-node.rejected .step-circle {
-            background: var(--sigma-danger);
-            border-color: var(--sigma-danger);
-        }
-
-        .step-node.rejected .step-circle svg {
-            display: block;
-            stroke: white;
-        }
-
-        .step-node span {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
-        .step-node.completed span,
-        .step-node.current span {
-            color: var(--text-heading);
-        }
-
-        .rejection-reason-box {
-            margin-top: 20px;
-            padding: 14px 18px;
-            border-radius: var(--radius-md);
-            background: var(--sigma-danger-soft);
-            border: 1px solid var(--sigma-danger-border);
-            color: #991B1B;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: none;
-            line-height: 1.4;
-        }
-
-        /* ==========================================================================
-           11. REFERRAL NETWORK TREE & DYNAMIC QR
-           ========================================================================== */
-        .referral-tree-card {
-            background: var(--sigma-surface);
-            border-radius: var(--radius-2xl);
-            padding: 26px 22px;
-            border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .tree-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .tree-tabs-nav {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            background: var(--sigma-subtle);
-            padding: 6px;
-            border-radius: var(--radius-lg);
-        }
-
-        .tree-tab-btn {
-            padding: 10px 4px;
-            border-radius: var(--radius-md);
-            font-size: 0.78rem;
-            font-weight: 800;
-            color: var(--text-muted);
-            transition: var(--transition-fast);
-            text-align: center;
-        }
-
-        .tree-tab-btn.active {
-            background: white;
-            color: var(--sigma-primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .tree-pane-content {
-            background: var(--sigma-subtle);
-            border-radius: var(--radius-xl);
+            opacity: 0;
+            transition: opacity 0.3s ease;
             padding: 20px;
-            border: 1px solid var(--sigma-muted-border);
+        }
+
+        .sigma-proof-modal.show {
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            text-align: center;
-        }
-
-        .tree-metric-col small {
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .tree-metric-col strong {
-            font-size: 1.25rem;
-            font-weight: 900;
-            color: var(--text-heading);
-            display: block;
-            margin-top: 4px;
-        }
-
-        .referral-detailed-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--sigma-muted-border);
-            margin-top: 4px;
-        }
-
-        .referral-detailed-stats span {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-body);
-        }
-
-        .badge-pending {
-            color: var(--sigma-gold-dark);
-            background: var(--sigma-gold-soft);
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.7rem;
-        }
-
-        /* ==========================================================================
-           12. RECENT LEDGER TRANSACTIONS
-           ========================================================================== */
-        .workspace-panel {
-            background: var(--sigma-surface);
-            border-radius: var(--radius-2xl);
-            padding: 26px 22px;
-            border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-subtle);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .panel-heading {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-
-        .panel-heading h3 {
-            font-size: 1.15rem;
-            font-weight: 800;
-        }
-
-        .panel-heading a {
-            font-size: 0.82rem;
-            font-weight: 700;
-            color: var(--sigma-info-dark);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .tx-history-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--sigma-muted-border);
-        }
-
-        .tx-history-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .tx-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--sigma-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .tx-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: var(--text-body);
-            fill: none;
-            stroke-width: 2.2;
-        }
-
-        .tx-icon.positive {
-            background: var(--sigma-accent-soft);
-        }
-
-        .tx-icon.positive svg {
-            stroke: var(--sigma-accent-dark);
-        }
-
-        .tx-icon.negative {
-            background: var(--sigma-danger-soft);
-        }
-
-        .tx-icon.negative svg {
-            stroke: var(--sigma-danger-dark);
-        }
-
-        .tx-icon.neutral {
-            background: var(--sigma-info-soft);
-        }
-
-        .tx-icon.neutral svg {
-            stroke: var(--sigma-info-dark);
-        }
-
-        .tx-details {
-            flex: 1;
-            padding: 0 14px;
-            min-width: 0;
-        }
-
-        .tx-details strong {
-            display: block;
-            font-size: 0.95rem;
-            color: var(--text-heading);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .tx-details small {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .tx-amount {
-            text-align: right;
-        }
-
-        .tx-amount strong {
-            display: block;
-            font-size: 1.05rem;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .tx-amount small {
-            font-size: 0.72rem;
-            color: var(--text-light);
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        /* ==========================================================================
-           13. STRICT 3-BUTTON FLOATING MOBILE DOCK
-           ========================================================================== */
-        .mobile-dock {
-            position: fixed;
-            bottom: var(--safe-area-bottom);
-            left: 50%;
-            transform: translateX(-50%);
-            height: 76px;
-            width: calc(100% - 32px);
-            max-width: 440px;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-float);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            z-index: var(--z-dock);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-        }
-
-        .dock-slot {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            color: var(--text-muted);
-            flex: 1;
-            height: 100%;
-            transition: var(--transition-bounce);
-            position: relative;
-            text-decoration: none;
-        }
-
-        .dock-slot svg {
-            width: 24px;
-            height: 24px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.2;
-        }
-
-        .dock-slot span {
-            font-size: 0.68rem;
-            font-weight: 800;
-        }
-
-        .dock-slot.active {
-            color: var(--sigma-primary);
-        }
-
-        .dock-slot.active svg {
-            stroke-width: 2.8;
-            transform: translateY(-2px);
-            color: var(--sigma-accent-dark);
-        }
-
-        .dock-crest-btn {
-            position: relative;
-            top: -24px;
-            width: 68px;
-            height: 68px;
-            flex-shrink: 0;
-            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 12px 24px rgba(11, 19, 43, 0.35);
-            border: 5px solid var(--sigma-surface-alt);
-            transition: var(--transition-bounce);
-            margin: 0 8px;
-        }
-
-        .dock-crest-btn:active {
-            transform: scale(0.9);
-        }
-
-        .dock-crest-btn img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-        }
-
-        .dock-crest-btn::after {
-            content: 'PLANS';
-            position: absolute;
-            bottom: -22px;
-            font-size: 0.65rem;
-            font-weight: 800;
-            color: var(--text-heading);
-        }
-
-        @media (min-width: 860px) {
-            .mobile-dock {
-                display: none;
-            }
-
-            body {
-                padding-bottom: 40px;
-            }
-        }
-
-        /* Floating WhatsApp Button */
-        .whatsapp-float {
-            position: fixed;
-            bottom: calc(100px + var(--safe-area-bottom));
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background: #25D366;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 24px rgba(37, 211, 102, 0.4);
-            z-index: var(--z-whatsapp);
-            transition: var(--transition-bounce);
-            text-decoration: none;
-            border: 2px solid white;
-        }
-
-        .whatsapp-float svg {
-            width: 34px;
-            height: 34px;
-            fill: currentColor;
-        }
-
-        .whatsapp-float:active {
-            transform: scale(0.85);
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-        }
-
-        @media (min-width: 860px) {
-            .whatsapp-float {
-                bottom: 40px;
-                right: 40px;
-                width: 68px;
-                height: 68px;
-            }
-
-            .whatsapp-float svg {
-                width: 38px;
-                height: 38px;
-            }
-        }
-
-        /* ==========================================================================
-           14. BOTTOM SHEETS & SYSTEM MODALS
-           ========================================================================== */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            z-index: var(--z-overlay);
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(8px);
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition-smooth);
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-        }
-
-        .overlay.show {
             opacity: 1;
-            visibility: visible;
         }
 
-        .sheet {
-            width: 100%;
-            max-width: 580px;
-            background: var(--sigma-surface);
-            border-radius: 28px 28px 0 0;
-            transform: translateY(100%);
-            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-            max-height: 88vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.2);
+        .proof-img-container {
             position: relative;
-            z-index: var(--z-modal);
-        }
-
-        .overlay.show .sheet {
-            transform: translateY(0);
-        }
-
-        .sheet-handle {
-            width: 44px;
-            height: 6px;
-            border-radius: 99px;
-            background: var(--sigma-input-border);
-            margin: 14px auto 8px;
-        }
-
-        .sheet-header {
-            padding: 16px 24px 20px;
-            border-bottom: 1px solid var(--sigma-muted-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .sheet-header h3 {
-            font-size: 1.25rem;
-            font-weight: 800;
-        }
-
-        .sheet-close-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--sigma-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            transition: var(--transition-fast);
-        }
-
-        .sheet-close-btn:active {
-            background: var(--sigma-muted-border);
-            transform: scale(0.9);
-        }
-
-        .sheet-close-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.5;
-        }
-
-        .sheet-body {
-            padding: 24px 24px 40px;
-            overflow-y: auto;
-            flex: 1;
-            overscroll-behavior: contain;
-        }
-
-        .btn-sheet-submit {
-            width: 100%;
-            height: 56px;
-            border-radius: var(--radius-xl);
-            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white;
-            font-size: 1rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 12px;
-            box-shadow: var(--shadow-card);
-            transition: var(--transition-fast);
-        }
-
-        .btn-sheet-submit:active {
-            transform: scale(0.96);
-            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.2);
-        }
-
-        /* Activity Center Notifications */
-        .notif-feed-item {
-            padding: 16px 20px;
-            border-radius: var(--radius-xl);
-            background: var(--sigma-surface-alt);
-            margin-bottom: 12px;
-            border: 1px solid var(--sigma-muted-border);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            position: relative;
+            max-width: 90vw;
+            max-height: 75vh;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .notif-feed-item:active {
-            transform: scale(0.98);
+        .sigma-proof-modal.show .proof-img-container {
+            transform: scale(1);
         }
 
-        .notif-feed-item.unread {
-            background: white;
-            border-color: var(--sigma-accent-border);
-            box-shadow: var(--shadow-sm);
+        .proof-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #FFFFFF;
+            display: block;
         }
 
-        .notif-feed-item.unread::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--sigma-accent);
-        }
-
-        .notif-feed-item.pinned {
-            border-color: var(--sigma-gold-border);
-            background: var(--sigma-gold-soft);
-        }
-
-        .notif-feed-item.pinned::before {
-            background: var(--sigma-gold);
-        }
-
-        .notif-feed-top {
+        /* Modal Controls */
+        .proof-controls {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
+            gap: 16px;
+            margin-top: 24px;
         }
 
-        .notif-feed-title-wrap {
+        .proof-btn {
             display: flex;
             align-items: center;
             gap: 8px;
-            flex: 1;
-        }
-
-        .notif-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--sigma-subtle);
-            flex-shrink: 0;
-        }
-
-        .notif-icon svg {
-            width: 16px;
-            height: 16px;
-            stroke: var(--text-heading);
-            fill: none;
-            stroke-width: 2.2;
-        }
-
-        .notif-feed-top strong {
-            font-size: 0.95rem;
-            color: var(--text-heading);
-            line-height: 1.2;
-        }
-
-        .notif-feed-top span {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .notif-feed-item p {
-            font-size: 0.85rem;
-            color: var(--text-body);
-            margin: 0;
-            margin-left: 40px;
-            line-height: 1.4;
-        }
-
-        .mark-all-read-btn {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--sigma-info-dark);
-            background: transparent;
-            border: none;
-            outline: none;
-            cursor: pointer;
-        }
-
-        /* Premium QR Code Modal */
-        .qr-wrapper {
-            position: relative;
-            display: inline-block;
-            padding: 16px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: var(--shadow-card);
-            border: 1px solid var(--sigma-muted-border);
-        }
-
-        .qr-logo-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 48px;
-            height: 48px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border: 3px solid white;
-            z-index: 10;
-        }
-
-        .qr-logo-overlay img {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-        }
-
-        /* Proof Viewer Modal */
-        #sheetProofViewer {
-            max-height: 95vh;
-            height: 95vh;
-        }
-
-        .proof-viewer-body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .proof-viewer-img {
-            max-width: 100%;
-            max-height: 50vh;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-md);
-            object-fit: contain;
-        }
-
-        /* Toast Component */
-        .toast {
-            position: fixed;
-            top: 24px;
-            left: 50%;
-            transform: translate(-50%, -20px) scale(0.9);
-            background: var(--sigma-primary);
-            color: white;
             padding: 14px 24px;
-            border-radius: var(--radius-pill);
+            border-radius: 16px;
             font-size: 0.9rem;
-            font-weight: 700;
-            box-shadow: var(--shadow-float);
-            z-index: var(--z-toast);
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .toast.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, 0) scale(1);
-        }
-
-        /* Admin Blocker Screen */
-        #blockerScreen {
-            position: fixed;
-            inset: 0;
-            z-index: var(--z-blocker);
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(24px);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            text-align: center;
-        }
-
-        #blockerScreen.active {
-            display: flex;
-        }
-
-        #blockerScreen svg {
-            width: 80px;
-            height: 80px;
-            stroke: var(--sigma-danger);
-            fill: none;
-            stroke-width: 1.5;
-            margin-bottom: 24px;
-        }
-
-        #blockerScreen h1 {
-            font-size: 2.5rem;
-            color: var(--sigma-primary);
-            margin-bottom: 12px;
-        }
-
-        #blockerScreen p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            max-width: 460px;
-            margin-bottom: 32px;
-            line-height: 1.6;
-        }
-
-        .btn-blocker-contact {
-            background: var(--sigma-danger);
-            color: white;
-            padding: 16px 32px;
-            border-radius: var(--radius-pill);
             font-weight: 800;
-            font-size: 1rem;
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-            transition: var(--transition-bounce);
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
         }
 
-        .btn-blocker-contact:active {
+        .proof-btn-download {
+            background: #10B981;
+            color: white;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .proof-btn-download:active {
             transform: scale(0.95);
         }
 
-        .skeleton {
-            background: #E2E8F0;
-            color: transparent !important;
-            border-radius: 6px;
-            animation: skel 1.5s infinite ease-in-out;
+        .proof-btn-close {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        @keyframes skel {
-            0% {
-                opacity: 0.5;
+        .proof-btn-close:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0.95);
+        }
+
+        /* Animations & Media Queries */
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
 
-            50% {
+            to {
                 opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes ping {
+            0% {
+                transform: scale(0.9);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
             }
 
             100% {
-                opacity: 0.5;
+                transform: scale(0.9);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
             }
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
+        @media (max-width: 400px) {
+            .trust-action-btn {
+                padding: 12px 4px;
+            }
+
+            .trust-icon-box {
+                width: 38px;
+                height: 38px;
+            }
+
+            .trust-action-btn span {
+                font-size: 0.65rem;
             }
         }
     </style>
-</head>
 
-<body>
+    <section class="sigma-trust-hub" id="officialSupportSection">
+        <div class="hub-header">
+            <h3>Trust & Support</h3>
+            <span>Official</span>
+        </div>
 
-    <!-- Offline Network Monitor Bar -->
-    <div id="networkOfflineBanner">Reconnecting to Sigma Core Node...</div>
-
-    <!-- Pull to Refresh Visual Spinner -->
-    <div class="ptr-indicator" id="ptrSpinner">
-        <svg viewBox="0 0 24 24">
-            <path
-                d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"
-                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
-        </svg>
-    </div>
-
-    <!-- SVG System Assets -->
-    <svg width="0" height="0" style="display:none;" aria-hidden="true">
-        <symbol id="icon-crown" viewBox="0 0 24 24">
-            <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5v-2z" />
-        </symbol>
-        <symbol id="icon-wallet" viewBox="0 0 24 24">
-            <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" />
-            <path d="M4 6v12c0 1.1.9 2 2 2h14v-4" />
-            <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z" />
-        </symbol>
-        <symbol id="icon-bell" viewBox="0 0 24 24">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </symbol>
-        <symbol id="icon-menu" viewBox="0 0 24 24">
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-        </symbol>
-        <symbol id="icon-copy" viewBox="0 0 24 24">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-        </symbol>
-        <symbol id="icon-qr" viewBox="0 0 24 24">
-            <rect x="3" y="3" width="7" height="7" rx="1" />
-            <rect x="14" y="3" width="7" height="7" rx="1" />
-            <rect x="14" y="14" width="7" height="7" rx="1" />
-            <rect x="3" y="14" width="7" height="7" rx="1" />
-            <rect x="8" y="8" width="8" height="8" rx="1" />
-        </symbol>
-        <symbol id="icon-arrow-down" viewBox="0 0 24 24">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <polyline points="19 12 12 19 5 12" />
-        </symbol>
-        <symbol id="icon-arrow-up" viewBox="0 0 24 24">
-            <line x1="12" y1="19" x2="12" y2="5" />
-            <polyline points="5 12 12 5 19 12" />
-        </symbol>
-        <symbol id="icon-pie" viewBox="0 0 24 24">
-            <path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z" />
-        </symbol>
-        <symbol id="icon-users" viewBox="0 0 24 24">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-        </symbol>
-        <symbol id="icon-lifebuoy" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-            <circle cx="12" cy="12" r="4" />
-            <line x1="4.93" y1="4.93" x2="9.17" y2="9.17" />
-            <line x1="14.83" y1="14.83" x2="19.07" y2="19.07" />
-        </symbol>
-        <symbol id="icon-trophy" viewBox="0 0 24 24">
-            <path d="M6 9H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3" />
-            <path d="M18 9h3a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-3" />
-            <path d="M4 3h16v7a8 8 0 0 1-16 0V3z" />
-            <path d="M12 15v5" />
-            <path d="M8 21h8" />
-        </symbol>
-        <symbol id="icon-check" viewBox="0 0 24 24">
-            <polyline points="20 6 9 17 4 12" />
-        </symbol>
-        <symbol id="icon-x" viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-        </symbol>
-        <symbol id="icon-shield-alert" viewBox="0 0 24 24">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            <line x1="12" y1="8" x2="12" y2="12" />
-            <line x1="12" y1="16" x2="12.01" y2="16" />
-        </symbol>
-        <symbol id="icon-home" viewBox="0 0 24 24">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-        </symbol>
-        <symbol id="icon-user" viewBox="0 0 24 24">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-        </symbol>
-        <symbol id="icon-message" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </symbol>
-        <symbol id="icon-download" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline stroke-linecap="round" stroke-linejoin="round" points="7 10 12 15 17 10" />
-            <line stroke-linecap="round" stroke-linejoin="round" x1="12" y1="15" x2="12" y2="3" />
-        </symbol>
-        <symbol id="icon-receipt" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-            <polyline points="10 9 9 9 8 9" />
-        </symbol>
-        <symbol id="icon-file-text" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
-        </symbol>
-    </svg>
-
-    <!-- Administrative Blocker Screen -->
-    <div id="blockerScreen">
-        <svg>
-            <use href="#icon-shield-alert" />
-        </svg>
-        <h1 id="blockerTitle">Access Suspended</h1>
-        <p id="blockerMsg">Security protocols have placed this session on hold. Contact administrator verification.</p>
-        <a href="https://whatsapp.com/channel/sigma_official" class="btn-blocker-contact" id="blockerContactBtn">Open
-            Priority Support</a>
-    </div>
-
-    <!-- Main Mobile & Responsive Workspace Frame -->
-    <div class="app-container">
-
-        <!-- Guaranteed 320px Safe Single-Row Header -->
-        <header class="island-topbar" id="mainHeader">
-            <a href="index.html" class="brand-cluster">
-                <img src="assets/logo.png" alt="Sigma Logo" class="brand-logo-img"
-                    onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
-                <img src="assets/textlogo.png" alt="Sigma" class="brand-text-img" onerror="this.style.display='none'">
-            </a>
-
-            <div class="header-actions">
-                <a href="leaderboard.html" class="btn-top-action" aria-label="Leaderboard">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        style="color:var(--sigma-gold)">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+        <div class="trust-action-grid">
+            <!-- 1. FBR Certificate Button -->
+            <button class="trust-action-btn btn-fbr" id="btnOpenFbr" aria-label="View FBR Certificate">
+                <div class="trust-icon-box">
+                    <div class="live-ping"></div>
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        <polyline points="9 12 11 14 15 10" />
                     </svg>
-                </a>
-                <button class="btn-top-action" onclick="appController.openSheet('sheetNotif')"
-                    aria-label="Notifications">
-                    <svg>
-                        <use href="#icon-bell" />
-                    </svg>
-                    <span class="unread-dot" id="headerNotifDot"></span>
-                </button>
-                <button class="btn-top-action" onclick="appController.openSheet('sheetMenu')"
-                    aria-label="Terminal Navigation">
-                    <svg>
-                        <use href="#icon-menu" />
-                    </svg>
-                </button>
-            </div>
-        </header>
-
-        <!-- Primary Body Modules -->
-        <main class="workspace">
-
-            <!-- Dynamic Identity Strip with Trustworthy & Compact UID -->
-            <section class="identity-card">
-                <div class="id-left">
-                    <div class="user-avatar-wrap" onclick="window.location.href='profile.html'" title="Open Profile">
-                        <div class="user-avatar" id="uiAvatarWrap">
-                            <span id="uiAvatarLetter" class="skeleton">S</span>
-                        </div>
-                        <div class="avatar-tier-badge" title="Account Tier"><svg>
-                                <use href="#icon-crown" />
-                            </svg></div>
-                    </div>
-                    <div class="id-text">
-                        <h2>
-                            <span id="uiDisplayName" class="skeleton">Investor</span>
-                            <span class="tier-chip" id="uiTierBadge">Bronze</span>
-                        </h2>
-                        <div class="trust-id-badge font-mono">
-                            <span class="trust-dot"></span>
-                            <span id="uiAccountUID">SIG-â€¢â€¢â€¢â€¢</span>
-                        </div>
-                    </div>
                 </div>
-                <div class="id-actions">
-                    <button class="btn-id-pill" onclick="appController.openQrModal()" title="Show Invite QR"><svg>
-                            <use href="#icon-qr" />
-                        </svg></button>
-                    <button class="btn-id-pill" onclick="appController.copyReferralLink()" title="Copy Link"><svg>
-                            <use href="#icon-copy" />
-                        </svg></button>
-                </div>
-                <input type="hidden" id="rawReferralUrl" value="">
-            </section>
-
-            <!-- Real-Time Admin Notice Broadcast -->
-            <section class="system-announcement-pill" id="announcementPill"
-                onclick="appController.openAnnouncementModal()" style="display: none;">
-                <div class="announcement-text">
-                    <svg>
-                        <use href="#icon-bell" />
-                    </svg>
-                    <span id="announcementHeadline">Platform Transmissions</span>
-                </div>
-                <span style="font-size: 0.75rem; font-weight: 800; color: #065F46;">READ &rarr;</span>
-            </section>
-
-            <!-- =======================================================================
-     SIGMA APPLE iPHONE 15 PINK FROSTED LUXURY WALLET CARD
-     Featuring: Frosted Matte Baby Pink + Light White Glow + Real User Details
-     ======================================================================= -->
-            <style>
-                /* -------------------------------------------------------------------------
-       iPhone 15 Frosted Glass Matte Pink Shell
-       ------------------------------------------------------------------------- */
-                .vault-main-card {
-                    position: relative;
-                    width: 100%;
-                    min-height: 250px;
-                    border-radius: 30px;
-                    /* Apple iPhone 15 color-infused matte pink multi-layer gradient */
-                    background: linear-gradient(135deg,
-                            #FFF5F8 0%,
-                            #FDE6ED 28%,
-                            #FACBD8 65%,
-                            #F9BFCF 100%);
-                    border: 1px solid rgba(255, 255, 255, 0.95);
-                    box-shadow:
-                        0 24px 48px -14px rgba(244, 114, 182, 0.35),
-                        0 10px 20px -6px rgba(251, 182, 206, 0.4),
-                        0 0 0 1px rgba(255, 192, 213, 0.6),
-                        inset 0 1px 2px rgba(255, 255, 255, 0.95);
-                    padding: 26px 26px 22px;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    overflow: hidden;
-                    isolation: isolate;
-                    color: #1E293B;
-                    /* Crisp Charcoal for maximum readability */
-                    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
-                }
-
-                .vault-main-card:hover {
-                    transform: translateY(-3px);
-                    box-shadow:
-                        0 30px 60px -14px rgba(244, 114, 182, 0.45),
-                        0 0 0 1px rgba(255, 182, 206, 0.8),
-                        inset 0 1px 2px rgba(255, 255, 255, 1);
-                }
-
-                /* Soft White Light Ambient Highlights (iPhone 15 Refraction Effect) */
-                .vault-main-card::before {
-                    content: '';
-                    position: absolute;
-                    top: -40%;
-                    left: -30%;
-                    width: 170%;
-                    height: 170%;
-                    background:
-                        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 45%),
-                        radial-gradient(circle at 85% 85%, rgba(244, 114, 182, 0.28) 0%, rgba(255, 255, 255, 0) 55%);
-                    pointer-events: none;
-                    z-index: 0;
-                }
-
-                /* Subtle Pearlescent Light Shimmer */
-                .vault-main-card::after {
-                    content: '';
-                    position: absolute;
-                    inset: 0;
-                    background: linear-gradient(115deg,
-                            transparent 30%,
-                            rgba(255, 255, 255, 0.45) 45%,
-                            rgba(255, 255, 255, 0.75) 50%,
-                            rgba(255, 255, 255, 0.45) 55%,
-                            transparent 70%);
-                    background-size: 250% 100%;
-                    animation: appleGlassShimmer 9s infinite linear;
-                    pointer-events: none;
-                    z-index: 1;
-                }
-
-                @keyframes appleGlassShimmer {
-                    0% {
-                        background-position: 250% 0;
-                    }
-
-                    100% {
-                        background-position: -250% 0;
-                    }
-                }
-
-                /* Watermark Logo Tinted in Soft Rose Pink */
-                .card-bg-watermark {
-                    position: absolute;
-                    right: -25px;
-                    bottom: -25px;
-                    width: 160px;
-                    height: 160px;
-                    opacity: 0.12;
-                    pointer-events: none;
-                    z-index: 0;
-                    filter: hue-rotate(300deg) saturate(1.4);
-                }
-
-                /* -------------------------------------------------------------------------
-       Card Top Header: Hardware Chip + Brand + Eye Privacy Toggle
-       ------------------------------------------------------------------------- */
-                .card-top-row {
-                    position: relative;
-                    z-index: 2;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    width: 100%;
-                }
-
-                .card-hardware-group {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                }
-
-                /* Satin Rose-Gold / Champagne EMV Smart Chip */
-                .card-rose-chip {
-                    width: 44px;
-                    height: 33px;
-                    border-radius: 8px;
-                    background: linear-gradient(135deg, #FFF3D6 0%, #F5C6AA 48%, #E49A78 100%);
-                    border: 1px solid rgba(255, 255, 255, 0.9);
-                    box-shadow:
-                        0 2px 6px rgba(180, 83, 9, 0.18),
-                        inset 0 1px 2px rgba(255, 255, 255, 0.9);
-                    position: relative;
-                    overflow: hidden;
-                }
-
-                .card-rose-chip::before {
-                    content: '';
-                    position: absolute;
-                    inset: 4px;
-                    border: 1px solid rgba(140, 70, 30, 0.35);
-                    border-radius: 4px;
-                    background:
-                        linear-gradient(90deg, transparent 46%, rgba(140, 70, 30, 0.22) 46%, rgba(140, 70, 30, 0.22) 54%, transparent 54%),
-                        linear-gradient(0deg, transparent 46%, rgba(140, 70, 30, 0.22) 46%, rgba(140, 70, 30, 0.22) 54%, transparent 54%);
-                }
-
-                /* Minimal Contactless Wave */
-                .card-contactless-wave {
-                    width: 20px;
-                    height: 20px;
-                    color: #7A5C6B;
-                    opacity: 0.85;
-                }
-
-                /* Brand Logos on Card */
-                .card-brand-wrap {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
-
-                .card-brand-logo {
-                    width: 32px;
-                    height: 32px;
-                    object-fit: contain;
-                    filter: drop-shadow(0 2px 6px rgba(225, 29, 72, 0.2));
-                }
-
-                .card-brand-text {
-                    height: 18px;
-                    object-fit: contain;
-                    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
-                }
-
-                /* Confidentiality Eye Toggle (Integrated in Card) */
-                .btn-eye-toggle {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 38px;
-                    height: 38px;
-                    border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.7);
-                    backdrop-filter: blur(8px);
-                    -webkit-backdrop-filter: blur(8px);
-                    border: 1px solid rgba(255, 255, 255, 0.95);
-                    color: #4A3542;
-                    box-shadow: 0 2px 8px rgba(244, 114, 182, 0.2);
-                    transition: transform 0.2s ease, background 0.2s ease;
-                    padding: 0;
-                }
-
-                .btn-eye-toggle:active {
-                    transform: scale(0.88);
-                    background: #FFFFFF;
-                }
-
-                .btn-eye-toggle svg {
-                    width: 19px;
-                    height: 19px;
-                    stroke: currentColor;
-                    fill: none;
-                    stroke-width: 2.2;
-                }
-
-                /* -------------------------------------------------------------------------
-       Card Balance Core Display
-       ------------------------------------------------------------------------- */
-                .card-body-balance {
-                    position: relative;
-                    z-index: 2;
-                    margin-top: 14px;
-                    margin-bottom: 14px;
-                }
-
-                .card-label-row {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 8px;
-                    margin-bottom: 2px;
-                }
-
-                .vault-top-label {
-                    font-size: 0.75rem;
-                    font-weight: 800;
-                    text-transform: uppercase;
-                    letter-spacing: 1.2px;
-                    color: #6E5363;
-                }
-
-                .card-tier-pill {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 5px;
-                    padding: 3px 9px;
-                    border-radius: var(--radius-pill);
-                    background: rgba(255, 255, 255, 0.85);
-                    border: 1px solid rgba(244, 114, 182, 0.35);
-                    color: #831843;
-                    font-size: 0.68rem;
-                    font-weight: 800;
-                    letter-spacing: 0.6px;
-                    text-transform: uppercase;
-                    box-shadow: 0 2px 6px rgba(244, 114, 182, 0.15);
-                }
-
-                .card-tier-pill::before {
-                    content: '';
-                    width: 6px;
-                    height: 6px;
-                    border-radius: 50%;
-                    background: #10B981;
-                    box-shadow: 0 0 6px #10B981;
-                }
-
-                .vault-balance-row {
-                    display: flex;
-                    align-items: baseline;
-                    gap: 8px;
-                }
-
-                .vault-currency {
-                    font-size: 1.55rem;
-                    font-weight: 800;
-                    color: #4A154B;
-                    letter-spacing: -0.5px;
-                }
-
-                .vault-number {
-                    font-size: clamp(2.3rem, 7.5vw, 3.4rem);
-                    font-weight: 900;
-                    letter-spacing: -1.8px;
-                    line-height: 1;
-                    color: #0F172A;
-                    /* Deep Rich Slate for high contrast on pink */
-                }
-
-                /* -------------------------------------------------------------------------
-       Card Bottom: Real Authenticated User Details (Name, UID, Validity)
-       ------------------------------------------------------------------------- */
-                .card-user-details-footer {
-                    position: relative;
-                    z-index: 2;
-                    padding-top: 14px;
-                    border-top: 1px solid rgba(122, 92, 107, 0.15);
-                    display: flex;
-                    align-items: flex-end;
-                    justify-content: space-between;
-                    gap: 12px;
-                }
-
-                .card-user-meta {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 2px;
-                    min-width: 0;
-                }
-
-                .card-meta-caption {
-                    font-size: 0.62rem;
-                    font-weight: 800;
-                    text-transform: uppercase;
-                    letter-spacing: 0.8px;
-                    color: #7A5C6B;
-                }
-
-                .card-user-name {
-                    font-size: 1rem;
-                    font-weight: 800;
-                    color: #0F172A;
-                    letter-spacing: -0.3px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    max-width: 220px;
-                    text-transform: uppercase;
-                }
-
-                .card-meta-right {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: flex-end;
-                    gap: 2px;
-                    flex-shrink: 0;
-                    text-align: right;
-                }
-
-                .card-user-uid {
-                    font-size: 0.78rem;
-                    font-weight: 800;
-                    color: #2D1F27;
-                    letter-spacing: 0.5px;
-                }
-
-                .card-membership-tag {
-                    font-size: 0.65rem;
-                    font-weight: 700;
-                    color: #6E5363;
-                    letter-spacing: 0.4px;
-                }
-            </style>
-
-            <!-- SECTION DOM -->
-            <section class="vault-main-card" id="sigmaVaultMainCard">
-                <!-- Pink Tinted Background Watermark -->
-                <img src="assets/logo.png" alt="" class="card-bg-watermark" onerror="this.style.display='none'">
-
-                <!-- Top Technology & Hardware Row -->
-                <div class="card-top-row">
-                    <div class="card-hardware-group">
-                        <div class="card-rose-chip" title="Security Smart Chip"></div>
-                        <svg class="card-contactless-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.2" stroke-linecap="round">
-                            <path
-                                d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-1.12-2.5-2.5-2.5M11.5 17.5a5.5 5.5 0 0 0 0-11M14.5 20.5a8.5 8.5 0 0 0 0-17" />
-                        </svg>
-                    </div>
-
-                    <div class="card-brand-wrap">
-                        <img src="assets/textlogo.png" alt="SIGMA" class="card-brand-text"
-                            onerror="this.style.display='none'">
-                        <img src="assets/logo.png" alt="" class="card-brand-logo" onerror="this.style.display='none'">
-
-
-                    </div>
-                </div>
-
-                <!-- Core Balance Area -->
-                <div class="card-body-balance">
-                    <div class="card-label-row">
-                        <span class="vault-top-label" id="cmsTotalBalanceLabel">Total Net Worth</span>
-
-                    </div>
-
-                    <div class="vault-balance-row">
-                        <span class="vault-currency">Rs.</span>
-                        <!-- Preserves ID for existing Firebase Count-Up Animation -->
-                        <span class="vault-number font-mono" id="uiNetBalance">0.00</span>
-                    </div>
-                </div>
-
-                <!-- Authentic User Details Footer -->
-                <div class="card-user-details-footer">
-                    <div class="card-user-meta">
-                        <span class="card-meta-caption">Account Holder</span>
-                        <span class="card-user-name" id="cardUserFullName">Investor</span>
-                    </div>
-
-                    <div class="card-meta-right">
-                        <span class="card-meta-caption">Account ID</span>
-                        <span class="card-user-uid font-mono" id="cardDisplayUID">SIG-••••</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Auto-Sync Script for User Details on this Card -->
-            <script>
-                (function syncCardDetails() {
-                    // Observes dashboard identity and syncs real user details straight to this card
-                    const syncInterval = setInterval(() => {
-                        const srcName = document.getElementById('uiDisplayName');
-                        const srcUID = document.getElementById('uiAccountUID');
-                        const targetName = document.getElementById('cardUserFullName');
-                        const targetUID = document.getElementById('cardDisplayUID');
-                        const srcTier = document.getElementById('uiTierBadge');
-                        const targetTier = document.getElementById('cardTierBadge');
-
-                        if (srcName && targetName && srcName.textContent && !srcName.classList.contains('skeleton')) {
-                            targetName.textContent = srcName.textContent;
-                        }
-                        if (srcUID && targetUID && srcUID.textContent) {
-                            targetUID.textContent = srcUID.textContent.replace('UID: ', '');
-                        }
-                        if (srcTier && targetTier && srcTier.textContent) {
-                            targetTier.textContent = srcTier.textContent + ' Verified';
-                        }
-                    }, 600);
-
-                    // Clear interval after 15 seconds once user details are loaded
-                    setTimeout(() => clearInterval(syncInterval), 15000);
-                })();
-            </script>
-
-            <!-- =======================================================================
-     SIGMA WALLET ACTION DOCK (DEPOSIT & WITHDRAW - STRICT SINGLE ROW)
-     Place this directly below your Multi-Wallet Card
-     ======================================================================= -->
-            <style>
-                /* Scoped Container directly under wallet card */
-                .sigma-wallet-actions-row {
-                    width: 100%;
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 12px;
-                    margin-top: -6px;
-                    /* Blends seamlessly right beneath the vault card */
-                    margin-bottom: 20px;
-                }
-
-                /* Common Button Surface */
-                .btn-wallet-action {
-                    position: relative;
-                    height: 56px;
-                    border-radius: 18px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 10px;
-                    font-weight: 800;
-                    font-size: 0.95rem;
-                    letter-spacing: -0.2px;
-                    text-decoration: none;
-                    cursor: pointer;
-                    user-select: none;
-                    overflow: hidden;
-                    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        box-shadow 0.25s ease,
-                        filter 0.2s ease;
-                    -webkit-tap-highlight-color: transparent;
-                }
-
-                /* Micro Shimmer Light Sweep on Buttons */
-                .btn-wallet-action::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: -120%;
-                    width: 60%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-                    transform: skewX(-22deg);
-                    transition: left 0.6s ease;
-                    pointer-events: none;
-                }
-
-                .btn-wallet-action:hover::before {
-                    left: 180%;
-                }
-
-                /* Interactive Physical Depress */
-                .btn-wallet-action:active {
-                    transform: scale(0.96) translateY(1px);
-                }
-
-                /* 1. DEPOSIT ACTION (Profit Emerald Engine) */
-                .btn-action-deposit {
-                    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-                    color: #FFFFFF;
-                    border: 1px solid rgba(255, 255, 255, 0.25);
-                    box-shadow: 0 10px 22px -6px rgba(16, 185, 129, 0.45),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.35);
-                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
-                }
-
-                .btn-action-deposit:hover {
-                    filter: brightness(1.05);
-                    box-shadow: 0 14px 26px -6px rgba(16, 185, 129, 0.55);
-                }
-
-                /* 2. WITHDRAW ACTION (Corporate Velvet / Midnight Gold Contrast) */
-                .btn-action-withdraw {
-                    background: linear-gradient(135deg, #0B132B 0%, #1C2541 100%);
-                    color: #FFFFFF;
-                    border: 1px solid rgba(255, 255, 255, 0.12);
-                    box-shadow: 0 10px 22px -6px rgba(11, 19, 43, 0.35),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
-                }
-
-                .btn-action-withdraw:hover {
-                    filter: brightness(1.15);
-                    box-shadow: 0 14px 26px -6px rgba(11, 19, 43, 0.45);
-                }
-
-                /* Icon Housings */
-                .btn-wallet-action .action-ico-wrap {
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-shrink: 0;
-                    transition: transform 0.25s ease;
-                }
-
-                .btn-action-deposit .action-ico-wrap {
-                    background: rgba(255, 255, 255, 0.2);
-                    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
-                }
-
-                .btn-action-withdraw .action-ico-wrap {
-                    background: rgba(239, 68, 68, 0.15);
-                    color: #F87171;
-                    border: 1px solid rgba(239, 68, 68, 0.25);
-                }
-
-                .btn-wallet-action:hover .action-ico-wrap {
-                    transform: scale(1.1);
-                }
-
-                .btn-wallet-action svg {
-                    width: 18px;
-                    height: 18px;
-                    stroke: currentColor;
-                    fill: none;
-                    stroke-width: 2.6;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                }
-
-                /* Status Dot Inside Withdraw */
-                .withdraw-live-dot {
-                    width: 7px;
-                    height: 7px;
-                    border-radius: 50%;
-                    background: #10B981;
-                    box-shadow: 0 0 6px #10B981;
-                    margin-left: -2px;
-                }
-
-                /* Strict Mobile Viewport Safety (320px screen protection) */
-                @media (max-width: 380px) {
-                    .sigma-wallet-actions-row {
-                        gap: 8px;
-                    }
-
-                    .btn-wallet-action {
-                        height: 50px;
-                        font-size: 0.85rem;
-                        gap: 6px;
-                        border-radius: 14px;
-                    }
-
-                    .btn-wallet-action .action-ico-wrap {
-                        width: 28px;
-                        height: 28px;
-                        border-radius: 8px;
-                    }
-
-                    .btn-wallet-action svg {
-                        width: 15px;
-                        height: 15px;
-                    }
-                }
-            </style>
-
-            <!-- SECTION DOM -->
-            <div class="sigma-wallet-actions-row" id="walletActionsSubDock">
-                <!-- 1. Deposit Button -->
-                <a href="plans.html" class="btn-wallet-action btn-action-deposit" id="wBtnDeposit"
-                    aria-label="Deposit Funds">
-                    <div class="action-ico-wrap">
-                        <svg viewBox="0 0 24 24">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <polyline points="19 12 12 19 5 12"></polyline>
-                        </svg>
-                    </div>
-                    <span id="wTxtDeposit">Deposit</span>
-                </a>
-
-                <!-- 2. Withdraw Button -->
-                <a href="withdraw.html" class="btn-wallet-action btn-action-withdraw" id="wBtnWithdraw"
-                    aria-label="Withdraw Funds">
-                    <div class="action-ico-wrap">
-                        <svg viewBox="0 0 24 24">
-                            <line x1="12" y1="19" x2="12" y2="5"></line>
-                            <polyline points="5 12 12 5 19 12"></polyline>
-                        </svg>
-                    </div>
-                    <span id="wTxtWithdraw">Withdraw</span>
-                    <div class="withdraw-live-dot" title="24/7 Processing Active"></div>
-                </a>
-            </div>
-
-            <!-- COMPONENT SCRIPTS & REALTIME INTEGRATION -->
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const btnDep = document.getElementById('wBtnDeposit');
-                    const btnWith = document.getElementById('wBtnWithdraw');
-                    const txtDep = document.getElementById('wTxtDeposit');
-                    const txtWith = document.getElementById('wTxtWithdraw');
-
-                    // 1. Mobile Vibration (Haptic Touch Feedback)
-                    const triggerHaptic = (ms = 35) => {
-                        if ('vibrate' in navigator) {
-                            try { navigator.vibrate(ms); } catch (e) { }
-                        }
-                    };
-
-                    if (btnDep) btnDep.addEventListener('click', () => triggerHaptic(30));
-                    if (btnWith) btnWith.addEventListener('click', () => triggerHaptic(30));
-
-                    // 2. Firebase CMS Configuration Listener (Auto-updates without editing HTML)
-                    if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-                        try {
-                            const db = firebase.firestore();
-                            db.collection('settings').doc('cms_dashboard').onSnapshot(doc => {
-                                if (doc.exists) {
-                                    const cms = doc.data();
-
-                                    // Dynamic Labels Controlled by Admin
-                                    if (cms.btnDeposit && txtDep) txtDep.textContent = cms.btnDeposit;
-                                    if (cms.btnWithdraw && txtWith) txtWith.textContent = cms.btnWithdraw;
-
-                                    // Dynamic Custom Redirect Endpoints if Admin modifies paths
-                                    if (cms.urlDeposit && btnDep) btnDep.href = cms.urlDeposit;
-                                    if (cms.urlWithdraw && btnWith) btnWith.href = cms.urlWithdraw;
-                                }
-                            }, err => {
-                                console.warn("Wallet action CMS sync offline, using production defaults:", err);
-                            });
-                        } catch (err) {
-                            console.warn("Firebase runtime initialization skipped:", err);
-                        }
-                    }
-                });
-            </script>
-            <!-- Triple Pocket Multi-Wallet Matrix -->
-            <section class="pocket-wallets-grid">
-                <!-- 1. Deposit / Main Wallet -->
-                <div class="pocket-card p-deposit">
-                    <div class="pocket-head">
-                        <span class="pocket-title" id="cmsWalletDepositTitle">Deposit / Main</span>
-                        <div class="pocket-icon-wrap"><svg>
-                                <use href="#icon-wallet" />
-                            </svg></div>
-                    </div>
-                    <div class="pocket-details">
-                        <span class="pocket-title-mobile">Deposit</span>
-                        <div class="pocket-val font-mono" id="uiDepositWallet">Rs. 0.00</div>
-                        <div class="pocket-sub" id="cmsWalletDepositSub">Plans Buying Only</div>
-                    </div>
-                </div>
-
-                <!-- 2. Profit / ROI Wallet -->
-                <div class="pocket-card p-profit">
-                    <div class="pocket-head">
-                        <span class="pocket-title" id="cmsWalletProfitTitle">Profit / ROI</span>
-                        <div class="pocket-icon-wrap"><svg>
-                                <use href="#icon-arrow-up" />
-                            </svg></div>
-                    </div>
-                    <div class="pocket-details">
-                        <span class="pocket-title-mobile">Profit</span>
-                        <div class="pocket-val font-mono" id="uiProfitWallet">Rs. 0.00</div>
-                        <div class="pocket-sub" id="cmsWalletProfitSub">100% Withdrawable</div>
-                    </div>
-                </div>
-
-                <!-- 3. Commission Wallet -->
-                <div class="pocket-card p-comm">
-                    <div class="pocket-head">
-                        <span class="pocket-title" id="cmsWalletCommissionTitle">Commission</span>
-                        <div class="pocket-icon-wrap"><svg>
-                                <use href="#icon-crown" />
-                            </svg></div>
-                    </div>
-                    <div class="pocket-details">
-                        <span class="pocket-title-mobile">Commission</span>
-                        <div class="pocket-val font-mono" id="uiCommissionWallet">Rs. 0.00</div>
-                        <div class="pocket-sub" id="cmsWalletCommissionSub">Referral Bonuses</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Exact 24-Hour Plan Timestamp Countdown Engine -->
-            <section class="live-countdown-island">
-                <div class="countdown-info">
-                    <div class="pulsing-yield-ring"><svg>
-                            <use href="#icon-pie" />
-                        </svg></div>
-                    <div>
-                        <small id="cmsCountdownKicker">Next Profit Credit</small>
-                        <strong id="cmsCountdownPlan">No Active Cycle</strong>
-                    </div>
-                </div>
-                <div class="clock-display font-mono" id="profitClockDisplay">00:00:00</div>
-            </section>
-
-            <!-- Signature Circular Orbital Action Terminal -->
-            <section class="orbital-terminal-wrapper">
-                <div class="orbital-header">
-                    <h3 id="cmsTerminalTitle">Command Center</h3>
-                    <span
-                        style="font-size: 0.75rem; font-weight: 800; color: var(--sigma-accent-dark); letter-spacing: 1px;">ORBITAL
-                        MATRIX</span>
-                </div>
-
-                <div class="orbit-stage">
-                    <div class="orbit-ring"></div>
-                    <div class="orbit-ring-inner"></div>
-
-                    <!-- Central Core Hub -->
-                    <div class="orbit-center-core"
-                        onclick="appController.logAction('core_click', 'Interacted with central orbital hub'); appController.toast('Sigma Core Operational');">
-                        <img src="assets/logo.png" alt="Sigma Hub"
-                            onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
-                    </div>
-
-                    <!-- 6 Orbital Nodes Pointing Strictly to Full .html Routes -->
-                    <a href="plans.html" class="orbit-node node-pos-1"
-                        onclick="appController.logAction('deposit_node', 'Opened deposit/plans via terminal')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-info-dark);"><svg>
-                                <use href="#icon-arrow-down" />
-                            </svg></div>
-                        <span>Deposit</span>
-                    </a>
-
-                    <a href="assets/sigma.apk" download class="orbit-node node-pos-2"
-                        onclick="appController.logAction('app_download_node', 'Initiated App Download')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-purple);"><svg>
-                                <use href="#icon-download" />
-                            </svg></div>
-                        <span>App (APK)</span>
-                    </a>
-
-                    <a href="my-plans.html" class="orbit-node node-pos-3"
-                        onclick="appController.logAction('my_plans_node', 'Navigated to my plans')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg>
-                                <use href="#icon-pie" />
-                            </svg></div>
-                        <span>My Plans</span>
-                    </a>
-
-                    <a href="withdraw.html" class="orbit-node node-pos-4"
-                        onclick="appController.logAction('withdraw_node', 'Opened withdraw via terminal')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-danger-dark);"><svg>
-                                <use href="#icon-arrow-up" />
-                            </svg></div>
-                        <span>Withdraw</span>
-                    </a>
-
-                    <a href="team.html" class="orbit-node node-pos-5"
-                        onclick="appController.logAction('network_node', 'Viewed network tree')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-gold-dark);"><svg>
-                                <use href="#icon-users" />
-                            </svg></div>
-                        <span>Network</span>
-                    </a>
-
-                    <a href="support.html" class="orbit-node node-pos-6"
-                        onclick="appController.logAction('support_node', 'Opened support desk')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg>
-                                <use href="#icon-message" />
-                            </svg></div>
-                        <span>Support</span>
-                    </a>
-                </div>
-
-                <!-- Fallback Grid for Ultra-Narrow Viewports (<380px) -->
-                <div class="orbit-linear-fallback">
-                    <a href="plans.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-info-dark);"><svg>
-                                <use href="#icon-arrow-down" />
-                            </svg></div><span>Deposit</span>
-                    </a>
-                    <a href="assets/sigma.apk" download class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-purple);"><svg>
-                                <use href="#icon-download" />
-                            </svg></div><span>App (APK)</span>
-                    </a>
-                    <a href="my-plans.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-primary);"><svg>
-                                <use href="#icon-pie" />
-                            </svg></div><span>My Plans</span>
-                    </a>
-                    <a href="withdraw.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-danger-dark);"><svg>
-                                <use href="#icon-arrow-up" />
-                            </svg></div><span>Withdraw</span>
-                    </a>
-                    <a href="team.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-gold-dark);"><svg>
-                                <use href="#icon-users" />
-                            </svg></div><span>Network</span>
-                    </a>
-                    <a href="support.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg>
-                                <use href="#icon-message" />
-                            </svg></div><span>Support</span>
-                    </a>
-                </div>
-            </section>
-
-            <!-- Secondary Actions Grid (Transactions & Leaderboard) -->
-            <section class="secondary-actions-container">
-                <div class="secondary-actions-grid">
-                    <a href="transactions.html" class="sec-action-btn">
-                        <div class="sec-action-icon" style="color: var(--sigma-secondary);"><svg>
-                                <use href="#icon-receipt" />
-                            </svg></div>
-                        Transactions
-                    </a>
-                    <a href="leaderboard.html" class="sec-action-btn">
-                        <div class="sec-action-icon" style="color: var(--sigma-gold-dark);"><svg>
-                                <use href="#icon-trophy" />
-                            </svg></div>
-                        Leaderboard
-                    </a>
-                </div>
-
-                <!-- Official Verification Dynamically Injected Button -->
-                <div id="proofsGridContainer"></div>
-            </section>
-
-            <!-- Transaction Lifecycle Stepper -->
-            <section class="stepper-card" id="stepperLifecycleBox" style="display: none;">
-                <div class="stepper-header">
-                    <div>
-                        <span class="badge-type" id="stepperTrxType">Transaction</span>
-                        <h3 id="stepperTrxAmount" class="font-mono" style="margin-top: 6px;">Rs. 0.00</h3>
-                    </div>
-                    <span id="stepperReference" class="font-mono"
-                        style="font-size: 0.8rem; color: var(--text-muted);">REF-â€¢â€¢â€¢â€¢</span>
-                </div>
-
-                <div class="stepper-track">
-                    <div class="step-node completed" id="stepNode1">
-                        <div class="step-circle"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
-                        <span>Submitted</span>
-                    </div>
-                    <div class="step-node current" id="stepNode2">
-                        <div class="step-circle"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
-                        <span>Review</span>
-                    </div>
-                    <div class="step-node" id="stepNode3">
-                        <div class="step-circle"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
-                        <span id="step3Label">Processed</span>
-                    </div>
-                </div>
-
-                <div class="rejection-reason-box" id="stepperRejectionDetails">
-                    <strong>Verification Note:</strong> <span id="rejectionReasonText">None</span>
-                </div>
-            </section>
-
-            <!-- =======================================================================
-     SIGMA OFFICIAL TRUST & SUPPORT HUB (SINGLE ROW)
-     ======================================================================= -->
-            <style>
-                /* Section Container */
-                .sigma-trust-hub {
-                    background: var(--bg-surface, #FFFFFF);
-                    border-radius: 24px;
-                    padding: 20px;
-                    border: 1px solid rgba(15, 23, 42, 0.08);
-                    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
-                    margin-bottom: 24px;
-                    position: relative;
-                    overflow: hidden;
-                    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-                }
-
-                /* Subtle Background Decoration */
-                .sigma-trust-hub::before {
-                    content: '';
-                    position: absolute;
-                    top: -50px;
-                    right: -20px;
-                    width: 150px;
-                    height: 150px;
-                    border-radius: 50%;
-                    background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
-                    pointer-events: none;
-                }
-
-                .hub-header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    margin-bottom: 16px;
-                }
-
-                .hub-header h3 {
-                    font-size: 1.05rem;
-                    font-weight: 800;
-                    color: #0F172A;
-                    margin: 0;
-                }
-
-                .hub-header span {
-                    font-size: 0.7rem;
-                    font-weight: 800;
-                    color: #10B981;
-                    background: #D1FAE5;
-                    padding: 3px 8px;
-                    border-radius: 99px;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                }
-
-                /* Strictly 1-Row 3-Column Grid */
-                .trust-action-grid {
-                    display: grid;
-                    grid-template-columns: repeat(3, 1fr);
-                    gap: 12px;
-                    width: 100%;
-                }
-
-                /* Premium Holographic Buttons */
-                .trust-action-btn {
-                    position: relative;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 8px;
-                    padding: 16px 8px;
-                    background: #F8FAFC;
-                    border: 1px solid #E2E8F0;
-                    border-radius: 18px;
-                    text-decoration: none;
-                    cursor: pointer;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    overflow: hidden;
-                }
-
-                /* The Unique Shimmer/Holographic Effect */
-                .trust-action-btn::after {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 50%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-                    transform: skewX(-20deg);
-                    transition: 0.5s;
-                    z-index: 1;
-                }
-
-                .trust-action-btn:hover::after {
-                    left: 150%;
-                }
-
-                .trust-action-btn:hover,
-                .trust-action-btn:active {
-                    transform: translateY(-3px);
-                    background: #FFFFFF;
-                    border-color: #10B981;
-                    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
-                }
-
-                .trust-action-btn:active {
-                    transform: scale(0.96);
-                }
-
-                /* Icons inside buttons */
-                .trust-icon-box {
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    position: relative;
-                    z-index: 2;
-                }
-
-                .trust-icon-box svg {
-                    width: 22px;
-                    height: 22px;
-                    fill: none;
-                    stroke-width: 2;
-                }
-
-                /* Individual Button Colors */
-                .btn-fbr .trust-icon-box {
-                    background: rgba(16, 185, 129, 0.1);
-                    color: #10B981;
-                    stroke: #10B981;
-                }
-
-                .btn-wa .trust-icon-box {
-                    background: rgba(37, 211, 102, 0.1);
-                    color: #25D366;
-                }
-
-                .btn-wa .trust-icon-box svg {
-                    fill: currentColor;
-                    stroke: none;
-                }
-
-                .btn-sup .trust-icon-box {
-                    background: rgba(59, 130, 246, 0.1);
-                    color: #3B82F6;
-                    stroke: #3B82F6;
-                }
-
-                .trust-action-btn span {
-                    font-size: 0.75rem;
-                    font-weight: 700;
-                    color: #0F172A;
-                    white-space: nowrap;
-                    z-index: 2;
-                    position: relative;
-                }
-
-                /* Live Ping for FBR */
-                .live-ping {
-                    position: absolute;
-                    top: -3px;
-                    right: -3px;
-                    width: 12px;
-                    height: 12px;
-                    background: #10B981;
-                    border: 2px solid #FFF;
-                    border-radius: 50%;
-                    box-shadow: 0 0 0 rgba(16, 185, 129, 0.6);
-                    animation: ping 2s infinite;
-                    z-index: 3;
-                }
-
-                /* Full Screen Image Modal */
-                .sigma-proof-modal {
-                    position: fixed;
-                    inset: 0;
-                    z-index: 9999;
-                    background: rgba(15, 23, 42, 0.85);
-                    backdrop-filter: blur(12px);
-                    display: none;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
-                    padding: 20px;
-                }
-
-                .sigma-proof-modal.show {
-                    display: flex;
-                    opacity: 1;
-                }
-
-                .proof-img-container {
-                    position: relative;
-                    max-width: 90vw;
-                    max-height: 75vh;
-                    border-radius: 20px;
-                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-                    overflow: hidden;
-                    border: 2px solid rgba(255, 255, 255, 0.1);
-                    transform: scale(0.9);
-                    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-                }
-
-                .sigma-proof-modal.show .proof-img-container {
-                    transform: scale(1);
-                }
-
-                .proof-img-container img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;
-                    background: #FFFFFF;
-                    display: block;
-                }
-
-                /* Modal Controls */
-                .proof-controls {
-                    display: flex;
-                    gap: 16px;
-                    margin-top: 24px;
-                }
-
-                .proof-btn {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 14px 24px;
-                    border-radius: 16px;
-                    font-size: 0.9rem;
-                    font-weight: 800;
-                    cursor: pointer;
-                    border: none;
-                    transition: 0.2s;
-                }
-
-                .proof-btn-download {
-                    background: #10B981;
-                    color: white;
-                    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-                }
-
-                .proof-btn-download:active {
-                    transform: scale(0.95);
-                }
-
-                .proof-btn-close {
-                    background: rgba(255, 255, 255, 0.1);
-                    color: white;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                }
-
-                .proof-btn-close:active {
-                    background: rgba(255, 255, 255, 0.2);
-                    transform: scale(0.95);
-                }
-
-                /* Animations & Media Queries */
-                @keyframes slideUpFade {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-                @keyframes ping {
-                    0% {
-                        transform: scale(0.9);
-                        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-                    }
-
-                    70% {
-                        transform: scale(1);
-                        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
-                    }
-
-                    100% {
-                        transform: scale(0.9);
-                        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-                    }
-                }
-
-                @media (max-width: 400px) {
-                    .trust-action-btn {
-                        padding: 12px 4px;
-                    }
-
-                    .trust-icon-box {
-                        width: 38px;
-                        height: 38px;
-                    }
-
-                    .trust-action-btn span {
-                        font-size: 0.65rem;
-                    }
-                }
-            </style>
-
-            <section class="sigma-trust-hub" id="officialSupportSection">
-                <div class="hub-header">
-                    <h3>Trust & Support</h3>
-                    <span>Official</span>
-                </div>
-
-                <div class="trust-action-grid">
-                    <!-- 1. FBR Certificate Button -->
-                    <button class="trust-action-btn btn-fbr" id="btnOpenFbr" aria-label="View FBR Certificate">
-                        <div class="trust-icon-box">
-                            <div class="live-ping"></div>
-                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                <polyline points="9 12 11 14 15 10" />
-                            </svg>
-                        </div>
-                        <span>FBR Proof</span>
-                    </button>
-
-                    <!-- 2. WhatsApp Channel Button -->
-                    <a href="#" target="_blank" class="trust-action-btn btn-wa" id="btnWaChannel"
-                        aria-label="Join WhatsApp Channel">
-                        <div class="trust-icon-box">
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884" />
+                <span>FBR Proof</span>
+            </button>
+
+            <!-- 2. WhatsApp Channel Button -->
+            <a href="#" target="_blank" class="trust-action-btn btn-wa" id="btnWaChannel"
+                aria-label="Join WhatsApp Channel">
+                <div class="trust-icon-box">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
                             </svg>
                         </div>
                         <span>Channel</span>
@@ -4248,8 +2285,8 @@
                     </svg></button>
             </div>
             <div class="sheet-body" style="text-align: center;">
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;">
-                    Scan with any mobile camera to securely bind your referral tree.
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; font-weight: 500;">
+                    Scan with any mobile camera to securely bind downlines to your team tree.
                 </p>
                 <div class="qr-wrapper">
                     <div id="qrBoxContainer"></div>
@@ -4469,9 +2506,11 @@
                     const deposit = Number(userProfile.depositBalance || userProfile.balance || 0);
                     const profit = Number(userProfile.profitBalance || 0);
                     const comm = Number(userProfile.commissionBalance || 0);
-                    const total = deposit + profit + comm;
+                    
+                    // MAIN CARD BALANCE FIX: Only withdrawable balances (Profit + Commission). Deposit is excluded.
+                    const mainCardTotal = profit + comm;
 
-                    animateValue(dom.uiNetBalance, 0, total);
+                    animateValue(dom.uiNetBalance, 0, mainCardTotal);
                     if (dom.uiDepositWallet) dom.uiDepositWallet.textContent = "Rs. " + deposit.toLocaleString('en-PK', { minimumFractionDigits: 2 });
                     if (dom.uiProfitWallet) dom.uiProfitWallet.textContent = "Rs. " + profit.toLocaleString('en-PK', { minimumFractionDigits: 2 });
                     if (dom.uiCommissionWallet) dom.uiCommissionWallet.textContent = "Rs. " + comm.toLocaleString('en-PK', { minimumFractionDigits: 2 });
@@ -4581,10 +2620,11 @@
             };
 
             const logAction = async (actionType, description) => {
-                if (!authUser || typeof firebase === 'undefined') return;
+                const activeUid = sessionStorage.getItem('sigma_session_uid');
+                if (!activeUid || typeof firebase === 'undefined') return;
                 try {
                     const db = firebase.firestore();
-                    await db.collection('users').doc(authUser.uid).collection('notifications').add({
+                    await db.collection('users').doc(activeUid).collection('notifications').add({
                         type: actionType,
                         title: actionType.replace(/_/g, ' ').toUpperCase(),
                         body: description,
@@ -4599,7 +2639,8 @@
             };
 
             const markAllNotifsRead = async () => {
-                if (!authUser || currentNotifications.length === 0) return;
+                const activeUid = sessionStorage.getItem('sigma_session_uid');
+                if (!activeUid || currentNotifications.length === 0) return;
                 try {
                     const db = firebase.firestore();
                     const batch = db.batch();
@@ -4621,9 +2662,12 @@
 
             const terminateSession = async () => {
                 if (typeof firebase !== 'undefined' && firebase.auth()) {
+                    sessionStorage.setItem('sigma_explicit_logout', 'true');
                     await logAction('logout', 'Signed out securely from terminal');
                     await firebase.auth().signOut();
                 }
+                sessionStorage.removeItem('sigma_session_uid');
+                sessionStorage.removeItem('sigma_session_logged');
                 window.location.replace('login.html');
             };
 
@@ -4766,14 +2810,29 @@
 
                 bindCMS(db);
 
+                let sessionUid = sessionStorage.getItem('sigma_session_uid');
+
                 auth.onAuthStateChanged(user => {
                     if (!user) {
-                        window.location.replace('login.html');
+                        if (sessionStorage.getItem('sigma_explicit_logout') === 'true' || !sessionUid) {
+                            window.location.replace('login.html');
+                        } else {
+                            console.warn("Session cleared in another tab. Keeping this tab active.");
+                        }
                         return;
                     }
 
+                    // Session Isolation Logic
+                    if (!sessionUid) {
+                        sessionUid = user.uid;
+                        sessionStorage.setItem('sigma_session_uid', user.uid);
+                        sessionStorage.setItem('sigma_session_logged', 'true');
+                    } else if (sessionUid !== user.uid) {
+                        console.warn("Session isolation: another account logged in elsewhere. Preserving current view for " + sessionUid);
+                    }
+
                     authUser = user;
-                    const uid = user.uid;
+                    const uid = sessionUid; // strictly use sessionUid for all queries
 
                     // Identity & Avatar
                     if (user.photoURL && dom.uiAvatarWrap) {
@@ -4804,6 +2863,7 @@
                             dom.blockerScreen.classList.add('active');
                             safeSetText('blockerTitle', "Account Suspended");
                             safeSetText('blockerMsg', "Your account has been restricted due to a policy violation. Please contact support.");
+                            sessionStorage.setItem('sigma_explicit_logout', 'true');
                             auth.signOut();
                             return;
                         }
