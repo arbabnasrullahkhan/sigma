@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SIGMA PREMIUM PLATFORM - FIREBASE CONFIGURATION & SECURITY
+   SIGMA PREMIUM PLATFORM - FIREBASE CONFIGURATION & INITIALIZATION
    ========================================================================== */
 
 const firebaseConfig = {
@@ -12,23 +12,16 @@ const firebaseConfig = {
   measurementId: "G-REGQKRZHX7"
 };
 
-// Initialize Firebase with Strict Session Isolation
+// Initialize Firebase securely (Preventing duplicate initialization errors)
 if (typeof firebase !== 'undefined') {
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
-    
-    // STRICT SESSION ISOLATION: Prevents cross-tab overwrites.
-    // Admin in Tab A and User in Tab B will remain completely independent.
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-      .then(() => {
-        console.log("✅ SIGMA Auth: Session Persistence Enforced.");
-      })
-      .catch((error) => {
-        console.error("❌ Auth Persistence Error:", error);
-      });
-
     console.log("✅ SIGMA Firebase Initialized Successfully!");
+    
+    // Set Persistence to LOCAL (Session survives tab close)
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .catch((error) => console.error("Firebase Persistence Error:", error));
   }
 } else {
-  console.error("❌ Firebase SDK not found. Make sure scripts are loaded.");
+  console.error("❌ Firebase SDK not found. Make sure scripts are loaded in your HTML.");
 }
