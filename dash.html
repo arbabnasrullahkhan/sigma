@@ -2320,27 +2320,406 @@
                 <span style="font-size: 0.75rem; font-weight: 800; color: #065F46;">READ &rarr;</span>
             </section>
 
-            <!-- Redesigned Wallet Card (Enlarged Logos + Subtle Light Pink Sheen + High Contrast) -->
-            <section class="vault-main-card">
-                <div class="vault-branding">
-                    <img src="assets/textlogo.png" alt="SIGMA" class="vault-text-logo" onerror="this.style.display='none'">
-                    <img src="assets/logo.png" alt="" class="vault-icon-logo" onerror="this.style.display='none'">
-                </div>
+<!-- =======================================================================
+     SIGMA APPLE iPHONE 15 PINK FROSTED LUXURY WALLET CARD
+     Featuring: Frosted Matte Baby Pink + Light White Glow + Real User Details
+     ======================================================================= -->
+<style>
+    /* -------------------------------------------------------------------------
+       iPhone 15 Frosted Glass Matte Pink Shell
+       ------------------------------------------------------------------------- */
+    .vault-main-card {
+        position: relative;
+        width: 100%;
+        min-height: 250px;
+        border-radius: 30px;
+        /* Apple iPhone 15 color-infused matte pink multi-layer gradient */
+        background: linear-gradient(135deg, 
+            #FFF5F8 0%, 
+            #FDE6ED 28%, 
+            #FACBD8 65%, 
+            #F9BFCF 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.95);
+        box-shadow: 
+            0 24px 48px -14px rgba(244, 114, 182, 0.35),
+            0 10px 20px -6px rgba(251, 182, 206, 0.4),
+            0 0 0 1px rgba(255, 192, 213, 0.6),
+            inset 0 1px 2px rgba(255, 255, 255, 0.95);
+        padding: 26px 26px 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+        isolation: isolate;
+        color: #1E293B; /* Crisp Charcoal for maximum readability */
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+    }
 
-                <div class="vault-chip-row">
-                    <div class="vault-chip-icon"></div>
-                    <svg class="vault-nfc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 12h.01M12 12h.01M15 12h.01M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z" />
-                    </svg>
-                </div>
+    .vault-main-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 30px 60px -14px rgba(244, 114, 182, 0.45),
+            0 0 0 1px rgba(255, 182, 206, 0.8),
+            inset 0 1px 2px rgba(255, 255, 255, 1);
+    }
 
-                <span class="vault-top-label" id="cmsTotalBalanceLabel">Total Net Worth</span>
+    /* Soft White Light Ambient Highlights (iPhone 15 Refraction Effect) */
+    .vault-main-card::before {
+        content: '';
+        position: absolute;
+        top: -40%;
+        left: -30%;
+        width: 170%;
+        height: 170%;
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 45%),
+            radial-gradient(circle at 85% 85%, rgba(244, 114, 182, 0.28) 0%, rgba(255, 255, 255, 0) 55%);
+        pointer-events: none;
+        z-index: 0;
+    }
 
-                <div class="vault-balance-row">
-                    <span class="vault-currency">Rs.</span>
-                    <span class="vault-number font-mono" id="uiNetBalance">0.00</span>
-                </div>
-            </section>
+    /* Subtle Pearlescent Light Shimmer */
+    .vault-main-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(115deg, 
+            transparent 30%, 
+            rgba(255, 255, 255, 0.45) 45%, 
+            rgba(255, 255, 255, 0.75) 50%, 
+            rgba(255, 255, 255, 0.45) 55%, 
+            transparent 70%
+        );
+        background-size: 250% 100%;
+        animation: appleGlassShimmer 9s infinite linear;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    @keyframes appleGlassShimmer {
+        0% { background-position: 250% 0; }
+        100% { background-position: -250% 0; }
+    }
+
+    /* Watermark Logo Tinted in Soft Rose Pink */
+    .card-bg-watermark {
+        position: absolute;
+        right: -25px;
+        bottom: -25px;
+        width: 160px;
+        height: 160px;
+        opacity: 0.12;
+        pointer-events: none;
+        z-index: 0;
+        filter: hue-rotate(300deg) saturate(1.4);
+    }
+
+    /* -------------------------------------------------------------------------
+       Card Top Header: Hardware Chip + Brand + Eye Privacy Toggle
+       ------------------------------------------------------------------------- */
+    .card-top-row {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .card-hardware-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Satin Rose-Gold / Champagne EMV Smart Chip */
+    .card-rose-chip {
+        width: 44px;
+        height: 33px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #FFF3D6 0%, #F5C6AA 48%, #E49A78 100%);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 
+            0 2px 6px rgba(180, 83, 9, 0.18),
+            inset 0 1px 2px rgba(255, 255, 255, 0.9);
+        position: relative;
+        overflow: hidden;
+    }
+    .card-rose-chip::before {
+        content: '';
+        position: absolute;
+        inset: 4px;
+        border: 1px solid rgba(140, 70, 30, 0.35);
+        border-radius: 4px;
+        background: 
+            linear-gradient(90deg, transparent 46%, rgba(140, 70, 30, 0.22) 46%, rgba(140, 70, 30, 0.22) 54%, transparent 54%),
+            linear-gradient(0deg, transparent 46%, rgba(140, 70, 30, 0.22) 46%, rgba(140, 70, 30, 0.22) 54%, transparent 54%);
+    }
+
+    /* Minimal Contactless Wave */
+    .card-contactless-wave {
+        width: 20px;
+        height: 20px;
+        color: #7A5C6B;
+        opacity: 0.85;
+    }
+
+    /* Brand Logos on Card */
+    .card-brand-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .card-brand-logo {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 6px rgba(225, 29, 72, 0.2));
+    }
+    .card-brand-text {
+        height: 18px;
+        object-fit: contain;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
+    }
+
+    /* Confidentiality Eye Toggle (Integrated in Card) */
+    .btn-eye-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.95);
+        color: #4A3542;
+        box-shadow: 0 2px 8px rgba(244, 114, 182, 0.2);
+        transition: transform 0.2s ease, background 0.2s ease;
+        padding: 0;
+    }
+    .btn-eye-toggle:active {
+        transform: scale(0.88);
+        background: #FFFFFF;
+    }
+    .btn-eye-toggle svg {
+        width: 19px;
+        height: 19px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.2;
+    }
+
+    /* -------------------------------------------------------------------------
+       Card Balance Core Display
+       ------------------------------------------------------------------------- */
+    .card-body-balance {
+        position: relative;
+        z-index: 2;
+        margin-top: 14px;
+        margin-bottom: 14px;
+    }
+
+    .card-label-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 2px;
+    }
+    .vault-top-label {
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: #6E5363;
+    }
+    .card-tier-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 9px;
+        border-radius: var(--radius-pill);
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(244, 114, 182, 0.35);
+        color: #831843;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        box-shadow: 0 2px 6px rgba(244, 114, 182, 0.15);
+    }
+    .card-tier-pill::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #10B981;
+        box-shadow: 0 0 6px #10B981;
+    }
+
+    .vault-balance-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+    }
+    .vault-currency {
+        font-size: 1.55rem;
+        font-weight: 800;
+        color: #4A154B;
+        letter-spacing: -0.5px;
+    }
+    .vault-number {
+        font-size: clamp(2.3rem, 7.5vw, 3.4rem);
+        font-weight: 900;
+        letter-spacing: -1.8px;
+        line-height: 1;
+        color: #0F172A; /* Deep Rich Slate for high contrast on pink */
+    }
+
+    /* -------------------------------------------------------------------------
+       Card Bottom: Real Authenticated User Details (Name, UID, Validity)
+       ------------------------------------------------------------------------- */
+    .card-user-details-footer {
+        position: relative;
+        z-index: 2;
+        padding-top: 14px;
+        border-top: 1px solid rgba(122, 92, 107, 0.15);
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .card-user-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+    }
+    .card-meta-caption {
+        font-size: 0.62rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #7A5C6B;
+    }
+    .card-user-name {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #0F172A;
+        letter-spacing: -0.3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 220px;
+        text-transform: uppercase;
+    }
+
+    .card-meta-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+        flex-shrink: 0;
+        text-align: right;
+    }
+    .card-user-uid {
+        font-size: 0.78rem;
+        font-weight: 800;
+        color: #2D1F27;
+        letter-spacing: 0.5px;
+    }
+    .card-membership-tag {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: #6E5363;
+        letter-spacing: 0.4px;
+    }
+</style>
+
+<!-- SECTION DOM -->
+<section class="vault-main-card" id="sigmaVaultMainCard">
+    <!-- Pink Tinted Background Watermark -->
+    <img src="assets/logo.png" alt="" class="card-bg-watermark" onerror="this.style.display='none'">
+
+    <!-- Top Technology & Hardware Row -->
+    <div class="card-top-row">
+        <div class="card-hardware-group">
+            <div class="card-rose-chip" title="Security Smart Chip"></div>
+            <svg class="card-contactless-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-1.12-2.5-2.5-2.5M11.5 17.5a5.5 5.5 0 0 0 0-11M14.5 20.5a8.5 8.5 0 0 0 0-17"/>
+            </svg>
+        </div>
+
+        <div class="card-brand-wrap">
+            <img src="assets/textlogo.png" alt="SIGMA" class="card-brand-text" onerror="this.style.display='none'">
+            <img src="assets/logo.png" alt="" class="card-brand-logo" onerror="this.style.display='none'">
+            
+            <!-- Confidentiality Toggle Button (Preserves ID for existing JS) -->
+            <button class="btn-eye-toggle" id="btnEyeToggle" aria-label="Toggle Balance Visibility" title="Show/Hide Amount">
+                <svg id="eyeIconElem"><use href="#icon-eye"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Core Balance Area -->
+    <div class="card-body-balance">
+        <div class="card-label-row">
+            <span class="vault-top-label" id="cmsTotalBalanceLabel">Total Net Worth</span>
+            <span class="card-tier-pill" id="cardTierBadge">Investor Verified</span>
+        </div>
+
+        <div class="vault-balance-row">
+            <span class="vault-currency">Rs.</span>
+            <!-- Preserves ID for existing Firebase Count-Up Animation -->
+            <span class="vault-number font-mono" id="uiNetBalance">0.00</span>
+        </div>
+    </div>
+
+    <!-- Authentic User Details Footer -->
+    <div class="card-user-details-footer">
+        <div class="card-user-meta">
+            <span class="card-meta-caption">Account Holder</span>
+            <span class="card-user-name" id="cardUserFullName">Investor</span>
+        </div>
+
+        <div class="card-meta-right">
+            <span class="card-meta-caption">Account ID</span>
+            <span class="card-user-uid font-mono" id="cardDisplayUID">SIG-••••</span>
+        </div>
+    </div>
+</section>
+
+<!-- Auto-Sync Script for User Details on this Card -->
+<script>
+    (function syncCardDetails() {
+        // Observes dashboard identity and syncs real user details straight to this card
+        const syncInterval = setInterval(() => {
+            const srcName = document.getElementById('uiDisplayName');
+            const srcUID = document.getElementById('uiAccountUID');
+            const targetName = document.getElementById('cardUserFullName');
+            const targetUID = document.getElementById('cardDisplayUID');
+            const srcTier = document.getElementById('uiTierBadge');
+            const targetTier = document.getElementById('cardTierBadge');
+
+            if (srcName && targetName && srcName.textContent && !srcName.classList.contains('skeleton')) {
+                targetName.textContent = srcName.textContent;
+            }
+            if (srcUID && targetUID && srcUID.textContent) {
+                targetUID.textContent = srcUID.textContent.replace('UID: ', '');
+            }
+            if (srcTier && targetTier && srcTier.textContent) {
+                targetTier.textContent = srcTier.textContent + ' Verified';
+            }
+        }, 600);
+
+        // Clear interval after 15 seconds once user details are loaded
+        setTimeout(() => clearInterval(syncInterval), 15000);
+    })();
+</script>
 
             <!-- =======================================================================
      SIGMA WALLET ACTION DOCK (DEPOSIT & WITHDRAW - STRICT SINGLE ROW)
@@ -3022,6 +3401,258 @@
                 btnDownloadFbr.innerHTML = btnOriginalText;
             }
         });
+    });
+</script>
+
+            <!-- =======================================================================
+     SIGMA PURE AMBIENT VISUAL & SECURITY ENGINE (NO BUTTONS / PURE DESIGN)
+     Place this between any dashboard sections for next-level visual depth
+     ======================================================================= -->
+<style>
+    /* Section Master Canvas */
+    .sigma-ambient-stage {
+        position: relative;
+        width: 100%;
+        min-height: 140px;
+        border-radius: 28px;
+        background: linear-gradient(135deg, #0B132B 0%, #1C2541 60%, #0F172A 100%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 15px 35px -10px rgba(11, 19, 43, 0.35),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        margin: 16px 0 24px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        user-select: none;
+        pointer-events: none; /* Disables all accidental clicks */
+        isolation: isolate;
+    }
+
+    /* Ambient Glowing Nebula Orbs */
+    .ambient-glow-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(40px);
+        opacity: 0.35;
+        z-index: 0;
+        animation: orbFloat 8s ease-in-out infinite alternate;
+    }
+    .orb-emerald {
+        width: 130px; height: 130px;
+        background: #10B981;
+        top: -30px; left: -20px;
+    }
+    .orb-blue {
+        width: 160px; height: 160px;
+        background: #3B82F6;
+        bottom: -50px; right: -20px;
+        animation-delay: -4s;
+    }
+
+    @keyframes orbFloat {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(30px, 20px) scale(1.15); }
+    }
+
+    /* Holographic Cyber Waveform */
+    .cyber-wave-mesh {
+        position: absolute;
+        inset: 0;
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 20px 20px;
+        mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 80%);
+        -webkit-mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 80%);
+        z-index: 1;
+    }
+
+    /* Header Bar of the Ambient Card */
+    .ambient-topbar {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .ambient-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .pulse-laser-ring {
+        position: relative;
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #10B981;
+    }
+    .pulse-laser-ring::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 2px solid #10B981;
+        animation: radarPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+    @keyframes radarPing {
+        0% { transform: scale(0.8); opacity: 1; }
+        100% { transform: scale(2.4); opacity: 0; }
+    }
+
+    .ambient-chip span {
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: #E2E8F0;
+        text-transform: uppercase;
+    }
+
+    .telemetry-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .telemetry-tag strong {
+        color: #34D399;
+    }
+
+    /* Animated Dynamic Visualizer Bars */
+    .ambient-center-engine {
+        position: relative;
+        z-index: 2;
+        margin: 16px 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 4px;
+        height: 48px;
+        padding: 0 4px;
+    }
+
+    .bar-line {
+        flex: 1;
+        background: linear-gradient(180deg, #10B981 0%, rgba(16, 185, 129, 0.15) 100%);
+        border-radius: 4px 4px 1px 1px;
+        animation: equalizerPulse 2.4s ease-in-out infinite alternate;
+        transform-origin: bottom;
+    }
+    /* Staggered Animations */
+    .bar-line:nth-child(2n) { animation-duration: 1.8s; background: linear-gradient(180deg, #3B82F6 0%, rgba(59, 130, 246, 0.15) 100%); }
+    .bar-line:nth-child(3n) { animation-duration: 2.1s; background: linear-gradient(180deg, #F59E0B 0%, rgba(245, 158, 11, 0.15) 100%); }
+    .bar-line:nth-child(4n) { animation-duration: 1.5s; }
+    .bar-line:nth-child(5n) { animation-duration: 2.7s; }
+
+    @keyframes equalizerPulse {
+        0% { transform: scaleY(0.2); }
+        50% { transform: scaleY(0.85); }
+        100% { transform: scaleY(0.35); }
+    }
+
+    /* Ambient Footer Telemetry */
+    .ambient-bottom-strip {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.72rem;
+        color: #94A3B8;
+    }
+    .ambient-bottom-strip strong {
+        color: #FFFFFF;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    @media (max-width: 480px) {
+        .sigma-ambient-stage {
+            min-height: 125px;
+            padding: 16px;
+            border-radius: 22px;
+        }
+        .ambient-center-engine {
+            height: 36px;
+            margin: 10px 0;
+        }
+    }
+</style>
+
+<!-- AMBIENT DESIGN COMPONENT -->
+<div class="sigma-ambient-stage" aria-hidden="true">
+    <!-- Glowing Nebulas -->
+    <div class="ambient-glow-orb orb-emerald"></div>
+    <div class="ambient-glow-orb orb-blue"></div>
+    
+    <!-- Cyber Geometric Mesh -->
+    <div class="cyber-wave-mesh"></div>
+
+    <!-- Header Telemetry Row -->
+    <div class="ambient-topbar">
+        <div class="ambient-chip">
+            <div class="pulse-laser-ring"></div>
+            <span>Encrypted Node Sync</span>
+        </div>
+        <div class="telemetry-tag">
+            PKR POOL: <strong>ACTIVE</strong>
+        </div>
+    </div>
+
+    <!-- Live Animated Wave Spectrum (18 Adaptive Dynamic Bars) -->
+    <div class="ambient-center-engine">
+        <div class="bar-line" style="height: 35%;"></div>
+        <div class="bar-line" style="height: 60%;"></div>
+        <div class="bar-line" style="height: 40%;"></div>
+        <div class="bar-line" style="height: 85%;"></div>
+        <div class="bar-line" style="height: 50%;"></div>
+        <div class="bar-line" style="height: 95%;"></div>
+        <div class="bar-line" style="height: 70%;"></div>
+        <div class="bar-line" style="height: 45%;"></div>
+        <div class="bar-line" style="height: 80%;"></div>
+        <div class="bar-line" style="height: 65%;"></div>
+        <div class="bar-line" style="height: 90%;"></div>
+        <div class="bar-line" style="height: 30%;"></div>
+        <div class="bar-line" style="height: 75%;"></div>
+        <div class="bar-line" style="height: 55%;"></div>
+        <div class="bar-line" style="height: 100%;"></div>
+        <div class="bar-line" style="height: 40%;"></div>
+        <div class="bar-line" style="height: 65%;"></div>
+        <div class="bar-line" style="height: 30%;"></div>
+    </div>
+
+    <!-- Live Simulated Stream Footer -->
+    <div class="ambient-bottom-strip">
+        <span>Security Latency: <strong id="dynLatencyVal">18ms</strong></span>
+        <span>Consensus: <strong style="color: #34D399;">99.98%</strong></span>
+    </div>
+</div>
+
+<!-- MICRO REALTIME ANIMATION SCRIPT -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const latencyElem = document.getElementById('dynLatencyVal');
+        if (latencyElem) {
+            // Gently oscillates simulated packet latency to make the terminal feel live
+            setInterval(() => {
+                const randomLatency = Math.floor(Math.random() * (26 - 16 + 1)) + 16;
+                latencyElem.textContent = `${randomLatency}ms`;
+            }, 3000);
+        }
     });
 </script>
             <!-- Referral Network Tree Matrix -->
