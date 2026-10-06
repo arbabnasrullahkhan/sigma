@@ -860,8 +860,8 @@
                         img.src = event.target.result;
                         img.onload = () => {
                             const canvas = document.createElement('canvas');
-                            const MAX_WIDTH = 800;
-                            const MAX_HEIGHT = 800;
+                            const MAX_WIDTH = 600; // Optimal for Firestore 1MB document limit
+                            const MAX_HEIGHT = 600;
                             let width = img.width;
                             let height = img.height;
 
@@ -874,8 +874,7 @@
                             canvas.height = height;
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, width, height);
-                            // Compress to highly efficient JPEG data URL
-                            resolve(canvas.toDataURL('image/jpeg', 0.6)); 
+                            resolve(canvas.toDataURL('image/jpeg', 0.5)); 
                         };
                         img.onerror = error => reject(error);
                     };
@@ -920,19 +919,8 @@
                     const trxDoc = await trxRef.get();
                     if (trxDoc.exists) throw new Error("DUPLICATE_TRX_ID");
 
-                    // 2. Upload with Smart Fallback
-                    let proofUrl = "";
-                    try {
-                        const storage = firebase.storage();
-                        const ext = activeFile.name.split('.').pop() || 'jpg';
-                        const storagePath = `payment_proofs/${uid}/${reqId}_proof.${ext}`;
-                        const storageRef = storage.ref().child(storagePath);
-                        const snapshot = await storageRef.put(activeFile);
-                        proofUrl = await snapshot.ref.getDownloadURL();
-                    } catch (storageError) {
-                        console.warn("Firebase Storage CORS restriction encountered. Initiating Base64 Firestore injection fallback.");
-                        proofUrl = await compressImageToBase64(activeFile); // Frictionless fix!
-                    }
+                    // 2. Upload with Smart Fallback (Bypassing Storage entirely to fix CORS)
+                    const proofUrl = await compressImageToBase64(activeFile);
 
                     // 3. Construct Immutable Snapshots
                     const planSnap = { id: authPlanSnapshot.id, name: authPlanSnapshot.name, price: finalPayableAmount, duration: authPlanSnapshot.duration || 0 };
