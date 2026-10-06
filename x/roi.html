@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sigma Ops | Automated ROI Engine</title>
+    <title>Sigma Ops | Automated ROI Distribution Engine</title>
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#FFFFFF">
 
@@ -138,30 +138,6 @@
 
         .font-mono {
             font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Loading Auth Overlay */
-        #authOverlay {
-            position: fixed;
-            inset: 0;
-            background: var(--sigma-surface);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-heading);
-            transition: opacity 0.3s;
-        }
-
-        .auth-spinner {
-            width: 44px;
-            height: 44px;
-            border: 4px solid var(--border-light);
-            border-top-color: var(--sigma-accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 16px;
         }
 
         /* ==========================================================================
@@ -351,7 +327,7 @@
         }
 
         .stat-box small {
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
             font-weight: 800;
             text-transform: uppercase;
@@ -384,19 +360,21 @@
             box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
 
-        .btn-distribute:hover { background: var(--sigma-accent-dark); }
-        .btn-distribute:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
+        .btn-distribute:hover { background: var(--sigma-accent-dark); transform: translateY(-1px); }
+        .btn-distribute:active { transform: scale(0.98); }
+        .btn-distribute:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; transform: none; }
 
         .log-container {
-            background: #0F172A;
+            background: #0B132B;
             border-radius: var(--radius-lg);
             height: 280px;
             overflow-y: auto;
-            padding: 16px;
+            padding: 18px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
             color: #A7F3D0;
             border: 1px solid var(--border-light);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
         }
 
         .log-item { margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed rgba(255,255,255,0.08); }
@@ -406,7 +384,7 @@
         .log-warning { color: #FCD34D; }
 
         .spinner {
-            width: 20px; height: 20px;
+            width: 22px; height: 22px;
             border: 3px solid rgba(255, 255, 255, 0.3);
             border-top-color: white;
             border-radius: 50%;
@@ -626,12 +604,6 @@
 
 <body>
 
-    <!-- Auth Protection Overlay -->
-    <div id="authOverlay">
-        <div class="auth-spinner"></div>
-        <h2 style="font-size: 1.15rem; font-weight: 800;">Verifying Administrator Access...</h2>
-    </div>
-
     <!-- =======================================================================
          DESKTOP ADMIN SIDEBAR
          ======================================================================= -->
@@ -706,7 +678,7 @@
             </a>
             <a href="settings.html" class="nav-link">
                 <div class="nav-link-left">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     <span>Global Settings</span>
                 </div>
             </a>
@@ -742,21 +714,21 @@
             <div class="card">
                 <h3 style="font-size: 1.25rem;">Daily Profit Distribution</h3>
                 <p style="font-size: 0.92rem; line-height: 1.6;">
-                    The ROI Engine scans all member accounts, detects active portfolios, and credits the calculated daily return directly to their withdrawable profit wallet with an immutable ledger entry.
+                    The ROI Engine scans all member accounts, checks active portfolio cycles, and automatically credits the designated daily return directly into the user's profit balance with an immutable transaction log.
                 </p>
 
                 <div class="stat-grid">
                     <div class="stat-box">
                         <small>Active Investors</small>
-                        <b id="statUsers" class="font-mono">...</b>
+                        <b id="statUsers" class="font-mono">0</b>
                     </div>
                     <div class="stat-box">
                         <small>Active Portfolios</small>
-                        <b id="statPlans" class="font-mono">...</b>
+                        <b id="statPlans" class="font-mono">0</b>
                     </div>
                     <div class="stat-box" style="border-color: var(--sigma-accent);">
-                        <small style="color: var(--sigma-accent-dark);">Estimated Payout</small>
-                        <b id="statEstPayout" class="font-mono">...</b>
+                        <small style="color: var(--sigma-accent-dark);">Estimated Payout Today</small>
+                        <b id="statEstPayout" class="font-mono">Rs. 0</b>
                     </div>
                 </div>
 
@@ -766,7 +738,7 @@
                 </button>
 
                 <div class="log-container" id="logContainer">
-                    <div class="log-item"><span class="log-time">[SYSTEM]</span> Ready to execute profit distribution sequence...</div>
+                    <div class="log-item"><span class="log-time">[SYSTEM]</span> Ready to calculate and distribute daily yields...</div>
                 </div>
             </div>
         </div>
@@ -837,7 +809,7 @@
                 <a href="team.html" class="sheet-menu-link">
                     <div class="sheet-menu-left">
                         <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                        <span>Team Tree Tracker</span>
+                        <span>Team Network</span>
                     </div>
                     &rarr;
                 </a>
@@ -857,15 +829,15 @@
                 </a>
                 <a href="settings.html" class="sheet-menu-link">
                     <div class="sheet-menu-left">
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                        <span>Global Settings</span>
-                    </div>
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <span>Global Settings</span>
+                </div>
                     &rarr;
                 </a>
                 <a href="content.html" class="sheet-menu-link">
                     <div class="sheet-menu-left">
                         <svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                        <span>UI Configuration</span>
+                        <span>UI Content Config</span>
                     </div>
                     &rarr;
                 </a>
@@ -883,7 +855,7 @@
     </div>
 
     <!-- =======================================================================
-         JAVASCRIPT CONTROLLER (ROI ENGINE & FIRESTORE BATCH CREDITING)
+         JAVASCRIPT CONTROLLER (NO START LOADING OVERLAY)
          ======================================================================= -->
     <script>
         const RoiAdminController = (() => {
@@ -893,7 +865,6 @@
             const auth = firebase.auth();
 
             const dom = {
-                authOverlay: document.getElementById('authOverlay'),
                 menuSheet: document.getElementById('sheetAdminMenu'),
                 dockBadgeDeposits: document.getElementById('dockBadgeDeposits'),
                 statUsers: document.getElementById('statUsers'),
@@ -943,9 +914,6 @@
 
                                 if (role === 'admin' || role === 'superadmin') {
                                     adminUser = user;
-                                    dom.authOverlay.style.opacity = '0';
-                                    setTimeout(() => dom.authOverlay.style.display = 'none', 300);
-
                                     bindPendingBadge();
                                     calculateEstimates();
                                     return;
@@ -1000,7 +968,7 @@
                     dom.statPlans.textContent = totalActivePlans;
                     dom.statEstPayout.textContent = `Rs. ${totalEstPayout.toLocaleString('en-PK')}`;
 
-                    logMsg(`Scan complete. Detected ${totalActivePlans} active portfolios across ${activeUsersCount} investors.`);
+                    logMsg(`Scan complete. Found ${totalActivePlans} active portfolios across ${activeUsersCount} investors.`);
                 } catch (e) {
                     console.error("Estimate scan error:", e);
                     logMsg(`Failed to calculate telemetry: ${e.message}`, "error");
@@ -1008,7 +976,7 @@
             };
 
             const executeRoiDistribution = async () => {
-                if (!confirm("Are you sure you want to execute daily ROI distribution across all active portfolios? This will credit user profit wallets.")) return;
+                if (!confirm("Are you sure you want to execute daily ROI distribution? This will credit user profit wallets.")) return;
 
                 dom.btnRunROI.disabled = true;
                 dom.btnRunROI.classList.add('loading');
