@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 
@@ -42,6 +40,7 @@
     <!-- Centralized Firebase Configuration Reference -->
     <script src="firebase-config.js"></script>
     <script>
+        // Extreme fallback initialization to guarantee terminal loads
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             const fallbackConfig = {
                 apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
@@ -52,7 +51,7 @@
                 appId: "1:480334485782:web:c0c886ed710567b9e6d837"
             };
             firebase.initializeApp(fallbackConfig);
-            console.log("Sigma Firebase fallback verified in dashboard gateway.");
+            console.log("Sigma Firebase fallback verified in secure dashboard.");
         }
     </script>
 
@@ -195,11 +194,7 @@
             display: block;
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5 {
+        h1, h2, h3, h4, h5 {
             color: var(--text-heading);
             font-weight: 800;
             letter-spacing: -0.02em;
@@ -312,7 +307,6 @@
             gap: 10px;
             min-width: 0;
             flex-shrink: 1;
-            text-decoration: none;
         }
 
         .brand-logo-img {
@@ -384,17 +378,9 @@
         }
 
         @keyframes pulse-dot {
-            0% {
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
-            }
-
-            70% {
-                box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-            }
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
         /* ==========================================================================
@@ -698,7 +684,7 @@
         }
 
         /* ==========================================================================
-           6. NEXT-GEN REDESIGNED WALLET CARD (NO EYE BUTTON)
+           6. NEXT-GEN REDESIGNED WALLET CARD
            ========================================================================== */
         .vault-main-card {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -713,7 +699,6 @@
             gap: 6px;
         }
 
-        /* Premium Background Elements */
         .vault-main-card::after {
             content: '';
             position: absolute;
@@ -735,12 +720,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg opacity="0.03" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M0 10l10-10 10 10-10 10z" fill="white"/></svg>');
+            background: url('data:image/svg+xml;utf8,<svg opacity="0.03" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M0 10l10-10 10 10L10 20zM20 30l10-10 10 10-10 10z" fill="white"/></svg>');
             pointer-events: none;
             z-index: 0;
         }
 
-        /* Authentic Fintech Branding on Card */
         .vault-branding {
             position: absolute;
             bottom: 24px;
@@ -766,7 +750,6 @@
             opacity: 0.15;
         }
 
-        /* EMV Chip & NFC */
         .vault-chip-row {
             display: flex;
             justify-content: space-between;
@@ -996,7 +979,6 @@
             font-size: 1.15rem;
         }
 
-        /* The Circular Layout Engine */
         .orbit-stage {
             position: relative;
             width: 100%;
@@ -1026,12 +1008,9 @@
         }
 
         @keyframes orbitSpin {
-            100% {
-                transform: rotate(360deg);
-            }
+            100% { transform: rotate(360deg); }
         }
 
-        /* Central Sigma Core Hub */
         .orbit-center-core {
             position: relative;
             z-index: 10;
@@ -1070,7 +1049,6 @@
             animation: pulse-dot 3s infinite;
         }
 
-        /* 6 Orbital Nodes Positioned Radially using Absolute Percentages */
         .orbit-node {
             position: absolute;
             display: flex;
@@ -1123,52 +1101,16 @@
             white-space: nowrap;
         }
 
-        /* Exact placement on the circular ring (Radius = 50%) */
-        .node-pos-1 {
-            top: 0%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+        .node-pos-1 { top: 0%; left: 50%; transform: translate(-50%, -50%); }
+        .node-pos-2 { top: 25%; left: 93.3%; transform: translate(-50%, -50%); }
+        .node-pos-3 { top: 75%; left: 93.3%; transform: translate(-50%, -50%); }
+        .node-pos-4 { top: 100%; left: 50%; transform: translate(-50%, -50%); }
+        .node-pos-5 { top: 75%; left: 6.7%; transform: translate(-50%, -50%); }
+        .node-pos-6 { top: 25%; left: 6.7%; transform: translate(-50%, -50%); }
 
-        .node-pos-2 {
-            top: 25%;
-            left: 93.3%;
-            transform: translate(-50%, -50%);
-        }
-
-        .node-pos-3 {
-            top: 75%;
-            left: 93.3%;
-            transform: translate(-50%, -50%);
-        }
-
-        .node-pos-4 {
-            top: 100%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .node-pos-5 {
-            top: 75%;
-            left: 6.7%;
-            transform: translate(-50%, -50%);
-        }
-
-        .node-pos-6 {
-            top: 25%;
-            left: 6.7%;
-            transform: translate(-50%, -50%);
-        }
-
-        /* Fallback linear for very narrow screens */
         @media (max-width: 380px) {
-            .orbit-stage {
-                display: none;
-            }
-
-            .orbit-linear-fallback {
-                display: grid !important;
-            }
+            .orbit-stage { display: none; }
+            .orbit-linear-fallback { display: grid !important; }
         }
 
         .orbit-linear-fallback {
@@ -1220,7 +1162,7 @@
         }
 
         /* ==========================================================================
-           8. SECONDARY QUICK ACTIONS GRID (Transactions, Leaderboard, FBR)
+           8. SECONDARY QUICK ACTIONS GRID
            ========================================================================== */
         .secondary-actions-container {
             display: flex;
@@ -1278,7 +1220,6 @@
             stroke-width: 2.2;
         }
 
-        /* Specific Full Width Buttons */
         .btn-full-wide {
             grid-column: 1 / -1;
             width: 100%;
@@ -1293,6 +1234,7 @@
             transition: var(--transition-bounce);
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
         }
 
         .btn-full-wide:active {
@@ -1341,9 +1283,7 @@
             margin-bottom: 24px;
         }
 
-        .stepper-header h3 {
-            font-size: 1.1rem;
-        }
+        .stepper-header h3 { font-size: 1.1rem; }
 
         .badge-type {
             font-size: 0.7rem;
@@ -1412,22 +1352,16 @@
             background: var(--sigma-accent);
             border-color: var(--sigma-accent);
         }
-
-        .step-node.completed .step-circle svg {
-            display: block;
-        }
-
+        .step-node.completed .step-circle svg { display: block; }
         .step-node.current .step-circle {
             background: white;
             border-color: var(--sigma-gold);
             box-shadow: 0 0 0 6px var(--sigma-gold-soft);
         }
-
         .step-node.rejected .step-circle {
             background: var(--sigma-danger);
             border-color: var(--sigma-danger);
         }
-
         .step-node.rejected .step-circle svg {
             display: block;
             stroke: white;
@@ -1438,9 +1372,7 @@
             font-weight: 700;
             color: var(--text-muted);
         }
-
-        .step-node.completed span,
-        .step-node.current span {
+        .step-node.completed span, .step-node.current span {
             color: var(--text-heading);
         }
 
@@ -1620,29 +1552,12 @@
             stroke-width: 2.2;
         }
 
-        .tx-icon.positive {
-            background: var(--sigma-accent-soft);
-        }
-
-        .tx-icon.positive svg {
-            stroke: var(--sigma-accent-dark);
-        }
-
-        .tx-icon.negative {
-            background: var(--sigma-danger-soft);
-        }
-
-        .tx-icon.negative svg {
-            stroke: var(--sigma-danger-dark);
-        }
-
-        .tx-icon.neutral {
-            background: var(--sigma-info-soft);
-        }
-
-        .tx-icon.neutral svg {
-            stroke: var(--sigma-info-dark);
-        }
+        .tx-icon.positive { background: var(--sigma-accent-soft); }
+        .tx-icon.positive svg { stroke: var(--sigma-accent-dark); }
+        .tx-icon.negative { background: var(--sigma-danger-soft); }
+        .tx-icon.negative svg { stroke: var(--sigma-danger-dark); }
+        .tx-icon.neutral { background: var(--sigma-info-soft); }
+        .tx-icon.neutral svg { stroke: var(--sigma-info-dark); }
 
         .tx-details {
             flex: 1;
@@ -1780,13 +1695,8 @@
         }
 
         @media (min-width: 860px) {
-            .mobile-dock {
-                display: none;
-            }
-
-            body {
-                padding-bottom: 40px;
-            }
+            .mobile-dock { display: none; }
+            body { padding-bottom: 40px; }
         }
 
         /* Configurable WhatsApp Button positioned ABOVE dock */
@@ -1809,29 +1719,12 @@
             border: 2px solid white;
         }
 
-        .whatsapp-float svg {
-            width: 34px;
-            height: 34px;
-            fill: currentColor;
-        }
-
-        .whatsapp-float:active {
-            transform: scale(0.85);
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-        }
+        .whatsapp-float svg { width: 34px; height: 34px; fill: currentColor; }
+        .whatsapp-float:active { transform: scale(0.85); box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
 
         @media (min-width: 860px) {
-            .whatsapp-float {
-                bottom: 40px;
-                right: 40px;
-                width: 68px;
-                height: 68px;
-            }
-
-            .whatsapp-float svg {
-                width: 38px;
-                height: 38px;
-            }
+            .whatsapp-float { bottom: 40px; right: 40px; width: 68px; height: 68px; }
+            .whatsapp-float svg { width: 38px; height: 38px; }
         }
 
         /* ==========================================================================
@@ -1871,9 +1764,7 @@
             z-index: var(--z-modal);
         }
 
-        .overlay.show .sheet {
-            transform: translateY(0);
-        }
+        .overlay.show .sheet { transform: translateY(0); }
 
         .sheet-handle {
             width: 44px;
@@ -1891,10 +1782,7 @@
             align-items: center;
         }
 
-        .sheet-header h3 {
-            font-size: 1.25rem;
-            font-weight: 800;
-        }
+        .sheet-header h3 { font-size: 1.25rem; font-weight: 800; }
 
         .sheet-close-btn {
             width: 36px;
@@ -1908,18 +1796,8 @@
             transition: var(--transition-fast);
         }
 
-        .sheet-close-btn:active {
-            background: var(--sigma-muted-border);
-            transform: scale(0.9);
-        }
-
-        .sheet-close-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2.5;
-        }
+        .sheet-close-btn:active { background: var(--sigma-muted-border); transform: scale(0.9); }
+        .sheet-close-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; }
 
         .sheet-body {
             padding: 24px 24px 40px;
@@ -1943,6 +1821,7 @@
             margin-top: 12px;
             box-shadow: var(--shadow-card);
             transition: var(--transition-fast);
+            text-decoration: none;
         }
 
         .btn-sheet-submit:active {
@@ -1966,9 +1845,7 @@
             overflow: hidden;
         }
 
-        .notif-feed-item:active {
-            transform: scale(0.98);
-        }
+        .notif-feed-item:active { transform: scale(0.98); }
 
         .notif-feed-item.unread {
             background: white;
@@ -1979,257 +1856,85 @@
         .notif-feed-item.unread::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
+            left: 0; top: 0; bottom: 0; width: 4px;
             background: var(--sigma-accent);
         }
 
-        .notif-feed-item.pinned {
-            border-color: var(--sigma-gold-border);
-            background: var(--sigma-gold-soft);
-        }
+        .notif-feed-item.pinned { border-color: var(--sigma-gold-border); background: var(--sigma-gold-soft); }
+        .notif-feed-item.pinned::before { background: var(--sigma-gold); }
 
-        .notif-feed-item.pinned::before {
-            background: var(--sigma-gold);
-        }
-
-        .notif-feed-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .notif-feed-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
+        .notif-feed-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+        .notif-feed-title-wrap { display: flex; align-items: center; gap: 8px; flex: 1; }
         .notif-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--sigma-subtle);
-            flex-shrink: 0;
+            width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            background: var(--sigma-subtle); flex-shrink: 0;
         }
-
-        .notif-icon svg {
-            width: 16px;
-            height: 16px;
-            stroke: var(--text-heading);
-            fill: none;
-            stroke-width: 2.2;
-        }
-
-        .notif-feed-top strong {
-            font-size: 0.95rem;
-            color: var(--text-heading);
-            line-height: 1.2;
-        }
-
-        .notif-feed-top span {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .notif-feed-item p {
-            font-size: 0.85rem;
-            color: var(--text-body);
-            margin: 0;
-            margin-left: 40px;
-            line-height: 1.4;
-        }
+        .notif-icon svg { width: 16px; height: 16px; stroke: var(--text-heading); fill: none; stroke-width: 2.2; }
+        .notif-feed-top strong { font-size: 0.95rem; color: var(--text-heading); line-height: 1.2; }
+        .notif-feed-top span { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; white-space: nowrap; }
+        .notif-feed-item p { font-size: 0.85rem; color: var(--text-body); margin: 0; margin-left: 40px; line-height: 1.4; }
 
         .mark-all-read-btn {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--sigma-info-dark);
-            background: transparent;
-            border: none;
-            outline: none;
-            cursor: pointer;
+            font-size: 0.8rem; font-weight: 700; color: var(--sigma-info-dark);
+            background: transparent; border: none; outline: none; cursor: pointer;
         }
 
         /* Premium QR Code Modal Style */
         .qr-wrapper {
-            position: relative;
-            display: inline-block;
-            padding: 16px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: var(--shadow-card);
-            border: 1px solid var(--sigma-muted-border);
+            position: relative; display: inline-block; padding: 16px; background: white;
+            border-radius: 20px; box-shadow: var(--shadow-card); border: 1px solid var(--sigma-muted-border);
         }
 
         .qr-logo-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 48px;
-            height: 48px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border: 3px solid white;
-            z-index: 10;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 48px; height: 48px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); border: 3px solid white; z-index: 10;
         }
 
-        .qr-logo-overlay img {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-        }
+        .qr-logo-overlay img { width: 30px; height: 30px; object-fit: contain; }
 
         /* Proof Viewer Modal */
-        #sheetProofViewer {
-            max-height: 95vh;
-            height: 95vh;
-        }
-
-        .proof-viewer-body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
+        #sheetProofViewer { max-height: 95vh; height: 95vh; }
+        .proof-viewer-body { display: flex; flex-direction: column; align-items: center; gap: 20px; }
         .proof-viewer-img {
-            max-width: 100%;
-            max-height: 50vh;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--sigma-muted-border);
-            box-shadow: var(--shadow-md);
-            object-fit: contain;
+            max-width: 100%; max-height: 50vh; border-radius: var(--radius-lg);
+            border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-md); object-fit: contain;
         }
 
         /* Toast Notification */
         .toast {
-            position: fixed;
-            top: 24px;
-            left: 50%;
-            transform: translate(-50%, -20px) scale(0.9);
-            background: var(--sigma-primary);
-            color: white;
-            padding: 14px 24px;
-            border-radius: var(--radius-pill);
-            font-size: 0.9rem;
-            font-weight: 700;
-            box-shadow: var(--shadow-float);
-            z-index: var(--z-toast);
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed; top: 24px; left: 50%; transform: translate(-50%, -20px) scale(0.9);
+            background: var(--sigma-primary); color: white; padding: 14px 24px; border-radius: var(--radius-pill);
+            font-size: 0.9rem; font-weight: 700; box-shadow: var(--shadow-float); z-index: var(--z-toast);
+            opacity: 0; visibility: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .toast.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, 0) scale(1);
-        }
+        .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); }
 
         /* ==========================================================================
            14. ADMIN BLOCKER & SAFETY SCREEN
            ========================================================================== */
         #blockerScreen {
-            position: fixed;
-            inset: 0;
-            z-index: var(--z-blocker);
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(24px);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            text-align: center;
+            position: fixed; inset: 0; z-index: var(--z-blocker); background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(24px); display: none; flex-direction: column; align-items: center;
+            justify-content: center; padding: 24px; text-align: center;
         }
-
-        #blockerScreen.active {
-            display: flex;
-        }
-
-        #blockerScreen svg {
-            width: 80px;
-            height: 80px;
-            stroke: var(--sigma-danger);
-            fill: none;
-            stroke-width: 1.5;
-            margin-bottom: 24px;
-        }
-
-        #blockerScreen h1 {
-            font-size: 2.5rem;
-            color: var(--sigma-primary);
-            margin-bottom: 12px;
-        }
-
-        #blockerScreen p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            max-width: 460px;
-            margin-bottom: 32px;
-            line-height: 1.6;
-        }
-
+        #blockerScreen.active { display: flex; }
+        #blockerScreen svg { width: 80px; height: 80px; stroke: var(--sigma-danger); fill: none; stroke-width: 1.5; margin-bottom: 24px; }
+        #blockerScreen h1 { font-size: 2.5rem; color: var(--sigma-primary); margin-bottom: 12px; }
+        #blockerScreen p { font-size: 1.1rem; color: var(--text-muted); max-width: 460px; margin-bottom: 32px; line-height: 1.6; }
         .btn-blocker-contact {
-            background: var(--sigma-danger);
-            color: white;
-            padding: 16px 32px;
-            border-radius: var(--radius-pill);
-            font-weight: 800;
-            font-size: 1rem;
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-            transition: var(--transition-bounce);
+            background: var(--sigma-danger); color: white; padding: 16px 32px; border-radius: var(--radius-pill);
+            font-weight: 800; font-size: 1rem; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); transition: var(--transition-bounce);
+            text-decoration: none;
         }
-
-        .btn-blocker-contact:active {
-            transform: scale(0.95);
-        }
+        .btn-blocker-contact:active { transform: scale(0.95); }
 
         /* Animations & Skeletons */
-        .skeleton {
-            background: #E2E8F0;
-            color: transparent !important;
-            border-radius: 6px;
-            animation: skel 1.5s infinite ease-in-out;
-        }
-
-        @keyframes skel {
-            0% {
-                opacity: 0.5;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0.5;
-            }
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        .skeleton { background: #E2E8F0; color: transparent !important; border-radius: 6px; animation: skel 1.5s infinite ease-in-out; }
+        @keyframes skel { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 
@@ -2241,9 +1946,7 @@
     <!-- Pull to Refresh Visual Spinner -->
     <div class="ptr-indicator" id="ptrSpinner">
         <svg viewBox="0 0 24 24">
-            <path
-                d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"
-                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
         </svg>
     </div>
 
@@ -2327,8 +2030,7 @@
             <circle cx="12" cy="7" r="4" />
         </symbol>
         <symbol id="icon-message" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </symbol>
         <symbol id="icon-download" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -2346,13 +2048,10 @@
 
     <!-- Administrative Blocker Screen -->
     <div id="blockerScreen">
-        <svg>
-            <use href="#icon-shield-alert" />
-        </svg>
+        <svg><use href="#icon-shield-alert" /></svg>
         <h1 id="blockerTitle">Access Suspended</h1>
         <p id="blockerMsg">Security protocols have placed this session on hold. Contact administrator verification.</p>
-        <a href="https://wa.me/923000000000" class="btn-blocker-contact" id="blockerContactBtn">Open Priority
-            Support</a>
+        <a href="https://wa.me/923000000000" class="btn-blocker-contact" id="blockerContactBtn">Open Priority Support</a>
     </div>
 
     <!-- Main Mobile & Responsive Workspace Frame -->
@@ -2372,18 +2071,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </a>
-                <button class="btn-top-action" onclick="appController.openSheet('sheetNotif')"
-                    aria-label="Notifications">
-                    <svg>
-                        <use href="#icon-bell" />
-                    </svg>
+                <button class="btn-top-action" onclick="appController.openSheet('sheetNotif')" aria-label="Notifications">
+                    <svg><use href="#icon-bell" /></svg>
                     <span class="unread-dot" id="headerNotifDot"></span>
                 </button>
-                <button class="btn-top-action" onclick="appController.openSheet('sheetMenu')"
-                    aria-label="Terminal Navigation">
-                    <svg>
-                        <use href="#icon-menu" />
-                    </svg>
+                <button class="btn-top-action" onclick="appController.openSheet('sheetMenu')" aria-label="Terminal Navigation">
+                    <svg><use href="#icon-menu" /></svg>
                 </button>
             </div>
         </header>
@@ -2398,47 +2091,34 @@
                         <div class="user-avatar" id="uiAvatarWrap">
                             <span id="uiAvatarLetter" class="skeleton">S</span>
                         </div>
-                        <div class="avatar-tier-badge" title="Account Tier"><svg>
-                                <use href="#icon-crown" />
-                            </svg></div>
+                        <div class="avatar-tier-badge" title="Account Tier"><svg><use href="#icon-crown" /></svg></div>
                     </div>
                     <div class="id-text">
-                        <h2><span id="uiDisplayName" class="skeleton">Investor</span> <span class="tier-chip"
-                                id="uiTierBadge">Bronze</span></h2>
+                        <h2><span id="uiDisplayName" class="skeleton">Investor</span> <span class="tier-chip" id="uiTierBadge">Bronze</span></h2>
                         <p id="uiAccountUID" class="font-mono">UID: SIGMA-••••</p>
                     </div>
                 </div>
                 <div class="id-actions">
-                    <button class="btn-id-pill" onclick="appController.openQrModal()" title="Show Invite QR"><svg>
-                            <use href="#icon-qr" />
-                        </svg></button>
-                    <button class="btn-id-pill" onclick="appController.copyReferralLink()" title="Copy Link"><svg>
-                            <use href="#icon-copy" />
-                        </svg></button>
+                    <button class="btn-id-pill" onclick="appController.openQrModal()" title="Show Invite QR"><svg><use href="#icon-qr" /></svg></button>
+                    <button class="btn-id-pill" onclick="appController.copyReferralLink()" title="Copy Link"><svg><use href="#icon-copy" /></svg></button>
                 </div>
                 <input type="hidden" id="rawReferralUrl" value="">
             </section>
 
             <!-- Real-Time Admin Notice Broadcast -->
-            <section class="system-announcement-pill" id="announcementPill"
-                onclick="appController.openAnnouncementModal()" style="display: none;">
+            <section class="system-announcement-pill" id="announcementPill" onclick="appController.openAnnouncementModal()" style="display: none;">
                 <div class="announcement-text">
-                    <svg>
-                        <use href="#icon-bell" />
-                    </svg>
+                    <svg><use href="#icon-bell" /></svg>
                     <span id="announcementHeadline">Platform Transmissions</span>
                 </div>
                 <span style="font-size: 0.75rem; font-weight: 800; color: #065F46;">READ &rarr;</span>
             </section>
 
-
-
             <!-- Next-Gen Multi-Wallet Core Engine (Premium Card UI with Logos) -->
             <section class="vault-main-card">
                 <!-- Authentic Embedded Branding inside the Card -->
                 <div class="vault-branding">
-                    <img src="assets/textlogo.png" alt="SIGMA" class="vault-text-logo"
-                        onerror="this.style.display='none'">
+                    <img src="assets/textlogo.png" alt="SIGMA" class="vault-text-logo" onerror="this.style.display='none'">
                     <img src="assets/logo.png" alt="" class="vault-icon-logo" onerror="this.style.display='none'">
                 </div>
 
@@ -2463,9 +2143,7 @@
                 <div class="pocket-card p-deposit">
                     <div class="pocket-head">
                         <span class="pocket-title" id="cmsWalletDepositTitle">Deposit / Main</span>
-                        <div class="pocket-icon-wrap"><svg>
-                                <use href="#icon-wallet" />
-                            </svg></div>
+                        <div class="pocket-icon-wrap"><svg><use href="#icon-wallet" /></svg></div>
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Deposit</span>
@@ -2478,9 +2156,7 @@
                 <div class="pocket-card p-profit">
                     <div class="pocket-head">
                         <span class="pocket-title" id="cmsWalletProfitTitle">Profit / ROI</span>
-                        <div class="pocket-icon-wrap"><svg>
-                                <use href="#icon-arrow-up" />
-                            </svg></div>
+                        <div class="pocket-icon-wrap"><svg><use href="#icon-arrow-up" /></svg></div>
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Profit</span>
@@ -2493,9 +2169,7 @@
                 <div class="pocket-card p-comm">
                     <div class="pocket-head">
                         <span class="pocket-title" id="cmsWalletCommissionTitle">Commission</span>
-                        <div class="pocket-icon-wrap"><svg>
-                                <use href="#icon-crown" />
-                            </svg></div>
+                        <div class="pocket-icon-wrap"><svg><use href="#icon-crown" /></svg></div>
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Commission</span>
@@ -2508,9 +2182,7 @@
             <!-- Exact 24-Hour Purchase-Timestamp Countdown Engine -->
             <section class="live-countdown-island">
                 <div class="countdown-info">
-                    <div class="pulsing-yield-ring"><svg>
-                            <use href="#icon-pie" />
-                        </svg></div>
+                    <div class="pulsing-yield-ring"><svg><use href="#icon-pie" /></svg></div>
                     <div>
                         <small id="cmsCountdownKicker">Next Profit Credit</small>
                         <strong id="cmsCountdownPlan">No Active Cycle</strong>
@@ -2523,9 +2195,7 @@
             <section class="orbital-terminal-wrapper">
                 <div class="orbital-header">
                     <h3 id="cmsTerminalTitle">Command Center</h3>
-                    <span
-                        style="font-size: 0.75rem; font-weight: 800; color: var(--sigma-accent-dark); letter-spacing: 1px;">ORBITAL
-                        MATRIX</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--sigma-accent-dark); letter-spacing: 1px;">ORBITAL MATRIX</span>
                 </div>
 
                 <!-- Radial Circular Hub Interface -->
@@ -2534,59 +2204,33 @@
                     <div class="orbit-ring-inner"></div>
 
                     <!-- Central Core Hub -->
-                    <div class="orbit-center-core"
-                        onclick="appController.logAction('core_click', 'Interacted with central orbital hub'); appController.toast('Sigma Core Operational');">
-                        <img src="assets/logo.png" alt="Sigma Hub"
-                            onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+                    <div class="orbit-center-core" onclick="appController.logAction('core_click', 'Interacted with central orbital hub'); appController.toast('Sigma Core Operational');">
+                        <img src="assets/logo.png" alt="Sigma Hub" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
                     </div>
 
                     <!-- 6 Equidistant Orbiting Nodes (Perfect Hitboxes, No Animation Glitches) -->
-                    <!-- Node 1: Deposit (Routes to plans) -->
-                    <a href="plans.html" class="orbit-node node-pos-1"
-                        onclick="appController.logAction('deposit_node', 'Opened deposit/plans via terminal')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-info-dark);"><svg>
-                                <use href="#icon-arrow-down" />
-                            </svg></div>
+                    <a href="plans.html" class="orbit-node node-pos-1" onclick="appController.logAction('deposit_node', 'Opened deposit/plans via terminal')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-info-dark);"><svg><use href="#icon-arrow-down" /></svg></div>
                         <span>Deposit</span>
                     </a>
-                    <!-- Node 2: App Download (Replaces Transfer) -->
-                    <a href="assets/sigma.apk" download class="orbit-node node-pos-2"
-                        onclick="appController.logAction('app_download_node', 'Initiated App Download')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-purple);"><svg>
-                                <use href="#icon-download" />
-                            </svg></div>
+                    <a href="assets/sigma.apk" download class="orbit-node node-pos-2" onclick="appController.logAction('app_download_node', 'Initiated App Download')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-purple);"><svg><use href="#icon-download" /></svg></div>
                         <span>App (APK)</span>
                     </a>
-                    <!-- Node 3: My Plans (Routes to my-plans) -->
-                    <a href="my-plans.html" class="orbit-node node-pos-3"
-                        onclick="appController.logAction('my_plans_node', 'Navigated to my plans')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg>
-                                <use href="#icon-pie" />
-                            </svg></div>
+                    <a href="my-plans.html" class="orbit-node node-pos-3" onclick="appController.logAction('my_plans_node', 'Navigated to my plans')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg><use href="#icon-pie" /></svg></div>
                         <span>My Plans</span>
                     </a>
-                    <!-- Node 4: Withdraw -->
-                    <a href="withdraw.html" class="orbit-node node-pos-4"
-                        onclick="appController.logAction('withdraw_node', 'Opened withdraw via terminal')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-danger-dark);"><svg>
-                                <use href="#icon-arrow-up" />
-                            </svg></div>
+                    <a href="withdraw.html" class="orbit-node node-pos-4" onclick="appController.logAction('withdraw_node', 'Opened withdraw via terminal')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-danger-dark);"><svg><use href="#icon-arrow-up" /></svg></div>
                         <span>Withdraw</span>
                     </a>
-                    <!-- Node 5: Network -->
-                    <a href="team.html" class="orbit-node node-pos-5"
-                        onclick="appController.logAction('network_node', 'Viewed network tree')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-gold-dark);"><svg>
-                                <use href="#icon-users" />
-                            </svg></div>
+                    <a href="team.html" class="orbit-node node-pos-5" onclick="appController.logAction('network_node', 'Viewed network tree')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-users" /></svg></div>
                         <span>Network</span>
                     </a>
-                    <!-- Node 6: Support (Uses Chat Icon) -->
-                    <a href="support.html" class="orbit-node node-pos-6"
-                        onclick="appController.logAction('support_node', 'Opened support desk')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg>
-                                <use href="#icon-message" />
-                            </svg></div>
+                    <a href="support.html" class="orbit-node node-pos-6" onclick="appController.logAction('support_node', 'Opened support desk')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-message" /></svg></div>
                         <span>Support</span>
                     </a>
                 </div>
@@ -2594,34 +2238,22 @@
                 <!-- Fallback Grid for Ultra-Narrow Viewports (<380px) -->
                 <div class="orbit-linear-fallback">
                     <a href="plans.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-info-dark);"><svg>
-                                <use href="#icon-arrow-down" />
-                            </svg></div><span>Deposit</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-info-dark);"><svg><use href="#icon-arrow-down" /></svg></div><span>Deposit</span>
                     </a>
                     <a href="assets/sigma.apk" download class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-purple);"><svg>
-                                <use href="#icon-download" />
-                            </svg></div><span>App (APK)</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-purple);"><svg><use href="#icon-download" /></svg></div><span>App (APK)</span>
                     </a>
                     <a href="my-plans.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-primary);"><svg>
-                                <use href="#icon-pie" />
-                            </svg></div><span>My Plans</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-primary);"><svg><use href="#icon-pie" /></svg></div><span>My Plans</span>
                     </a>
                     <a href="withdraw.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-danger-dark);"><svg>
-                                <use href="#icon-arrow-up" />
-                            </svg></div><span>Withdraw</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-danger-dark);"><svg><use href="#icon-arrow-up" /></svg></div><span>Withdraw</span>
                     </a>
                     <a href="team.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-gold-dark);"><svg>
-                                <use href="#icon-users" />
-                            </svg></div><span>Network</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-users" /></svg></div><span>Network</span>
                     </a>
                     <a href="support.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg>
-                                <use href="#icon-message" />
-                            </svg></div><span>Support</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-message" /></svg></div><span>Support</span>
                     </a>
                 </div>
             </section>
@@ -2630,15 +2262,11 @@
             <section class="secondary-actions-container">
                 <div class="secondary-actions-grid">
                     <a href="transactions.html" class="sec-action-btn">
-                        <div class="sec-action-icon" style="color: var(--sigma-secondary);"><svg>
-                                <use href="#icon-receipt" />
-                            </svg></div>
+                        <div class="sec-action-icon" style="color: var(--sigma-secondary);"><svg><use href="#icon-receipt" /></svg></div>
                         Transactions
                     </a>
                     <a href="leaderboard.html" class="sec-action-btn">
-                        <div class="sec-action-icon" style="color: var(--sigma-gold-dark);"><svg>
-                                <use href="#icon-trophy" />
-                            </svg></div>
+                        <div class="sec-action-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-trophy" /></svg></div>
                         Leaderboard
                     </a>
                 </div>
@@ -2656,27 +2284,20 @@
                         <span class="badge-type" id="stepperTrxType">Transaction</span>
                         <h3 id="stepperTrxAmount" class="font-mono" style="margin-top: 6px;">Rs. 0.00</h3>
                     </div>
-                    <span id="stepperReference" class="font-mono"
-                        style="font-size: 0.8rem; color: var(--text-muted);">REF-••••</span>
+                    <span id="stepperReference" class="font-mono" style="font-size: 0.8rem; color: var(--text-muted);">REF-••••</span>
                 </div>
 
                 <div class="stepper-track">
                     <div class="step-node completed" id="stepNode1">
-                        <div class="step-circle"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
+                        <div class="step-circle"><svg><use href="#icon-check" /></svg></div>
                         <span>Submitted</span>
                     </div>
                     <div class="step-node current" id="stepNode2">
-                        <div class="step-circle"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
+                        <div class="step-circle"><svg><use href="#icon-check" /></svg></div>
                         <span>Review</span>
                     </div>
                     <div class="step-node" id="stepNode3">
-                        <div class="step-circle"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
+                        <div class="step-circle"><svg><use href="#icon-check" /></svg></div>
                         <span id="step3Label">Processed</span>
                     </div>
                 </div>
@@ -2693,18 +2314,13 @@
                         <h3 id="cmsNetworkMatrixTitle">Referral Network Matrix</h3>
                         <p style="font-size: 0.8rem; margin-top: 2px;">Verified Ledger Distributions</p>
                     </div>
-                    <button class="btn-id-pill" onclick="appController.openQrModal()"><svg>
-                            <use href="#icon-qr" />
-                        </svg> Invite</button>
+                    <button class="btn-id-pill" onclick="appController.openQrModal()"><svg><use href="#icon-qr" /></svg> Invite</button>
                 </div>
 
                 <div class="tree-tabs-nav">
-                    <button class="tree-tab-btn active" id="btnTier1"
-                        onclick="appController.switchTreeTier(1, this)">Level 1</button>
-                    <button class="tree-tab-btn" id="btnTier2" onclick="appController.switchTreeTier(2, this)">Level
-                        2</button>
-                    <button class="tree-tab-btn" id="btnTier3" onclick="appController.switchTreeTier(3, this)">Level
-                        3</button>
+                    <button class="tree-tab-btn active" id="btnTier1" onclick="appController.switchTreeTier(1, this)">Level 1</button>
+                    <button class="tree-tab-btn" id="btnTier2" onclick="appController.switchTreeTier(2, this)">Level 2</button>
+                    <button class="tree-tab-btn" id="btnTier3" onclick="appController.switchTreeTier(3, this)">Level 3</button>
                 </div>
 
                 <div class="tree-pane-content" id="treeTierContent">
@@ -2712,8 +2328,7 @@
                         <small>Total Members</small>
                         <strong id="tierMembersCount" class="font-mono">0</strong>
                     </div>
-                    <div class="tree-metric-col"
-                        style="border-left: 1px solid var(--sigma-input-border); border-right: 1px solid var(--sigma-input-border); padding: 0 16px;">
+                    <div class="tree-metric-col" style="border-left: 1px solid var(--sigma-input-border); border-right: 1px solid var(--sigma-input-border); padding: 0 16px;">
                         <small>Active Plans</small>
                         <strong id="tierActiveCount" class="font-mono">0</strong>
                     </div>
@@ -2749,38 +2364,27 @@
     <!-- 3-Button Single Row Native Mobile Dock -->
     <nav class="mobile-dock" aria-label="Primary Mobile Commands">
         <a href="dash.html" class="dock-slot active" aria-current="page">
-            <svg>
-                <use href="#icon-home" />
-            </svg>
+            <svg><use href="#icon-home" /></svg>
             <span>Home</span>
         </a>
 
         <!-- Central Crest Button (Plans) -->
-        <a href="plans.html" class="dock-crest-btn" aria-label="Available Portfolios"
-            onclick="appController.logAction('dock_plans', 'Opened investment plans from mobile dock')">
-            <img src="assets/logo.png" alt="Sigma Crest"
-                onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+        <a href="plans.html" class="dock-crest-btn" aria-label="Available Portfolios" onclick="appController.logAction('dock_plans', 'Opened investment plans from mobile dock')">
+            <img src="assets/logo.png" alt="Sigma Crest" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
         </a>
 
         <a href="profile.html" class="dock-slot">
-            <div style="width: 26px; height: 26px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);"
-                id="dockAvatarContainer">
-                <svg style="width: 18px; height: 18px;">
-                    <use href="#icon-user" />
-                </svg>
+            <div style="width: 26px; height: 26px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);" id="dockAvatarContainer">
+                <svg style="width: 18px; height: 18px;"><use href="#icon-user" /></svg>
             </div>
             <span>Profile</span>
         </a>
     </nav>
 
     <!-- Dynamic Admin Configurable Floating WhatsApp Button -->
-    <a href="https://whatsapp.com/channel/sigma_official" target="_blank" class="whatsapp-float"
-        id="btnFloatingWhatsApp" aria-label="WhatsApp Priority Support"
-        onclick="appController.logAction('whatsapp_click', 'Clicked floating WhatsApp channel support')"
-        style="display: none;">
+    <a href="https://whatsapp.com/channel/sigma_official" target="_blank" class="whatsapp-float" id="btnFloatingWhatsApp" aria-label="WhatsApp Priority Support" onclick="appController.logAction('whatsapp_click', 'Clicked floating WhatsApp channel support')" style="display: none;">
         <svg viewBox="0 0 24 24">
-            <path
-                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
         </svg>
     </a>
 
@@ -2792,28 +2396,22 @@
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>Personal Invite Code</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetQr')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetQr')"><svg><use href="#icon-x" /></svg></button>
             </div>
             <div class="sheet-body" style="text-align: center;">
                 <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;">
-                    Scan with any camera app to bind your referral tree automatically. Your unique identifier is
-                    embedded.
+                    Scan with any camera app to bind your referral tree automatically. Your unique identifier is embedded.
                 </p>
                 <div class="qr-wrapper">
                     <div id="qrBoxContainer"></div>
                     <div class="qr-logo-overlay">
-                        <img src="assets/logo.png" alt="S"
-                            onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/></svg>'">
+                        <img src="assets/logo.png" alt="S" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/></svg>'">
                     </div>
                 </div>
 
                 <div style="margin-top: 24px; display: flex; gap: 12px; flex-direction: column;">
                     <button class="btn-sheet-submit" onclick="appController.copyReferralLink()">
-                        <svg style="width:18px;height:18px;fill:none;stroke:white;stroke-width:2;">
-                            <use href="#icon-copy" />
-                        </svg> Copy Unique URL
+                        <svg style="width:18px;height:18px;fill:none;stroke:white;stroke-width:2;"><use href="#icon-copy" /></svg> Copy Unique URL
                     </button>
                 </div>
             </div>
@@ -2828,17 +2426,12 @@
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>Official Document</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetProofViewer')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetProofViewer')"><svg><use href="#icon-x" /></svg></button>
             </div>
             <div class="sheet-body proof-viewer-body">
                 <img id="proofViewerImg" src="" alt="Official Document" class="proof-viewer-img">
-                <p id="proofViewerDesc"
-                    style="text-align: center; color: var(--text-muted); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">
-                </p>
-                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetProofViewer')">Close
-                    Viewer</button>
+                <p id="proofViewerDesc" style="text-align: center; color: var(--text-muted); font-size: 0.9rem; max-width: 400px; margin: 0 auto;"></p>
+                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetProofViewer')">Close Viewer</button>
             </div>
         </div>
     </div>
@@ -2851,16 +2444,12 @@
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>System Announcement</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetAnnouncement')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetAnnouncement')"><svg><use href="#icon-x" /></svg></button>
             </div>
             <div class="sheet-body">
                 <h4 id="announcementModalTitle" style="margin-bottom: 12px; font-size: 1.1rem;">Notice</h4>
-                <p id="announcementModalBody"
-                    style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; color: var(--text-body);"></p>
-                <button class="btn-sheet-submit"
-                    onclick="appController.closeSheet('sheetAnnouncement')">Acknowledge</button>
+                <p id="announcementModalBody" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; color: var(--text-body);"></p>
+                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetAnnouncement')">Acknowledge</button>
             </div>
         </div>
     </div>
@@ -2874,20 +2463,13 @@
             <div class="sheet-header">
                 <h3>Activity Center</h3>
                 <div style="display: flex; align-items: center; gap: 16px;">
-                    <button class="mark-all-read-btn" id="btnMarkAllRead" onclick="appController.markAllNotifsRead()"
-                        style="display: none;">Mark all read</button>
-                    <button class="sheet-close-btn" onclick="appController.closeSheet('sheetNotif')"><svg>
-                            <use href="#icon-x" />
-                        </svg></button>
+                    <button class="mark-all-read-btn" id="btnMarkAllRead" onclick="appController.markAllNotifsRead()" style="display: none;">Mark all read</button>
+                    <button class="sheet-close-btn" onclick="appController.closeSheet('sheetNotif')"><svg><use href="#icon-x" /></svg></button>
                 </div>
             </div>
-            <div class="sheet-body" id="notifListContainer"
-                style="padding: 16px 20px; background: var(--sigma-surface);">
+            <div class="sheet-body" id="notifListContainer" style="padding: 16px 20px; background: var(--sigma-surface);">
                 <div style="padding: 40px 0; text-align: center; color: var(--text-light);">
-                    <svg
-                        style="width: 48px; height: 48px; stroke: currentColor; fill: none; stroke-width: 1.5; margin-bottom: 16px;">
-                        <use href="#icon-bell" />
-                    </svg>
+                    <svg style="width: 48px; height: 48px; stroke: currentColor; fill: none; stroke-width: 1.5; margin-bottom: 16px;"><use href="#icon-bell"/></svg>
                     <p>No active notifications recorded in your authenticated history.</p>
                 </div>
             </div>
@@ -2902,48 +2484,31 @@
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>Terminal Menu</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetMenu')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetMenu')"><svg><use href="#icon-x" /></svg></button>
             </div>
             <div class="sheet-body" id="cmsNavMenuWrapper">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <a href="leaderboard.html" class="btn-sheet-submit"
-                        style="color: var(--sigma-gold-dark); background: var(--sigma-gold-soft); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-gold-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;">
-                            <use href="#icon-trophy" />
-                        </svg>
+                    <a href="leaderboard.html" class="btn-sheet-submit" style="color: var(--sigma-gold-dark); background: var(--sigma-gold-soft); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-gold-border); box-shadow: none;">
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-trophy" /></svg>
                         <span class="cms-nav-label" data-key="navLeaderboard">Global Leaderboard</span>
                     </a>
-                    <a href="profile.html" class="btn-sheet-submit"
-                        style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;">
-                            <use href="#icon-user" />
-                        </svg>
+                    <a href="profile.html" class="btn-sheet-submit" style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-user" /></svg>
                         <span class="cms-nav-label" data-key="navProfile">Profile & Settings</span>
                     </a>
-                    <a href="transactions.html" class="btn-sheet-submit"
-                        style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;">
-                            <use href="#icon-receipt" />
-                        </svg>
+                    <a href="transactions.html" class="btn-sheet-submit" style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-receipt" /></svg>
                         <span class="cms-nav-label" data-key="navHistory">Transaction History</span>
                     </a>
-                    <a href="support.html" class="btn-sheet-submit"
-                        style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;">
-                            <use href="#icon-lifebuoy" />
-                        </svg>
+                    <a href="support.html" class="btn-sheet-submit" style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
+                        <svg style="width: 20px; height: 20px;"><use href="#icon-lifebuoy" /></svg>
                         <span class="cms-nav-label" data-key="navSupport">Help & Support</span>
                     </a>
 
                     <div style="height: 1px; background: var(--sigma-muted-border); margin: 8px 0;"></div>
 
-                    <button onclick="appController.terminateSession()" class="btn-sheet-submit"
-                        style="justify-content: flex-start; padding: 14px 20px; color: var(--sigma-danger-dark); border: 1px solid var(--sigma-danger-border); background: var(--sigma-danger-soft); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px; stroke: var(--sigma-danger-dark);">
-                            <use href="#icon-shield-alert" />
-                        </svg>
+                    <button onclick="appController.terminateSession()" class="btn-sheet-submit" style="justify-content: flex-start; padding: 14px 20px; color: var(--sigma-danger-dark); border: 1px solid var(--sigma-danger-border); background: var(--sigma-danger-soft); box-shadow: none;">
+                        <svg style="width: 20px; height: 20px; stroke: var(--sigma-danger-dark);"><use href="#icon-shield-alert" /></svg>
                         <span class="cms-nav-label" data-key="navLogout">Logout Securely</span>
                     </button>
                 </div>
@@ -2953,9 +2518,7 @@
 
     <!-- Toast Component -->
     <div class="toast" id="toastBox">
-        <svg style="width:18px;height:18px;stroke:var(--sigma-accent-light);fill:none;stroke-width:2.5;">
-            <use href="#icon-check" />
-        </svg>
+        <svg style="width:18px;height:18px;stroke:var(--sigma-accent-light);fill:none;stroke-width:2.5;"><use href="#icon-check" /></svg>
         <span id="toastMsg">Verified</span>
     </div>
 
@@ -2995,6 +2558,7 @@
                 if (el) el.style[prop] = value;
             };
 
+            // Haptic Feedback Intervention Bug Fix
             const hapticTouch = (ms = 30) => {
                 try {
                     if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return;
@@ -3272,7 +2836,7 @@
                             if (d.visible !== false) {
                                 const btn = document.createElement('div');
                                 btn.className = 'btn-full-wide btn-fbr';
-                                btn.innerHTML = `<svg><use href="#icon-receipt"/></svg> ${d.title}`;
+                                btn.innerHTML = `<svg><use href="#icon-file-text"/></svg> ${d.title}`;
                                 btn.onclick = () => openProofModal(d.imageUrl, d.description);
                                 proofsGrid.appendChild(btn);
                             }
@@ -3353,9 +2917,9 @@
                         if (dockAvatar) dockAvatar.innerHTML = imgTag;
                     }
 
-                    // Unique Ref URL
+                    // Unique Ref URL directly links to reg.html
                     const uniqueSlug = user.displayName ? user.displayName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 5) : uid.substring(0, 5).toLowerCase();
-                    const invUrl = `https://sigmaaz.vercel.app/reg.html?ref=${uniqueSlug}`;
+                    const invUrl = `${window.location.origin}/reg.html?ref=${uniqueSlug}`;
                     if (dom.rawReferralUrl) dom.rawReferralUrl.value = invUrl;
                     safeSetText('uiAccountUID', `UID: SIGMA-${uid.substring(0, 5).toUpperCase()}`);
 
@@ -3523,8 +3087,7 @@
                                 if (tx.status === 'rejected') txIconStr = 'negative';
                                 else if (isPositive) txIconStr = 'positive';
 
-                                let txSvg = '#icon-exchange'; // Fallback
-                                // Correcting icon references to exist in the SVG sprite block of THIS file
+                                let txSvg = '#icon-exchange';
                                 if (tx.type === 'deposit') txSvg = '#icon-arrow-down';
                                 if (tx.type === 'withdraw') txSvg = '#icon-arrow-up';
 
@@ -3548,7 +3111,6 @@
                         });
 
                     // H. Referral Matrix Aggregation (Pending vs Active split)
-                    // Note: This requires a composite index in Firestore in production.
                     db.collection('users').where('referredBy', '==', userProfile?.username || uid.substring(0, 7).toLowerCase())
                         .onSnapshot(querySnapshot => {
                             const total = querySnapshot.size;
@@ -3570,8 +3132,6 @@
                             if (activeBtn && activeBtn.id === 'btnTier1') {
                                 switchTreeTier(1, null);
                             }
-                        }, err => {
-                            console.warn("Referral listener issue (possibly missing index):", err);
                         });
                 });
             };
