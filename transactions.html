@@ -5,17 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sigma | Transaction History</title>
+    <title>Sigma | Immutable Transaction Ledger</title>
 
-    <!-- SEO, Privacy & PWA Meta (Protected Workspace) -->
+    <!-- SEO, Privacy & PWA Meta -->
     <meta name="description"
-        content="View your complete Sigma transaction history, deposits, withdrawals, and commissions securely.">
+        content="View your complete Sigma immutable transaction history, deposits, withdrawals, daily ROI credits, and team commissions securely.">
+    <meta name="keywords" content="Sigma Ledger, Transaction History, Deposit Records, Withdrawal Slips, PKR Payout Receipts">
+    <meta name="author" content="Sigma Technologies">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#0B132B">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sigma Ledger">
+    <link rel="canonical" href="https://sigmaaz.vercel.app/transactions.html">
+
+    <!-- Open Graph & Social Cards -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sigmaaz.vercel.app/transactions.html">
+    <meta property="og:title" content="Sigma | Immutable Transaction Ledger">
+    <meta property="og:description" content="Cryptographically logged ledger of deposits, profits, and withdrawals.">
+    <meta property="og:image" content="https://sigmaaz.vercel.app/assets/preview.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sigma | Transaction Ledger">
+    <meta name="twitter:description" content="View verified audit trails and digital receipts for all financial movements.">
+    <meta name="twitter:image" content="https://sigmaaz.vercel.app/assets/preview.png">
 
     <!-- Favicon & Touch Icons -->
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
@@ -66,14 +80,17 @@
             --sigma-accent: #10B981;
             --sigma-accent-dark: #059669;
             --sigma-accent-soft: #ECFDF5;
+            --sigma-accent-border: #A7F3D0;
 
             --sigma-gold: #F59E0B;
             --sigma-gold-dark: #D97706;
             --sigma-gold-soft: #FEF3C7;
+            --sigma-gold-border: #FDE68A;
 
             --sigma-danger: #EF4444;
             --sigma-danger-dark: #DC2626;
             --sigma-danger-soft: #FEE2E2;
+            --sigma-danger-border: #FECACA;
 
             --sigma-info: #3B82F6;
             --sigma-info-dark: #2563EB;
@@ -81,6 +98,7 @@
 
             --sigma-purple: #8B5CF6;
             --sigma-purple-soft: #F5F3FF;
+            --sigma-pink: #F472B6;
 
             --text-heading: #0F172A;
             --text-body: #334155;
@@ -110,9 +128,7 @@
         /* ==========================================================================
            2. GLOBAL RESET & BASE
            ========================================================================== */
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -125,14 +141,16 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background-color: var(--sigma-surface-alt);
             color: var(--text-body);
             line-height: 1.5;
             min-height: 100vh;
             overflow-x: hidden;
             padding-bottom: calc(110px + var(--safe-area-bottom));
-            background-image: radial-gradient(circle at 10% 0%, rgba(59, 130, 246, 0.03) 0%, transparent 40%), radial-gradient(circle at 90% 100%, rgba(16, 185, 129, 0.03) 0%, transparent 40%);
+            background-image:
+                radial-gradient(circle at 10% 0%, rgba(244, 114, 182, 0.035) 0%, transparent 45vw),
+                radial-gradient(circle at 90% 100%, rgba(16, 185, 129, 0.04) 0%, transparent 45vw);
             background-attachment: fixed;
         }
 
@@ -146,8 +164,7 @@
             color: inherit;
         }
 
-        button,
-        input {
+        button, input {
             font-family: inherit;
             border: none;
             outline: none;
@@ -164,9 +181,7 @@
             display: block;
         }
 
-        h1,
-        h2,
-        h3 {
+        h1, h2, h3 {
             color: var(--text-heading);
             font-weight: 800;
             letter-spacing: -0.02em;
@@ -194,7 +209,7 @@
         }
 
         /* ==========================================================================
-           3. DYNAMIC ISLAND HEADER
+           3. SINGLE-ROW ISLAND HEADER WITH LOGO & TEXT LOGO
            ========================================================================== */
         .app-container {
             width: 100%;
@@ -256,20 +271,39 @@
             fill: none;
         }
 
-        .brand-center {
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+        }
+
+        .brand-text-img {
+            height: 20px;
+            object-fit: contain;
+            margin-top: 2px;
+        }
+
+        .header-title-box {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
         }
 
-        .brand-center b {
-            font-size: 1.05rem;
+        .header-title-box b {
+            font-size: 0.95rem;
             font-weight: 900;
             color: var(--sigma-primary);
+            line-height: 1.1;
         }
 
-        .brand-center small {
+        .header-title-box small {
             font-size: 0.65rem;
             color: var(--text-muted);
             font-weight: 800;
@@ -278,7 +312,7 @@
         }
 
         /* ==========================================================================
-           4. PAGE CONTENT & FILTERS
+           4. WORKSPACE & FILTER NAVIGATION
            ========================================================================== */
         .workspace {
             padding: 0 16px;
@@ -289,38 +323,33 @@
 
         .filter-scroll {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             overflow-x: auto;
-            padding-bottom: 8px;
-            margin: 4px -16px 8px;
+            padding-bottom: 6px;
+            margin: 0 -16px;
             padding-left: 16px;
             padding-right: 16px;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
 
-        .filter-scroll::-webkit-scrollbar {
-            display: none;
-        }
+        .filter-scroll::-webkit-scrollbar { display: none; }
 
         .filter-pill {
-            padding: 10px 20px;
+            padding: 9px 18px;
             border-radius: var(--radius-pill);
             background: var(--sigma-surface);
             border: 1px solid var(--sigma-muted-border);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 800;
             color: var(--text-muted);
             white-space: nowrap;
             transition: var(--transition-bounce);
             box-shadow: var(--shadow-subtle);
             cursor: pointer;
-            user-select: none;
         }
 
-        .filter-pill:active {
-            transform: scale(0.95);
-        }
+        .filter-pill:active { transform: scale(0.95); }
 
         .filter-pill.active {
             background: var(--sigma-primary);
@@ -330,7 +359,7 @@
         }
 
         /* ==========================================================================
-           5. TRANSACTION LIST & CARDS
+           5. TRANSACTION LIST & RECORD ROWS
            ========================================================================== */
         .island-card {
             background: var(--sigma-surface);
@@ -340,23 +369,21 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            min-height: 400px;
+            min-height: 380px;
         }
 
         .trx-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 18px 20px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--sigma-muted-border);
             transition: var(--transition-smooth);
             cursor: pointer;
-            animation: slideUp 0.4s ease-out backwards;
+            animation: slideUp 0.35s ease-out backwards;
         }
 
-        .trx-row:last-child {
-            border-bottom: none;
-        }
+        .trx-row:last-child { border-bottom: none; }
 
         .trx-row:active {
             background: var(--sigma-subtle);
@@ -371,9 +398,9 @@
         }
 
         .trx-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -381,46 +408,21 @@
         }
 
         .trx-icon svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2.2;
         }
 
-        .ic-deposit {
-            background: var(--sigma-info-soft);
-            color: var(--sigma-info-dark);
-        }
+        .ic-deposit { background: var(--sigma-info-soft); color: var(--sigma-info-dark); }
+        .ic-withdraw { background: var(--sigma-danger-soft); color: var(--sigma-danger-dark); }
+        .ic-plan { background: var(--sigma-purple-soft); color: var(--sigma-purple); }
+        .ic-comm { background: var(--sigma-gold-soft); color: var(--sigma-gold-dark); }
+        .ic-bonus { background: var(--sigma-accent-soft); color: var(--sigma-accent-dark); }
+        .ic-rejected { background: var(--sigma-subtle); color: var(--text-muted); }
 
-        .ic-withdraw {
-            background: var(--sigma-danger-soft);
-            color: var(--sigma-danger-dark);
-        }
-
-        .ic-plan {
-            background: var(--sigma-purple-soft);
-            color: var(--sigma-purple);
-        }
-
-        .ic-comm {
-            background: var(--sigma-gold-soft);
-            color: var(--sigma-gold-dark);
-        }
-
-        .ic-bonus {
-            background: var(--sigma-accent-soft);
-            color: var(--sigma-accent-dark);
-        }
-
-        .ic-rejected {
-            background: var(--sigma-subtle);
-            color: var(--text-muted);
-        }
-
-        .trx-details {
-            min-width: 0;
-        }
+        .trx-details { min-width: 0; }
 
         .trx-details b {
             display: block;
@@ -435,7 +437,7 @@
 
         .trx-details small {
             display: block;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
             font-weight: 600;
         }
@@ -454,26 +456,17 @@
             font-weight: 900;
             font-family: 'JetBrains Mono', monospace;
             letter-spacing: -0.5px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
-        .amt-plus {
-            color: var(--sigma-accent-dark);
-        }
-
-        .amt-minus {
-            color: var(--text-heading);
-        }
-
-        .amt-rejected {
-            color: var(--text-muted);
-            text-decoration: line-through;
-        }
+        .amt-plus { color: var(--sigma-accent-dark); }
+        .amt-minus { color: var(--text-heading); }
+        .amt-rejected { color: var(--text-muted); text-decoration: line-through; }
 
         .trx-status {
             display: inline-flex;
             align-items: center;
-            padding: 3px 10px;
+            padding: 3px 9px;
             border-radius: var(--radius-pill);
             font-size: 0.65rem;
             font-weight: 800;
@@ -508,16 +501,16 @@
         }
 
         .skel-row {
-            padding: 20px;
+            padding: 18px 20px;
             border-bottom: 1px solid var(--sigma-muted-border);
             display: flex;
             gap: 14px;
         }
 
         .skel-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             flex-shrink: 0;
         }
 
@@ -529,15 +522,8 @@
             justify-content: center;
         }
 
-        .skel-line-1 {
-            height: 16px;
-            width: 60%;
-        }
-
-        .skel-line-2 {
-            height: 12px;
-            width: 40%;
-        }
+        .skel-line-1 { height: 16px; width: 60%; }
+        .skel-line-2 { height: 12px; width: 40%; }
 
         /* Empty State */
         .empty-state {
@@ -552,34 +538,34 @@
         }
 
         .empty-state svg {
-            width: 56px;
-            height: 56px;
+            width: 52px;
+            height: 52px;
             stroke: var(--sigma-input-border);
             fill: none;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             stroke-width: 1.5;
         }
 
         .empty-state b {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: var(--text-heading);
             display: block;
             margin-bottom: 4px;
         }
 
         .empty-state p {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 500;
         }
 
         /* ==========================================================================
-           6. DIGITAL RECEIPT MODAL (BOTTOM SHEET)
+           6. DIGITAL RECEIPT MODAL (ENGLISH ONLY WITH FULL SHARE PROOF)
            ========================================================================== */
         .overlay {
             position: fixed;
             inset: 0;
             z-index: var(--z-modal);
-            background: rgba(11, 19, 43, 0.6);
+            background: rgba(11, 19, 43, 0.65);
             backdrop-filter: blur(8px);
             opacity: 0;
             visibility: hidden;
@@ -596,32 +582,30 @@
 
         .sheet {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             background: var(--sigma-surface);
             border-radius: 32px 32px 0 0;
             transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
             max-height: 90vh;
             display: flex;
             flex-direction: column;
             box-shadow: 0 -24px 48px rgba(0, 0, 0, 0.25);
         }
 
-        .overlay.show .sheet {
-            transform: translateY(0);
-        }
+        .overlay.show .sheet { transform: translateY(0); }
 
         .sheet-handle {
-            width: 50px;
+            width: 48px;
             height: 6px;
             border-radius: 99px;
             background: var(--sigma-input-border);
-            margin: 16px auto 12px;
+            margin: 14px auto 10px;
             flex-shrink: 0;
         }
 
         .sheet-header {
-            padding: 8px 24px 20px;
+            padding: 8px 24px 18px;
             border-bottom: 1px dashed var(--sigma-muted-border);
             display: flex;
             justify-content: space-between;
@@ -652,66 +636,62 @@
         }
 
         .btn-close svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2.5;
         }
 
         .sheet-body {
-            padding: 30px 24px;
+            padding: 24px 24px 34px;
             overflow-y: auto;
             flex: 1;
         }
 
         .receipt-amount {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
 
         .receipt-amount small {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 800;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: 0.5px;
         }
 
         .receipt-amount b {
-            font-size: 2.5rem;
+            font-size: 2.4rem;
             font-weight: 900;
             color: var(--text-heading);
             font-family: 'JetBrains Mono', monospace;
-            letter-spacing: -1.5px;
+            letter-spacing: -1px;
         }
 
-        .receipt-status-wrap {
-            margin-top: 12px;
-        }
+        .receipt-status-wrap { margin-top: 10px; }
 
         .receipt-list {
             background: var(--sigma-surface-alt);
             border-radius: var(--radius-xl);
             border: 1px solid var(--sigma-muted-border);
-            padding: 12px 20px;
-            margin-bottom: 24px;
+            padding: 10px 18px;
+            margin-bottom: 20px;
         }
 
         .receipt-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 0;
+            padding: 14px 0;
             border-bottom: 1px dashed var(--sigma-input-border);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
-        .receipt-item:last-child {
-            border-bottom: none;
-        }
+        .receipt-item:last-child { border-bottom: none; }
 
         .receipt-item span {
             color: var(--text-muted);
@@ -727,21 +707,35 @@
         .receipt-item b.copyable {
             color: var(--sigma-info-dark);
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
             background: var(--sigma-info-soft);
-            padding: 4px 10px;
-            border-radius: 8px;
-            transition: var(--transition-fast);
+            padding: 4px 8px;
+            border-radius: 6px;
         }
 
-        .receipt-item b.copyable:active {
-            transform: scale(0.95);
+        .btn-share-receipt {
+            width: 100%;
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: var(--radius-xl);
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+            transition: var(--transition-bounce);
         }
+
+        .btn-share-receipt:active { transform: scale(0.96); }
 
         /* ==========================================================================
-           7. NATIVE 3-BUTTON MOBILE DOCK
+           7. 3-BUTTON MOBILE DOCK (.html FULL NAVIGATION)
            ========================================================================== */
         .mobile-dock {
             position: fixed;
@@ -790,10 +784,7 @@
             font-weight: 800;
         }
 
-        .dock-slot.active {
-            color: var(--sigma-primary);
-        }
-
+        .dock-slot.active { color: var(--sigma-primary); }
         .dock-slot.active svg {
             stroke-width: 2.8;
             transform: translateY(-2px);
@@ -815,10 +806,7 @@
             border: 5px solid var(--sigma-surface-alt);
         }
 
-        .dock-crest-btn:active {
-            transform: scale(0.9);
-        }
-
+        .dock-crest-btn:active { transform: scale(0.9); }
         .dock-crest-btn img {
             width: 32px;
             height: 32px;
@@ -829,7 +817,7 @@
         .dock-crest-btn::after {
             content: 'MY PLANS';
             position: absolute;
-            bottom: -24px;
+            bottom: -22px;
             font-size: 0.65rem;
             font-weight: 900;
             color: var(--text-heading);
@@ -838,13 +826,8 @@
         }
 
         @media (min-width: 860px) {
-            .mobile-dock {
-                display: none;
-            }
-
-            body {
-                padding-bottom: 40px;
-            }
+            .mobile-dock { display: none; }
+            body { padding-bottom: 40px; }
         }
 
         /* Toast */
@@ -875,40 +858,24 @@
             transform: translate(-50%, 0) scale(1);
         }
 
-        /* Animations */
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes pulseSkel {
-            0% {
-                opacity: 0.5;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0.5;
-            }
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
     </style>
 </head>
 
 <body>
 
-    <div id="networkOfflineBanner">Connection Lost. Operating in Offline Mode.</div>
+    <div id="networkOfflineBanner">Reconnecting to Sigma Core Node...</div>
 
-    <!-- SVG SPRITES -->
+    <!-- SVG Sprites Architecture -->
     <svg width="0" height="0" style="display:none;" aria-hidden="true">
         <symbol id="icon-back" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -963,40 +930,46 @@
         <symbol id="icon-check" viewBox="0 0 24 24">
             <polyline stroke-linecap="round" stroke-linejoin="round" points="20 6 9 17 4 12" />
         </symbol>
+        <symbol id="icon-whatsapp" viewBox="0 0 24 24">
+            <path fill="currentColor"
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </symbol>
     </svg>
 
     <div class="app-container">
 
-        <!-- HEADER -->
+        <!-- HEADER WITH LOGO, TEXT LOGO & FAVICON -->
         <header class="island-topbar" id="topHeader">
             <a href="dash.html" class="btn-back" aria-label="Go Back">
-                <svg>
-                    <use href="#icon-back"></use>
-                </svg>
+                <svg><use href="#icon-back"></use></svg>
             </a>
-            <div class="brand-center">
-                <b>Ledger</b>
-                <small>Immutable Records</small>
+            
+            <div class="brand-cluster">
+                <img src="assets/logo.png" alt="Sigma" class="brand-logo-img"
+                    onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+                <img src="assets/textlogo.png" alt="Sigma" class="brand-text-img" onerror="this.style.display='none'">
             </div>
-            <div style="width: 44px;"></div> <!-- Balancer -->
+
+            <div class="header-title-box">
+                <b>Ledger</b>
+                <small>Audit Trail</small>
+            </div>
         </header>
 
         <main class="workspace">
 
-            <!-- Filters -->
+            <!-- Category Filter Navigation -->
             <div class="filter-scroll" id="filterNav">
                 <button class="filter-pill active" data-filter="all">All Records</button>
                 <button class="filter-pill" data-filter="deposit">Deposits</button>
                 <button class="filter-pill" data-filter="withdraw">Withdrawals</button>
-                <button class="filter-pill" data-filter="plan">Portfolios</button>
+                <button class="filter-pill" data-filter="profit">Daily ROI</button>
                 <button class="filter-pill" data-filter="commission">Commissions</button>
-                <button class="filter-pill" data-filter="internal_transfer">Transfers</button>
+                <button class="filter-pill" data-filter="plan">Portfolios</button>
             </div>
 
-            <!-- Transaction List -->
+            <!-- Transaction List Container -->
             <div class="island-card" id="trxListContainer">
-
-                <!-- Initial Skeletons -->
                 <div class="skel-row">
                     <div class="skeleton skel-icon"></div>
                     <div class="skel-lines">
@@ -1011,27 +984,22 @@
                         <div class="skeleton skel-line-2"></div>
                     </div>
                 </div>
-
             </div>
 
             <!-- Empty State -->
             <div class="empty-state" id="emptyState">
-                <svg>
-                    <use href="#icon-receipt"></use>
-                </svg>
-                <b>No records found</b>
-                <p>There are no transactions in this category.</p>
+                <svg><use href="#icon-receipt"></use></svg>
+                <b>No Records Found</b>
+                <p>No verified transaction history matches this category.</p>
             </div>
 
         </main>
     </div>
 
-    <!-- NATIVE 3-BUTTON DOCK -->
+    <!-- 3-BUTTON MOBILE DOCK (.html FULL NAVIGATION) -->
     <nav class="mobile-dock">
         <a href="dash.html" class="dock-slot">
-            <svg>
-                <use href="#icon-home" />
-            </svg>
+            <svg><use href="#icon-home" /></svg>
             <span>Home</span>
         </a>
         <a href="my-plans.html" class="dock-crest-btn">
@@ -1040,32 +1008,27 @@
         <a href="profile.html" class="dock-slot">
             <div style="width: 26px; height: 26px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);"
                 id="dockAvatarContainer">
-                <svg style="width: 18px; height: 18px; stroke: var(--sigma-primary);">
-                    <use href="#icon-user" />
-                </svg>
+                <svg style="width: 18px; height: 18px; stroke: var(--sigma-primary);"><use href="#icon-user" /></svg>
             </div>
             <span>Profile</span>
         </a>
     </nav>
 
-    <!-- ==========================================================================
-         BOTTOM SHEET (Transaction Receipt)
-         ========================================================================== -->
+    <!-- DIGITAL RECEIPT BOTTOM SHEET MODAL -->
     <div class="overlay" id="sheetReceipt">
         <div class="sheet">
             <div class="sheet-handle"></div>
 
             <div class="sheet-header">
                 <div>
-                    <h3>Digital Receipt</h3>
+                    <h3>Digital Slip</h3>
                 </div>
-                <button class="btn-close" onclick="TransactionController.closeSheet('sheetReceipt')"><svg>
-                        <use href="#icon-x"></use>
-                    </svg></button>
+                <button class="btn-close" onclick="TransactionController.closeSheet('sheetReceipt')">
+                    <svg><use href="#icon-x"></use></svg>
+                </button>
             </div>
 
             <div class="sheet-body">
-
                 <div class="receipt-amount">
                     <small id="rcTitle">Transaction Type</small>
                     <b id="rcAmount">0.00 PKR</b>
@@ -1077,17 +1040,17 @@
                 <div class="receipt-list">
                     <div class="receipt-item">
                         <span>Reference ID</span>
-                        <b class="copyable" onclick="TransactionController.copyTrxId()" id="rcId">NX-000000 <svg
-                                style="width:14px;height:14px;">
-                                <use href="#icon-copy"></use>
-                            </svg></b>
+                        <b class="copyable" onclick="TransactionController.copyTrxId()" id="rcId">
+                            NX-000000 
+                            <svg style="width:14px;height:14px;"><use href="#icon-copy"></use></svg>
+                        </b>
                     </div>
                     <div class="receipt-item">
                         <span>Date & Time</span>
                         <b id="rcDate">Oct 00, 2026</b>
                     </div>
                     <div class="receipt-item">
-                        <span>Network Fee</span>
+                        <span>Fee Charged</span>
                         <b id="rcFee">0.00 PKR</b>
                     </div>
                     <div class="receipt-item">
@@ -1096,20 +1059,22 @@
                     </div>
                 </div>
 
+                <button class="btn-share-receipt" onclick="TransactionController.shareOnWhatsApp()">
+                    <svg style="width:20px;height:20px;"><use href="#icon-whatsapp"></use></svg>
+                    Share Proof on WhatsApp
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- TOAST -->
+    <!-- Notification Toast -->
     <div class="toast" id="toastBox">
-        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;">
-            <use href="#icon-check"></use>
-        </svg>
+        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg>
         <span id="toastMsg">Action successful</span>
     </div>
 
     <!-- ==========================================================================
-         JAVASCRIPT APPLICATION CONTROLLER (Firebase Connected)
+         JAVASCRIPT CONTROLLER (IMMUTABLE FIRESTORE AUDIT TRAIL)
          ========================================================================== -->
     <script>
         const TransactionController = (() => {
@@ -1161,7 +1126,7 @@
             };
 
             const copyTrxId = async () => {
-                const rawText = dom.rcId.textContent.trim().replace('Copy', ''); // Clean string if needed
+                const rawText = dom.rcId.textContent.trim().replace('Copy', '');
                 try {
                     if (navigator.clipboard && window.isSecureContext) {
                         await navigator.clipboard.writeText(rawText);
@@ -1176,22 +1141,48 @@
                 }
             };
 
-            // Mapping logic for UI presentation
+            const shareOnWhatsApp = () => {
+                const title = dom.rcTitle.textContent.trim();
+                const amt = dom.rcAmount.textContent.trim();
+                const status = dom.rcStatusBadge.textContent.trim().toUpperCase();
+                const ref = dom.rcId.textContent.replace('Copy', '').trim();
+                const date = dom.rcDate.textContent.trim();
+
+                const emoji = status === 'VERIFIED' ? '✅' : status === 'PENDING' ? '⏳' : '❌';
+                const msg = `${emoji} *Payment ${status}* ${emoji}\n\n*Amount:* ${amt}\n*Type:* ${title}\n*Reference:* ${ref}\n*Date:* ${date}\n\nProcessed securely via Sigma.`;
+
+                if (navigator.share && /mobile|android|iphone/i.test(navigator.userAgent)) {
+                    navigator.share({
+                        title: 'Sigma Digital Slip',
+                        text: msg
+                    }).catch(console.error);
+                } else {
+                    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+                    window.open(url, '_blank');
+                }
+            };
+
             const mapTransactionType = (type) => {
                 const t = (type || '').toLowerCase();
                 let iconClass = 'ic-plan';
                 let iconSvg = '#icon-layers';
                 let sign = '';
                 let isPositive = false;
-                let titlePrefix = t.replace('_', ' ');
+                let titlePrefix = t.replace(/_/g, ' ').toUpperCase();
 
-                if (t === 'deposit') { iconClass = 'ic-deposit'; iconSvg = '#icon-arrow-down'; sign = '+'; isPositive = true; }
-                else if (t === 'welcome_bonus') { iconClass = 'ic-deposit'; iconSvg = '#icon-gift'; sign = '+'; isPositive = true; titlePrefix = 'Welcome Bonus'; }
-                else if (t === 'withdraw') { iconClass = 'ic-withdraw'; iconSvg = '#icon-arrow-up'; sign = '-'; isPositive = false; }
-                else if (t === 'plan') { iconClass = 'ic-plan'; iconSvg = '#icon-layers'; sign = '-'; isPositive = false; titlePrefix = 'Portfolio Subscribed'; }
-                else if (t === 'commission') { iconClass = 'ic-comm'; iconSvg = '#icon-gift'; sign = '+'; isPositive = true; titlePrefix = 'Referral Bonus'; }
-                else if (t === 'internal_transfer') { iconClass = 'ic-plan'; iconSvg = '#icon-exchange'; sign = ''; isPositive = true; titlePrefix = 'Wallet Transfer'; }
-                else if (t === 'profit') { iconClass = 'ic-bonus'; iconSvg = '#icon-arrow-down'; sign = '+'; isPositive = true; titlePrefix = 'Daily ROI'; }
+                if (t === 'deposit') {
+                    iconClass = 'ic-deposit'; iconSvg = '#icon-arrow-down'; sign = '+'; isPositive = true; titlePrefix = 'Deposit Fund';
+                } else if (t === 'welcome_bonus') {
+                    iconClass = 'ic-deposit'; iconSvg = '#icon-gift'; sign = '+'; isPositive = true; titlePrefix = 'Welcome Credit';
+                } else if (t === 'withdraw' || t === 'withdrawal') {
+                    iconClass = 'ic-withdraw'; iconSvg = '#icon-arrow-up'; sign = '-'; isPositive = false; titlePrefix = 'Withdrawal Payout';
+                } else if (t === 'plan') {
+                    iconClass = 'ic-plan'; iconSvg = '#icon-layers'; sign = '-'; isPositive = false; titlePrefix = 'Portfolio Subscription';
+                } else if (t === 'commission') {
+                    iconClass = 'ic-comm'; iconSvg = '#icon-gift'; sign = '+'; isPositive = true; titlePrefix = 'Referral Commission';
+                } else if (t === 'profit' || t === 'roi') {
+                    iconClass = 'ic-bonus'; iconSvg = '#icon-arrow-down'; sign = '+'; isPositive = true; titlePrefix = 'Daily ROI Yield';
+                }
 
                 return { iconClass, iconSvg, sign, isPositive, titlePrefix };
             };
@@ -1201,16 +1192,15 @@
 
                 dom.rcTitle.textContent = tx.description || uiMap.titlePrefix;
 
-                // Status Mapping
                 const st = (tx.status || 'verified').toLowerCase();
                 dom.rcStatusBadge.textContent = st;
-                dom.rcStatusBadge.className = 'trx-status'; // reset
+                dom.rcStatusBadge.className = 'trx-status';
                 let amtColor = 'var(--text-heading)';
 
                 if (st === 'rejected' || st === 'failed') {
                     dom.rcStatusBadge.classList.add('st-rejected');
                     amtColor = 'var(--text-muted)';
-                    uiMap.sign = ''; // Remove sign if rejected
+                    uiMap.sign = '';
                 } else if (st === 'pending' || st === 'processing') {
                     dom.rcStatusBadge.classList.add('st-pending');
                 } else {
@@ -1218,7 +1208,6 @@
                     if (uiMap.isPositive) amtColor = 'var(--sigma-accent-dark)';
                 }
 
-                // Amounts & Fee calculation (Mocking 0 fee unless specified in backend)
                 const baseAmt = Number(tx.amount || 0);
                 const feeAmt = Number(tx.fee || 0);
                 const netAmt = baseAmt - feeAmt;
@@ -1231,11 +1220,10 @@
 
                 dom.rcId.innerHTML = `${tx.referenceId || 'N/A'} <svg style="width:14px;height:14px;"><use href="#icon-copy"></use></svg>`;
 
-                // Date formatting
                 let dateStr = 'Recent';
                 if (tx.createdAt) {
-                    const d = new Date(tx.createdAt.seconds * 1000);
-                    dateStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ' • ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const d = new Date(tx.createdAt.seconds ? tx.createdAt.seconds * 1000 : tx.createdAt);
+                    dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' • ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 }
                 dom.rcDate.textContent = dateStr;
 
@@ -1246,9 +1234,14 @@
                 if (!dom.listContainer) return;
 
                 const filtered = transactionsList.filter(tx => {
+                    const t = (tx.type || '').toLowerCase();
                     if (currentFilter === 'all') return true;
-                    if (currentFilter === 'deposit' && (tx.type === 'deposit' || tx.type === 'welcome_bonus')) return true;
-                    return tx.type === currentFilter;
+                    if (currentFilter === 'deposit') return (t === 'deposit' || t === 'welcome_bonus');
+                    if (currentFilter === 'withdraw') return (t === 'withdraw' || t === 'withdrawal');
+                    if (currentFilter === 'profit') return (t === 'profit' || t === 'roi');
+                    if (currentFilter === 'commission') return (t === 'commission');
+                    if (currentFilter === 'plan') return (t === 'plan');
+                    return t === currentFilter;
                 });
 
                 if (filtered.length === 0) {
@@ -1277,13 +1270,11 @@
                         statusBadgeClass = 'st-pending';
                     }
 
-                    const dateStr = tx.createdAt ? new Date(tx.createdAt.seconds * 1000).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'Today';
+                    const dateStr = tx.createdAt ? new Date(tx.createdAt.seconds ? tx.createdAt.seconds * 1000 : tx.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Today';
 
                     const row = document.createElement('div');
                     row.className = 'trx-row';
-                    row.style.animationDelay = `${idx * 0.05}s`;
-
-                    // Attach event to open modal
+                    row.style.animationDelay = `${idx * 0.04}s`;
                     row.onclick = () => openReceipt(tx);
 
                     row.innerHTML = `
@@ -1318,10 +1309,7 @@
             };
 
             const initFirebase = () => {
-                if (typeof firebase === 'undefined' || !firebase.apps.length) {
-                    if (dom.listContainer) dom.listContainer.innerHTML = `<div style="padding:40px; text-align:center;">Firebase Connection Error</div>`;
-                    return;
-                }
+                if (typeof firebase === 'undefined' || !firebase.apps.length) return;
 
                 const auth = firebase.auth();
                 const db = firebase.firestore();
@@ -1335,10 +1323,9 @@
                         if (dockAvatar) dockAvatar.innerHTML = `<img src="${user.photoURL}" alt="User" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer">`;
                     }
 
-                    // Real-time listener for authenticated user's transactions
                     unsubscribeListener = db.collection('users').doc(user.uid).collection('transactions')
                         .orderBy('createdAt', 'desc')
-                        .limit(50) // Fetch top 50 to keep it performant
+                        .limit(50)
                         .onSnapshot(snapshot => {
                             transactionsList = [];
                             snapshot.forEach(doc => {
@@ -1346,7 +1333,7 @@
                             });
                             renderTransactions();
                         }, error => {
-                            console.error("Ledger query error:", error);
+                            console.error("Ledger error:", error);
                             if (dom.listContainer) dom.listContainer.innerHTML = `<div style="padding:40px; text-align:center; color: var(--sigma-danger);">Unable to securely fetch ledger.</div>`;
                         });
                 });
@@ -1369,7 +1356,7 @@
                 initFirebase();
             };
 
-            return { init, closeSheet, copyTrxId };
+            return { init, closeSheet, copyTrxId, shareOnWhatsApp };
         })();
 
         document.addEventListener('DOMContentLoaded', TransactionController.init);
