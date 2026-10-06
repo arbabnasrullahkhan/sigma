@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sigma Ops | Referral Network Tracker</title>
+    <title>Sigma Ops | Team Network & Referral Tree Tracker</title>
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#FFFFFF">
 
@@ -138,30 +138,6 @@
 
         .font-mono {
             font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Loading Auth Overlay */
-        #authOverlay {
-            position: fixed;
-            inset: 0;
-            background: var(--sigma-surface);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-heading);
-            transition: opacity 0.3s;
-        }
-
-        .auth-spinner {
-            width: 44px;
-            height: 44px;
-            border: 4px solid var(--border-light);
-            border-top-color: var(--sigma-accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
         }
 
         /* ==========================================================================
@@ -323,6 +299,7 @@
             gap: 20px;
         }
 
+        /* Search Card */
         .search-card {
             background: var(--sigma-surface);
             border-radius: var(--radius-xl);
@@ -382,6 +359,41 @@
 
         .btn-primary:hover { background: var(--sigma-secondary); }
 
+        /* Stats Cards */
+        .stats-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--sigma-surface);
+            border-radius: var(--radius-xl);
+            padding: 18px 20px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stat-card small {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card strong {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--text-heading);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+        }
+
+        /* Results Card & Table */
         .team-result-card {
             background: var(--sigma-surface);
             border-radius: var(--radius-xl);
@@ -402,7 +414,7 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            min-width: 600px;
+            min-width: 680px;
         }
 
         th {
@@ -421,9 +433,22 @@
             font-weight: 600;
             color: var(--text-heading);
             border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
         }
 
         tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--sigma-surface-alt); }
+
+        .status-badge {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: var(--radius-pill);
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        .status-badge.active { background: var(--sigma-accent-soft); color: var(--sigma-accent-dark); }
+        .status-badge.pending { background: var(--sigma-gold-soft); color: var(--sigma-gold-dark); }
 
         /* ==========================================================================
            4. UNIFIED 5-BUTTON ADMIN MOBILE DOCK
@@ -627,19 +652,12 @@
             .topbar-brand-mobile { display: flex; }
             .desktop-only { display: none; }
             .page-content { padding: 20px 16px; }
+            .stats-summary-grid { grid-template-columns: 1fr; }
         }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 
 <body>
-
-    <!-- Auth Protection Overlay -->
-    <div id="authOverlay">
-        <div class="auth-spinner"></div>
-        <h2 style="font-size: 1.15rem; font-weight: 800;">Verifying Administrator Access...</h2>
-    </div>
 
     <!-- =======================================================================
          DESKTOP ADMIN SIDEBAR
@@ -715,7 +733,7 @@
             </a>
             <a href="settings.html" class="nav-link">
                 <div class="nav-link-left">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     <span>Global Settings</span>
                 </div>
             </a>
@@ -752,20 +770,33 @@
             <div class="search-card">
                 <div class="search-input-wrapper">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" id="searchInput" placeholder="Enter Exact Sponsor UID to inspect downlines...">
+                    <input type="text" id="searchInput" placeholder="Enter Sponsor UID, Username, or Compact Code (e.g. SIG-XXXXX)...">
                 </div>
-                <button class="btn-primary" id="searchBtn" onclick="TeamAdminController.findTeam()">Find Team</button>
+                <button class="btn-primary" id="searchBtn" onclick="TeamAdminController.findTeam()">Inspect Tree</button>
             </div>
 
             <!-- Team Result Card -->
             <div class="team-result-card" id="teamCard" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 14px; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <h3 id="sponsorUid">Sponsor UID</h3>
-                        <p style="font-size: 0.8rem; margin-top: 2px;">Direct Level 1 Downline Registry</p>
+                        <h3 id="sponsorUid">Sponsor</h3>
+                        <p style="font-size: 0.8rem; margin-top: 2px;">Direct Network Level 1 Downline Registry</p>
                     </div>
-                    <div class="font-mono" style="font-size: 0.95rem; font-weight: 800; background: var(--sigma-subtle); padding: 6px 14px; border-radius: var(--radius-pill); border: 1px solid var(--border-light);">
-                        Total: <span id="tCount">0</span>
+                </div>
+
+                <!-- Stats Summary -->
+                <div class="stats-summary-grid">
+                    <div class="stat-card">
+                        <small>Total Downlines</small>
+                        <strong id="statTotalDownlines">0</strong>
+                    </div>
+                    <div class="stat-card">
+                        <small>Active Portfolios</small>
+                        <strong id="statActiveDownlines" style="color: var(--sigma-accent-dark);">0</strong>
+                    </div>
+                    <div class="stat-card">
+                        <small>Pending (Unfunded)</small>
+                        <strong id="statPendingDownlines" style="color: var(--sigma-gold-dark);">0</strong>
                     </div>
                 </div>
 
@@ -773,14 +804,15 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>User UID</th>
-                                <th>Account Email / Username</th>
-                                <th>Registration Date</th>
-                                <th>Status</th>
+                                <th>Member UID</th>
+                                <th>Name / Username</th>
+                                <th>Registered Email</th>
+                                <th>Joined Date</th>
+                                <th>Portfolio Status</th>
                             </tr>
                         </thead>
                         <tbody id="tbody">
-                            <tr><td colspan="4" style="text-align:center; padding: 30px; color: var(--text-light);">No downline records found.</td></tr>
+                            <tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--text-light);">No downline records found.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -873,7 +905,7 @@
                 </a>
                 <a href="settings.html" class="sheet-menu-link">
                     <div class="sheet-menu-left">
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                         <span>Global Settings</span>
                     </div>
                     &rarr;
@@ -881,7 +913,7 @@
                 <a href="content.html" class="sheet-menu-link">
                     <div class="sheet-menu-left">
                         <svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                        <span>UI Configuration</span>
+                        <span>UI Content Config</span>
                     </div>
                     &rarr;
                 </a>
@@ -899,7 +931,7 @@
     </div>
 
     <!-- =======================================================================
-         JAVASCRIPT CONTROLLER
+         JAVASCRIPT CONTROLLER (NO START LOADING OVERLAY)
          ======================================================================= -->
     <script>
         const TeamAdminController = (() => {
@@ -909,11 +941,12 @@
             const auth = firebase.auth();
 
             const dom = {
-                authOverlay: document.getElementById('authOverlay'),
                 searchInput: document.getElementById('searchInput'),
                 teamCard: document.getElementById('teamCard'),
                 sponsorUid: document.getElementById('sponsorUid'),
-                tCount: document.getElementById('tCount'),
+                statTotal: document.getElementById('statTotalDownlines'),
+                statActive: document.getElementById('statActiveDownlines'),
+                statPending: document.getElementById('statPendingDownlines'),
                 tbody: document.getElementById('tbody'),
                 menuSheet: document.getElementById('sheetAdminMenu'),
                 dockBadgeDeposits: document.getElementById('dockBadgeDeposits')
@@ -945,10 +978,15 @@
 
                                 if (role === 'admin' || role === 'superadmin') {
                                     adminUser = user;
-                                    dom.authOverlay.style.opacity = '0';
-                                    setTimeout(() => dom.authOverlay.style.display = 'none', 300);
-
                                     bindPendingBadge();
+
+                                    // If URL parameter ?uid= is present, auto-inspect
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    const uidParam = urlParams.get('uid');
+                                    if (uidParam) {
+                                        dom.searchInput.value = uidParam;
+                                        findTeam();
+                                    }
                                     return;
                                 }
                             }
@@ -976,19 +1014,36 @@
             };
 
             const findTeam = async () => {
-                const uid = dom.searchInput.value.trim().toLowerCase();
-                if (!uid) return;
+                const query = dom.searchInput.value.trim();
+                if (!query) return;
 
                 dom.teamCard.style.display = 'block';
-                dom.sponsorUid.textContent = uid.toUpperCase();
-                dom.tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 24px; color: var(--text-light);">Searching network tree...</td></tr>`;
+                dom.sponsorUid.textContent = `Sponsor: ${query}`;
+                dom.tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px; color: var(--text-light);">Scanning database for referrals...</td></tr>`;
 
                 try {
-                    const snap = await db.collection('users').where('referredBy', 'in', [uid, uid.substring(0, 5)]).get();
-                    dom.tCount.textContent = snap.size;
+                    // Try to resolve query if it is an email or username
+                    let possibleSponsorCodes = [query, query.toLowerCase(), query.toUpperCase()];
+                    const cleanSlug = query.replace(/^SIG-/i, '').toLowerCase();
+                    possibleSponsorCodes.push(cleanSlug, `sig-${cleanSlug}`, cleanSlug.toUpperCase(), `SIG-${cleanSlug.toUpperCase()}`);
+
+                    // Also check if user exists by email/username to get their exact UID
+                    const userByEmail = await db.collection('users').where('email', '==', query.toLowerCase()).limit(1).get();
+                    if (!userByEmail.empty) {
+                        const uId = userByEmail.docs[0].id;
+                        possibleSponsorCodes.push(uId, uId.substring(0, 5), uId.substring(0, 5).toUpperCase());
+                    }
+
+                    const snap = await db.collection('users').where('referredBy', 'in', possibleSponsorCodes.slice(0, 10)).get();
+
+                    let activeCount = 0;
+                    let pendingCount = 0;
 
                     if (snap.empty) {
-                        dom.tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 24px; color: var(--text-muted);">No direct referrals found for this sponsor ID.</td></tr>`;
+                        dom.statTotal.textContent = "0";
+                        dom.statActive.textContent = "0";
+                        dom.statPending.textContent = "0";
+                        dom.tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px; color: var(--text-muted);">No downlines found under this sponsor.</td></tr>`;
                         return;
                     }
 
@@ -996,22 +1051,30 @@
                     snap.forEach(doc => {
                         const d = doc.data();
                         const dateStr = d.createdAt ? new Date(d.createdAt.seconds ? d.createdAt.seconds * 1000 : d.createdAt).toLocaleDateString() : 'N/A';
-                        const isActive = (d.totalInvested || 0) > 0 || (d.activePlans || 0) > 0;
+                        const isActive = (d.totalInvested || 0) > 0 || (d.depositBalance || 0) > 0 || (d.activePlans || 0) > 0;
+
+                        if (isActive) activeCount++;
+                        else pendingCount++;
 
                         html += `
                             <tr>
                                 <td class="font-mono" style="font-weight: 800;">SIG-${doc.id.substring(0, 5).toUpperCase()}</td>
-                                <td>${d.username || d.fullName || d.email || 'Member'}</td>
+                                <td>${d.fullName || d.username || 'Member'}</td>
+                                <td>${d.email || 'None'}</td>
                                 <td>${dateStr}</td>
-                                <td><span style="font-size:0.7rem; font-weight:800; padding:3px 9px; border-radius:99px; background:${isActive ? 'var(--sigma-accent-soft)' : 'var(--sigma-gold-soft)'}; color:${isActive ? 'var(--sigma-accent-dark)' : 'var(--sigma-gold-dark)'}; text-transform: uppercase;">${isActive ? 'Active' : 'Pending'}</span></td>
+                                <td><span class="status-badge ${isActive ? 'active' : 'pending'}">${isActive ? 'Active' : 'Unfunded'}</span></td>
                             </tr>
                         `;
                     });
+
+                    dom.statTotal.textContent = snap.size;
+                    dom.statActive.textContent = activeCount;
+                    dom.statPending.textContent = pendingCount;
                     dom.tbody.innerHTML = html;
 
                 } catch (e) {
                     console.error("Team query error:", e);
-                    dom.tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 24px; color: var(--sigma-danger);">Error querying database.</td></tr>`;
+                    dom.tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px; color: var(--sigma-danger);">Error querying referral network. Check permissions.</td></tr>`;
                 }
             };
 
