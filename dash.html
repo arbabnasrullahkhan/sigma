@@ -702,7 +702,8 @@
         }
 
         .vault-branding img.vault-text-logo {
-            height: 26px; /* Enlarged text logo */
+            height: 26px;
+            /* Enlarged text logo */
             object-fit: contain;
             margin-bottom: 6px;
             filter: brightness(0) invert(1);
@@ -710,7 +711,8 @@
         }
 
         .vault-branding img.vault-icon-logo {
-            height: 64px; /* Enlarged crest logo watermark */
+            height: 64px;
+            /* Enlarged crest logo watermark */
             width: 64px;
             object-fit: contain;
             opacity: 0.22;
@@ -890,13 +892,16 @@
             color: var(--text-light);
         }
 
-        .pocket-title-mobile { display: none; }
+        .pocket-title-mobile {
+            display: none;
+        }
 
         @media (max-width: 600px) {
             .pocket-wallets-grid {
                 grid-template-columns: 1fr;
                 gap: 8px;
             }
+
             .pocket-card {
                 padding: 16px 20px;
                 flex-direction: row;
@@ -904,20 +909,25 @@
                 justify-content: flex-start;
                 gap: 16px;
             }
+
             .pocket-head {
                 display: contents;
             }
+
             .pocket-title {
                 display: none;
             }
+
             .pocket-details {
                 display: flex;
                 flex-direction: column;
                 flex: 1;
             }
+
             .pocket-val {
                 font-size: 1.25rem;
             }
+
             .pocket-title-mobile {
                 display: block;
                 font-size: 0.72rem;
@@ -1071,7 +1081,9 @@
         }
 
         @keyframes orbitSpin {
-            100% { transform: rotate(360deg); }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .orbit-center-core {
@@ -1165,12 +1177,41 @@
         }
 
         /* 6 Orbital Positions */
-        .node-pos-1 { top: 0%; left: 50%; transform: translate(-50%, -50%); }
-        .node-pos-2 { top: 25%; left: 93.3%; transform: translate(-50%, -50%); }
-        .node-pos-3 { top: 75%; left: 93.3%; transform: translate(-50%, -50%); }
-        .node-pos-4 { top: 100%; left: 50%; transform: translate(-50%, -50%); }
-        .node-pos-5 { top: 75%; left: 6.7%; transform: translate(-50%, -50%); }
-        .node-pos-6 { top: 25%; left: 6.7%; transform: translate(-50%, -50%); }
+        .node-pos-1 {
+            top: 0%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-2 {
+            top: 25%;
+            left: 93.3%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-3 {
+            top: 75%;
+            left: 93.3%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-4 {
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-5 {
+            top: 75%;
+            left: 6.7%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-6 {
+            top: 25%;
+            left: 6.7%;
+            transform: translate(-50%, -50%);
+        }
 
         .orbit-linear-fallback {
             display: none;
@@ -1181,8 +1222,13 @@
         }
 
         @media (max-width: 380px) {
-            .orbit-stage { display: none; }
-            .orbit-linear-fallback { display: grid !important; }
+            .orbit-stage {
+                display: none;
+            }
+
+            .orbit-linear-fallback {
+                display: grid !important;
+            }
         }
 
         .terminal-btn {
@@ -3654,7 +3700,7 @@
                         <div class="trust-icon-box">
                             <svg viewBox="0 0 24 24">
                                 <path
-                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884" />
                             </svg>
                         </div>
                         <span>Channel</span>
@@ -4202,8 +4248,8 @@
                     </svg></button>
             </div>
             <div class="sheet-body" style="text-align: center;">
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; font-weight: 500;">
-                    Scan with any mobile camera to securely bind downlines to your team tree.
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;">
+                    Scan with any mobile camera to securely bind your referral tree.
                 </p>
                 <div class="qr-wrapper">
                     <div id="qrBoxContainer"></div>
@@ -4213,98 +4259,34 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;">
-                    <button class="btn-sheet-action" onclick="appController.copyLink()">
-                        <svg style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.5;">
+                <div style="margin-top: 24px; display: flex; gap: 12px; flex-direction: column;">
+                    <button class="btn-sheet-submit" onclick="appController.copyReferralLink()">
+                        <svg style="width:18px;height:18px;fill:none;stroke:white;stroke-width:2;">
                             <use href="#icon-copy" />
-                        </svg>
-                        Copy Referral URL
+                        </svg> Copy Unique URL
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- RULES MODAL (ENGLISH ONLY) -->
-    <div class="overlay" id="sheetRules">
+    <!-- Official Proofs Viewer Modal -->
+    <div class="overlay" id="sheetProofViewer">
         <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <h3>Program Guidelines</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetRules')">
-                    <svg>
+                <h3>Official Document</h3>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetProofViewer')"><svg>
                         <use href="#icon-x" />
-                    </svg>
-                </button>
+                    </svg></button>
             </div>
-            <div class="sheet-body rules-content">
-                <p>Referral bonuses are governed by automated ledger rules to guarantee fair distribution:</p>
-                <ul>
-                    <li><svg>
-                            <use href="#icon-check" />
-                        </svg> Direct Level 1 commissions are credited immediately after a downline's portfolio is
-                        verified by administration.</li>
-                    <li><svg>
-                            <use href="#icon-check" />
-                        </svg> Level 2 and Level 3 commissions compound automatically into your Commission Pocket.</li>
-                    <li><svg>
-                            <use href="#icon-check" />
-                        </svg> Commission balances are 100% eligible for transfer or direct cashout via EasyPaisa and
-                        JazzCash.</li>
-                    <li><svg>
-                            <use href="#icon-check" />
-                        </svg> Self-referral abuse and duplicate accounts result in permanent network disqualification.
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- MEMBER DETAILS MODAL -->
-    <div class="overlay" id="sheetMemberDetails">
-        <div class="sheet">
-            <div class="sheet-handle"></div>
-            <div class="sheet-header">
-                <div>
-                    <h3 id="mdlName">Downline Details</h3>
-                    <p id="mdlId" class="font-mono" style="font-size: 0.8rem; margin-top: 2px;">UID: ---</p>
-                </div>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetMemberDetails')">
-                    <svg>
-                        <use href="#icon-x" />
-                    </svg>
-                </button>
-            </div>
-            <div class="sheet-body">
-                <div class="tl-container">
-                    <div class="tl-item completed">
-                        <div class="tl-indicator"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
-                        <div class="tl-content">
-                            <b>Registered Account</b>
-                            <small id="mdlRegDate">--</small>
-                        </div>
-                    </div>
-                    <div class="tl-item" id="mdlTlPayment">
-                        <div class="tl-indicator"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
-                        <div class="tl-content">
-                            <b>Portfolio Status</b>
-                            <small id="mdlPayStatus">Pending / Unfunded</small>
-                        </div>
-                    </div>
-                    <div class="tl-item" id="mdlTlEligible">
-                        <div class="tl-indicator"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
-                        <div class="tl-content">
-                            <b>Commission Credited</b>
-                            <small id="mdlRewardStatus">Awaiting Plan Activation</small>
-                        </div>
-                    </div>
-                </div>
+            <div class="sheet-body proof-viewer-body">
+                <img id="proofViewerImg" src="" alt="Official Document" class="proof-viewer-img">
+                <p id="proofViewerDesc"
+                    style="text-align: center; color: var(--text-muted); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">
+                </p>
+                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetProofViewer')">Close
+                    Viewer</button>
             </div>
         </div>
     </div>
@@ -4411,12 +4393,12 @@
         </div>
     </div>
 
-    <!-- Notification Toast -->
+    <!-- Toast Component -->
     <div class="toast" id="toastBox">
-        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;">
+        <svg style="width:18px;height:18px;stroke:var(--sigma-accent-light);fill:none;stroke-width:2.5;">
             <use href="#icon-check" />
         </svg>
-        <span id="toastMsg">Action successful</span>
+        <span id="toastMsg">Verified</span>
     </div>
 
     <!-- ==========================================================================
@@ -4438,39 +4420,7 @@
                 l3: { members: 0, pending: 0, active: 0, earnings: 0 }
             };
 
-            const dom = {
-                uiNetBalance: document.getElementById('uiNetBalance'),
-                uiDepositWallet: document.getElementById('uiDepositWallet'),
-                uiProfitWallet: document.getElementById('uiProfitWallet'),
-                uiCommissionWallet: document.getElementById('uiCommissionWallet'),
-                uiDisplayName: document.getElementById('uiDisplayName'),
-                uiAvatarWrap: document.getElementById('uiAvatarWrap'),
-                uiAvatarLetter: document.getElementById('uiAvatarLetter'),
-                uiTierBadge: document.getElementById('uiTierBadge'),
-                uiAccountUID: document.getElementById('uiAccountUID'),
-                profitClockDisplay: document.getElementById('profitClockDisplay'),
-                cmsCountdownPlan: document.getElementById('cmsCountdownPlan'),
-                announcementPill: document.getElementById('announcementPill'),
-                announcementHeadline: document.getElementById('announcementHeadline'),
-                announcementModalTitle: document.getElementById('announcementModalTitle'),
-                announcementModalBody: document.getElementById('announcementModalBody'),
-                rawReferralUrl: document.getElementById('rawReferralUrl'),
-                qrBoxContainer: document.getElementById('qrBoxContainer'),
-                blockerScreen: document.getElementById('blockerScreen'),
-                blockerTitle: document.getElementById('blockerTitle'),
-                blockerMsg: document.getElementById('blockerMsg'),
-                blockerContactBtn: document.getElementById('blockerContactBtn'),
-                btnFloatingWhatsApp: document.getElementById('btnFloatingWhatsApp'),
-                headerNotifDot: document.getElementById('headerNotifDot'),
-                notifListContainer: document.getElementById('notifListContainer'),
-                btnMarkAllRead: document.getElementById('btnMarkAllRead'),
-                recentTransactionList: document.getElementById('recentTransactionList'),
-                stepperLifecycleBox: document.getElementById('stepperLifecycleBox'),
-                toastBox: document.getElementById('toastBox'),
-                toastMsg: document.getElementById('toastMsg'),
-                ptrSpinner: document.getElementById('ptrSpinner'),
-                offlineBanner: document.getElementById('networkOfflineBanner')
-            };
+            const dom = {};
 
             const safeSetText = (id, text) => {
                 const el = document.getElementById(id);
@@ -4631,11 +4581,10 @@
             };
 
             const logAction = async (actionType, description) => {
-                const activeUid = sessionStorage.getItem('sigma_session_uid');
-                if (!activeUid || typeof firebase === 'undefined') return;
+                if (!authUser || typeof firebase === 'undefined') return;
                 try {
                     const db = firebase.firestore();
-                    await db.collection('users').doc(activeUid).collection('notifications').add({
+                    await db.collection('users').doc(authUser.uid).collection('notifications').add({
                         type: actionType,
                         title: actionType.replace(/_/g, ' ').toUpperCase(),
                         body: description,
@@ -4650,8 +4599,7 @@
             };
 
             const markAllNotifsRead = async () => {
-                const activeUid = sessionStorage.getItem('sigma_session_uid');
-                if (!activeUid || currentNotifications.length === 0) return;
+                if (!authUser || currentNotifications.length === 0) return;
                 try {
                     const db = firebase.firestore();
                     const batch = db.batch();
@@ -4673,12 +4621,9 @@
 
             const terminateSession = async () => {
                 if (typeof firebase !== 'undefined' && firebase.auth()) {
-                    sessionStorage.setItem('sigma_explicit_logout', 'true');
                     await logAction('logout', 'Signed out securely from terminal');
                     await firebase.auth().signOut();
                 }
-                sessionStorage.removeItem('sigma_session_uid');
-                sessionStorage.removeItem('sigma_session_logged');
                 window.location.replace('login.html');
             };
 
@@ -4821,28 +4766,14 @@
 
                 bindCMS(db);
 
-                let sessionUid = sessionStorage.getItem('sigma_session_uid');
-
                 auth.onAuthStateChanged(user => {
                     if (!user) {
-                        if (sessionStorage.getItem('sigma_explicit_logout') === 'true' || !sessionUid) {
-                            window.location.replace('login.html');
-                        } else {
-                            console.warn("Session cleared in another tab. Keeping this tab active.");
-                        }
-                        return;
-                    }
-
-                    if (!sessionUid) {
-                        sessionUid = user.uid;
-                        sessionStorage.setItem('sigma_session_uid', user.uid);
-                    } else if (sessionUid !== user.uid) {
-                        console.warn("Session isolation: another account logged in elsewhere. Preserving current view for " + sessionUid);
+                        window.location.replace('login.html');
                         return;
                     }
 
                     authUser = user;
-                    const uid = sessionUid;
+                    const uid = user.uid;
 
                     // Identity & Avatar
                     if (user.photoURL && dom.uiAvatarWrap) {
@@ -4873,7 +4804,6 @@
                             dom.blockerScreen.classList.add('active');
                             safeSetText('blockerTitle', "Account Suspended");
                             safeSetText('blockerMsg', "Your account has been restricted due to a policy violation. Please contact support.");
-                            sessionStorage.setItem('sigma_explicit_logout', 'true');
                             auth.signOut();
                             return;
                         }
