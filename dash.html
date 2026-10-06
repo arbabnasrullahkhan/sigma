@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 
@@ -10,7 +12,8 @@
     <!-- SEO, Privacy & PWA Meta -->
     <meta name="description"
         content="Authorized member workspace for Sigma automated portfolios, real-time PKR wallet management, and referral network monitoring.">
-    <meta name="keywords" content="Sigma Dashboard, Crypto Trading Pakistan, PKR Portfolio, EasyPaisa Withdrawals, JazzCash Investment">
+    <meta name="keywords"
+        content="Sigma Dashboard, Crypto Trading Pakistan, PKR Portfolio, EasyPaisa Withdrawals, JazzCash Investment">
     <meta name="author" content="Sigma Technologies">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#0B132B">
@@ -24,7 +27,8 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sigmaaz.vercel.app/dash.html">
     <meta property="og:title" content="Sigma | Member Financial Terminal">
-    <meta property="og:description" content="Access live daily PKR yields, wallet pockets, instant withdrawals, and your referral network.">
+    <meta property="og:description"
+        content="Access live daily PKR yields, wallet pockets, instant withdrawals, and your referral network.">
     <meta property="og:site_name" content="Sigma">
     <meta property="og:image" content="https://sigmaaz.vercel.app/assets/preview.png">
     <meta property="og:image:width" content="1200">
@@ -33,7 +37,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Sigma | Member Financial Terminal">
-    <meta name="twitter:description" content="Manage automated PKR investment portfolios and instant withdrawals securely.">
+    <meta name="twitter:description"
+        content="Manage automated PKR investment portfolios and instant withdrawals securely.">
     <meta name="twitter:image" content="https://sigmaaz.vercel.app/assets/preview.png">
 
     <!-- Favicon & Touch Icons -->
@@ -152,7 +157,9 @@
         /* ==========================================================================
            2. GLOBAL RESET & BASE
            ========================================================================== */
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -190,7 +197,9 @@
             color: inherit;
         }
 
-        button, input, select {
+        button,
+        input,
+        select {
             font-family: inherit;
             border: none;
             outline: none;
@@ -207,22 +216,33 @@
             display: block;
         }
 
-        h1, h2, h3, h4, h5 {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
             color: var(--text-heading);
             font-weight: 800;
             letter-spacing: -0.02em;
             line-height: 1.2;
         }
 
-        p { color: var(--text-muted); }
+        p {
+            color: var(--text-muted);
+        }
 
         .font-mono {
             font-family: 'JetBrains Mono', monospace;
             font-feature-settings: "tnum" 1;
         }
 
-        .text-accent { color: var(--sigma-accent-dark); }
-        .text-pink { color: var(--sigma-pink); }
+        .text-accent {
+            color: var(--sigma-accent-dark);
+        }
+
+        .text-pink {
+            color: var(--sigma-pink);
+        }
 
         /* Offline Bar & Pull-To-Refresh */
         #networkOfflineBanner {
@@ -261,7 +281,10 @@
             transition: top 0.2s ease;
         }
 
-        .ptr-indicator.active { top: 20px; }
+        .ptr-indicator.active {
+            top: 20px;
+        }
+
         .ptr-indicator svg {
             width: 22px;
             height: 22px;
@@ -380,12 +403,22 @@
             animation: pulse-dot 2s infinite;
         }
 
-        .unread-dot.active { display: block; }
+        .unread-dot.active {
+            display: block;
+        }
 
         @keyframes pulse-dot {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
         }
 
         /* ==========================================================================
@@ -430,7 +463,9 @@
             transition: var(--transition-bounce);
         }
 
-        .user-avatar-wrap:active { transform: scale(0.92); }
+        .user-avatar-wrap:active {
+            transform: scale(0.92);
+        }
 
         .user-avatar-wrap::before {
             content: '';
@@ -491,7 +526,9 @@
             fill: currentColor;
         }
 
-        .id-text { min-width: 0; }
+        .id-text {
+            min-width: 0;
+        }
 
         .id-text h2 {
             font-size: 1.05rem;
@@ -589,7 +626,9 @@
             box-shadow: var(--shadow-xs);
         }
 
-        .system-announcement-pill:active { transform: translateY(1px); }
+        .system-announcement-pill:active {
+            transform: translateY(1px);
+        }
 
         .announcement-text {
             display: flex;
@@ -665,7 +704,8 @@
         }
 
         .vault-branding img.vault-text-logo {
-            height: 26px; /* Enlarged text logo */
+            height: 26px;
+            /* Enlarged text logo */
             object-fit: contain;
             margin-bottom: 6px;
             filter: brightness(0) invert(1);
@@ -673,7 +713,8 @@
         }
 
         .vault-branding img.vault-icon-logo {
-            height: 64px; /* Enlarged crest logo watermark */
+            height: 64px;
+            /* Enlarged crest logo watermark */
             width: 64px;
             object-fit: contain;
             opacity: 0.22;
@@ -761,6 +802,70 @@
             line-height: 1;
             color: #FFFFFF;
             text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        /* -------------------------------------------------------------------------
+       Card Bottom: Real Authenticated User Details (Name, UID, Validity)
+       ------------------------------------------------------------------------- */
+        .card-user-details-footer {
+            position: relative;
+            z-index: 2;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card-user-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .card-meta-caption {
+            font-size: 0.62rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #94A3B8;
+        }
+
+        .card-user-name {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 220px;
+            text-transform: uppercase;
+        }
+
+        .card-meta-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .card-user-uid {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            letter-spacing: 0.5px;
+        }
+
+        .card-membership-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #94A3B8;
+            letter-spacing: 0.4px;
         }
 
         /* ==========================================================================
@@ -853,7 +958,9 @@
             color: var(--text-light);
         }
 
-        .pocket-title-mobile { display: none; }
+        .pocket-title-mobile {
+            display: none;
+        }
 
         @media (max-width: 600px) {
             .pocket-wallets-grid {
@@ -869,14 +976,24 @@
                 gap: 16px;
             }
 
-            .pocket-head { display: contents; }
-            .pocket-title { display: none; }
+            .pocket-head {
+                display: contents;
+            }
+
+            .pocket-title {
+                display: none;
+            }
+
             .pocket-details {
                 display: flex;
                 flex-direction: column;
                 flex: 1;
             }
-            .pocket-val { font-size: 1.25rem; }
+
+            .pocket-val {
+                font-size: 1.25rem;
+            }
+
             .pocket-title-mobile {
                 display: block;
                 font-size: 0.72rem;
@@ -997,7 +1114,9 @@
             margin-bottom: 30px;
         }
 
-        .orbital-header h3 { font-size: 1.15rem; }
+        .orbital-header h3 {
+            font-size: 1.15rem;
+        }
 
         .orbit-stage {
             position: relative;
@@ -1028,7 +1147,9 @@
         }
 
         @keyframes orbitSpin {
-            100% { transform: rotate(360deg); }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .orbit-center-core {
@@ -1122,12 +1243,41 @@
         }
 
         /* 6 Orbital Positions */
-        .node-pos-1 { top: 0%; left: 50%; transform: translate(-50%, -50%); }
-        .node-pos-2 { top: 25%; left: 93.3%; transform: translate(-50%, -50%); }
-        .node-pos-3 { top: 75%; left: 93.3%; transform: translate(-50%, -50%); }
-        .node-pos-4 { top: 100%; left: 50%; transform: translate(-50%, -50%); }
-        .node-pos-5 { top: 75%; left: 6.7%; transform: translate(-50%, -50%); }
-        .node-pos-6 { top: 25%; left: 6.7%; transform: translate(-50%, -50%); }
+        .node-pos-1 {
+            top: 0%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-2 {
+            top: 25%;
+            left: 93.3%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-3 {
+            top: 75%;
+            left: 93.3%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-4 {
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-5 {
+            top: 75%;
+            left: 6.7%;
+            transform: translate(-50%, -50%);
+        }
+
+        .node-pos-6 {
+            top: 25%;
+            left: 6.7%;
+            transform: translate(-50%, -50%);
+        }
 
         .orbit-linear-fallback {
             display: none;
@@ -1138,8 +1288,13 @@
         }
 
         @media (max-width: 380px) {
-            .orbit-stage { display: none; }
-            .orbit-linear-fallback { display: grid !important; }
+            .orbit-stage {
+                display: none;
+            }
+
+            .orbit-linear-fallback {
+                display: grid !important;
+            }
         }
 
         .terminal-btn {
@@ -1158,7 +1313,9 @@
             transition: var(--transition-bounce);
         }
 
-        .terminal-btn:active { transform: scale(0.94); }
+        .terminal-btn:active {
+            transform: scale(0.94);
+        }
 
         .terminal-btn-icon {
             width: 40px;
@@ -1295,7 +1452,9 @@
             margin-bottom: 24px;
         }
 
-        .stepper-header h3 { font-size: 1.1rem; }
+        .stepper-header h3 {
+            font-size: 1.1rem;
+        }
 
         .badge-type {
             font-size: 0.7rem;
@@ -1365,7 +1524,9 @@
             border-color: var(--sigma-accent);
         }
 
-        .step-node.completed .step-circle svg { display: block; }
+        .step-node.completed .step-circle svg {
+            display: block;
+        }
 
         .step-node.current .step-circle {
             background: white;
@@ -1570,12 +1731,29 @@
             stroke-width: 2.2;
         }
 
-        .tx-icon.positive { background: var(--sigma-accent-soft); }
-        .tx-icon.positive svg { stroke: var(--sigma-accent-dark); }
-        .tx-icon.negative { background: var(--sigma-danger-soft); }
-        .tx-icon.negative svg { stroke: var(--sigma-danger-dark); }
-        .tx-icon.neutral { background: var(--sigma-info-soft); }
-        .tx-icon.neutral svg { stroke: var(--sigma-info-dark); }
+        .tx-icon.positive {
+            background: var(--sigma-accent-soft);
+        }
+
+        .tx-icon.positive svg {
+            stroke: var(--sigma-accent-dark);
+        }
+
+        .tx-icon.negative {
+            background: var(--sigma-danger-soft);
+        }
+
+        .tx-icon.negative svg {
+            stroke: var(--sigma-danger-dark);
+        }
+
+        .tx-icon.neutral {
+            background: var(--sigma-info-soft);
+        }
+
+        .tx-icon.neutral svg {
+            stroke: var(--sigma-info-dark);
+        }
 
         .tx-details {
             flex: 1;
@@ -1597,7 +1775,10 @@
             color: var(--text-muted);
         }
 
-        .tx-amount { text-align: right; }
+        .tx-amount {
+            text-align: right;
+        }
+
         .tx-amount strong {
             display: block;
             font-size: 1.05rem;
@@ -1662,7 +1843,10 @@
             font-weight: 800;
         }
 
-        .dock-slot.active { color: var(--sigma-primary); }
+        .dock-slot.active {
+            color: var(--sigma-primary);
+        }
+
         .dock-slot.active svg {
             stroke-width: 2.8;
             transform: translateY(-2px);
@@ -1686,7 +1870,10 @@
             margin: 0 8px;
         }
 
-        .dock-crest-btn:active { transform: scale(0.9); }
+        .dock-crest-btn:active {
+            transform: scale(0.9);
+        }
+
         .dock-crest-btn img {
             width: 32px;
             height: 32px;
@@ -1704,8 +1891,13 @@
         }
 
         @media (min-width: 860px) {
-            .mobile-dock { display: none; }
-            body { padding-bottom: 40px; }
+            .mobile-dock {
+                display: none;
+            }
+
+            body {
+                padding-bottom: 40px;
+            }
         }
 
         /* Floating WhatsApp Button */
@@ -1746,6 +1938,7 @@
                 width: 68px;
                 height: 68px;
             }
+
             .whatsapp-float svg {
                 width: 38px;
                 height: 38px;
@@ -1789,7 +1982,9 @@
             z-index: var(--z-modal);
         }
 
-        .overlay.show .sheet { transform: translateY(0); }
+        .overlay.show .sheet {
+            transform: translateY(0);
+        }
 
         .sheet-handle {
             width: 44px;
@@ -1882,7 +2077,9 @@
             overflow: hidden;
         }
 
-        .notif-feed-item:active { transform: scale(0.98); }
+        .notif-feed-item:active {
+            transform: scale(0.98);
+        }
 
         .notif-feed-item.unread {
             background: white;
@@ -1905,7 +2102,9 @@
             background: var(--sigma-gold-soft);
         }
 
-        .notif-feed-item.pinned::before { background: var(--sigma-gold); }
+        .notif-feed-item.pinned::before {
+            background: var(--sigma-gold);
+        }
 
         .notif-feed-top {
             display: flex;
@@ -2071,7 +2270,9 @@
             text-align: center;
         }
 
-        #blockerScreen.active { display: flex; }
+        #blockerScreen.active {
+            display: flex;
+        }
 
         #blockerScreen svg {
             width: 80px;
@@ -2107,7 +2308,9 @@
             transition: var(--transition-bounce);
         }
 
-        .btn-blocker-contact:active { transform: scale(0.95); }
+        .btn-blocker-contact:active {
+            transform: scale(0.95);
+        }
 
         .skeleton {
             background: #E2E8F0;
@@ -2117,13 +2320,23 @@
         }
 
         @keyframes skel {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -2248,10 +2461,13 @@
 
     <!-- Administrative Blocker Screen -->
     <div id="blockerScreen">
-        <svg><use href="#icon-shield-alert" /></svg>
+        <svg>
+            <use href="#icon-shield-alert" />
+        </svg>
         <h1 id="blockerTitle">Access Suspended</h1>
         <p id="blockerMsg">Security protocols have placed this session on hold. Contact administrator verification.</p>
-        <a href="https://whatsapp.com/channel/sigma_official" class="btn-blocker-contact" id="blockerContactBtn">Open Priority Support</a>
+        <a href="https://whatsapp.com/channel/sigma_official" class="btn-blocker-contact" id="blockerContactBtn">Open
+            Priority Support</a>
     </div>
 
     <!-- Main Mobile & Responsive Workspace Frame -->
@@ -2267,16 +2483,24 @@
 
             <div class="header-actions">
                 <a href="leaderboard.html" class="btn-top-action" aria-label="Leaderboard">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--sigma-gold)">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        style="color:var(--sigma-gold)">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </a>
-                <button class="btn-top-action" onclick="appController.openSheet('sheetNotif')" aria-label="Notifications">
-                    <svg><use href="#icon-bell" /></svg>
+                <button class="btn-top-action" onclick="appController.openSheet('sheetNotif')"
+                    aria-label="Notifications">
+                    <svg>
+                        <use href="#icon-bell" />
+                    </svg>
                     <span class="unread-dot" id="headerNotifDot"></span>
                 </button>
-                <button class="btn-top-action" onclick="appController.openSheet('sheetMenu')" aria-label="Terminal Navigation">
-                    <svg><use href="#icon-menu" /></svg>
+                <button class="btn-top-action" onclick="appController.openSheet('sheetMenu')"
+                    aria-label="Terminal Navigation">
+                    <svg>
+                        <use href="#icon-menu" />
+                    </svg>
                 </button>
             </div>
         </header>
@@ -2291,11 +2515,13 @@
                         <div class="user-avatar" id="uiAvatarWrap">
                             <span id="uiAvatarLetter" class="skeleton">S</span>
                         </div>
-                        <div class="avatar-tier-badge" title="Account Tier"><svg><use href="#icon-crown" /></svg></div>
+                        <div class="avatar-tier-badge" title="Account Tier"><svg>
+                                <use href="#icon-crown" />
+                            </svg></div>
                     </div>
                     <div class="id-text">
                         <h2>
-                            <span id="uiDisplayName" class="skeleton">Investor</span> 
+                            <span id="uiDisplayName" class="skeleton">Investor</span>
                             <span class="tier-chip" id="uiTierBadge">Bronze</span>
                         </h2>
                         <div class="trust-id-badge font-mono">
@@ -2305,645 +2531,691 @@
                     </div>
                 </div>
                 <div class="id-actions">
-                    <button class="btn-id-pill" onclick="appController.openQrModal()" title="Show Invite QR"><svg><use href="#icon-qr" /></svg></button>
-                    <button class="btn-id-pill" onclick="appController.copyReferralLink()" title="Copy Link"><svg><use href="#icon-copy" /></svg></button>
+                    <button class="btn-id-pill" onclick="appController.openQrModal()" title="Show Invite QR"><svg>
+                            <use href="#icon-qr" />
+                        </svg></button>
+                    <button class="btn-id-pill" onclick="appController.copyReferralLink()" title="Copy Link"><svg>
+                            <use href="#icon-copy" />
+                        </svg></button>
                 </div>
                 <input type="hidden" id="rawReferralUrl" value="">
             </section>
 
             <!-- Real-Time Admin Notice Broadcast -->
-            <section class="system-announcement-pill" id="announcementPill" onclick="appController.openAnnouncementModal()" style="display: none;">
+            <section class="system-announcement-pill" id="announcementPill"
+                onclick="appController.openAnnouncementModal()" style="display: none;">
                 <div class="announcement-text">
-                    <svg><use href="#icon-bell" /></svg>
+                    <svg>
+                        <use href="#icon-bell" />
+                    </svg>
                     <span id="announcementHeadline">Platform Transmissions</span>
                 </div>
                 <span style="font-size: 0.75rem; font-weight: 800; color: #065F46;">READ &rarr;</span>
             </section>
 
-<!-- =======================================================================
+            <!-- =======================================================================
      SIGMA APPLE iPHONE 15 PINK FROSTED LUXURY WALLET CARD
      Featuring: Frosted Matte Baby Pink + Light White Glow + Real User Details
      ======================================================================= -->
-<style>
-    /* -------------------------------------------------------------------------
+            <style>
+                /* -------------------------------------------------------------------------
        iPhone 15 Frosted Glass Matte Pink Shell
        ------------------------------------------------------------------------- */
-    .vault-main-card {
-        position: relative;
-        width: 100%;
-        min-height: 250px;
-        border-radius: 30px;
-        /* Apple iPhone 15 color-infused matte pink multi-layer gradient */
-        background: linear-gradient(135deg, 
-            #FFF5F8 0%, 
-            #FDE6ED 28%, 
-            #FACBD8 65%, 
-            #F9BFCF 100%
-        );
-        border: 1px solid rgba(255, 255, 255, 0.95);
-        box-shadow: 
-            0 24px 48px -14px rgba(244, 114, 182, 0.35),
-            0 10px 20px -6px rgba(251, 182, 206, 0.4),
-            0 0 0 1px rgba(255, 192, 213, 0.6),
-            inset 0 1px 2px rgba(255, 255, 255, 0.95);
-        padding: 26px 26px 22px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        overflow: hidden;
-        isolation: isolate;
-        color: #1E293B; /* Crisp Charcoal for maximum readability */
-        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
-    }
+                .vault-main-card {
+                    position: relative;
+                    width: 100%;
+                    min-height: 250px;
+                    border-radius: 30px;
+                    /* Apple iPhone 15 color-infused matte pink multi-layer gradient */
+                    background: linear-gradient(135deg,
+                            #FFF5F8 0%,
+                            #FDE6ED 28%,
+                            #FACBD8 65%,
+                            #F9BFCF 100%);
+                    border: 1px solid rgba(255, 255, 255, 0.95);
+                    box-shadow:
+                        0 24px 48px -14px rgba(244, 114, 182, 0.35),
+                        0 10px 20px -6px rgba(251, 182, 206, 0.4),
+                        0 0 0 1px rgba(255, 192, 213, 0.6),
+                        inset 0 1px 2px rgba(255, 255, 255, 0.95);
+                    padding: 26px 26px 22px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    overflow: hidden;
+                    isolation: isolate;
+                    color: #1E293B;
+                    /* Crisp Charcoal for maximum readability */
+                    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+                }
 
-    .vault-main-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 
-            0 30px 60px -14px rgba(244, 114, 182, 0.45),
-            0 0 0 1px rgba(255, 182, 206, 0.8),
-            inset 0 1px 2px rgba(255, 255, 255, 1);
-    }
+                .vault-main-card:hover {
+                    transform: translateY(-3px);
+                    box-shadow:
+                        0 30px 60px -14px rgba(244, 114, 182, 0.45),
+                        0 0 0 1px rgba(255, 182, 206, 0.8),
+                        inset 0 1px 2px rgba(255, 255, 255, 1);
+                }
 
-    /* Soft White Light Ambient Highlights (iPhone 15 Refraction Effect) */
-    .vault-main-card::before {
-        content: '';
-        position: absolute;
-        top: -40%;
-        left: -30%;
-        width: 170%;
-        height: 170%;
-        background: 
-            radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 45%),
-            radial-gradient(circle at 85% 85%, rgba(244, 114, 182, 0.28) 0%, rgba(255, 255, 255, 0) 55%);
-        pointer-events: none;
-        z-index: 0;
-    }
+                /* Soft White Light Ambient Highlights (iPhone 15 Refraction Effect) */
+                .vault-main-card::before {
+                    content: '';
+                    position: absolute;
+                    top: -40%;
+                    left: -30%;
+                    width: 170%;
+                    height: 170%;
+                    background:
+                        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 45%),
+                        radial-gradient(circle at 85% 85%, rgba(244, 114, 182, 0.28) 0%, rgba(255, 255, 255, 0) 55%);
+                    pointer-events: none;
+                    z-index: 0;
+                }
 
-    /* Subtle Pearlescent Light Shimmer */
-    .vault-main-card::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(115deg, 
-            transparent 30%, 
-            rgba(255, 255, 255, 0.45) 45%, 
-            rgba(255, 255, 255, 0.75) 50%, 
-            rgba(255, 255, 255, 0.45) 55%, 
-            transparent 70%
-        );
-        background-size: 250% 100%;
-        animation: appleGlassShimmer 9s infinite linear;
-        pointer-events: none;
-        z-index: 1;
-    }
+                /* Subtle Pearlescent Light Shimmer */
+                .vault-main-card::after {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(115deg,
+                            transparent 30%,
+                            rgba(255, 255, 255, 0.45) 45%,
+                            rgba(255, 255, 255, 0.75) 50%,
+                            rgba(255, 255, 255, 0.45) 55%,
+                            transparent 70%);
+                    background-size: 250% 100%;
+                    animation: appleGlassShimmer 9s infinite linear;
+                    pointer-events: none;
+                    z-index: 1;
+                }
 
-    @keyframes appleGlassShimmer {
-        0% { background-position: 250% 0; }
-        100% { background-position: -250% 0; }
-    }
+                @keyframes appleGlassShimmer {
+                    0% {
+                        background-position: 250% 0;
+                    }
 
-    /* Watermark Logo Tinted in Soft Rose Pink */
-    .card-bg-watermark {
-        position: absolute;
-        right: -25px;
-        bottom: -25px;
-        width: 160px;
-        height: 160px;
-        opacity: 0.12;
-        pointer-events: none;
-        z-index: 0;
-        filter: hue-rotate(300deg) saturate(1.4);
-    }
+                    100% {
+                        background-position: -250% 0;
+                    }
+                }
 
-    /* -------------------------------------------------------------------------
+                /* Watermark Logo Tinted in Soft Rose Pink */
+                .card-bg-watermark {
+                    position: absolute;
+                    right: -25px;
+                    bottom: -25px;
+                    width: 160px;
+                    height: 160px;
+                    opacity: 0.12;
+                    pointer-events: none;
+                    z-index: 0;
+                    filter: hue-rotate(300deg) saturate(1.4);
+                }
+
+                /* -------------------------------------------------------------------------
        Card Top Header: Hardware Chip + Brand + Eye Privacy Toggle
        ------------------------------------------------------------------------- */
-    .card-top-row {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-    }
+                .card-top-row {
+                    position: relative;
+                    z-index: 2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+                }
 
-    .card-hardware-group {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
+                .card-hardware-group {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
 
-    /* Satin Rose-Gold / Champagne EMV Smart Chip */
-    .card-rose-chip {
-        width: 44px;
-        height: 33px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, #FFF3D6 0%, #F5C6AA 48%, #E49A78 100%);
-        border: 1px solid rgba(255, 255, 255, 0.9);
-        box-shadow: 
-            0 2px 6px rgba(180, 83, 9, 0.18),
-            inset 0 1px 2px rgba(255, 255, 255, 0.9);
-        position: relative;
-        overflow: hidden;
-    }
-    .card-rose-chip::before {
-        content: '';
-        position: absolute;
-        inset: 4px;
-        border: 1px solid rgba(140, 70, 30, 0.35);
-        border-radius: 4px;
-        background: 
-            linear-gradient(90deg, transparent 46%, rgba(140, 70, 30, 0.22) 46%, rgba(140, 70, 30, 0.22) 54%, transparent 54%),
-            linear-gradient(0deg, transparent 46%, rgba(140, 70, 30, 0.22) 46%, rgba(140, 70, 30, 0.22) 54%, transparent 54%);
-    }
+                /* Satin Rose-Gold / Champagne EMV Smart Chip */
+                .card-rose-chip {
+                    width: 44px;
+                    height: 33px;
+                    border-radius: 8px;
+                    background: linear-gradient(135deg, #FFF3D6 0%, #F5C6AA 48%, #E49A78 100%);
+                    border: 1px solid rgba(255, 255, 255, 0.9);
+                    box-shadow:
+                        0 2px 6px rgba(180, 83, 9, 0.18),
+                        inset 0 1px 2px rgba(255, 255, 255, 0.9);
+                    position: relative;
+                    overflow: hidden;
+                }
 
-    /* Minimal Contactless Wave */
-    .card-contactless-wave {
-        width: 20px;
-        height: 20px;
-        color: #7A5C6B;
-        opacity: 0.85;
-    }
+                .card-rose-chip::before {
+                    content: '';
+                    position: absolute;
+                    inset: 4px;
+                    border: 1px solid rgba(140, 70, 30, 0.35);
+                    border-radius: 4px;
+                    background:
+                        linear-gradient(90deg, transparent 46%, rgba(140, 70, 30, 0.22) 46%, rgba(140, 70, 30, 0.22) 54%, transparent 54%),
+                        linear-gradient(0deg, transparent 46%, rgba(140, 70, 30, 0.22) 46%, rgba(140, 70, 30, 0.22) 54%, transparent 54%);
+                }
 
-    /* Brand Logos on Card */
-    .card-brand-wrap {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .card-brand-logo {
-        width: 32px;
-        height: 32px;
-        object-fit: contain;
-        filter: drop-shadow(0 2px 6px rgba(225, 29, 72, 0.2));
-    }
-    .card-brand-text {
-        height: 18px;
-        object-fit: contain;
-        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
-    }
+                /* Minimal Contactless Wave */
+                .card-contactless-wave {
+                    width: 20px;
+                    height: 20px;
+                    color: #7A5C6B;
+                    opacity: 0.85;
+                }
 
-    /* Confidentiality Eye Toggle (Integrated in Card) */
-    .btn-eye-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.95);
-        color: #4A3542;
-        box-shadow: 0 2px 8px rgba(244, 114, 182, 0.2);
-        transition: transform 0.2s ease, background 0.2s ease;
-        padding: 0;
-    }
-    .btn-eye-toggle:active {
-        transform: scale(0.88);
-        background: #FFFFFF;
-    }
-    .btn-eye-toggle svg {
-        width: 19px;
-        height: 19px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 2.2;
-    }
+                /* Brand Logos on Card */
+                .card-brand-wrap {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
 
-    /* -------------------------------------------------------------------------
+                .card-brand-logo {
+                    width: 32px;
+                    height: 32px;
+                    object-fit: contain;
+                    filter: drop-shadow(0 2px 6px rgba(225, 29, 72, 0.2));
+                }
+
+                .card-brand-text {
+                    height: 18px;
+                    object-fit: contain;
+                    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
+                }
+
+                /* Confidentiality Eye Toggle (Integrated in Card) */
+                .btn-eye-toggle {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.7);
+                    backdrop-filter: blur(8px);
+                    -webkit-backdrop-filter: blur(8px);
+                    border: 1px solid rgba(255, 255, 255, 0.95);
+                    color: #4A3542;
+                    box-shadow: 0 2px 8px rgba(244, 114, 182, 0.2);
+                    transition: transform 0.2s ease, background 0.2s ease;
+                    padding: 0;
+                }
+
+                .btn-eye-toggle:active {
+                    transform: scale(0.88);
+                    background: #FFFFFF;
+                }
+
+                .btn-eye-toggle svg {
+                    width: 19px;
+                    height: 19px;
+                    stroke: currentColor;
+                    fill: none;
+                    stroke-width: 2.2;
+                }
+
+                /* -------------------------------------------------------------------------
        Card Balance Core Display
        ------------------------------------------------------------------------- */
-    .card-body-balance {
-        position: relative;
-        z-index: 2;
-        margin-top: 14px;
-        margin-bottom: 14px;
-    }
+                .card-body-balance {
+                    position: relative;
+                    z-index: 2;
+                    margin-top: 14px;
+                    margin-bottom: 14px;
+                }
 
-    .card-label-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        margin-bottom: 2px;
-    }
-    .vault-top-label {
-        font-size: 0.75rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        color: #6E5363;
-    }
-    .card-tier-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 3px 9px;
-        border-radius: var(--radius-pill);
-        background: rgba(255, 255, 255, 0.85);
-        border: 1px solid rgba(244, 114, 182, 0.35);
-        color: #831843;
-        font-size: 0.68rem;
-        font-weight: 800;
-        letter-spacing: 0.6px;
-        text-transform: uppercase;
-        box-shadow: 0 2px 6px rgba(244, 114, 182, 0.15);
-    }
-    .card-tier-pill::before {
-        content: '';
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #10B981;
-        box-shadow: 0 0 6px #10B981;
-    }
+                .card-label-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 8px;
+                    margin-bottom: 2px;
+                }
 
-    .vault-balance-row {
-        display: flex;
-        align-items: baseline;
-        gap: 8px;
-    }
-    .vault-currency {
-        font-size: 1.55rem;
-        font-weight: 800;
-        color: #4A154B;
-        letter-spacing: -0.5px;
-    }
-    .vault-number {
-        font-size: clamp(2.3rem, 7.5vw, 3.4rem);
-        font-weight: 900;
-        letter-spacing: -1.8px;
-        line-height: 1;
-        color: #0F172A; /* Deep Rich Slate for high contrast on pink */
-    }
+                .vault-top-label {
+                    font-size: 0.75rem;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    letter-spacing: 1.2px;
+                    color: #6E5363;
+                }
 
-    /* -------------------------------------------------------------------------
+                .card-tier-pill {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 3px 9px;
+                    border-radius: var(--radius-pill);
+                    background: rgba(255, 255, 255, 0.85);
+                    border: 1px solid rgba(244, 114, 182, 0.35);
+                    color: #831843;
+                    font-size: 0.68rem;
+                    font-weight: 800;
+                    letter-spacing: 0.6px;
+                    text-transform: uppercase;
+                    box-shadow: 0 2px 6px rgba(244, 114, 182, 0.15);
+                }
+
+                .card-tier-pill::before {
+                    content: '';
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: #10B981;
+                    box-shadow: 0 0 6px #10B981;
+                }
+
+                .vault-balance-row {
+                    display: flex;
+                    align-items: baseline;
+                    gap: 8px;
+                }
+
+                .vault-currency {
+                    font-size: 1.55rem;
+                    font-weight: 800;
+                    color: #4A154B;
+                    letter-spacing: -0.5px;
+                }
+
+                .vault-number {
+                    font-size: clamp(2.3rem, 7.5vw, 3.4rem);
+                    font-weight: 900;
+                    letter-spacing: -1.8px;
+                    line-height: 1;
+                    color: #0F172A;
+                    /* Deep Rich Slate for high contrast on pink */
+                }
+
+                /* -------------------------------------------------------------------------
        Card Bottom: Real Authenticated User Details (Name, UID, Validity)
        ------------------------------------------------------------------------- */
-    .card-user-details-footer {
-        position: relative;
-        z-index: 2;
-        padding-top: 14px;
-        border-top: 1px solid rgba(122, 92, 107, 0.15);
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 12px;
-    }
+                .card-user-details-footer {
+                    position: relative;
+                    z-index: 2;
+                    padding-top: 14px;
+                    border-top: 1px solid rgba(122, 92, 107, 0.15);
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: space-between;
+                    gap: 12px;
+                }
 
-    .card-user-meta {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        min-width: 0;
-    }
-    .card-meta-caption {
-        font-size: 0.62rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: #7A5C6B;
-    }
-    .card-user-name {
-        font-size: 1rem;
-        font-weight: 800;
-        color: #0F172A;
-        letter-spacing: -0.3px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 220px;
-        text-transform: uppercase;
-    }
+                .card-user-meta {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+                    min-width: 0;
+                }
 
-    .card-meta-right {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 2px;
-        flex-shrink: 0;
-        text-align: right;
-    }
-    .card-user-uid {
-        font-size: 0.78rem;
-        font-weight: 800;
-        color: #2D1F27;
-        letter-spacing: 0.5px;
-    }
-    .card-membership-tag {
-        font-size: 0.65rem;
-        font-weight: 700;
-        color: #6E5363;
-        letter-spacing: 0.4px;
-    }
-</style>
+                .card-meta-caption {
+                    font-size: 0.62rem;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    letter-spacing: 0.8px;
+                    color: #7A5C6B;
+                }
 
-<!-- SECTION DOM -->
-<section class="vault-main-card" id="sigmaVaultMainCard">
-    <!-- Pink Tinted Background Watermark -->
-    <img src="assets/logo.png" alt="" class="card-bg-watermark" onerror="this.style.display='none'">
+                .card-user-name {
+                    font-size: 1rem;
+                    font-weight: 800;
+                    color: #0F172A;
+                    letter-spacing: -0.3px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 220px;
+                    text-transform: uppercase;
+                }
 
-    <!-- Top Technology & Hardware Row -->
-    <div class="card-top-row">
-        <div class="card-hardware-group">
-            <div class="card-rose-chip" title="Security Smart Chip"></div>
-            <svg class="card-contactless-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-1.12-2.5-2.5-2.5M11.5 17.5a5.5 5.5 0 0 0 0-11M14.5 20.5a8.5 8.5 0 0 0 0-17"/>
-            </svg>
-        </div>
+                .card-meta-right {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 2px;
+                    flex-shrink: 0;
+                    text-align: right;
+                }
 
-        <div class="card-brand-wrap">
-            <img src="assets/textlogo.png" alt="SIGMA" class="card-brand-text" onerror="this.style.display='none'">
-            <img src="assets/logo.png" alt="" class="card-brand-logo" onerror="this.style.display='none'">
-            
-           
-        </div>
-    </div>
+                .card-user-uid {
+                    font-size: 0.78rem;
+                    font-weight: 800;
+                    color: #2D1F27;
+                    letter-spacing: 0.5px;
+                }
 
-    <!-- Core Balance Area -->
-    <div class="card-body-balance">
-        <div class="card-label-row">
-            <span class="vault-top-label" id="cmsTotalBalanceLabel">Total Net Worth</span>
-    
-        </div>
+                .card-membership-tag {
+                    font-size: 0.65rem;
+                    font-weight: 700;
+                    color: #6E5363;
+                    letter-spacing: 0.4px;
+                }
+            </style>
 
-        <div class="vault-balance-row">
-            <span class="vault-currency">Rs.</span>
-            <!-- Preserves ID for existing Firebase Count-Up Animation -->
-            <span class="vault-number font-mono" id="uiNetBalance">0.00</span>
-        </div>
-    </div>
+            <!-- SECTION DOM -->
+            <section class="vault-main-card" id="sigmaVaultMainCard">
+                <!-- Pink Tinted Background Watermark -->
+                <img src="assets/logo.png" alt="" class="card-bg-watermark" onerror="this.style.display='none'">
 
-    <!-- Authentic User Details Footer -->
-    <div class="card-user-details-footer">
-        <div class="card-user-meta">
-            <span class="card-meta-caption">Account Holder</span>
-            <span class="card-user-name" id="cardUserFullName">Investor</span>
-        </div>
+                <!-- Top Technology & Hardware Row -->
+                <div class="card-top-row">
+                    <div class="card-hardware-group">
+                        <div class="card-rose-chip" title="Security Smart Chip"></div>
+                        <svg class="card-contactless-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round">
+                            <path
+                                d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-1.12-2.5-2.5-2.5M11.5 17.5a5.5 5.5 0 0 0 0-11M14.5 20.5a8.5 8.5 0 0 0 0-17" />
+                        </svg>
+                    </div>
 
-        <div class="card-meta-right">
-            <span class="card-meta-caption">Account ID</span>
-            <span class="card-user-uid font-mono" id="cardDisplayUID">SIG-••••</span>
-        </div>
-    </div>
-</section>
+                    <div class="card-brand-wrap">
+                        <img src="assets/textlogo.png" alt="SIGMA" class="card-brand-text"
+                            onerror="this.style.display='none'">
+                        <img src="assets/logo.png" alt="" class="card-brand-logo" onerror="this.style.display='none'">
 
-<!-- Auto-Sync Script for User Details on this Card -->
-<script>
-    (function syncCardDetails() {
-        // Observes dashboard identity and syncs real user details straight to this card
-        const syncInterval = setInterval(() => {
-            const srcName = document.getElementById('uiDisplayName');
-            const srcUID = document.getElementById('uiAccountUID');
-            const targetName = document.getElementById('cardUserFullName');
-            const targetUID = document.getElementById('cardDisplayUID');
-            const srcTier = document.getElementById('uiTierBadge');
-            const targetTier = document.getElementById('cardTierBadge');
 
-            if (srcName && targetName && srcName.textContent && !srcName.classList.contains('skeleton')) {
-                targetName.textContent = srcName.textContent;
-            }
-            if (srcUID && targetUID && srcUID.textContent) {
-                targetUID.textContent = srcUID.textContent.replace('UID: ', '');
-            }
-            if (srcTier && targetTier && srcTier.textContent) {
-                targetTier.textContent = srcTier.textContent + ' Verified';
-            }
-        }, 600);
+                    </div>
+                </div>
 
-        // Clear interval after 15 seconds once user details are loaded
-        setTimeout(() => clearInterval(syncInterval), 15000);
-    })();
-</script>
+                <!-- Core Balance Area -->
+                <div class="card-body-balance">
+                    <div class="card-label-row">
+                        <span class="vault-top-label" id="cmsTotalBalanceLabel">Total Net Worth</span>
+
+                    </div>
+
+                    <div class="vault-balance-row">
+                        <span class="vault-currency">Rs.</span>
+                        <!-- Preserves ID for existing Firebase Count-Up Animation -->
+                        <span class="vault-number font-mono" id="uiNetBalance">0.00</span>
+                    </div>
+                </div>
+
+                <!-- Authentic User Details Footer -->
+                <div class="card-user-details-footer">
+                    <div class="card-user-meta">
+                        <span class="card-meta-caption">Account Holder</span>
+                        <span class="card-user-name" id="cardUserFullName">Investor</span>
+                    </div>
+
+                    <div class="card-meta-right">
+                        <span class="card-meta-caption">Account ID</span>
+                        <span class="card-user-uid font-mono" id="cardDisplayUID">SIG-••••</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Auto-Sync Script for User Details on this Card -->
+            <script>
+                (function syncCardDetails() {
+                    // Observes dashboard identity and syncs real user details straight to this card
+                    const syncInterval = setInterval(() => {
+                        const srcName = document.getElementById('uiDisplayName');
+                        const srcUID = document.getElementById('uiAccountUID');
+                        const targetName = document.getElementById('cardUserFullName');
+                        const targetUID = document.getElementById('cardDisplayUID');
+                        const srcTier = document.getElementById('uiTierBadge');
+                        const targetTier = document.getElementById('cardTierBadge');
+
+                        if (srcName && targetName && srcName.textContent && !srcName.classList.contains('skeleton')) {
+                            targetName.textContent = srcName.textContent;
+                        }
+                        if (srcUID && targetUID && srcUID.textContent) {
+                            targetUID.textContent = srcUID.textContent.replace('UID: ', '');
+                        }
+                        if (srcTier && targetTier && srcTier.textContent) {
+                            targetTier.textContent = srcTier.textContent + ' Verified';
+                        }
+                    }, 600);
+
+                    // Clear interval after 15 seconds once user details are loaded
+                    setTimeout(() => clearInterval(syncInterval), 15000);
+                })();
+            </script>
 
             <!-- =======================================================================
      SIGMA WALLET ACTION DOCK (DEPOSIT & WITHDRAW - STRICT SINGLE ROW)
      Place this directly below your Multi-Wallet Card
      ======================================================================= -->
-<style>
-    /* Scoped Container directly under wallet card */
-    .sigma-wallet-actions-row {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-top: -6px; /* Blends seamlessly right beneath the vault card */
-        margin-bottom: 20px;
-    }
+            <style>
+                /* Scoped Container directly under wallet card */
+                .sigma-wallet-actions-row {
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 12px;
+                    margin-top: -6px;
+                    /* Blends seamlessly right beneath the vault card */
+                    margin-bottom: 20px;
+                }
 
-    /* Common Button Surface */
-    .btn-wallet-action {
-        position: relative;
-        height: 56px;
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        font-weight: 800;
-        font-size: 0.95rem;
-        letter-spacing: -0.2px;
-        text-decoration: none;
-        cursor: pointer;
-        user-select: none;
-        overflow: hidden;
-        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-                    box-shadow 0.25s ease,
-                    filter 0.2s ease;
-        -webkit-tap-highlight-color: transparent;
-    }
+                /* Common Button Surface */
+                .btn-wallet-action {
+                    position: relative;
+                    height: 56px;
+                    border-radius: 18px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    font-weight: 800;
+                    font-size: 0.95rem;
+                    letter-spacing: -0.2px;
+                    text-decoration: none;
+                    cursor: pointer;
+                    user-select: none;
+                    overflow: hidden;
+                    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        box-shadow 0.25s ease,
+                        filter 0.2s ease;
+                    -webkit-tap-highlight-color: transparent;
+                }
 
-    /* Micro Shimmer Light Sweep on Buttons */
-    .btn-wallet-action::before {
-        content: '';
-        position: absolute;
-        top: 0; left: -120%;
-        width: 60%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-        transform: skewX(-22deg);
-        transition: left 0.6s ease;
-        pointer-events: none;
-    }
-    .btn-wallet-action:hover::before { left: 180%; }
+                /* Micro Shimmer Light Sweep on Buttons */
+                .btn-wallet-action::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -120%;
+                    width: 60%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+                    transform: skewX(-22deg);
+                    transition: left 0.6s ease;
+                    pointer-events: none;
+                }
 
-    /* Interactive Physical Depress */
-    .btn-wallet-action:active {
-        transform: scale(0.96) translateY(1px);
-    }
+                .btn-wallet-action:hover::before {
+                    left: 180%;
+                }
 
-    /* 1. DEPOSIT ACTION (Profit Emerald Engine) */
-    .btn-action-deposit {
-        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-        color: #FFFFFF;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 0 10px 22px -6px rgba(16, 185, 129, 0.45),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.35);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
-    }
-    .btn-action-deposit:hover {
-        filter: brightness(1.05);
-        box-shadow: 0 14px 26px -6px rgba(16, 185, 129, 0.55);
-    }
+                /* Interactive Physical Depress */
+                .btn-wallet-action:active {
+                    transform: scale(0.96) translateY(1px);
+                }
 
-    /* 2. WITHDRAW ACTION (Corporate Velvet / Midnight Gold Contrast) */
-    .btn-action-withdraw {
-        background: linear-gradient(135deg, #0B132B 0%, #1C2541 100%);
-        color: #FFFFFF;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        box-shadow: 0 10px 22px -6px rgba(11, 19, 43, 0.35),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    }
-    .btn-action-withdraw:hover {
-        filter: brightness(1.15);
-        box-shadow: 0 14px 26px -6px rgba(11, 19, 43, 0.45);
-    }
+                /* 1. DEPOSIT ACTION (Profit Emerald Engine) */
+                .btn-action-deposit {
+                    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+                    color: #FFFFFF;
+                    border: 1px solid rgba(255, 255, 255, 0.25);
+                    box-shadow: 0 10px 22px -6px rgba(16, 185, 129, 0.45),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+                }
 
-    /* Icon Housings */
-    .btn-wallet-action .action-ico-wrap {
-        width: 32px;
-        height: 32px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        transition: transform 0.25s ease;
-    }
-    .btn-action-deposit .action-ico-wrap {
-        background: rgba(255, 255, 255, 0.2);
-        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-    .btn-action-withdraw .action-ico-wrap {
-        background: rgba(239, 68, 68, 0.15);
-        color: #F87171;
-        border: 1px solid rgba(239, 68, 68, 0.25);
-    }
+                .btn-action-deposit:hover {
+                    filter: brightness(1.05);
+                    box-shadow: 0 14px 26px -6px rgba(16, 185, 129, 0.55);
+                }
 
-    .btn-wallet-action:hover .action-ico-wrap {
-        transform: scale(1.1);
-    }
+                /* 2. WITHDRAW ACTION (Corporate Velvet / Midnight Gold Contrast) */
+                .btn-action-withdraw {
+                    background: linear-gradient(135deg, #0B132B 0%, #1C2541 100%);
+                    color: #FFFFFF;
+                    border: 1px solid rgba(255, 255, 255, 0.12);
+                    box-shadow: 0 10px 22px -6px rgba(11, 19, 43, 0.35),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                }
 
-    .btn-wallet-action svg {
-        width: 18px;
-        height: 18px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 2.6;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
+                .btn-action-withdraw:hover {
+                    filter: brightness(1.15);
+                    box-shadow: 0 14px 26px -6px rgba(11, 19, 43, 0.45);
+                }
 
-    /* Status Dot Inside Withdraw */
-    .withdraw-live-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #10B981;
-        box-shadow: 0 0 6px #10B981;
-        margin-left: -2px;
-    }
+                /* Icon Housings */
+                .btn-wallet-action .action-ico-wrap {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                    transition: transform 0.25s ease;
+                }
 
-    /* Strict Mobile Viewport Safety (320px screen protection) */
-    @media (max-width: 380px) {
-        .sigma-wallet-actions-row {
-            gap: 8px;
-        }
-        .btn-wallet-action {
-            height: 50px;
-            font-size: 0.85rem;
-            gap: 6px;
-            border-radius: 14px;
-        }
-        .btn-wallet-action .action-ico-wrap {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-        }
-        .btn-wallet-action svg {
-            width: 15px;
-            height: 15px;
-        }
-    }
-</style>
+                .btn-action-deposit .action-ico-wrap {
+                    background: rgba(255, 255, 255, 0.2);
+                    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+                }
 
-<!-- SECTION DOM -->
-<div class="sigma-wallet-actions-row" id="walletActionsSubDock">
-    <!-- 1. Deposit Button -->
-    <a href="plans.html" class="btn-wallet-action btn-action-deposit" id="wBtnDeposit" aria-label="Deposit Funds">
-        <div class="action-ico-wrap">
-            <svg viewBox="0 0 24 24">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <polyline points="19 12 12 19 5 12"></polyline>
-            </svg>
-        </div>
-        <span id="wTxtDeposit">Deposit</span>
-    </a>
+                .btn-action-withdraw .action-ico-wrap {
+                    background: rgba(239, 68, 68, 0.15);
+                    color: #F87171;
+                    border: 1px solid rgba(239, 68, 68, 0.25);
+                }
 
-    <!-- 2. Withdraw Button -->
-    <a href="withdraw.html" class="btn-wallet-action btn-action-withdraw" id="wBtnWithdraw" aria-label="Withdraw Funds">
-        <div class="action-ico-wrap">
-            <svg viewBox="0 0 24 24">
-                <line x1="12" y1="19" x2="12" y2="5"></line>
-                <polyline points="5 12 12 5 19 12"></polyline>
-            </svg>
-        </div>
-        <span id="wTxtWithdraw">Withdraw</span>
-        <div class="withdraw-live-dot" title="24/7 Processing Active"></div>
-    </a>
-</div>
+                .btn-wallet-action:hover .action-ico-wrap {
+                    transform: scale(1.1);
+                }
 
-<!-- COMPONENT SCRIPTS & REALTIME INTEGRATION -->
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const btnDep = document.getElementById('wBtnDeposit');
-        const btnWith = document.getElementById('wBtnWithdraw');
-        const txtDep = document.getElementById('wTxtDeposit');
-        const txtWith = document.getElementById('wTxtWithdraw');
+                .btn-wallet-action svg {
+                    width: 18px;
+                    height: 18px;
+                    stroke: currentColor;
+                    fill: none;
+                    stroke-width: 2.6;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                }
 
-        // 1. Mobile Vibration (Haptic Touch Feedback)
-        const triggerHaptic = (ms = 35) => {
-            if ('vibrate' in navigator) {
-                try { navigator.vibrate(ms); } catch (e) {}
-            }
-        };
+                /* Status Dot Inside Withdraw */
+                .withdraw-live-dot {
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 50%;
+                    background: #10B981;
+                    box-shadow: 0 0 6px #10B981;
+                    margin-left: -2px;
+                }
 
-        if (btnDep) btnDep.addEventListener('click', () => triggerHaptic(30));
-        if (btnWith) btnWith.addEventListener('click', () => triggerHaptic(30));
-
-        // 2. Firebase CMS Configuration Listener (Auto-updates without editing HTML)
-        if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-            try {
-                const db = firebase.firestore();
-                db.collection('settings').doc('cms_dashboard').onSnapshot(doc => {
-                    if (doc.exists) {
-                        const cms = doc.data();
-                        
-                        // Dynamic Labels Controlled by Admin
-                        if (cms.btnDeposit && txtDep) txtDep.textContent = cms.btnDeposit;
-                        if (cms.btnWithdraw && txtWith) txtWith.textContent = cms.btnWithdraw;
-
-                        // Dynamic Custom Redirect Endpoints if Admin modifies paths
-                        if (cms.urlDeposit && btnDep) btnDep.href = cms.urlDeposit;
-                        if (cms.urlWithdraw && btnWith) btnWith.href = cms.urlWithdraw;
+                /* Strict Mobile Viewport Safety (320px screen protection) */
+                @media (max-width: 380px) {
+                    .sigma-wallet-actions-row {
+                        gap: 8px;
                     }
-                }, err => {
-                    console.warn("Wallet action CMS sync offline, using production defaults:", err);
+
+                    .btn-wallet-action {
+                        height: 50px;
+                        font-size: 0.85rem;
+                        gap: 6px;
+                        border-radius: 14px;
+                    }
+
+                    .btn-wallet-action .action-ico-wrap {
+                        width: 28px;
+                        height: 28px;
+                        border-radius: 8px;
+                    }
+
+                    .btn-wallet-action svg {
+                        width: 15px;
+                        height: 15px;
+                    }
+                }
+            </style>
+
+            <!-- SECTION DOM -->
+            <div class="sigma-wallet-actions-row" id="walletActionsSubDock">
+                <!-- 1. Deposit Button -->
+                <a href="plans.html" class="btn-wallet-action btn-action-deposit" id="wBtnDeposit"
+                    aria-label="Deposit Funds">
+                    <div class="action-ico-wrap">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <polyline points="19 12 12 19 5 12"></polyline>
+                        </svg>
+                    </div>
+                    <span id="wTxtDeposit">Deposit</span>
+                </a>
+
+                <!-- 2. Withdraw Button -->
+                <a href="withdraw.html" class="btn-wallet-action btn-action-withdraw" id="wBtnWithdraw"
+                    aria-label="Withdraw Funds">
+                    <div class="action-ico-wrap">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="12" y1="19" x2="12" y2="5"></line>
+                            <polyline points="5 12 12 5 19 12"></polyline>
+                        </svg>
+                    </div>
+                    <span id="wTxtWithdraw">Withdraw</span>
+                    <div class="withdraw-live-dot" title="24/7 Processing Active"></div>
+                </a>
+            </div>
+
+            <!-- COMPONENT SCRIPTS & REALTIME INTEGRATION -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const btnDep = document.getElementById('wBtnDeposit');
+                    const btnWith = document.getElementById('wBtnWithdraw');
+                    const txtDep = document.getElementById('wTxtDeposit');
+                    const txtWith = document.getElementById('wTxtWithdraw');
+
+                    // 1. Mobile Vibration (Haptic Touch Feedback)
+                    const triggerHaptic = (ms = 35) => {
+                        if ('vibrate' in navigator) {
+                            try { navigator.vibrate(ms); } catch (e) { }
+                        }
+                    };
+
+                    if (btnDep) btnDep.addEventListener('click', () => triggerHaptic(30));
+                    if (btnWith) btnWith.addEventListener('click', () => triggerHaptic(30));
+
+                    // 2. Firebase CMS Configuration Listener (Auto-updates without editing HTML)
+                    if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                        try {
+                            const db = firebase.firestore();
+                            db.collection('settings').doc('cms_dashboard').onSnapshot(doc => {
+                                if (doc.exists) {
+                                    const cms = doc.data();
+
+                                    // Dynamic Labels Controlled by Admin
+                                    if (cms.btnDeposit && txtDep) txtDep.textContent = cms.btnDeposit;
+                                    if (cms.btnWithdraw && txtWith) txtWith.textContent = cms.btnWithdraw;
+
+                                    // Dynamic Custom Redirect Endpoints if Admin modifies paths
+                                    if (cms.urlDeposit && btnDep) btnDep.href = cms.urlDeposit;
+                                    if (cms.urlWithdraw && btnWith) btnWith.href = cms.urlWithdraw;
+                                }
+                            }, err => {
+                                console.warn("Wallet action CMS sync offline, using production defaults:", err);
+                            });
+                        } catch (err) {
+                            console.warn("Firebase runtime initialization skipped:", err);
+                        }
+                    }
                 });
-            } catch (err) {
-                console.warn("Firebase runtime initialization skipped:", err);
-            }
-        }
-    });
-</script>
+            </script>
             <!-- Triple Pocket Multi-Wallet Matrix -->
             <section class="pocket-wallets-grid">
                 <!-- 1. Deposit / Main Wallet -->
                 <div class="pocket-card p-deposit">
                     <div class="pocket-head">
                         <span class="pocket-title" id="cmsWalletDepositTitle">Deposit / Main</span>
-                        <div class="pocket-icon-wrap"><svg><use href="#icon-wallet" /></svg></div>
+                        <div class="pocket-icon-wrap"><svg>
+                                <use href="#icon-wallet" />
+                            </svg></div>
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Deposit</span>
@@ -2956,7 +3228,9 @@
                 <div class="pocket-card p-profit">
                     <div class="pocket-head">
                         <span class="pocket-title" id="cmsWalletProfitTitle">Profit / ROI</span>
-                        <div class="pocket-icon-wrap"><svg><use href="#icon-arrow-up" /></svg></div>
+                        <div class="pocket-icon-wrap"><svg>
+                                <use href="#icon-arrow-up" />
+                            </svg></div>
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Profit</span>
@@ -2969,7 +3243,9 @@
                 <div class="pocket-card p-comm">
                     <div class="pocket-head">
                         <span class="pocket-title" id="cmsWalletCommissionTitle">Commission</span>
-                        <div class="pocket-icon-wrap"><svg><use href="#icon-crown" /></svg></div>
+                        <div class="pocket-icon-wrap"><svg>
+                                <use href="#icon-crown" />
+                            </svg></div>
                     </div>
                     <div class="pocket-details">
                         <span class="pocket-title-mobile">Commission</span>
@@ -2982,7 +3258,9 @@
             <!-- Exact 24-Hour Plan Timestamp Countdown Engine -->
             <section class="live-countdown-island">
                 <div class="countdown-info">
-                    <div class="pulsing-yield-ring"><svg><use href="#icon-pie" /></svg></div>
+                    <div class="pulsing-yield-ring"><svg>
+                            <use href="#icon-pie" />
+                        </svg></div>
                     <div>
                         <small id="cmsCountdownKicker">Next Profit Credit</small>
                         <strong id="cmsCountdownPlan">No Active Cycle</strong>
@@ -2995,7 +3273,9 @@
             <section class="orbital-terminal-wrapper">
                 <div class="orbital-header">
                     <h3 id="cmsTerminalTitle">Command Center</h3>
-                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--sigma-accent-dark); letter-spacing: 1px;">ORBITAL MATRIX</span>
+                    <span
+                        style="font-size: 0.75rem; font-weight: 800; color: var(--sigma-accent-dark); letter-spacing: 1px;">ORBITAL
+                        MATRIX</span>
                 </div>
 
                 <div class="orbit-stage">
@@ -3010,33 +3290,51 @@
                     </div>
 
                     <!-- 6 Orbital Nodes Pointing Strictly to Full .html Routes -->
-                    <a href="plans.html" class="orbit-node node-pos-1" onclick="appController.logAction('deposit_node', 'Opened deposit/plans via terminal')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-info-dark);"><svg><use href="#icon-arrow-down" /></svg></div>
+                    <a href="plans.html" class="orbit-node node-pos-1"
+                        onclick="appController.logAction('deposit_node', 'Opened deposit/plans via terminal')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-info-dark);"><svg>
+                                <use href="#icon-arrow-down" />
+                            </svg></div>
                         <span>Deposit</span>
                     </a>
 
-                    <a href="assets/sigma.apk" download class="orbit-node node-pos-2" onclick="appController.logAction('app_download_node', 'Initiated App Download')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-purple);"><svg><use href="#icon-download" /></svg></div>
+                    <a href="assets/sigma.apk" download class="orbit-node node-pos-2"
+                        onclick="appController.logAction('app_download_node', 'Initiated App Download')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-purple);"><svg>
+                                <use href="#icon-download" />
+                            </svg></div>
                         <span>App (APK)</span>
                     </a>
 
-                    <a href="my-plans.html" class="orbit-node node-pos-3" onclick="appController.logAction('my_plans_node', 'Navigated to my plans')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg><use href="#icon-pie" /></svg></div>
+                    <a href="my-plans.html" class="orbit-node node-pos-3"
+                        onclick="appController.logAction('my_plans_node', 'Navigated to my plans')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-primary);"><svg>
+                                <use href="#icon-pie" />
+                            </svg></div>
                         <span>My Plans</span>
                     </a>
 
-                    <a href="withdraw.html" class="orbit-node node-pos-4" onclick="appController.logAction('withdraw_node', 'Opened withdraw via terminal')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-danger-dark);"><svg><use href="#icon-arrow-up" /></svg></div>
+                    <a href="withdraw.html" class="orbit-node node-pos-4"
+                        onclick="appController.logAction('withdraw_node', 'Opened withdraw via terminal')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-danger-dark);"><svg>
+                                <use href="#icon-arrow-up" />
+                            </svg></div>
                         <span>Withdraw</span>
                     </a>
 
-                    <a href="team.html" class="orbit-node node-pos-5" onclick="appController.logAction('network_node', 'Viewed network tree')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-users" /></svg></div>
+                    <a href="team.html" class="orbit-node node-pos-5"
+                        onclick="appController.logAction('network_node', 'Viewed network tree')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-gold-dark);"><svg>
+                                <use href="#icon-users" />
+                            </svg></div>
                         <span>Network</span>
                     </a>
 
-                    <a href="support.html" class="orbit-node node-pos-6" onclick="appController.logAction('support_node', 'Opened support desk')">
-                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-message" /></svg></div>
+                    <a href="support.html" class="orbit-node node-pos-6"
+                        onclick="appController.logAction('support_node', 'Opened support desk')">
+                        <div class="orbit-node-icon" style="color: var(--sigma-accent-dark);"><svg>
+                                <use href="#icon-message" />
+                            </svg></div>
                         <span>Support</span>
                     </a>
                 </div>
@@ -3044,22 +3342,34 @@
                 <!-- Fallback Grid for Ultra-Narrow Viewports (<380px) -->
                 <div class="orbit-linear-fallback">
                     <a href="plans.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-info-dark);"><svg><use href="#icon-arrow-down" /></svg></div><span>Deposit</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-info-dark);"><svg>
+                                <use href="#icon-arrow-down" />
+                            </svg></div><span>Deposit</span>
                     </a>
                     <a href="assets/sigma.apk" download class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-purple);"><svg><use href="#icon-download" /></svg></div><span>App (APK)</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-purple);"><svg>
+                                <use href="#icon-download" />
+                            </svg></div><span>App (APK)</span>
                     </a>
                     <a href="my-plans.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-primary);"><svg><use href="#icon-pie" /></svg></div><span>My Plans</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-primary);"><svg>
+                                <use href="#icon-pie" />
+                            </svg></div><span>My Plans</span>
                     </a>
                     <a href="withdraw.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-danger-dark);"><svg><use href="#icon-arrow-up" /></svg></div><span>Withdraw</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-danger-dark);"><svg>
+                                <use href="#icon-arrow-up" />
+                            </svg></div><span>Withdraw</span>
                     </a>
                     <a href="team.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-users" /></svg></div><span>Network</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-gold-dark);"><svg>
+                                <use href="#icon-users" />
+                            </svg></div><span>Network</span>
                     </a>
                     <a href="support.html" class="terminal-btn">
-                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg><use href="#icon-message" /></svg></div><span>Support</span>
+                        <div class="terminal-btn-icon" style="color: var(--sigma-accent-dark);"><svg>
+                                <use href="#icon-message" />
+                            </svg></div><span>Support</span>
                     </a>
                 </div>
             </section>
@@ -3068,11 +3378,15 @@
             <section class="secondary-actions-container">
                 <div class="secondary-actions-grid">
                     <a href="transactions.html" class="sec-action-btn">
-                        <div class="sec-action-icon" style="color: var(--sigma-secondary);"><svg><use href="#icon-receipt" /></svg></div>
+                        <div class="sec-action-icon" style="color: var(--sigma-secondary);"><svg>
+                                <use href="#icon-receipt" />
+                            </svg></div>
                         Transactions
                     </a>
                     <a href="leaderboard.html" class="sec-action-btn">
-                        <div class="sec-action-icon" style="color: var(--sigma-gold-dark);"><svg><use href="#icon-trophy" /></svg></div>
+                        <div class="sec-action-icon" style="color: var(--sigma-gold-dark);"><svg>
+                                <use href="#icon-trophy" />
+                            </svg></div>
                         Leaderboard
                     </a>
                 </div>
@@ -3088,20 +3402,27 @@
                         <span class="badge-type" id="stepperTrxType">Transaction</span>
                         <h3 id="stepperTrxAmount" class="font-mono" style="margin-top: 6px;">Rs. 0.00</h3>
                     </div>
-                    <span id="stepperReference" class="font-mono" style="font-size: 0.8rem; color: var(--text-muted);">REF-â€¢â€¢â€¢â€¢</span>
+                    <span id="stepperReference" class="font-mono"
+                        style="font-size: 0.8rem; color: var(--text-muted);">REF-â€¢â€¢â€¢â€¢</span>
                 </div>
 
                 <div class="stepper-track">
                     <div class="step-node completed" id="stepNode1">
-                        <div class="step-circle"><svg><use href="#icon-check" /></svg></div>
+                        <div class="step-circle"><svg>
+                                <use href="#icon-check" />
+                            </svg></div>
                         <span>Submitted</span>
                     </div>
                     <div class="step-node current" id="stepNode2">
-                        <div class="step-circle"><svg><use href="#icon-check" /></svg></div>
+                        <div class="step-circle"><svg>
+                                <use href="#icon-check" />
+                            </svg></div>
                         <span>Review</span>
                     </div>
                     <div class="step-node" id="stepNode3">
-                        <div class="step-circle"><svg><use href="#icon-check" /></svg></div>
+                        <div class="step-circle"><svg>
+                                <use href="#icon-check" />
+                            </svg></div>
                         <span id="step3Label">Processed</span>
                     </div>
                 </div>
@@ -3114,544 +3435,777 @@
             <!-- =======================================================================
      SIGMA OFFICIAL TRUST & SUPPORT HUB (SINGLE ROW)
      ======================================================================= -->
-<style>
-    /* Section Container */
-    .sigma-trust-hub {
-        background: var(--bg-surface, #FFFFFF);
-        border-radius: 24px;
-        padding: 20px;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
-        margin-bottom: 24px;
-        position: relative;
-        overflow: hidden;
-        animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
+            <style>
+                /* Section Container */
+                .sigma-trust-hub {
+                    background: var(--bg-surface, #FFFFFF);
+                    border-radius: 24px;
+                    padding: 20px;
+                    border: 1px solid rgba(15, 23, 42, 0.08);
+                    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
+                    margin-bottom: 24px;
+                    position: relative;
+                    overflow: hidden;
+                    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+                }
 
-    /* Subtle Background Decoration */
-    .sigma-trust-hub::before {
-        content: ''; position: absolute; top: -50px; right: -20px;
-        width: 150px; height: 150px; border-radius: 50%;
-        background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
-        pointer-events: none;
-    }
+                /* Subtle Background Decoration */
+                .sigma-trust-hub::before {
+                    content: '';
+                    position: absolute;
+                    top: -50px;
+                    right: -20px;
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 50%;
+                    background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+                    pointer-events: none;
+                }
 
-    .hub-header {
-        display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
-    }
-    .hub-header h3 { font-size: 1.05rem; font-weight: 800; color: #0F172A; margin: 0; }
-    .hub-header span { font-size: 0.7rem; font-weight: 800; color: #10B981; background: #D1FAE5; padding: 3px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; }
+                .hub-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 16px;
+                }
 
-    /* Strictly 1-Row 3-Column Grid */
-    .trust-action-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        width: 100%;
-    }
+                .hub-header h3 {
+                    font-size: 1.05rem;
+                    font-weight: 800;
+                    color: #0F172A;
+                    margin: 0;
+                }
 
-    /* Premium Holographic Buttons */
-    .trust-action-btn {
-        position: relative;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 8px; padding: 16px 8px;
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 18px;
-        text-decoration: none; cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-    }
+                .hub-header span {
+                    font-size: 0.7rem;
+                    font-weight: 800;
+                    color: #10B981;
+                    background: #D1FAE5;
+                    padding: 3px 8px;
+                    border-radius: 9999px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
 
-    /* The Unique Shimmer/Holographic Effect */
-    .trust-action-btn::after {
-        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-        transform: skewX(-20deg); transition: 0.5s; z-index: 1;
-    }
-    .trust-action-btn:hover::after { left: 150%; }
+                /* Strictly 1-Row 3-Column Grid */
+                .trust-action-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 12px;
+                    width: 100%;
+                }
 
-    .trust-action-btn:hover, .trust-action-btn:active {
-        transform: translateY(-3px);
-        background: #FFFFFF;
-        border-color: #10B981;
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
-    }
-    .trust-action-btn:active { transform: scale(0.96); }
+                /* Premium Holographic Buttons */
+                .trust-action-btn {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    padding: 16px 8px;
+                    background: #F8FAFC;
+                    border: 1px solid #E2E8F0;
+                    border-radius: 18px;
+                    text-decoration: none;
+                    cursor: pointer;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    overflow: hidden;
+                }
 
-    /* Icons inside buttons */
-    .trust-icon-box {
-        width: 44px; height: 44px; border-radius: 12px;
-        display: flex; align-items: center; justify-content: center;
-        position: relative; z-index: 2;
-    }
-    .trust-icon-box svg { width: 22px; height: 22px; fill: none; stroke-width: 2; }
+                /* The Unique Shimmer/Holographic Effect */
+                .trust-action-btn::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 50%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+                    transform: skewX(-20deg);
+                    transition: 0.5s;
+                    z-index: 1;
+                }
 
-    /* Individual Button Colors */
-    .btn-fbr .trust-icon-box { background: rgba(16, 185, 129, 0.1); color: #10B981; stroke: #10B981; }
-    .btn-wa .trust-icon-box { background: rgba(37, 211, 102, 0.1); color: #25D366; }
-    .btn-wa .trust-icon-box svg { fill: currentColor; stroke: none; }
-    .btn-sup .trust-icon-box { background: rgba(59, 130, 246, 0.1); color: #3B82F6; stroke: #3B82F6; }
+                .trust-action-btn:hover::after {
+                    left: 150%;
+                }
 
-    .trust-action-btn span {
-        font-size: 0.75rem; font-weight: 700; color: #0F172A;
-        white-space: nowrap; z-index: 2; position: relative;
-    }
+                .trust-action-btn:hover,
+                .trust-action-btn:active {
+                    transform: translateY(-3px);
+                    background: #FFFFFF;
+                    border-color: #10B981;
+                    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+                }
 
-    /* Live Ping for FBR */
-    .live-ping {
-        position: absolute; top: -3px; right: -3px; width: 12px; height: 12px;
-        background: #10B981; border: 2px solid #FFF; border-radius: 50%;
-        box-shadow: 0 0 0 rgba(16, 185, 129, 0.6); animation: ping 2s infinite; z-index: 3;
-    }
+                .trust-action-btn:active {
+                    transform: scale(0.96);
+                }
 
-    /* Full Screen Image Modal */
-    .sigma-proof-modal {
-        position: fixed; inset: 0; z-index: 9999;
-        background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px);
-        display: none; flex-direction: column; align-items: center; justify-content: center;
-        opacity: 0; transition: opacity 0.3s ease; padding: 20px;
-    }
-    .sigma-proof-modal.show { display: flex; opacity: 1; }
-    
-    .proof-img-container {
-        position: relative; max-width: 90vw; max-height: 75vh;
-        border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-        overflow: hidden; border: 2px solid rgba(255,255,255,0.1);
-        transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .sigma-proof-modal.show .proof-img-container { transform: scale(1); }
-    .proof-img-container img { width: 100%; height: 100%; object-fit: contain; background: #FFFFFF; display: block; }
+                /* Icons inside buttons */
+                .trust-icon-box {
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    z-index: 2;
+                }
 
-    /* Modal Controls */
-    .proof-controls {
-        display: flex; gap: 16px; margin-top: 24px;
-    }
-    .proof-btn {
-        display: flex; align-items: center; gap: 8px; padding: 14px 24px;
-        border-radius: 16px; font-size: 0.9rem; font-weight: 800; cursor: pointer;
-        border: none; transition: 0.2s;
-    }
-    .proof-btn-download { background: #10B981; color: white; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
-    .proof-btn-download:active { transform: scale(0.95); }
-    .proof-btn-close { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
-    .proof-btn-close:active { background: rgba(255,255,255,0.2); transform: scale(0.95); }
+                .trust-icon-box svg {
+                    width: 22px;
+                    height: 22px;
+                    fill: none;
+                    stroke-width: 2;
+                }
 
-    /* Animations & Media Queries */
-    @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes ping { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+                /* Individual Button Colors */
+                .btn-fbr .trust-icon-box {
+                    background: rgba(16, 185, 129, 0.1);
+                    color: #10B981;
+                    stroke: #10B981;
+                }
 
-    @media (max-width: 400px) {
-        .trust-action-btn { padding: 12px 4px; }
-        .trust-icon-box { width: 38px; height: 38px; }
-        .trust-action-btn span { font-size: 0.65rem; }
-    }
-</style>
+                .btn-wa .trust-icon-box {
+                    background: rgba(37, 211, 102, 0.1);
+                    color: #25D366;
+                }
 
-<section class="sigma-trust-hub" id="officialSupportSection">
-    <div class="hub-header">
-        <h3>Trust & Support</h3>
-        <span>Official</span>
-    </div>
+                .btn-wa .trust-icon-box svg {
+                    fill: currentColor;
+                    stroke: none;
+                }
 
-    <div class="trust-action-grid">
-        <!-- 1. FBR Certificate Button -->
-        <button class="trust-action-btn btn-fbr" id="btnOpenFbr" aria-label="View FBR Certificate">
-            <div class="trust-icon-box">
-                <div class="live-ping"></div>
-                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <polyline points="9 12 11 14 15 10"/>
-                </svg>
-            </div>
-            <span>FBR Proof</span>
-        </button>
+                .btn-sup .trust-icon-box {
+                    background: rgba(59, 130, 246, 0.1);
+                    color: #3B82F6;
+                    stroke: #3B82F6;
+                }
 
-        <!-- 2. WhatsApp Channel Button -->
-        <a href="#" target="_blank" class="trust-action-btn btn-wa" id="btnWaChannel" aria-label="Join WhatsApp Channel">
-            <div class="trust-icon-box">
-                <svg viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/>
-                </svg>
-            </div>
-            <span>Channel</span>
-        </a>
+                .trust-action-btn span {
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    color: #0F172A;
+                    white-space: nowrap;
+                    z-index: 2;
+                    position: relative;
+                }
 
-        <!-- 3. Support Helpdesk Button -->
-        <a href="support.html" class="trust-action-btn btn-sup" aria-label="Open Support Desk">
-            <div class="trust-icon-box">
-                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>
-                    <line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/>
-                    <line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/>
-                </svg>
-            </div>
-            <span>Support</span>
-        </a>
-    </div>
-</section>
+                /* Live Ping for FBR */
+                .live-ping {
+                    position: absolute;
+                    top: -3px;
+                    right: -3px;
+                    width: 12px;
+                    height: 12px;
+                    background: #10B981;
+                    border: 2px solid #FFF;
+                    border-radius: 50%;
+                    box-shadow: 0 0 0 rgba(16, 185, 129, 0.6);
+                    animation: ping 2s infinite;
+                    z-index: 3;
+                }
 
-<!-- =======================================================================
+                /* Full Screen Image Modal */
+                .sigma-proof-modal {
+                    position: fixed;
+                    inset: 0;
+                    z-index: 9999;
+                    background: rgba(15, 23, 42, 0.85);
+                    backdrop-filter: blur(12px);
+                    display: none;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                    padding: 20px;
+                }
+
+                .sigma-proof-modal.show {
+                    display: flex;
+                    opacity: 1;
+                }
+
+                .proof-img-container {
+                    position: relative;
+                    max-width: 90vw;
+                    max-height: 75vh;
+                    border-radius: 20px;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+                    overflow: hidden;
+                    border: 2px solid rgba(255, 255, 255, 0.1);
+                    transform: scale(0.9);
+                    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                }
+
+                .sigma-proof-modal.show .proof-img-container {
+                    transform: scale(1);
+                }
+
+                .proof-img-container img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    background: #FFFFFF;
+                    display: block;
+                }
+
+                /* Modal Controls */
+                .proof-controls {
+                    display: flex;
+                    gap: 16px;
+                    margin-top: 24px;
+                }
+
+                .proof-btn {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 14px 24px;
+                    border-radius: 16px;
+                    font-size: 0.9rem;
+                    font-weight: 800;
+                    cursor: pointer;
+                    border: none;
+                    transition: 0.2s;
+                }
+
+                .proof-btn-download {
+                    background: #10B981;
+                    color: white;
+                    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+                }
+
+                .proof-btn-download:active {
+                    transform: scale(0.95);
+                }
+
+                .proof-btn-close {
+                    background: rgba(255, 255, 255, 0.1);
+                    color: white;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                .proof-btn-close:active {
+                    background: rgba(255, 255, 255, 0.2);
+                    transform: scale(0.95);
+                }
+
+                /* Animations & Media Queries */
+                @keyframes slideUpFade {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes ping {
+                    0% {
+                        transform: scale(0.9);
+                        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+                    }
+
+                    70% {
+                        transform: scale(1);
+                        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+                    }
+
+                    100% {
+                        transform: scale(0.9);
+                        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+                    }
+                }
+
+                @media (max-width: 400px) {
+                    .trust-action-btn {
+                        padding: 12px 4px;
+                    }
+
+                    .trust-icon-box {
+                        width: 38px;
+                        height: 38px;
+                    }
+
+                    .trust-action-btn span {
+                        font-size: 0.65rem;
+                    }
+                }
+            </style>
+
+            <section class="sigma-trust-hub" id="officialSupportSection">
+                <div class="hub-header">
+                    <h3>Trust & Support</h3>
+                    <span>Official</span>
+                </div>
+
+                <div class="trust-action-grid">
+                    <!-- 1. FBR Certificate Button -->
+                    <button class="trust-action-btn btn-fbr" id="btnOpenFbr" aria-label="View FBR Certificate">
+                        <div class="trust-icon-box">
+                            <div class="live-ping"></div>
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                <polyline points="9 12 11 14 15 10" />
+                            </svg>
+                        </div>
+                        <span>FBR Proof</span>
+                    </button>
+
+                    <!-- 2. WhatsApp Channel Button -->
+                    <a href="#" target="_blank" class="trust-action-btn btn-wa" id="btnWaChannel"
+                        aria-label="Join WhatsApp Channel">
+                        <div class="trust-icon-box">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                            </svg>
+                        </div>
+                        <span>Channel</span>
+                    </a>
+
+                    <!-- 3. Support Helpdesk Button -->
+                    <a href="support.html" class="trust-action-btn btn-sup" aria-label="Open Support Desk">
+                        <div class="trust-icon-box">
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <circle cx="12" cy="12" r="4" />
+                                <line x1="4.93" y1="4.93" x2="9.17" y2="9.17" />
+                                <line x1="14.83" y1="14.83" x2="19.07" y2="19.07" />
+                                <line x1="14.83" y1="9.17" x2="19.07" y2="4.93" />
+                                <line x1="4.93" y1="19.07" x2="9.17" y2="14.83" />
+                            </svg>
+                        </div>
+                        <span>Support</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- =======================================================================
      FULL SCREEN FBR PROOF MODAL (With Viewer & Download)
      ======================================================================= -->
-<div class="sigma-proof-modal" id="fbrModal">
-    <div class="proof-img-container">
-        <!-- Image source will be injected via Firebase -->
-        <img id="fbrModalImage" src="assets/fbr-placeholder.png" alt="Official FBR Certificate">
-    </div>
-    
-    <div class="proof-controls">
-        <button class="proof-btn proof-btn-close" onclick="closeFbrModal()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            Close
-        </button>
-        <button class="proof-btn proof-btn-download" id="btnDownloadFbr">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Save Document
-        </button>
-    </div>
-</div>
+            <div class="sigma-proof-modal" id="fbrModal">
+                <div class="proof-img-container">
+                    <!-- Image source will be injected via Firebase -->
+                    <img id="fbrModalImage" src="assets/fbr-placeholder.png" alt="Official FBR Certificate">
+                </div>
 
-<!-- =======================================================================
+                <div class="proof-controls">
+                    <button class="proof-btn proof-btn-close" onclick="closeFbrModal()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                        Close
+                    </button>
+                    <button class="proof-btn proof-btn-download" id="btnDownloadFbr">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Save Document
+                    </button>
+                </div>
+            </div>
+
+            <!-- =======================================================================
      JAVASCRIPT LOGIC (Firebase Data Fetch & Modal Actions)
      ======================================================================= -->
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Elements
-        const fbrModal = document.getElementById('fbrModal');
-        const fbrModalImage = document.getElementById('fbrModalImage');
-        const btnOpenFbr = document.getElementById('btnOpenFbr');
-        const btnDownloadFbr = document.getElementById('btnDownloadFbr');
-        const btnWaChannel = document.getElementById('btnWaChannel');
-        
-        let currentFbrImageUrl = '';
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Elements
+                    const fbrModal = document.getElementById('fbrModal');
+                    const fbrModalImage = document.getElementById('fbrModalImage');
+                    const btnOpenFbr = document.getElementById('btnOpenFbr');
+                    const btnDownloadFbr = document.getElementById('btnDownloadFbr');
+                    const btnWaChannel = document.getElementById('btnWaChannel');
 
-        // --- 1. FIREBASE REAL-TIME FETCHING ---
-        if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-            const db = firebase.firestore();
+                    let currentFbrImageUrl = '';
 
-            // Fetch WhatsApp Channel Link
-            db.collection('settings').doc('support').onSnapshot(doc => {
-                if (doc.exists && doc.data().whatsapp_channel_url) {
-                    btnWaChannel.href = doc.data().whatsapp_channel_url;
-                } else {
-                    // Fallback URL if not set
-                    btnWaChannel.href = "https://whatsapp.com/channel/sigma_official";
-                }
-            });
+                    // --- 1. FIREBASE REAL-TIME FETCHING ---
+                    if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                        const db = firebase.firestore();
 
-            // Fetch FBR Proof Image URL
-            db.collection('settings').doc('proofs').onSnapshot(doc => {
-                if (doc.exists && doc.data().fbr_image_url) {
-                    currentFbrImageUrl = doc.data().fbr_image_url;
-                    fbrModalImage.src = currentFbrImageUrl;
-                }
-            });
-        }
+                        // Fetch WhatsApp Channel Link
+                        db.collection('settings').doc('support').onSnapshot(doc => {
+                            if (doc.exists && doc.data().whatsapp_channel_url) {
+                                btnWaChannel.href = doc.data().whatsapp_channel_url;
+                            } else {
+                                // Fallback URL if not set
+                                btnWaChannel.href = "https://whatsapp.com/channel/sigma_official";
+                            }
+                        });
 
-        // --- 2. MODAL CONTROLS ---
-        btnOpenFbr.addEventListener('click', () => {
-            fbrModal.classList.add('show');
-            document.body.style.overflow = 'hidden'; // Lock background scroll
-        });
+                        // Fetch FBR Proof Image URL
+                        db.collection('settings').doc('proofs').onSnapshot(doc => {
+                            if (doc.exists && doc.data().fbr_image_url) {
+                                currentFbrImageUrl = doc.data().fbr_image_url;
+                                fbrModalImage.src = currentFbrImageUrl;
+                            }
+                        });
+                    }
 
-        window.closeFbrModal = () => {
-            fbrModal.classList.remove('show');
-            document.body.style.overflow = '';
-        };
+                    // --- 2. MODAL CONTROLS ---
+                    btnOpenFbr.addEventListener('click', () => {
+                        fbrModal.classList.add('show');
+                        document.body.style.overflow = 'hidden'; // Lock background scroll
+                    });
 
-        // Close modal when clicking outside the image
-        fbrModal.addEventListener('click', (e) => {
-            if (e.target === fbrModal) closeFbrModal();
-        });
+                    window.closeFbrModal = () => {
+                        fbrModal.classList.remove('show');
+                        document.body.style.overflow = '';
+                    };
 
-        // --- 3. DOWNLOAD IMAGE LOGIC ---
-        // Uses fetch to create a blob, avoiding CORS "open in new tab" issues
-        btnDownloadFbr.addEventListener('click', async () => {
-            if (!currentFbrImageUrl) {
-                alert('Document is still loading. Please try again in a moment.');
-                return;
-            }
-            
-            const btnOriginalText = btnDownloadFbr.innerHTML;
-            btnDownloadFbr.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg> Downloading...`;
-            
-            try {
-                const response = await fetch(currentFbrImageUrl);
-                const blob = await response.blob();
-                const blobUrl = window.URL.createObjectURL(blob);
-                
-                const a = document.createElement('a');
-                a.href = blobUrl;
-                a.download = 'Sigma_Official_FBR_Certificate.jpg';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(blobUrl);
+                    // Close modal when clicking outside the image
+                    fbrModal.addEventListener('click', (e) => {
+                        if (e.target === fbrModal) closeFbrModal();
+                    });
 
-                btnDownloadFbr.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Downloaded!`;
-                setTimeout(() => { btnDownloadFbr.innerHTML = btnOriginalText; }, 2000);
-            } catch (error) {
-                console.error('Download failed:', error);
-                // Fallback for strict CORS policies
-                window.open(currentFbrImageUrl, '_blank');
-                btnDownloadFbr.innerHTML = btnOriginalText;
-            }
-        });
-    });
-</script>
+                    // --- 3. DOWNLOAD IMAGE LOGIC ---
+                    // Uses fetch to create a blob, avoiding CORS "open in new tab" issues
+                    btnDownloadFbr.addEventListener('click', async () => {
+                        if (!currentFbrImageUrl) {
+                            alert('Document is still loading. Please try again in a moment.');
+                            return;
+                        }
+
+                        const btnOriginalText = btnDownloadFbr.innerHTML;
+                        btnDownloadFbr.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg> Downloading...`;
+
+                        try {
+                            const response = await fetch(currentFbrImageUrl);
+                            const blob = await response.blob();
+                            const blobUrl = window.URL.createObjectURL(blob);
+
+                            const a = document.createElement('a');
+                            a.href = blobUrl;
+                            a.download = 'Sigma_Official_FBR_Certificate.jpg';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            window.URL.revokeObjectURL(blobUrl);
+
+                            btnDownloadFbr.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Downloaded!`;
+                            setTimeout(() => { btnDownloadFbr.innerHTML = btnOriginalText; }, 2000);
+                        } catch (error) {
+                            console.error('Download failed:', error);
+                            // Fallback for strict CORS policies
+                            window.open(currentFbrImageUrl, '_blank');
+                            btnDownloadFbr.innerHTML = btnOriginalText;
+                        }
+                    });
+                });
+            </script>
 
             <!-- =======================================================================
      SIGMA PURE AMBIENT VISUAL & SECURITY ENGINE (NO BUTTONS / PURE DESIGN)
      Place this between any dashboard sections for next-level visual depth
      ======================================================================= -->
-<style>
-    /* Section Master Canvas */
-    .sigma-ambient-stage {
-        position: relative;
-        width: 100%;
-        min-height: 140px;
-        border-radius: 28px;
-        background: linear-gradient(135deg, #0B132B 0%, #1C2541 60%, #0F172A 100%);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        box-shadow: 0 15px 35px -10px rgba(11, 19, 43, 0.35),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        overflow: hidden;
-        margin: 16px 0 24px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        user-select: none;
-        pointer-events: none; /* Disables all accidental clicks */
-        isolation: isolate;
-    }
+            <style>
+                /* Section Master Canvas */
+                .sigma-ambient-stage {
+                    position: relative;
+                    width: 100%;
+                    min-height: 140px;
+                    border-radius: 28px;
+                    background: linear-gradient(135deg, #0B132B 0%, #1C2541 60%, #0F172A 100%);
+                    border: 1px solid rgba(255, 255, 255, 0.12);
+                    box-shadow: 0 15px 35px -10px rgba(11, 19, 43, 0.35),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                    overflow: hidden;
+                    margin: 16px 0 24px;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    user-select: none;
+                    pointer-events: none;
+                    /* Disables all accidental clicks */
+                    isolation: isolate;
+                }
 
-    /* Ambient Glowing Nebula Orbs */
-    .ambient-glow-orb {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(40px);
-        opacity: 0.35;
-        z-index: 0;
-        animation: orbFloat 8s ease-in-out infinite alternate;
-    }
-    .orb-emerald {
-        width: 130px; height: 130px;
-        background: #10B981;
-        top: -30px; left: -20px;
-    }
-    .orb-blue {
-        width: 160px; height: 160px;
-        background: #3B82F6;
-        bottom: -50px; right: -20px;
-        animation-delay: -4s;
-    }
+                /* Ambient Glowing Nebula Orbs */
+                .ambient-glow-orb {
+                    position: absolute;
+                    border-radius: 50%;
+                    filter: blur(40px);
+                    opacity: 0.35;
+                    z-index: 0;
+                    animation: orbFloat 8s ease-in-out infinite alternate;
+                }
 
-    @keyframes orbFloat {
-        0% { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(30px, 20px) scale(1.15); }
-    }
+                .orb-emerald {
+                    width: 130px;
+                    height: 130px;
+                    background: #10B981;
+                    top: -30px;
+                    left: -20px;
+                }
 
-    /* Holographic Cyber Waveform */
-    .cyber-wave-mesh {
-        position: absolute;
-        inset: 0;
-        background-image: 
-            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        background-size: 20px 20px;
-        mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 80%);
-        -webkit-mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 80%);
-        z-index: 1;
-    }
+                .orb-blue {
+                    width: 160px;
+                    height: 160px;
+                    background: #3B82F6;
+                    bottom: -50px;
+                    right: -20px;
+                    animation-delay: -4s;
+                }
 
-    /* Header Bar of the Ambient Card */
-    .ambient-topbar {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-    }
+                @keyframes orbFloat {
+                    0% {
+                        transform: translate(0, 0) scale(1);
+                    }
 
-    .ambient-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 14px;
-        border-radius: 9999px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-    }
+                    100% {
+                        transform: translate(30px, 20px) scale(1.15);
+                    }
+                }
 
-    .pulse-laser-ring {
-        position: relative;
-        width: 8px; height: 8px;
-        border-radius: 50%;
-        background: #10B981;
-    }
-    .pulse-laser-ring::after {
-        content: '';
-        position: absolute;
-        inset: -4px;
-        border-radius: 50%;
-        border: 2px solid #10B981;
-        animation: radarPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-    }
-    @keyframes radarPing {
-        0% { transform: scale(0.8); opacity: 1; }
-        100% { transform: scale(2.4); opacity: 0; }
-    }
+                /* Holographic Cyber Waveform */
+                .cyber-wave-mesh {
+                    position: absolute;
+                    inset: 0;
+                    background-image:
+                        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+                    background-size: 20px 20px;
+                    mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 80%);
+                    -webkit-mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 80%);
+                    z-index: 1;
+                }
 
-    .ambient-chip span {
-        font-size: 0.68rem;
-        font-weight: 800;
-        letter-spacing: 1px;
-        color: #E2E8F0;
-        text-transform: uppercase;
-    }
+                /* Header Bar of the Ambient Card */
+                .ambient-topbar {
+                    position: relative;
+                    z-index: 2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                }
 
-    .telemetry-tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.7rem;
-        color: rgba(255, 255, 255, 0.5);
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .telemetry-tag strong {
-        color: #34D399;
-    }
+                .ambient-chip {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 6px 14px;
+                    border-radius: 9999px;
+                    background: rgba(255, 255, 255, 0.08);
+                    border: 1px solid rgba(255, 255, 255, 0.15);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
 
-    /* Animated Dynamic Visualizer Bars */
-    .ambient-center-engine {
-        position: relative;
-        z-index: 2;
-        margin: 16px 0;
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 4px;
-        height: 48px;
-        padding: 0 4px;
-    }
+                .pulse-laser-ring {
+                    position: relative;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #10B981;
+                }
 
-    .bar-line {
-        flex: 1;
-        background: linear-gradient(180deg, #10B981 0%, rgba(16, 185, 129, 0.15) 100%);
-        border-radius: 4px 4px 1px 1px;
-        animation: equalizerPulse 2.4s ease-in-out infinite alternate;
-        transform-origin: bottom;
-    }
-    /* Staggered Animations */
-    .bar-line:nth-child(2n) { animation-duration: 1.8s; background: linear-gradient(180deg, #3B82F6 0%, rgba(59, 130, 246, 0.15) 100%); }
-    .bar-line:nth-child(3n) { animation-duration: 2.1s; background: linear-gradient(180deg, #F59E0B 0%, rgba(245, 158, 11, 0.15) 100%); }
-    .bar-line:nth-child(4n) { animation-duration: 1.5s; }
-    .bar-line:nth-child(5n) { animation-duration: 2.7s; }
+                .pulse-laser-ring::after {
+                    content: '';
+                    position: absolute;
+                    inset: -4px;
+                    border-radius: 50%;
+                    border: 2px solid #10B981;
+                    animation: radarPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+                }
 
-    @keyframes equalizerPulse {
-        0% { transform: scaleY(0.2); }
-        50% { transform: scaleY(0.85); }
-        100% { transform: scaleY(0.35); }
-    }
+                @keyframes radarPing {
+                    0% {
+                        transform: scale(0.8);
+                        opacity: 1;
+                    }
 
-    /* Ambient Footer Telemetry */
-    .ambient-bottom-strip {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-top: 10px;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        font-size: 0.72rem;
-        color: #94A3B8;
-    }
-    .ambient-bottom-strip strong {
-        color: #FFFFFF;
-        font-family: 'JetBrains Mono', monospace;
-    }
+                    100% {
+                        transform: scale(2.4);
+                        opacity: 0;
+                    }
+                }
 
-    @media (max-width: 480px) {
-        .sigma-ambient-stage {
-            min-height: 125px;
-            padding: 16px;
-            border-radius: 22px;
-        }
-        .ambient-center-engine {
-            height: 36px;
-            margin: 10px 0;
-        }
-    }
-</style>
+                .ambient-chip span {
+                    font-size: 0.68rem;
+                    font-weight: 800;
+                    letter-spacing: 1px;
+                    color: #E2E8F0;
+                    text-transform: uppercase;
+                }
 
-<!-- AMBIENT DESIGN COMPONENT -->
-<div class="sigma-ambient-stage" aria-hidden="true">
-    <!-- Glowing Nebulas -->
-    <div class="ambient-glow-orb orb-emerald"></div>
-    <div class="ambient-glow-orb orb-blue"></div>
-    
-    <!-- Cyber Geometric Mesh -->
-    <div class="cyber-wave-mesh"></div>
+                .telemetry-tag {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 0.7rem;
+                    color: rgba(255, 255, 255, 0.5);
+                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
 
-    <!-- Header Telemetry Row -->
-    <div class="ambient-topbar">
-        <div class="ambient-chip">
-            <div class="pulse-laser-ring"></div>
-            <span>Encrypted Node Sync</span>
-        </div>
-        <div class="telemetry-tag">
-            PKR POOL: <strong>ACTIVE</strong>
-        </div>
-    </div>
+                .telemetry-tag strong {
+                    color: #34D399;
+                }
 
-    <!-- Live Animated Wave Spectrum (18 Adaptive Dynamic Bars) -->
-    <div class="ambient-center-engine">
-        <div class="bar-line" style="height: 35%;"></div>
-        <div class="bar-line" style="height: 60%;"></div>
-        <div class="bar-line" style="height: 40%;"></div>
-        <div class="bar-line" style="height: 85%;"></div>
-        <div class="bar-line" style="height: 50%;"></div>
-        <div class="bar-line" style="height: 95%;"></div>
-        <div class="bar-line" style="height: 70%;"></div>
-        <div class="bar-line" style="height: 45%;"></div>
-        <div class="bar-line" style="height: 80%;"></div>
-        <div class="bar-line" style="height: 65%;"></div>
-        <div class="bar-line" style="height: 90%;"></div>
-        <div class="bar-line" style="height: 30%;"></div>
-        <div class="bar-line" style="height: 75%;"></div>
-        <div class="bar-line" style="height: 55%;"></div>
-        <div class="bar-line" style="height: 100%;"></div>
-        <div class="bar-line" style="height: 40%;"></div>
-        <div class="bar-line" style="height: 65%;"></div>
-        <div class="bar-line" style="height: 30%;"></div>
-    </div>
+                /* Animated Dynamic Visualizer Bars */
+                .ambient-center-engine {
+                    position: relative;
+                    z-index: 2;
+                    margin: 16px 0;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: space-between;
+                    gap: 4px;
+                    height: 48px;
+                    padding: 0 4px;
+                }
 
-    <!-- Live Simulated Stream Footer -->
-    <div class="ambient-bottom-strip">
-        <span>Security Latency: <strong id="dynLatencyVal">18ms</strong></span>
-        <span>Consensus: <strong style="color: #34D399;">99.98%</strong></span>
-    </div>
-</div>
+                .bar-line {
+                    flex: 1;
+                    background: linear-gradient(180deg, #10B981 0%, rgba(16, 185, 129, 0.15) 100%);
+                    border-radius: 4px 4px 1px 1px;
+                    animation: equalizerPulse 2.4s ease-in-out infinite alternate;
+                    transform-origin: bottom;
+                }
 
-<!-- MICRO REALTIME ANIMATION SCRIPT -->
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const latencyElem = document.getElementById('dynLatencyVal');
-        if (latencyElem) {
-            // Gently oscillates simulated packet latency to make the terminal feel live
-            setInterval(() => {
-                const randomLatency = Math.floor(Math.random() * (26 - 16 + 1)) + 16;
-                latencyElem.textContent = `${randomLatency}ms`;
-            }, 3000);
-        }
-    });
-</script>
+                /* Staggered Animations */
+                .bar-line:nth-child(2n) {
+                    animation-duration: 1.8s;
+                    background: linear-gradient(180deg, #3B82F6 0%, rgba(59, 130, 246, 0.15) 100%);
+                }
+
+                .bar-line:nth-child(3n) {
+                    animation-duration: 2.1s;
+                    background: linear-gradient(180deg, #F59E0B 0%, rgba(245, 158, 11, 0.15) 100%);
+                }
+
+                .bar-line:nth-child(4n) {
+                    animation-duration: 1.5s;
+                }
+
+                .bar-line:nth-child(5n) {
+                    animation-duration: 2.7s;
+                }
+
+                @keyframes equalizerPulse {
+                    0% {
+                        transform: scaleY(0.2);
+                    }
+
+                    50% {
+                        transform: scaleY(0.85);
+                    }
+
+                    100% {
+                        transform: scaleY(0.35);
+                    }
+                }
+
+                /* Ambient Footer Telemetry */
+                .ambient-bottom-strip {
+                    position: relative;
+                    z-index: 2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding-top: 10px;
+                    border-top: 1px solid rgba(255, 255, 255, 0.08);
+                    font-size: 0.72rem;
+                    color: #94A3B8;
+                }
+
+                .ambient-bottom-strip strong {
+                    color: #FFFFFF;
+                    font-family: 'JetBrains Mono', monospace;
+                }
+
+                @media (max-width: 480px) {
+                    .sigma-ambient-stage {
+                        min-height: 125px;
+                        padding: 16px;
+                        border-radius: 22px;
+                    }
+
+                    .ambient-center-engine {
+                        height: 36px;
+                        margin: 10px 0;
+                    }
+                }
+            </style>
+
+            <!-- AMBIENT DESIGN COMPONENT -->
+            <div class="sigma-ambient-stage" aria-hidden="true">
+                <!-- Glowing Nebulas -->
+                <div class="ambient-glow-orb orb-emerald"></div>
+                <div class="ambient-glow-orb orb-blue"></div>
+
+                <!-- Cyber Geometric Mesh -->
+                <div class="cyber-wave-mesh"></div>
+
+                <!-- Header Telemetry Row -->
+                <div class="ambient-topbar">
+                    <div class="ambient-chip">
+                        <div class="pulse-laser-ring"></div>
+                        <span>Encrypted Node Sync</span>
+                    </div>
+                    <div class="telemetry-tag">
+                        PKR POOL: <strong>ACTIVE</strong>
+                    </div>
+                </div>
+
+                <!-- Live Animated Wave Spectrum (18 Adaptive Dynamic Bars) -->
+                <div class="ambient-center-engine">
+                    <div class="bar-line" style="height: 35%;"></div>
+                    <div class="bar-line" style="height: 60%;"></div>
+                    <div class="bar-line" style="height: 40%;"></div>
+                    <div class="bar-line" style="height: 85%;"></div>
+                    <div class="bar-line" style="height: 50%;"></div>
+                    <div class="bar-line" style="height: 95%;"></div>
+                    <div class="bar-line" style="height: 70%;"></div>
+                    <div class="bar-line" style="height: 45%;"></div>
+                    <div class="bar-line" style="height: 80%;"></div>
+                    <div class="bar-line" style="height: 65%;"></div>
+                    <div class="bar-line" style="height: 90%;"></div>
+                    <div class="bar-line" style="height: 30%;"></div>
+                    <div class="bar-line" style="height: 75%;"></div>
+                    <div class="bar-line" style="height: 55%;"></div>
+                    <div class="bar-line" style="height: 100%;"></div>
+                    <div class="bar-line" style="height: 40%;"></div>
+                    <div class="bar-line" style="height: 65%;"></div>
+                    <div class="bar-line" style="height: 30%;"></div>
+                </div>
+
+                <!-- Live Simulated Stream Footer -->
+                <div class="ambient-bottom-strip">
+                    <span>Security Latency: <strong id="dynLatencyVal">18ms</strong></span>
+                    <span>Consensus: <strong style="color: #34D399;">99.98%</strong></span>
+                </div>
+            </div>
+
+            <!-- MICRO REALTIME ANIMATION SCRIPT -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const latencyElem = document.getElementById('dynLatencyVal');
+                    if (latencyElem) {
+                        // Gently oscillates simulated packet latency to make the terminal feel live
+                        setInterval(() => {
+                            const randomLatency = Math.floor(Math.random() * (26 - 16 + 1)) + 16;
+                            latencyElem.textContent = `${randomLatency}ms`;
+                        }, 3000);
+                    }
+                });
+            </script>
             <!-- Referral Network Tree Matrix -->
             <section class="referral-tree-card">
                 <div class="tree-header">
@@ -3659,13 +4213,18 @@
                         <h3 id="cmsNetworkMatrixTitle">Referral Network Matrix</h3>
                         <p style="font-size: 0.8rem; margin-top: 2px;">Verified Ledger Distributions</p>
                     </div>
-                    <button class="btn-id-pill" onclick="appController.openQrModal()"><svg><use href="#icon-qr" /></svg> Invite</button>
+                    <button class="btn-id-pill" onclick="appController.openQrModal()"><svg>
+                            <use href="#icon-qr" />
+                        </svg> Invite</button>
                 </div>
 
                 <div class="tree-tabs-nav">
-                    <button class="tree-tab-btn active" id="btnTier1" onclick="appController.switchTreeTier(1, this)">Level 1</button>
-                    <button class="tree-tab-btn" id="btnTier2" onclick="appController.switchTreeTier(2, this)">Level 2</button>
-                    <button class="tree-tab-btn" id="btnTier3" onclick="appController.switchTreeTier(3, this)">Level 3</button>
+                    <button class="tree-tab-btn active" id="btnTier1"
+                        onclick="appController.switchTreeTier(1, this)">Level 1</button>
+                    <button class="tree-tab-btn" id="btnTier2" onclick="appController.switchTreeTier(2, this)">Level
+                        2</button>
+                    <button class="tree-tab-btn" id="btnTier3" onclick="appController.switchTreeTier(3, this)">Level
+                        3</button>
                 </div>
 
                 <div class="tree-pane-content" id="treeTierContent">
@@ -3673,7 +4232,8 @@
                         <small>Total Members</small>
                         <strong id="tierMembersCount" class="font-mono">0</strong>
                     </div>
-                    <div class="tree-metric-col" style="border-left: 1px solid var(--sigma-input-border); border-right: 1px solid var(--sigma-input-border); padding: 0 16px;">
+                    <div class="tree-metric-col"
+                        style="border-left: 1px solid var(--sigma-input-border); border-right: 1px solid var(--sigma-input-border); padding: 0 16px;">
                         <small>Active Plans</small>
                         <strong id="tierActiveCount" class="font-mono">0</strong>
                     </div>
@@ -3708,7 +4268,9 @@
     <!-- 3-Button Single Row Floating Mobile Dock -->
     <nav class="mobile-dock" aria-label="Primary Mobile Commands">
         <a href="dash.html" class="dock-slot active" aria-current="page">
-            <svg><use href="#icon-home" /></svg>
+            <svg>
+                <use href="#icon-home" />
+            </svg>
             <span>Home</span>
         </a>
 
@@ -3722,7 +4284,9 @@
         <a href="profile.html" class="dock-slot">
             <div style="width: 26px; height: 26px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-subtle);"
                 id="dockAvatarContainer">
-                <svg style="width: 18px; height: 18px;"><use href="#icon-user" /></svg>
+                <svg style="width: 18px; height: 18px;">
+                    <use href="#icon-user" />
+                </svg>
             </div>
             <span>Profile</span>
         </a>
@@ -3745,11 +4309,13 @@
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>Personal Invite Code</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetQr')"><svg><use href="#icon-x" /></svg></button>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetQr')"><svg>
+                        <use href="#icon-x" />
+                    </svg></button>
             </div>
             <div class="sheet-body" style="text-align: center;">
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;">
-                    Scan with any mobile camera to securely bind your referral tree.
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; font-weight: 500;">
+                    Scan with any mobile camera to securely bind downlines to your team tree.
                 </p>
                 <div class="qr-wrapper">
                     <div id="qrBoxContainer"></div>
@@ -3759,120 +4325,108 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 24px; display: flex; gap: 12px; flex-direction: column;">
-                    <button class="btn-sheet-submit" onclick="appController.copyReferralLink()">
-                        <svg style="width:18px;height:18px;fill:none;stroke:white;stroke-width:2;"><use href="#icon-copy" /></svg> Copy Unique URL
+                <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;">
+                    <button class="btn-sheet-action" onclick="appController.copyLink()">
+                        <svg style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.5;">
+                            <use href="#icon-copy" />
+                        </svg>
+                        Copy Referral URL
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Official Proofs Viewer Modal -->
-    <div class="overlay" id="sheetProofViewer">
+    <!-- RULES MODAL (ENGLISH ONLY) -->
+    <div class="overlay" id="sheetRules">
         <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <h3>Official Document</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetProofViewer')"><svg><use href="#icon-x" /></svg></button>
+                <h3>Program Guidelines</h3>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetRules')"><svg>
+                        <use href="#icon-x" />
+                    </svg></button>
             </div>
-            <div class="sheet-body proof-viewer-body">
-                <img id="proofViewerImg" src="" alt="Official Document" class="proof-viewer-img">
-                <p id="proofViewerDesc" style="text-align: center; color: var(--text-muted); font-size: 0.9rem; max-width: 400px; margin: 0 auto;"></p>
-                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetProofViewer')">Close Viewer</button>
+            <div class="sheet-body rules-content">
+                <p>Referral bonuses are governed by automated ledger rules to guarantee fair distribution:</p>
+                <ul>
+                    <li><svg>
+                            <use href="#icon-check" />
+                        </svg> Direct Level 1 commissions are credited immediately after a downline's portfolio is
+                        verified by administration.</li>
+                    <li><svg>
+                            <use href="#icon-check" />
+                        </svg> Level 2 and Level 3 commissions compound automatically into your Commission Pocket.</li>
+                    <li><svg>
+                            <use href="#icon-check" />
+                        </svg> Commission balances are 100% eligible for transfer or direct cashout via EasyPaisa and
+                        JazzCash.</li>
+                    <li><svg>
+                            <use href="#icon-check" />
+                        </svg> Self-referral abuse and duplicate accounts result in permanent network disqualification.
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <!-- System Announcement Modal -->
-    <div class="overlay" id="sheetAnnouncement">
-        <div class="sheet" style="max-width: 480px;">
+    <!-- MEMBER DETAILS MODAL -->
+    <div class="overlay" id="sheetMemberDetails">
+        <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
-                <h3>System Announcement</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetAnnouncement')"><svg><use href="#icon-x" /></svg></button>
+                <div>
+                    <h3 id="mdlName">Downline Details</h3>
+                    <p id="mdlId" class="font-mono" style="font-size: 0.8rem; margin-top: 2px;">UID: ---</p>
+                </div>
+                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetMemberDetails')"><svg>
+                        <use href="#icon-x" />
+                    </svg></button>
             </div>
             <div class="sheet-body">
-                <h4 id="announcementModalTitle" style="margin-bottom: 12px; font-size: 1.1rem;">Notice</h4>
-                <p id="announcementModalBody" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; color: var(--text-body);"></p>
-                <button class="btn-sheet-submit" onclick="appController.closeSheet('sheetAnnouncement')">Acknowledge</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Activity Center (Notifications) -->
-    <div class="overlay" id="sheetNotif">
-        <div class="sheet" style="max-height: 95vh; height: 90vh;">
-            <div class="sheet-handle"></div>
-            <div class="sheet-header">
-                <h3>Activity Center</h3>
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <button class="mark-all-read-btn" id="btnMarkAllRead" onclick="appController.markAllNotifsRead()" style="display: none;">Mark all read</button>
-                    <button class="sheet-close-btn" onclick="appController.closeSheet('sheetNotif')"><svg><use href="#icon-x" /></svg></button>
-                </div>
-            </div>
-            <div class="sheet-body" id="notifListContainer" style="padding: 16px 20px; background: var(--sigma-surface);">
-                <div style="padding: 40px 0; text-align: center; color: var(--text-light);">
-                    <svg style="width: 48px; height: 48px; stroke: currentColor; fill: none; stroke-width: 1.5; margin-bottom: 16px;">
-                        <use href="#icon-bell" />
-                    </svg>
-                    <p>No active notifications recorded in your authenticated history.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Terminal Menu Modal -->
-    <div class="overlay" id="sheetMenu">
-        <div class="sheet" style="max-width: 480px;">
-            <div class="sheet-handle"></div>
-            <div class="sheet-header">
-                <h3>Terminal Menu</h3>
-                <button class="sheet-close-btn" onclick="appController.closeSheet('sheetMenu')"><svg><use href="#icon-x" /></svg></button>
-            </div>
-            <div class="sheet-body" id="cmsNavMenuWrapper">
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <a href="leaderboard.html" class="btn-sheet-submit"
-                        style="color: var(--sigma-gold-dark); background: var(--sigma-gold-soft); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-gold-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;"><use href="#icon-trophy" /></svg>
-                        <span class="cms-nav-label" data-key="navLeaderboard">Global Leaderboard</span>
-                    </a>
-                    <a href="profile.html" class="btn-sheet-submit"
-                        style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;"><use href="#icon-crown" /></svg>
-                        <span class="cms-nav-label" data-key="navProfile">Profile & Settings</span>
-                    </a>
-                    <a href="transactions.html" class="btn-sheet-submit"
-                        style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;"><use href="#icon-receipt" /></svg>
-                        <span class="cms-nav-label" data-key="navHistory">Transaction History</span>
-                    </a>
-                    <a href="support.html" class="btn-sheet-submit"
-                        style="color: var(--text-heading); background: var(--sigma-surface-alt); justify-content: flex-start; padding: 14px 20px; border: 1px solid var(--sigma-muted-border); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px;"><use href="#icon-lifebuoy" /></svg>
-                        <span class="cms-nav-label" data-key="navSupport">Help & Support</span>
-                    </a>
-
-                    <div style="height: 1px; background: var(--sigma-muted-border); margin: 8px 0;"></div>
-
-                    <button onclick="appController.terminateSession()" class="btn-sheet-submit"
-                        style="justify-content: flex-start; padding: 14px 20px; color: var(--sigma-danger-dark); border: 1px solid var(--sigma-danger-border); background: var(--sigma-danger-soft); box-shadow: none;">
-                        <svg style="width: 20px; height: 20px; stroke: var(--sigma-danger-dark);"><use href="#icon-shield-alert" /></svg>
-                        <span class="cms-nav-label" data-key="navLogout">Logout Securely</span>
-                    </button>
+                <div class="tl-container">
+                    <div class="tl-item completed">
+                        <div class="tl-indicator"><svg>
+                                <use href="#icon-check" />
+                            </svg></div>
+                        <div class="tl-content">
+                            <b>Registered Account</b>
+                            <small id="mdlRegDate">--</small>
+                        </div>
+                    </div>
+                    <div class="tl-item" id="mdlTlPayment">
+                        <div class="tl-indicator"><svg>
+                                <use href="#icon-check" />
+                            </svg></div>
+                        <div class="tl-content">
+                            <b>Portfolio Status</b>
+                            <small id="mdlPayStatus">Pending / Unfunded</small>
+                        </div>
+                    </div>
+                    <div class="tl-item" id="mdlTlEligible">
+                        <div class="tl-indicator"><svg>
+                                <use href="#icon-check" />
+                            </svg></div>
+                        <div class="tl-content">
+                            <b>Commission Credited</b>
+                            <small id="mdlRewardStatus">Awaiting Plan Activation</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Toast Component -->
+    <!-- Notification Toast -->
     <div class="toast" id="toastBox">
-        <svg style="width:18px;height:18px;stroke:var(--sigma-accent-light);fill:none;stroke-width:2.5;"><use href="#icon-check" /></svg>
-        <span id="toastMsg">Verified</span>
+        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;">
+            <use href="#icon-check" />
+        </svg>
+        <span id="toastMsg">Action successful</span>
     </div>
 
     <!-- ==========================================================================
-         JAVASCRIPT ARCHITECTURE & FIREBASE LOGIC
+         JAVASCRIPT CONTROLLER (STRICT SESSION ISOLATION)
          ========================================================================== -->
     <script>
         const appController = (() => {
@@ -4259,16 +4813,28 @@
                     if (dom.rawReferralUrl) dom.rawReferralUrl.value = invUrl;
                     safeSetText('uiAccountUID', `SIG-${compactCode}`);
 
+                    // Session verification log
                     if (!sessionStorage.getItem('sigma_session_logged')) {
                         logAction('login', `Session securely authenticated from ${navigator.platform}`);
                         sessionStorage.setItem('sigma_session_logged', 'true');
                     }
 
-                    // Real-Time User Profile Listener
+                    // Real-Time User Profile Listener (STRICT USER DATA ISOLATION)
                     db.collection('users').doc(uid).onSnapshot(doc => {
-                        if (!doc.exists) return;
+                        if (!doc.exists) {
+                            terminateSession(); // Terminate if user doc does not exist
+                            return;
+                        }
+                        
                         userProfile = doc.data();
 
+                        // Route Protection: Admin trying to use User Dashboard
+                        if (userProfile.role === 'admin' || userProfile.role === 'superadmin') {
+                            window.location.replace('x/dashboard.html');
+                            return;
+                        }
+
+                        // Blocked User Check
                         if ((userProfile.status === 'blocked' || userProfile.status === 'suspended') && dom.blockerScreen) {
                             document.body.classList.add('locked');
                             dom.blockerScreen.classList.add('active');
@@ -4301,7 +4867,10 @@
                         document.querySelectorAll('.skeleton').forEach(sk => sk.classList.remove('skeleton'));
                         updateBalanceVisibility();
 
-                    }, err => console.error("Profile access error:", err));
+                    }, err => {
+                        console.error("Profile access error:", err);
+                        if(err.code === 'permission-denied') terminateSession();
+                    });
 
                     // Active Plan Countdown Listener
                     db.collection('users').doc(uid).collection('active_plans')
