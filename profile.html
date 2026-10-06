@@ -1,20 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sigma | Account Profile</title>
+    <title>Sigma | Account Profile & Security Settings</title>
 
-    <!-- SEO, Privacy & PWA Meta (Protected Workspace) -->
-    <meta name="description" content="Manage your Sigma profile, security settings, and verified payout methods.">
+    <!-- SEO, Privacy & PWA Metadata -->
+    <meta name="description"
+        content="Manage your verified Sigma account credentials, update payout gateways, and configure cryptographic security settings.">
+    <meta name="keywords" content="Sigma Profile, Account Security, Payout Methods, KYC Pakistan, EasyPaisa Settings">
+    <meta name="author" content="Sigma Technologies">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#0B132B">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sigma Profile">
+    <link rel="canonical" href="https://sigmaaz.vercel.app/profile.html">
+
+    <!-- Open Graph & Social Cards -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sigmaaz.vercel.app/profile.html">
+    <meta property="og:title" content="Sigma | Account Profile & Security">
+    <meta property="og:description" content="Manage personal profile identity, linked wallets, and authentication settings.">
+    <meta property="og:image" content="https://sigmaaz.vercel.app/assets/preview.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sigma | Profile Settings">
+    <meta name="twitter:description" content="Account credentials and payout configuration terminal.">
+    <meta name="twitter:image" content="https://sigmaaz.vercel.app/assets/preview.png">
 
     <!-- Favicon & Touch Icons -->
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
@@ -34,6 +49,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     <script src="firebase-config.js"></script>
 
+    <!-- Fallback Firebase Initialization -->
     <script>
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             firebase.initializeApp({
@@ -80,13 +96,17 @@
             --sigma-info-dark: #2563EB;
             --sigma-info-soft: #EFF6FF;
 
+            --sigma-purple: #8B5CF6;
+            --sigma-purple-soft: #F5F3FF;
+            --sigma-pink: #F472B6;
+
             --text-heading: #0F172A;
             --text-body: #334155;
             --text-muted: #64748B;
             --text-light: #94A3B8;
 
             --radius-pill: 9999px;
-            --radius-2xl: 28px;
+            --radius-2xl: 32px;
             --radius-xl: 20px;
             --radius-lg: 16px;
             --radius-md: 12px;
@@ -102,16 +122,14 @@
             --z-toast: 3000;
 
             --transition-smooth: 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-bounce: 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
             --safe-area-bottom: env(safe-area-inset-bottom, 16px);
         }
 
         /* ==========================================================================
            2. GLOBAL RESET & BASE
            ========================================================================== */
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -124,14 +142,16 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background-color: var(--sigma-surface-alt);
             color: var(--text-body);
             line-height: 1.5;
             min-height: 100vh;
             overflow-x: hidden;
             padding-bottom: calc(110px + var(--safe-area-bottom));
-            background-image: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.03) 0%, transparent 40%), radial-gradient(circle at 10% 100%, rgba(16, 185, 129, 0.03) 0%, transparent 40%);
+            background-image:
+                radial-gradient(circle at 10% 0%, rgba(244, 114, 182, 0.035) 0%, transparent 45vw),
+                radial-gradient(circle at 90% 100%, rgba(16, 185, 129, 0.04) 0%, transparent 45vw);
             background-attachment: fixed;
         }
 
@@ -145,9 +165,7 @@
             color: inherit;
         }
 
-        button,
-        input,
-        select {
+        button, input, select {
             font-family: inherit;
             border: none;
             outline: none;
@@ -164,9 +182,7 @@
             display: block;
         }
 
-        h1,
-        h2,
-        h3 {
+        h1, h2, h3 {
             color: var(--text-heading);
             font-weight: 800;
             letter-spacing: -0.02em;
@@ -177,7 +193,7 @@
         }
 
         /* ==========================================================================
-           3. ISLAND HEADER
+           3. SINGLE-ROW ISLAND HEADER WITH BOTH LOGOS
            ========================================================================== */
         .app-container {
             width: 100%;
@@ -239,20 +255,39 @@
             fill: none;
         }
 
-        .brand-center {
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+        }
+
+        .brand-text-img {
+            height: 20px;
+            object-fit: contain;
+            margin-top: 2px;
+        }
+
+        .header-title-box {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-end;
         }
 
-        .brand-center b {
-            font-size: 1.05rem;
+        .header-title-box b {
+            font-size: 0.95rem;
             font-weight: 900;
             color: var(--sigma-primary);
+            line-height: 1.1;
         }
 
-        .brand-center small {
+        .header-title-box small {
             font-size: 0.65rem;
             color: var(--sigma-accent-dark);
             font-weight: 800;
@@ -261,7 +296,7 @@
         }
 
         /* ==========================================================================
-           4. PROFILE IDENTITY CARD
+           4. PROFILE IDENTITY CARD & AVATAR UPLOADER
            ========================================================================== */
         .workspace {
             padding: 0 16px;
@@ -281,16 +316,17 @@
         }
 
         .profile-cover {
-            height: 110px;
-            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            height: 115px;
+            background: linear-gradient(135deg, #0b132b 0%, #161c36 45%, #20172e 80%, #131b2e 100%);
             position: relative;
+            border-bottom: 1px solid rgba(244, 114, 182, 0.2);
         }
 
         .profile-cover::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            background: radial-gradient(circle at top right, rgba(244, 114, 182, 0.25) 0%, transparent 60%);
         }
 
         .profile-body {
@@ -352,10 +388,7 @@
             box-shadow: 0 4px 10px rgba(11, 19, 43, 0.2);
         }
 
-        .btn-edit-avatar:active {
-            transform: scale(0.85);
-        }
-
+        .btn-edit-avatar:active { transform: scale(0.85); }
         .btn-edit-avatar svg {
             width: 16px;
             height: 16px;
@@ -367,7 +400,7 @@
         .uploading-spinner {
             position: absolute;
             inset: 0;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             border-radius: 50%;
             display: none;
             align-items: center;
@@ -390,9 +423,9 @@
         }
 
         .profile-username {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 10px;
             font-family: 'JetBrains Mono', monospace;
         }
@@ -405,7 +438,7 @@
             border-radius: var(--radius-pill);
             background: var(--sigma-accent-soft);
             color: var(--sigma-accent-dark);
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 800;
             text-transform: uppercase;
             border: 1px solid var(--sigma-accent-border);
@@ -423,7 +456,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-top: 24px;
+            margin-top: 22px;
             width: 100%;
         }
 
@@ -435,11 +468,11 @@
             text-align: left;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }
 
         .stat-box small {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
             font-weight: 800;
             text-transform: uppercase;
@@ -447,7 +480,7 @@
         }
 
         .stat-box b {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 900;
             color: var(--text-heading);
         }
@@ -467,7 +500,7 @@
         }
 
         .menu-label {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 800;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -484,6 +517,7 @@
             transition: var(--transition-bounce);
             cursor: pointer;
             border: 1px solid transparent;
+            text-decoration: none;
         }
 
         .menu-item:active {
@@ -495,18 +529,19 @@
         .menu-left {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .menu-icon {
             width: 44px;
             height: 44px;
-            border-radius: 14px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--sigma-subtle);
             color: var(--text-heading);
+            flex-shrink: 0;
         }
 
         .menu-icon svg {
@@ -517,29 +552,14 @@
             stroke-width: 2.2;
         }
 
-        .icon-blue {
-            background: var(--sigma-info-soft);
-            color: var(--sigma-info-dark);
-        }
-
-        .icon-green {
-            background: var(--sigma-accent-soft);
-            color: var(--sigma-accent-dark);
-        }
-
-        .icon-warn {
-            background: var(--sigma-gold-soft);
-            color: var(--sigma-gold-dark);
-        }
-
-        .icon-purple {
-            background: var(--sigma-purple-soft);
-            color: var(--sigma-purple);
-        }
+        .icon-blue { background: var(--sigma-info-soft); color: var(--sigma-info-dark); }
+        .icon-green { background: var(--sigma-accent-soft); color: var(--sigma-accent-dark); }
+        .icon-warn { background: var(--sigma-gold-soft); color: var(--sigma-gold-dark); }
+        .icon-purple { background: var(--sigma-purple-soft); color: var(--sigma-purple); }
 
         .menu-text b {
             display: block;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 800;
             color: var(--text-heading);
             margin-bottom: 2px;
@@ -547,7 +567,7 @@
 
         .menu-text small {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
             font-weight: 500;
         }
@@ -559,8 +579,8 @@
         }
 
         .menu-right svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2.5;
@@ -568,11 +588,11 @@
 
         .btn-logout {
             width: 100%;
-            height: 60px;
+            height: 58px;
             border-radius: var(--radius-xl);
             background: var(--sigma-danger-soft);
             color: var(--sigma-danger-dark);
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 900;
             border: 1px solid var(--sigma-danger-border);
             display: flex;
@@ -580,8 +600,7 @@
             justify-content: center;
             gap: 10px;
             transition: var(--transition-bounce);
-            margin-top: 8px;
-            animation: slideUp 0.5s ease-out 0.3s both;
+            margin-top: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -593,8 +612,8 @@
         }
 
         .btn-logout svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2.5;
@@ -607,7 +626,7 @@
             position: fixed;
             inset: 0;
             z-index: var(--z-overlay);
-            background: rgba(11, 19, 43, 0.7);
+            background: rgba(11, 19, 43, 0.65);
             backdrop-filter: blur(8px);
             opacity: 0;
             visibility: hidden;
@@ -617,56 +636,42 @@
             justify-content: center;
         }
 
-        .overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .overlay.show { opacity: 1; visibility: visible; }
 
         .sheet {
             width: 100%;
-            max-width: 600px;
+            max-width: 580px;
             background: var(--sigma-surface);
             border-radius: 32px 32px 0 0;
             transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
             max-height: 90vh;
             display: flex;
             flex-direction: column;
             box-shadow: 0 -24px 48px rgba(0, 0, 0, 0.25);
         }
 
-        .overlay.show .sheet {
-            transform: translateY(0);
-        }
+        .overlay.show .sheet { transform: translateY(0); }
 
         .sheet-handle {
-            width: 50px;
+            width: 48px;
             height: 6px;
             border-radius: 99px;
             background: var(--sigma-input-border);
-            margin: 16px auto 12px;
+            margin: 14px auto 10px;
             flex-shrink: 0;
         }
 
         .sheet-header {
-            padding: 8px 24px 20px;
+            padding: 8px 24px 18px;
             border-bottom: 1px solid var(--sigma-muted-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .sheet-header h3 {
-            font-size: 1.35rem;
-            font-weight: 900;
-        }
-
-        .sheet-header p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            margin-top: 2px;
-        }
+        .sheet-header h3 { font-size: 1.3rem; font-weight: 900; }
+        .sheet-header p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
 
         .sheet-close-btn {
             width: 40px;
@@ -678,12 +683,6 @@
             justify-content: center;
             border: 1px solid var(--sigma-muted-border);
             color: var(--text-muted);
-            transition: var(--transition-fast);
-        }
-
-        .sheet-close-btn:active {
-            background: var(--sigma-input-border);
-            transform: scale(0.9);
         }
 
         .sheet-close-btn svg {
@@ -721,11 +720,6 @@
             box-shadow: 0 0 0 4px rgba(11, 19, 43, 0.08);
         }
 
-        .input-wrapper.error {
-            border-color: var(--sigma-danger);
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
-        }
-
         .input-icon {
             padding-left: 16px;
             color: var(--text-muted);
@@ -733,13 +727,11 @@
             align-items: center;
         }
 
-        .input-wrapper:focus-within .input-icon {
-            color: var(--sigma-primary);
-        }
+        .input-wrapper:focus-within .input-icon { color: var(--sigma-primary); }
 
         .input-icon svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
@@ -747,26 +739,21 @@
 
         .input-field {
             flex: 1;
-            height: 64px;
-            padding: 24px 16px 8px 12px;
-            font-size: 1.05rem;
+            height: 60px;
+            padding: 22px 16px 6px 12px;
+            font-size: 0.98rem;
             color: var(--text-heading);
             font-weight: 700;
             background: transparent;
         }
 
-        .input-field:focus {
-            outline: none;
-        }
-
-        .input-field::placeholder {
-            color: transparent;
-        }
+        .input-field:focus { outline: none; }
+        .input-field::placeholder { color: transparent; }
 
         .floating-label {
             position: absolute;
             left: 48px;
-            top: 20px;
+            top: 18px;
             font-size: 0.95rem;
             color: var(--text-muted);
             pointer-events: none;
@@ -776,8 +763,8 @@
 
         .input-field:focus~.floating-label,
         .input-field:not(:placeholder-shown)~.floating-label {
-            top: 8px;
-            font-size: 0.75rem;
+            top: 7px;
+            font-size: 0.72rem;
             color: var(--sigma-primary);
             font-weight: 800;
             text-transform: uppercase;
@@ -795,7 +782,7 @@
             content: '▼';
             position: absolute;
             right: 20px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
             pointer-events: none;
         }
@@ -804,27 +791,24 @@
             display: none;
             background: var(--sigma-danger-soft);
             color: var(--sigma-danger-dark);
-            padding: 14px;
+            padding: 12px 16px;
             border-radius: var(--radius-lg);
             font-size: 0.85rem;
             font-weight: 700;
             text-align: center;
             border: 1px solid var(--sigma-danger);
             animation: shake 0.4s ease;
-            margin-bottom: 8px;
         }
 
-        .form-error.show {
-            display: block;
-        }
+        .form-error.show { display: block; }
 
         .btn-submit {
             width: 100%;
-            height: 60px;
+            height: 58px;
             border-radius: var(--radius-xl);
             background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
             color: white;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 900;
             display: flex;
             align-items: center;
@@ -834,22 +818,15 @@
             transition: var(--transition-bounce);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
-        .btn-submit:active {
-            transform: scale(0.96);
-            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.2);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
+        .btn-submit:active { transform: scale(0.96); }
+        .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
 
         .spinner {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border: 3px solid rgba(255, 255, 255, 0.3);
             border-top-color: white;
             border-radius: 50%;
@@ -857,16 +834,11 @@
             display: none;
         }
 
-        .btn-submit.loading .spinner {
-            display: block;
-        }
-
-        .btn-submit.loading span {
-            display: none;
-        }
+        .btn-submit.loading .spinner { display: block; }
+        .btn-submit.loading span { display: none; }
 
         /* ==========================================================================
-           7. EXACT 3-BUTTON MOBILE DOCK
+           7. 3-BUTTON MOBILE DOCK (.html FULL NAVIGATION)
            ========================================================================== */
         .mobile-dock {
             position: fixed;
@@ -915,10 +887,7 @@
             font-weight: 800;
         }
 
-        .dock-slot.active {
-            color: var(--sigma-primary);
-        }
-
+        .dock-slot.active { color: var(--sigma-primary); }
         .dock-slot.active svg {
             stroke-width: 2.8;
             transform: translateY(-2px);
@@ -938,12 +907,11 @@
             justify-content: center;
             box-shadow: 0 12px 24px rgba(11, 19, 43, 0.35);
             border: 5px solid var(--sigma-surface-alt);
+            transition: var(--transition-bounce);
+            text-decoration: none;
         }
 
-        .dock-crest-btn:active {
-            transform: scale(0.9);
-        }
-
+        .dock-crest-btn:active { transform: scale(0.9); }
         .dock-crest-btn img {
             width: 32px;
             height: 32px;
@@ -954,7 +922,7 @@
         .dock-crest-btn::after {
             content: 'MY PLANS';
             position: absolute;
-            bottom: -24px;
+            bottom: -22px;
             font-size: 0.65rem;
             font-weight: 900;
             color: var(--text-heading);
@@ -963,16 +931,11 @@
         }
 
         @media (min-width: 860px) {
-            .mobile-dock {
-                display: none;
-            }
-
-            body {
-                padding-bottom: 40px;
-            }
+            .mobile-dock { display: none; }
+            body { padding-bottom: 40px; }
         }
 
-        /* Toast */
+        /* Toast Component */
         .toast {
             position: fixed;
             top: 24px;
@@ -992,21 +955,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .toast.error {
-            background: var(--sigma-danger-dark);
-            border-color: var(--sigma-danger);
-        }
-
+        .toast.error { background: var(--sigma-danger-dark); }
         .toast.show {
             opacity: 1;
             visibility: visible;
             transform: translate(-50%, 0) scale(1);
         }
 
-        /* Skeletons & Animations */
         .skeleton {
             background: #E2E8F0;
             color: transparent !important;
@@ -1015,58 +972,29 @@
         }
 
         @keyframes skel {
-            0% {
-                opacity: 0.5;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0.5;
-            }
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-6px);
-            }
-
-            75% {
-                transform: translateX(6px);
-            }
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- SVG SPRITES -->
+    <!-- SVG Sprites Architecture -->
     <svg width="0" height="0" style="display:none;" aria-hidden="true">
         <symbol id="icon-back" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -1090,12 +1018,6 @@
         </symbol>
         <symbol id="icon-shield" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </symbol>
-        <symbol id="icon-lifebuoy" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round" />
-            <circle cx="12" cy="12" r="4" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="4.93" y1="4.93" x2="9.17" y2="9.17" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="14.83" y1="14.83" x2="19.07" y2="19.07" stroke-linecap="round" stroke-linejoin="round" />
         </symbol>
         <symbol id="icon-logout" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -1132,18 +1054,22 @@
 
     <div class="app-container">
 
-        <!-- HEADER -->
+        <!-- HEADER WITH LOGO, TEXT LOGO & TITLE -->
         <header class="island-topbar" id="topHeader">
             <a href="dash.html" class="btn-back" aria-label="Go Back">
-                <svg>
-                    <use href="#icon-back" />
-                </svg>
+                <svg><use href="#icon-back" /></svg>
             </a>
-            <div class="brand-center">
-                <b>My Profile</b>
-                <small>NEXRA SECURE</small>
+
+            <div class="brand-cluster">
+                <img src="assets/logo.png" alt="Sigma" class="brand-logo-img"
+                    onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+                <img src="assets/textlogo.png" alt="Sigma" class="brand-text-img" onerror="this.style.display='none'">
             </div>
-            <div style="width: 44px;"></div> <!-- Spacer -->
+
+            <div class="header-title-box">
+                <b>Profile</b>
+                <small>Account Security</small>
+            </div>
         </header>
 
         <main class="workspace">
@@ -1158,125 +1084,101 @@
                         </div>
                         <button class="btn-edit-avatar" onclick="document.getElementById('avatarUpload').click()"
                             aria-label="Upload Avatar">
-                            <svg>
-                                <use href="#icon-camera" />
-                            </svg>
+                            <svg><use href="#icon-camera" /></svg>
                         </button>
                         <input type="file" id="avatarUpload" style="display:none;"
                             accept="image/jpeg, image/png, image/webp">
-                        <div class="uploading-spinner" id="avatarSpinner"><svg>
-                                <use href="#icon-loader" />
-                            </svg></div>
+                        <div class="uploading-spinner" id="avatarSpinner">
+                            <svg><use href="#icon-loader" /></svg>
+                        </div>
                     </div>
 
                     <h2 class="profile-name"><span id="uiDisplayName" class="skeleton">Investor Account</span></h2>
-                    <p class="profile-username" id="uiAccountUID">@UID: SIGMA-••••</p>
+                    <p class="profile-username" id="uiAccountUID">UID: SIG-•••••</p>
 
                     <div class="verified-badge">
-                        <svg>
-                            <use href="#icon-check" />
-                        </svg> Verified
+                        <svg><use href="#icon-check" /></svg> Verified Identity
                     </div>
 
                     <div class="stats-strip">
                         <div class="stat-box">
-                            <small>Join Date</small>
+                            <small>Member Since</small>
                             <b id="uiJoinDate" class="skeleton">Oct 2026</b>
                         </div>
                         <div class="stat-box">
-                            <small>Team Rank</small>
+                            <small>Account Tier</small>
                             <b id="uiTierBadge" style="color: var(--sigma-primary);" class="skeleton">Bronze</b>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Settings Group 1: Account -->
+            <!-- Settings Group 1: Account Information -->
             <div class="menu-group">
                 <div class="menu-label">Account Settings</div>
 
                 <div class="menu-item" onclick="ProfileController.openSheet('sheetProfile')">
                     <div class="menu-left">
-                        <div class="menu-icon icon-blue"><svg>
-                                <use href="#icon-user" />
-                            </svg></div>
+                        <div class="menu-icon icon-blue"><svg><use href="#icon-user" /></svg></div>
                         <div class="menu-text">
                             <b>Personal Information</b>
-                            <small>Update name, email, phone</small>
+                            <small>Update display name, email, and phone</small>
                         </div>
                     </div>
-                    <div class="menu-right"><svg>
-                            <use href="#icon-chevron-right" />
-                        </svg></div>
+                    <div class="menu-right"><svg><use href="#icon-chevron-right" /></svg></div>
                 </div>
 
                 <div class="menu-item" onclick="ProfileController.openSheet('sheetPayout')">
                     <div class="menu-left">
-                        <div class="menu-icon icon-green"><svg>
-                                <use href="#icon-credit-card" />
-                            </svg></div>
+                        <div class="menu-icon icon-green"><svg><use href="#icon-credit-card" /></svg></div>
                         <div class="menu-text">
                             <b>Payout Methods</b>
-                            <small>Manage bank & wallet details</small>
+                            <small>Configure default receiving wallets and bank IBAN</small>
                         </div>
                     </div>
-                    <div class="menu-right"><svg>
-                            <use href="#icon-chevron-right" />
-                        </svg></div>
+                    <div class="menu-right"><svg><use href="#icon-chevron-right" /></svg></div>
                 </div>
             </div>
 
-            <!-- Settings Group 2: Security & Verification -->
+            <!-- Settings Group 2: Security & Authentication -->
             <div class="menu-group">
                 <div class="menu-label">Security & Authentication</div>
 
                 <div class="menu-item" onclick="ProfileController.openSheet('sheetPassword')">
                     <div class="menu-left">
-                        <div class="menu-icon icon-warn"><svg>
-                                <use href="#icon-lock" />
-                            </svg></div>
+                        <div class="menu-icon icon-warn"><svg><use href="#icon-lock" /></svg></div>
                         <div class="menu-text">
                             <b>Change Password</b>
-                            <small>Update your login credentials</small>
+                            <small>Update your account access credentials</small>
                         </div>
                     </div>
-                    <div class="menu-right"><svg>
-                            <use href="#icon-chevron-right" />
-                        </svg></div>
+                    <div class="menu-right"><svg><use href="#icon-chevron-right" /></svg></div>
                 </div>
 
-                <div class="menu-item" onclick="window.location.href='kyc.html'">
+                <a href="kyc.html" class="menu-item">
                     <div class="menu-left">
-                        <div class="menu-icon icon-purple"><svg>
-                                <use href="#icon-shield" />
-                            </svg></div>
+                        <div class="menu-icon icon-purple"><svg><use href="#icon-shield" /></svg></div>
                         <div class="menu-text">
                             <b>KYC Verification</b>
-                            <small>Identity & Document status</small>
+                            <small>Identity & national documentation status</small>
                         </div>
                     </div>
-                    <div class="menu-right"><svg>
-                            <use href="#icon-chevron-right" />
-                        </svg></div>
-                </div>
+                    <div class="menu-right"><svg><use href="#icon-chevron-right" /></svg></div>
+                </a>
             </div>
 
-            <!-- Logout -->
+            <!-- Logout Button -->
             <button class="btn-logout" onclick="ProfileController.terminateSession()">
-                <svg>
-                    <use href="#icon-logout" />
-                </svg> Secure Logout
+                <svg><use href="#icon-logout" /></svg> Secure Logout
             </button>
 
         </main>
     </div>
 
-    <!-- NATIVE 3-BUTTON DOCK -->
+    <!-- 3-BUTTON MOBILE DOCK (.html FULL NAVIGATION) -->
     <nav class="mobile-dock">
         <a href="dash.html" class="dock-slot">
-            <svg>
-                <use href="#icon-home" />
-            </svg>
+            <svg><use href="#icon-home" /></svg>
             <span>Home</span>
         </a>
         <a href="my-plans.html" class="dock-crest-btn">
@@ -1285,19 +1187,13 @@
         <a href="profile.html" class="dock-slot active">
             <div style="width: 26px; height: 26px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--sigma-surface);"
                 id="dockAvatarContainer">
-                <svg style="width: 18px; height: 18px; stroke: var(--sigma-primary);">
-                    <use href="#icon-user" />
-                </svg>
+                <svg style="width: 18px; height: 18px; stroke: var(--sigma-primary);"><use href="#icon-user" /></svg>
             </div>
             <span>Profile</span>
         </a>
     </nav>
 
-    <!-- ==========================================================================
-         BOTTOM SHEETS (Forms)
-         ========================================================================== -->
-
-    <!-- 1. Edit Profile Sheet -->
+    <!-- 1. EDIT PROFILE BOTTOM SHEET -->
     <div class="overlay" id="sheetProfile">
         <div class="sheet">
             <div class="sheet-handle"></div>
@@ -1306,42 +1202,34 @@
                     <h3>Personal Information</h3>
                     <p>Update your contact details</p>
                 </div>
-                <button class="sheet-close-btn" onclick="ProfileController.closeSheet('sheetProfile')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <button class="sheet-close-btn" onclick="ProfileController.closeSheet('sheetProfile')">
+                    <svg><use href="#icon-x" /></svg>
+                </button>
             </div>
             <div class="sheet-body">
                 <form id="formProfile">
                     <div class="form-error" id="errProfile"></div>
 
                     <div class="input-wrapper">
-                        <div class="input-icon"><svg>
-                                <use href="#icon-user" />
-                            </svg></div>
+                        <div class="input-icon"><svg><use href="#icon-user" /></svg></div>
                         <input type="text" id="inpFullName" class="input-field" placeholder=" " required minlength="3">
                         <label class="floating-label">Full Name</label>
                     </div>
 
                     <div class="input-wrapper" style="opacity: 0.7; pointer-events: none;">
-                        <div class="input-icon"><svg>
-                                <use href="#icon-user" />
-                            </svg></div>
+                        <div class="input-icon"><svg><use href="#icon-user" /></svg></div>
                         <input type="text" id="inpUsername" class="input-field" placeholder=" " readonly>
                         <label class="floating-label">Username (Immutable)</label>
                     </div>
 
                     <div class="input-wrapper" style="opacity: 0.7; pointer-events: none;">
-                        <div class="input-icon"><svg>
-                                <use href="#icon-mail" />
-                            </svg></div>
+                        <div class="input-icon"><svg><use href="#icon-mail" /></svg></div>
                         <input type="email" id="inpEmail" class="input-field" placeholder=" " readonly>
                         <label class="floating-label">Email Address (Immutable)</label>
                     </div>
 
                     <div class="input-wrapper">
-                        <div class="input-icon"><svg>
-                                <use href="#icon-phone" />
-                            </svg></div>
+                        <div class="input-icon"><svg><use href="#icon-phone" /></svg></div>
                         <input type="tel" id="inpPhone" class="input-field" placeholder=" " required>
                         <label class="floating-label">Mobile Number</label>
                     </div>
@@ -1355,55 +1243,51 @@
         </div>
     </div>
 
-    <!-- 2. Payout Methods Sheet -->
+    <!-- 2. PAYOUT METHODS BOTTOM SHEET -->
     <div class="overlay" id="sheetPayout">
         <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <div>
                     <h3>Payout Methods</h3>
-                    <p>Default receiving account</p>
+                    <p>Default beneficiary account for automated payouts</p>
                 </div>
-                <button class="sheet-close-btn" onclick="ProfileController.closeSheet('sheetPayout')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <button class="sheet-close-btn" onclick="ProfileController.closeSheet('sheetPayout')">
+                    <svg><use href="#icon-x" /></svg>
+                </button>
             </div>
             <div class="sheet-body">
                 <form id="formPayout">
                     <div class="form-error" id="errPayout"></div>
 
                     <div class="input-wrapper select-wrapper">
-                        <div class="input-icon"><svg>
-                                <use href="#icon-credit-card" />
-                            </svg></div>
+                        <div class="input-icon"><svg><use href="#icon-credit-card" /></svg></div>
                         <select id="inpPayoutGateway" class="input-field select-field" required>
-                            <option value="" disabled selected>Select Provider</option>
+                            <option value="" disabled selected>Select Provider Gateway</option>
+                            <option value="EasyPaisa">EasyPaisa</option>
                             <option value="JazzCash">JazzCash</option>
-                            <option value="Easypaisa">Easypaisa</option>
                             <option value="SadaPay">SadaPay</option>
                             <option value="NayaPay">NayaPay</option>
-                            <option value="BankTransfer">Bank Transfer</option>
-                            <option value="BinanceUSDT">USDT (TRC20)</option>
+                            <option value="BankTransfer">Bank IBFT (All Pakistani Banks)</option>
+                            <option value="BinanceUSDT">USDT (TRC20 / BEP20)</option>
                         </select>
                         <label class="floating-label">Gateway Provider</label>
                     </div>
 
                     <div class="input-wrapper">
-                        <div class="input-icon"><svg>
-                                <use href="#icon-user" />
-                            </svg></div>
+                        <div class="input-icon"><svg><use href="#icon-user" /></svg></div>
                         <input type="text" id="inpPayoutName" class="input-field" placeholder=" " required>
                         <label class="floating-label">Account Title / Holder Name</label>
                     </div>
 
                     <div class="input-wrapper">
                         <div class="input-icon" style="font-family: monospace; font-weight: 800;">#</div>
-                        <input type="text" id="inpPayoutNumber" class="input-field" placeholder=" " required>
-                        <label class="floating-label">Account Number / Address</label>
+                        <input type="text" id="inpPayoutNumber" class="input-field font-mono" placeholder=" " required>
+                        <label class="floating-label">Account Number / IBAN</label>
                     </div>
 
                     <button type="submit" class="btn-submit" id="btnSubmitPayout">
-                        <span>Save Account Details</span>
+                        <span>Save Beneficiary Details</span>
                         <div class="spinner"></div>
                     </button>
                 </form>
@@ -1411,44 +1295,36 @@
         </div>
     </div>
 
-    <!-- 3. Change Password Sheet -->
+    <!-- 3. CHANGE PASSWORD BOTTOM SHEET -->
     <div class="overlay" id="sheetPassword">
         <div class="sheet">
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <div>
                     <h3>Security Settings</h3>
-                    <p>Change your login password</p>
+                    <p>Update your authentication password</p>
                 </div>
-                <button class="sheet-close-btn" onclick="ProfileController.closeSheet('sheetPassword')"><svg>
-                        <use href="#icon-x" />
-                    </svg></button>
+                <button class="sheet-close-btn" onclick="ProfileController.closeSheet('sheetPassword')">
+                    <svg><use href="#icon-x" /></svg>
+                </button>
             </div>
             <div class="sheet-body">
                 <form id="formPassword">
                     <div class="form-error" id="errPassword"></div>
 
                     <div class="input-wrapper">
-                        <div class="input-icon"><svg>
-                                <use href="#icon-lock" />
-                            </svg></div>
+                        <div class="input-icon"><svg><use href="#icon-lock" /></svg></div>
                         <input type="password" id="inpOldPwd" class="input-field" placeholder=" " required>
                         <label class="floating-label">Current Password</label>
                     </div>
                     <div class="input-wrapper">
-                        <div class="input-icon"><svg>
-                                <use href="#icon-lock" />
-                            </svg></div>
-                        <input type="password" id="inpNewPwd" class="input-field" placeholder=" " required
-                            minlength="6">
+                        <div class="input-icon"><svg><use href="#icon-lock" /></svg></div>
+                        <input type="password" id="inpNewPwd" class="input-field" placeholder=" " required minlength="6">
                         <label class="floating-label">New Password</label>
                     </div>
                     <div class="input-wrapper">
-                        <div class="input-icon"><svg>
-                                <use href="#icon-check" />
-                            </svg></div>
-                        <input type="password" id="inpConfPwd" class="input-field" placeholder=" " required
-                            minlength="6">
+                        <div class="input-icon"><svg><use href="#icon-check" /></svg></div>
+                        <input type="password" id="inpConfPwd" class="input-field" placeholder=" " required minlength="6">
                         <label class="floating-label">Confirm New Password</label>
                     </div>
 
@@ -1461,16 +1337,14 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
+    <!-- Notification Toast -->
     <div class="toast" id="toastBox">
-        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;">
-            <use href="#icon-check" />
-        </svg>
+        <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;"><use href="#icon-check" /></svg>
         <span id="toastMsg">Success</span>
     </div>
 
     <!-- ==========================================================================
-         JAVASCRIPT CONTROLLER (Firebase Connected)
+         JAVASCRIPT CONTROLLER (FIREBASE & CLOUD STORAGE SYNC)
          ========================================================================== -->
     <script>
         const ProfileController = (() => {
@@ -1519,6 +1393,7 @@
                     haptic(50);
                 }
             };
+
             const hideError = (boxId) => {
                 const box = document.getElementById(boxId);
                 if (box) box.classList.remove('show');
@@ -1555,8 +1430,6 @@
                 }
             };
 
-            // --- Form Submissions ---
-
             const updateProfileInfo = async (e) => {
                 e.preventDefault();
                 hideError('errProfile');
@@ -1577,12 +1450,11 @@
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
 
-                    // Update Auth Profile as well for consistency
                     await authUser.updateProfile({ displayName: name });
 
                     const btn = document.getElementById('btnSubmitProfile');
                     btn.classList.remove('loading');
-                    btn.innerHTML = `<span><svg style="width:18px;height:18px;margin-bottom:-4px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Saved</span>`;
+                    btn.innerHTML = `<span><svg style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Saved</span>`;
                     btn.style.background = 'var(--sigma-accent)';
 
                     toast("Profile updated successfully!");
@@ -1590,7 +1462,7 @@
                         closeSheet('sheetProfile');
                         setBtnLoading('btnSubmitProfile', false, "Save Changes");
                         btn.style.background = '';
-                    }, 1000);
+                    }, 900);
 
                 } catch (error) {
                     setBtnLoading('btnSubmitProfile', false, "Save Changes");
@@ -1607,7 +1479,7 @@
                 const accName = document.getElementById('inpPayoutName').value.trim();
                 const accNum = document.getElementById('inpPayoutNumber').value.trim();
 
-                if (!gateway || !accName || !accNum) return showError('errPayout', "Please fill all fields.");
+                if (!gateway || !accName || !accNum) return showError('errPayout', "Please complete all fields.");
 
                 setBtnLoading('btnSubmitPayout', true);
 
@@ -1624,19 +1496,19 @@
 
                     const btn = document.getElementById('btnSubmitPayout');
                     btn.classList.remove('loading');
-                    btn.innerHTML = `<span><svg style="width:18px;height:18px;margin-bottom:-4px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Saved</span>`;
+                    btn.innerHTML = `<span><svg style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Saved</span>`;
                     btn.style.background = 'var(--sigma-accent)';
 
                     toast("Payout details securely saved.");
                     setTimeout(() => {
                         closeSheet('sheetPayout');
-                        setBtnLoading('btnSubmitPayout', false, "Save Account Details");
+                        setBtnLoading('btnSubmitPayout', false, "Save Beneficiary Details");
                         btn.style.background = '';
-                    }, 1000);
+                    }, 900);
 
                 } catch (error) {
-                    setBtnLoading('btnSubmitPayout', false, "Save Account Details");
-                    showError('errPayout', "Failed to save payout data.");
+                    setBtnLoading('btnSubmitPayout', false, "Save Beneficiary Details");
+                    showError('errPayout', "Failed to save payout configuration.");
                 }
             };
 
@@ -1649,23 +1521,20 @@
                 const newPwd = document.getElementById('inpNewPwd').value;
                 const confPwd = document.getElementById('inpConfPwd').value;
 
-                if (!oldPwd) return showError('errPassword', "Enter current password.");
+                if (!oldPwd) return showError('errPassword', "Enter your current password.");
                 if (newPwd.length < 6) return showError('errPassword', "New password must be at least 6 characters.");
-                if (newPwd !== confPwd) return showError('errPassword', "Passwords do not match.");
+                if (newPwd !== confPwd) return showError('errPassword', "New passwords do not match.");
 
                 setBtnLoading('btnSubmitPassword', true);
 
                 try {
-                    // Re-authenticate first
                     const cred = firebase.auth.EmailAuthProvider.credential(authUser.email, oldPwd);
                     await authUser.reauthenticateWithCredential(cred);
-
-                    // Update Password
                     await authUser.updatePassword(newPwd);
 
                     const btn = document.getElementById('btnSubmitPassword');
                     btn.classList.remove('loading');
-                    btn.innerHTML = `<span><svg style="width:18px;height:18px;margin-bottom:-4px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Updated</span>`;
+                    btn.innerHTML = `<span><svg style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.5;"><use href="#icon-check"></use></svg> Updated</span>`;
                     btn.style.background = 'var(--sigma-accent)';
 
                     toast("Password changed successfully.");
@@ -1675,12 +1544,14 @@
                         closeSheet('sheetPassword');
                         setBtnLoading('btnSubmitPassword', false, "Update Password");
                         btn.style.background = '';
-                    }, 1000);
+                    }, 900);
 
                 } catch (error) {
                     setBtnLoading('btnSubmitPassword', false, "Update Password");
                     let msg = "Failed to update password.";
-                    if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') msg = "Current password is incorrect.";
+                    if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                        msg = "Current password is incorrect.";
+                    }
                     showError('errPassword', msg);
                 }
             };
@@ -1702,12 +1573,9 @@
                     const url = await avatarRef.getDownloadURL();
 
                     await authUser.updateProfile({ photoURL: url });
-
-                    // Update Firestore as well
                     await firebase.firestore().collection('users').doc(authUser.uid).update({ photoURL: url });
 
-                    // Update UI immediately
-                    const imgTag = `<img src="${url}" alt="User" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer">`;
+                    const imgTag = `<img src="${url}" alt="User" referrerpolicy="no-referrer">`;
                     dom.avatarWrap.innerHTML = imgTag;
                     dom.dockAvatar.innerHTML = imgTag;
 
@@ -1715,10 +1583,10 @@
 
                 } catch (err) {
                     console.error("Upload error:", err);
-                    toast("Failed to upload image.", true);
+                    toast("Failed to upload avatar.", true);
                 } finally {
                     dom.spinnerUpload.style.display = 'none';
-                    dom.fileUpload.value = ''; // Reset input
+                    dom.fileUpload.value = '';
                 }
             };
 
@@ -1745,8 +1613,6 @@
                 }
             };
 
-            // --- Real-time Listeners ---
-
             const initFirebase = () => {
                 if (typeof firebase === 'undefined' || !firebase.apps.length) return;
 
@@ -1763,7 +1629,7 @@
                         dom.dockAvatar.innerHTML = imgTag;
                     }
 
-                    dom.accountUID.textContent = `UID: SIGMA-${user.uid.substring(0, 6).toUpperCase()}`;
+                    dom.accountUID.textContent = `UID: SIG-${user.uid.substring(0, 5).toUpperCase()}`;
 
                     db.collection('users').doc(user.uid).onSnapshot(doc => {
                         if (!doc.exists) return;
@@ -1776,22 +1642,24 @@
                             dom.avatarLetter.textContent = name.charAt(0).toUpperCase();
                         }
 
-                        // Parse Join Date
                         if (userDocData.createdAt) {
-                            const date = new Date(userDocData.createdAt.seconds * 1000);
-                            dom.joinDate.textContent = date.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+                            const date = new Date(userDocData.createdAt.seconds ? userDocData.createdAt.seconds * 1000 : userDocData.createdAt);
+                            dom.joinDate.textContent = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
                         }
 
-                        // VIP Tier Logic
                         const refCount = userDocData.referralsCount || 0;
                         if (refCount >= 50) {
-                            dom.tierBadge.textContent = "Sigma Elite"; dom.tierBadge.style.color = "#D97706";
+                            dom.tierBadge.textContent = "Elite";
+                            dom.tierBadge.style.color = "#D97706";
                         } else if (refCount >= 20) {
-                            dom.tierBadge.textContent = "Gold"; dom.tierBadge.style.color = "#B45309";
+                            dom.tierBadge.textContent = "Gold";
+                            dom.tierBadge.style.color = "#B45309";
                         } else if (refCount >= 5) {
-                            dom.tierBadge.textContent = "Silver"; dom.tierBadge.style.color = "#475569";
+                            dom.tierBadge.textContent = "Silver";
+                            dom.tierBadge.style.color = "#475569";
                         } else {
-                            dom.tierBadge.textContent = "Bronze"; dom.tierBadge.style.color = "var(--sigma-primary)";
+                            dom.tierBadge.textContent = "Bronze";
+                            dom.tierBadge.style.color = "var(--sigma-primary)";
                         }
 
                         document.querySelectorAll('.skeleton').forEach(sk => sk.classList.remove('skeleton'));
@@ -1810,12 +1678,10 @@
                     }, { passive: true });
                 }
 
-                // Overlay delegates
                 document.querySelectorAll('.overlay').forEach(ov => {
                     ov.addEventListener('click', e => { if (e.target === ov) closeSheet(ov.id); });
                 });
 
-                // Input listeners to clear errors
                 document.querySelectorAll('input').forEach(inp => {
                     inp.addEventListener('input', (e) => {
                         const form = e.target.closest('form');
@@ -1826,7 +1692,6 @@
                     });
                 });
 
-                // Attach submit handlers
                 document.getElementById('formProfile').addEventListener('submit', updateProfileInfo);
                 document.getElementById('formPayout').addEventListener('submit', updatePayoutInfo);
                 document.getElementById('formPassword').addEventListener('submit', changePassword);
