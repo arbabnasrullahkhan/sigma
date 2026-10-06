@@ -2342,6 +2342,225 @@
                 </div>
             </section>
 
+            <!-- =======================================================================
+     SIGMA WALLET ACTION DOCK (DEPOSIT & WITHDRAW - STRICT SINGLE ROW)
+     Place this directly below your Multi-Wallet Card
+     ======================================================================= -->
+<style>
+    /* Scoped Container directly under wallet card */
+    .sigma-wallet-actions-row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: -6px; /* Blends seamlessly right beneath the vault card */
+        margin-bottom: 20px;
+    }
+
+    /* Common Button Surface */
+    .btn-wallet-action {
+        position: relative;
+        height: 56px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 0.95rem;
+        letter-spacing: -0.2px;
+        text-decoration: none;
+        cursor: pointer;
+        user-select: none;
+        overflow: hidden;
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                    box-shadow 0.25s ease,
+                    filter 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Micro Shimmer Light Sweep on Buttons */
+    .btn-wallet-action::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -120%;
+        width: 60%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+        transform: skewX(-22deg);
+        transition: left 0.6s ease;
+        pointer-events: none;
+    }
+    .btn-wallet-action:hover::before { left: 180%; }
+
+    /* Interactive Physical Depress */
+    .btn-wallet-action:active {
+        transform: scale(0.96) translateY(1px);
+    }
+
+    /* 1. DEPOSIT ACTION (Profit Emerald Engine) */
+    .btn-action-deposit {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        color: #FFFFFF;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 10px 22px -6px rgba(16, 185, 129, 0.45),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+    }
+    .btn-action-deposit:hover {
+        filter: brightness(1.05);
+        box-shadow: 0 14px 26px -6px rgba(16, 185, 129, 0.55);
+    }
+
+    /* 2. WITHDRAW ACTION (Corporate Velvet / Midnight Gold Contrast) */
+    .btn-action-withdraw {
+        background: linear-gradient(135deg, #0B132B 0%, #1C2541 100%);
+        color: #FFFFFF;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 10px 22px -6px rgba(11, 19, 43, 0.35),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+    .btn-action-withdraw:hover {
+        filter: brightness(1.15);
+        box-shadow: 0 14px 26px -6px rgba(11, 19, 43, 0.45);
+    }
+
+    /* Icon Housings */
+    .btn-wallet-action .action-ico-wrap {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: transform 0.25s ease;
+    }
+    .btn-action-deposit .action-ico-wrap {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    }
+    .btn-action-withdraw .action-ico-wrap {
+        background: rgba(239, 68, 68, 0.15);
+        color: #F87171;
+        border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-wallet-action:hover .action-ico-wrap {
+        transform: scale(1.1);
+    }
+
+    .btn-wallet-action svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    /* Status Dot Inside Withdraw */
+    .withdraw-live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #10B981;
+        box-shadow: 0 0 6px #10B981;
+        margin-left: -2px;
+    }
+
+    /* Strict Mobile Viewport Safety (320px screen protection) */
+    @media (max-width: 380px) {
+        .sigma-wallet-actions-row {
+            gap: 8px;
+        }
+        .btn-wallet-action {
+            height: 50px;
+            font-size: 0.85rem;
+            gap: 6px;
+            border-radius: 14px;
+        }
+        .btn-wallet-action .action-ico-wrap {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+        }
+        .btn-wallet-action svg {
+            width: 15px;
+            height: 15px;
+        }
+    }
+</style>
+
+<!-- SECTION DOM -->
+<div class="sigma-wallet-actions-row" id="walletActionsSubDock">
+    <!-- 1. Deposit Button -->
+    <a href="deposit.html" class="btn-wallet-action btn-action-deposit" id="wBtnDeposit" aria-label="Deposit Funds">
+        <div class="action-ico-wrap">
+            <svg viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+        </div>
+        <span id="wTxtDeposit">Deposit</span>
+    </a>
+
+    <!-- 2. Withdraw Button -->
+    <a href="withdraw.html" class="btn-wallet-action btn-action-withdraw" id="wBtnWithdraw" aria-label="Withdraw Funds">
+        <div class="action-ico-wrap">
+            <svg viewBox="0 0 24 24">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </div>
+        <span id="wTxtWithdraw">Withdraw</span>
+        <div class="withdraw-live-dot" title="24/7 Processing Active"></div>
+    </a>
+</div>
+
+<!-- COMPONENT SCRIPTS & REALTIME INTEGRATION -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnDep = document.getElementById('wBtnDeposit');
+        const btnWith = document.getElementById('wBtnWithdraw');
+        const txtDep = document.getElementById('wTxtDeposit');
+        const txtWith = document.getElementById('wTxtWithdraw');
+
+        // 1. Mobile Vibration (Haptic Touch Feedback)
+        const triggerHaptic = (ms = 35) => {
+            if ('vibrate' in navigator) {
+                try { navigator.vibrate(ms); } catch (e) {}
+            }
+        };
+
+        if (btnDep) btnDep.addEventListener('click', () => triggerHaptic(30));
+        if (btnWith) btnWith.addEventListener('click', () => triggerHaptic(30));
+
+        // 2. Firebase CMS Configuration Listener (Auto-updates without editing HTML)
+        if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+            try {
+                const db = firebase.firestore();
+                db.collection('settings').doc('cms_dashboard').onSnapshot(doc => {
+                    if (doc.exists) {
+                        const cms = doc.data();
+                        
+                        // Dynamic Labels Controlled by Admin
+                        if (cms.btnDeposit && txtDep) txtDep.textContent = cms.btnDeposit;
+                        if (cms.btnWithdraw && txtWith) txtWith.textContent = cms.btnWithdraw;
+
+                        // Dynamic Custom Redirect Endpoints if Admin modifies paths
+                        if (cms.urlDeposit && btnDep) btnDep.href = cms.urlDeposit;
+                        if (cms.urlWithdraw && btnWith) btnWith.href = cms.urlWithdraw;
+                    }
+                }, err => {
+                    console.warn("Wallet action CMS sync offline, using production defaults:", err);
+                });
+            } catch (err) {
+                console.warn("Firebase runtime initialization skipped:", err);
+            }
+        }
+    });
+</script>
             <!-- Triple Pocket Multi-Wallet Matrix -->
             <section class="pocket-wallets-grid">
                 <!-- 1. Deposit / Main Wallet -->
