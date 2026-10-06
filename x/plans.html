@@ -1,17 +1,24 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sigma Admin | Plans Management</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sigma Ops | Plans & Portfolios</title>
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-    <meta name="theme-color" content="#0B132B">
+    <meta name="theme-color" content="#FFFFFF">
 
+    <!-- Favicon & Touch Icons -->
     <link rel="shortcut icon" href="../assets/favicon.png" type="image/png">
-    
+    <link rel="apple-touch-icon" href="../assets/favicon.png">
+
+    <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap"
+        rel="stylesheet">
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -19,458 +26,1427 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="../firebase-config.js"></script>
 
+    <!-- Safe Fallback Initialization -->
+    <script>
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp({
+                apiKey: "AIzaSyCTRe2w4juZ55DrayIw61qKz_UYlZfw1H8",
+                authDomain: "week-team.firebaseapp.com",
+                projectId: "week-team",
+                storageBucket: "week-team.firebasestorage.app",
+                messagingSenderId: "480334485782",
+                appId: "1:480334485782:web:c0c886ed710567b9e6d837"
+            });
+        }
+    </script>
+
     <style>
+        /* ==========================================================================
+           1. LIGHT MODE FINTECH DESIGN SYSTEM
+           ========================================================================== */
         :root {
             --sigma-primary: #0B132B;
             --sigma-secondary: #1C2541;
-            --sigma-accent: #10B981;
-            --sigma-danger: #EF4444;
+            --sigma-tertiary: #3A506B;
+
             --sigma-surface: #FFFFFF;
+            --sigma-surface-alt: #F8FAFC;
             --sigma-subtle: #F1F5F9;
+
+            --border-light: #E2E8F0;
+            --border-muted: #CBD5E1;
+
+            --sigma-accent: #10B981;
+            --sigma-accent-dark: #059669;
+            --sigma-accent-soft: #ECFDF5;
+
+            --sigma-gold: #F59E0B;
+            --sigma-gold-dark: #D97706;
+            --sigma-gold-soft: #FEF3C7;
+
+            --sigma-danger: #EF4444;
+            --sigma-danger-dark: #DC2626;
+            --sigma-danger-soft: #FEE2E2;
+
+            --sigma-info: #3B82F6;
+            --sigma-info-soft: #EFF6FF;
+
             --text-heading: #0F172A;
             --text-body: #334155;
             --text-muted: #64748B;
-            --input-border: #CBD5E1;
-            --radius-md: 12px;
+            --text-light: #94A3B8;
+
+            --radius-pill: 9999px;
+            --radius-2xl: 28px;
+            --radius-xl: 20px;
             --radius-lg: 16px;
-            --transition: 0.3s ease;
+            --radius-md: 12px;
+
+            --shadow-subtle: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+            --shadow-card: 0 16px 32px -8px rgba(15, 23, 42, 0.08);
+            --shadow-float: 0 24px 48px -12px rgba(15, 23, 42, 0.16);
+
+            --z-dock: 1000;
+            --z-drawer: 2000;
+            --z-modal: 3000;
+            --z-auth: 9999;
+            --z-toast: 4000;
+            --safe-area-bottom: env(safe-area-inset-bottom, 16px);
+            --transition: 0.25s ease;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--sigma-subtle); color: var(--text-body); display: flex; min-height: 100vh; overflow-x: hidden; }
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        /* Loading Overlay */
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--sigma-subtle);
+            color: var(--text-body);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            padding-bottom: calc(90px + var(--safe-area-bottom));
+        }
+
+        body.locked { overflow: hidden; }
+        a { text-decoration: none; color: inherit; }
+        button, input, select { font-family: inherit; border: none; outline: none; background: none; }
+        button { cursor: pointer; user-select: none; }
+        img { max-width: 100%; display: block; }
+        h1, h2, h3, h4 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.025em; }
+        p { color: var(--text-muted); }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Loading Auth Overlay */
         #authOverlay {
-            position: fixed; inset: 0; background: var(--sigma-primary); z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; transition: opacity 0.4s;
+            position: fixed;
+            inset: 0;
+            background: var(--sigma-surface);
+            z-index: var(--z-auth);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-heading);
+            transition: opacity 0.3s;
         }
-        .spinner {
-            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.2);
-            border-top-color: var(--sigma-accent); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 12px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Sidebar Navigation */
+        .auth-spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid var(--border-light);
+            border-top-color: var(--sigma-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        /* ==========================================================================
+           2. UNIFIED ADMIN SIDEBAR (DESKTOP)
+           ========================================================================== */
         .admin-sidebar {
-            width: 260px; background: var(--sigma-primary); color: white; flex-shrink: 0;
-            display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0;
-            z-index: 100; transform: translateX(0); transition: transform 0.3s ease;
+            width: 270px;
+            background: var(--sigma-surface);
+            border-right: 1px solid var(--border-light);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0; bottom: 0; left: 0;
+            z-index: 100;
+            transition: transform var(--transition);
         }
-        .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
-        .sidebar-header img { width: 32px; height: 32px; background: white; border-radius: 8px; padding: 4px; }
-        .sidebar-header h2 { font-size: 1.1rem; margin:0; }
-        .nav-links { padding: 20px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow-y: auto; }
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-            border-radius: var(--radius-md); color: rgba(255,255,255,0.7);
-            text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: var(--transition);
-        }
-        .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
-        .nav-link.active { background: var(--sigma-accent); color: white; }
-        .nav-link svg { width: 20px; height: 20px; }
-        .logout-btn {
-            margin: 20px 12px; background: rgba(239, 68, 68, 0.1); color: #FCA5A5;
-            border: 1px solid rgba(239, 68, 68, 0.2); text-align: center; padding: 12px;
-            border-radius: var(--radius-md); cursor: pointer; font-weight: 700; transition: var(--transition);
-        }
-        .logout-btn:hover { background: var(--sigma-danger); color: white; }
 
-        /* Main Content */
-        .admin-main { flex: 1; margin-left: 260px; display: flex; flex-direction: column; min-height: 100vh; }
-        .topbar {
-            height: 70px; background: var(--sigma-surface); border-bottom: 1px solid var(--input-border);
-            display: flex; align-items: center; padding: 0 24px; justify-content: space-between;
-            position: sticky; top: 0; z-index: 90;
+        .sidebar-brand-header {
+            padding: 22px 20px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .topbar h1 { font-size: 1.25rem; margin: 0; }
-        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--text-heading); }
-        
-        .page-content { padding: 32px 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        .brand-logo-img { width: 36px; height: 36px; object-fit: contain; }
+        .brand-text-img { height: 20px; object-fit: contain; margin-top: 2px; }
+
+        .sidebar-scroll {
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            color: var(--text-body);
+            font-size: 0.92rem;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .nav-link-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .nav-link:hover { background: var(--sigma-subtle); color: var(--sigma-primary); }
+        .nav-link.active { background: var(--sigma-primary); color: white; }
+        .nav-link.active svg { stroke: var(--sigma-accent); }
+
+        .nav-badge {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: var(--radius-pill);
+            background: var(--sigma-danger-soft);
+            color: var(--sigma-danger-dark);
+        }
+
+        .sidebar-logout-btn {
+            margin: 16px 12px;
+            background: var(--sigma-danger-soft);
+            color: var(--sigma-danger-dark);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 14px;
+            border-radius: var(--radius-md);
+            font-weight: 800;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .sidebar-logout-btn:active { background: var(--sigma-danger); color: white; }
+
+        /* ==========================================================================
+           3. MAIN OPERATIONAL WORKSPACE
+           ========================================================================== */
+        .admin-main {
+            flex: 1;
+            margin-left: 270px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .admin-topbar {
+            height: 70px;
+            background: var(--sigma-surface);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .topbar-brand-mobile {
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-content {
+            padding: 30px 24px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
 
         /* Toolbar */
-        .toolbar {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+        .toolbar-card {
+            background: var(--sigma-surface);
+            border-radius: var(--radius-xl);
+            padding: 18px 24px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
         }
+
+        .toolbar-info h2 {
+            font-size: 1.15rem;
+        }
+
+        .toolbar-info p {
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
         .btn-primary {
-            background: var(--sigma-primary); color: white; border: none; padding: 12px 20px;
-            border-radius: var(--radius-md); font-weight: 700; font-size: 0.95rem; cursor: pointer;
-            display: flex; align-items: center; gap: 8px; transition: var(--transition);
+            background: var(--sigma-primary);
+            color: white;
+            padding: 14px 24px;
+            border-radius: var(--radius-lg);
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(11, 19, 43, 0.15);
         }
-        .btn-primary:hover { background: var(--sigma-secondary); }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+            background: var(--sigma-secondary);
+        }
+
+        .btn-primary svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
 
         /* Plans Grid */
         .plans-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
         }
 
         .plan-card {
-            background: var(--sigma-surface); border-radius: var(--radius-lg);
-            padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            display: flex; flex-direction: column; position: relative; overflow: hidden;
-            border: 1px solid var(--input-border);
+            background: var(--sigma-surface);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-subtle);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
         }
-        .plan-card.inactive { opacity: 0.6; filter: grayscale(1); }
+
+        .plan-card:hover {
+            border-color: var(--sigma-accent);
+            box-shadow: var(--shadow-card);
+            transform: translateY(-2px);
+        }
+
+        .plan-card.inactive {
+            background: var(--sigma-surface-alt);
+            border-color: var(--border-light);
+            opacity: 0.85;
+        }
+
+        .plan-card.inactive::after {
+            content: 'INACTIVE';
+            position: absolute;
+            top: 24px;
+            right: -30px;
+            background: var(--sigma-muted-border);
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 4px 30px;
+            transform: rotate(45deg);
+            letter-spacing: 1px;
+        }
 
         .plan-header {
-            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
         }
-        .plan-name { font-size: 1.15rem; font-weight: 800; color: var(--text-heading); }
-        .plan-price { font-size: 1.25rem; font-weight: 900; color: var(--sigma-accent); }
-        
-        .plan-detail {
-            display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 8px;
-            border-bottom: 1px dashed var(--input-border); padding-bottom: 4px;
-        }
-        .plan-detail strong { color: var(--text-heading); }
-        .plan-detail span { color: var(--text-muted); }
 
-        .plan-actions {
-            margin-top: 20px; display: flex; gap: 12px;
+        .plan-title-box h3 {
+            font-size: 1.15rem;
+            color: var(--text-heading);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .btn-action {
-            flex: 1; padding: 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
-            cursor: pointer; border: 1px solid var(--input-border); background: none; transition: var(--transition);
-        }
-        .btn-action:hover { background: var(--sigma-subtle); }
-        .btn-action.edit { color: var(--sigma-primary); border-color: var(--sigma-primary); }
-        .btn-action.edit:hover { background: var(--sigma-primary); color: white; }
 
-        /* Modals */
+        .plan-title-box .badge-status {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: var(--radius-pill);
+            background: var(--sigma-accent-soft);
+            color: var(--sigma-accent-dark);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .plan-card.inactive .badge-status {
+            background: var(--border-light);
+            color: var(--text-muted);
+        }
+
+        .plan-price {
+            font-size: 1.45rem;
+            font-weight: 900;
+            color: var(--sigma-primary);
+            text-align: right;
+            line-height: 1.1;
+        }
+
+        .plan-price small {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .plan-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: var(--sigma-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            border: 1px solid var(--border-light);
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-row span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .metric-row strong {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-heading);
+        }
+
+        .metric-row.total strong {
+            color: var(--sigma-accent-dark);
+        }
+
+        .btn-edit-plan {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-muted);
+            color: var(--text-heading);
+            font-weight: 800;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .btn-edit-plan:hover {
+            background: var(--sigma-subtle);
+            border-color: var(--sigma-primary);
+        }
+
+        /* ==========================================================================
+           4. MODAL SHEET FOR PLAN CONFIGURATION
+           ========================================================================== */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000;
-            display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 19, 43, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: var(--z-modal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
         }
-        .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-content {
-            background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg);
-            padding: 24px; transform: scale(0.95); transition: transform 0.3s; max-height: 90vh; overflow-y: auto;
-        }
-        .modal-overlay.show .modal-content { transform: scale(1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-header h3 { font-size: 1.25rem; }
-        .close-modal { background: none; border: none; cursor: pointer; color: var(--text-muted); }
 
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; color: var(--text-heading); }
-        .form-input {
-            width: 100%; padding: 12px 16px; border: 1px solid var(--input-border);
-            border-radius: var(--radius-md); font-size: 0.95rem; outline: none; transition: var(--transition);
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
         }
-        .form-input:focus { border-color: var(--sigma-accent); }
-        
+
+        .modal-card {
+            background: var(--sigma-surface);
+            border-radius: var(--radius-2xl);
+            width: 100%;
+            max-width: 500px;
+            padding: 28px 24px;
+            box-shadow: var(--shadow-float);
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 16px;
+        }
+
+        .modal-head h3 { font-size: 1.25rem; }
+
+        .modal-close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--sigma-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .modal-close-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--sigma-subtle);
+            border: 1px solid var(--border-muted);
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--sigma-primary);
+            background: var(--sigma-surface);
+            box-shadow: 0 0 0 3px rgba(11, 19, 43, 0.08);
+        }
+
+        .input-field {
+            flex: 1;
+            height: 56px;
+            padding: 20px 16px 4px 16px;
+            font-size: 1rem;
+            color: var(--text-heading);
+            font-weight: 700;
+        }
+
+        .input-field::placeholder { color: transparent; }
+
+        .floating-label {
+            position: absolute;
+            left: 16px;
+            top: 18px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: 0.2s ease all;
+            font-weight: 600;
+        }
+
+        .input-field:focus~.floating-label,
+        .input-field:not(:placeholder-shown)~.floating-label {
+            top: 6px;
+            font-size: 0.68rem;
+            color: var(--sigma-primary);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
         .toggle-group {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 16px; background: #F8FAFC; border-radius: var(--radius-md);
-            margin-bottom: 16px; border: 1px solid var(--input-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--sigma-subtle);
+            border-radius: var(--radius-lg);
+            margin-bottom: 16px;
+            border: 1px solid var(--border-muted);
         }
-        .toggle-text { font-weight: 600; font-size: 0.9rem; }
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+
+        .toggle-text {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-heading);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #CBD5E1; transition: .3s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--border-muted); transition: .3s; border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px;
+            left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%;
+        }
         input:checked + .slider { background-color: var(--sigma-accent); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        @media (max-width: 768px) {
-            .admin-sidebar { transform: translateX(-100%); }
-            .admin-sidebar.open { transform: translateX(0); }
+        .btn-modal-save {
+            width: 100%;
+            height: 56px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 900;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(11, 19, 43, 0.2);
+            transition: var(--transition);
+        }
+
+        .btn-modal-save:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 10px rgba(11, 19, 43, 0.1);
+        }
+
+        .btn-modal-save:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* ==========================================================================
+           5. UNIFIED 5-BUTTON ADMIN MOBILE DOCK
+           ========================================================================== */
+        .admin-mobile-dock {
+            display: none;
+            position: fixed;
+            bottom: var(--safe-area-bottom);
+            left: 50%;
+            transform: translateX(-50%);
+            height: 74px;
+            width: calc(100% - 24px);
+            max-width: 460px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-float);
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: var(--z-dock);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .dock-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--text-muted);
+            flex: 1;
+            height: 100%;
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .dock-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .dock-btn span {
+            font-size: 0.65rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .dock-btn.active { color: var(--sigma-primary); }
+        .dock-btn.active svg {
+            stroke: var(--sigma-accent-dark);
+            stroke-width: 2.6;
+            transform: translateY(-2px);
+        }
+
+        .dock-badge {
+            position: absolute;
+            top: 8px;
+            right: 18px;
+            min-width: 18px;
+            height: 18px;
+            background: var(--sigma-danger);
+            color: white;
+            border-radius: 9px;
+            font-size: 0.65rem;
+            font-weight: 900;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid white;
+        }
+
+        .dock-center-action {
+            position: relative;
+            top: -20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 22px rgba(11, 19, 43, 0.35);
+            border: 4px solid var(--sigma-subtle);
+            color: white;
+            flex-shrink: 0;
+            margin: 0 4px;
+        }
+
+        .dock-center-action:active { transform: scale(0.92); }
+        .dock-center-action svg {
+            width: 26px;
+            height: 26px;
+            stroke: white;
+            stroke-width: 2.2;
+        }
+
+        /* ==========================================================================
+           6. UNIFIED DRAWER / MORE MODULES MODAL
+           ========================================================================== */
+        .sheet {
+            width: 100%;
+            max-width: 520px;
+            background: var(--sigma-surface);
+            border-radius: 32px 32px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -20px 48px rgba(0, 0, 0, 0.2);
+        }
+
+        .overlay.show .sheet { transform: translateY(0); }
+
+        .sheet-handle {
+            width: 48px;
+            height: 6px;
+            border-radius: 99px;
+            background: var(--border-muted);
+            margin: 14px auto 8px;
+        }
+
+        .sheet-header {
+            padding: 12px 24px 18px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sheet-header h3 { font-size: 1.2rem; font-weight: 800; }
+        .sheet-close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--sigma-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .sheet-body {
+            padding: 20px 24px 36px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sheet-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: var(--sigma-surface-alt);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-heading);
+            transition: var(--transition);
+        }
+
+        .sheet-menu-link:active {
+            background: var(--sigma-subtle);
+            transform: scale(0.98);
+        }
+
+        .sheet-menu-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sheet-menu-left svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--sigma-primary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translate(-50%, -20px) scale(0.9);
+            background: var(--sigma-primary);
+            color: white;
+            padding: 14px 28px;
+            border-radius: var(--radius-pill);
+            font-size: 0.95rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-float);
+            z-index: 4000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.error { background: var(--sigma-danger-dark); }
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0) scale(1);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 860px) {
+            .admin-sidebar { display: none; }
             .admin-main { margin-left: 0; }
-            .mobile-menu-btn { display: block; }
+            .admin-mobile-dock { display: flex; }
+            .topbar-brand-mobile { display: flex; }
+            .desktop-only { display: none; }
             .page-content { padding: 20px 16px; }
+            .plans-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Auth Protection Overlay -->
     <div id="authOverlay">
-        <div class="spinner"></div>
-        <h2>Authorizing Admin...</h2>
+        <div class="auth-spinner"></div>
+        <h2 style="font-size: 1.15rem; font-weight: 800;">Verifying Administrator Access...</h2>
     </div>
 
-    <!-- Sidebar -->
+    <!-- =======================================================================
+         DESKTOP ADMIN SIDEBAR
+         ======================================================================= -->
     <aside class="admin-sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <svg viewBox="0 0 24 24" style="width: 28px; fill: none; stroke: var(--sigma-accent); stroke-width: 2;">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-            </svg>
-            <h2>Sigma Ops</h2>
+        <div class="sidebar-brand-header">
+            <img src="../assets/logo.png" alt="Sigma Logo" class="brand-logo-img"
+                onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2310B981\'/><text x=\'50\' y=\'65\' font-family=\'Arial\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\'>S</text></svg>'">
+            <img src="../assets/textlogo.png" alt="Sigma" class="brand-text-img" onerror="this.style.display='none'">
         </div>
-        <div class="nav-links">
-            <a href="dashboard" class="nav-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                Overview
+
+        <div class="sidebar-scroll">
+            <a href="dashboard.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span>Overview</span>
+                </div>
             </a>
-            <a href="users" class="nav-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                User Management
+            <a href="users.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <span>Users</span>
+                </div>
             </a>
-            <a href="plans" class="nav-link active">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Plans & Portfolios
+            <a href="deposits.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                    <span>Deposits</span>
+                </div>
+                <span class="nav-badge" id="sideBadgeDeposits" style="display:none;">0</span>
             </a>
-            <a href="content" class="nav-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                UI & Content Config
+            <a href="withdrawals.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                    <span>Withdrawals</span>
+                </div>
+            </a>
+            <a href="plans.html" class="nav-link active">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span>Plans & Tiers</span>
+                </div>
+            </a>
+            <a href="wallet.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                    <span>Ledger & Wallet</span>
+                </div>
+            </a>
+            <a href="roi.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>ROI Engine</span>
+                </div>
+            </a>
+            <a href="team.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                    <span>Team Network</span>
+                </div>
+            </a>
+            <a href="tickets.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <span>Support Tickets</span>
+                </div>
+            </a>
+            <a href="security.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <span>Security & Admins</span>
+                </div>
+            </a>
+            <a href="settings.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <span>Global Settings</span>
+                </div>
+            </a>
+            <a href="content.html" class="nav-link">
+                <div class="nav-link-left">
+                    <svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    <span>UI Content Config</span>
+                </div>
             </a>
         </div>
-        <button class="logout-btn" id="logoutBtn">Secure Logout</button>
+
+        <button class="sidebar-logout-btn" onclick="PlansController.terminateSession()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            Secure Logout
+        </button>
     </aside>
 
-    <!-- Main View -->
+    <!-- =======================================================================
+         MAIN VIEWPORT CONTENT
+         ======================================================================= -->
     <main class="admin-main">
-        <header class="topbar">
-            <div style="display:flex; align-items:center; gap: 16px;">
-                <button class="mobile-menu-btn" id="menuBtn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                </button>
-                <h1>Plans Management</h1>
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <div class="topbar-brand-mobile">
+                    <img src="../assets/logo.png" alt="Sigma Logo" class="brand-logo-img">
+                    <img src="../assets/textlogo.png" alt="Sigma" class="brand-text-img">
+                </div>
+                <h2 style="font-size: 1.15rem; font-weight: 800;" class="desktop-only">Plans Management</h2>
             </div>
         </header>
 
         <div class="page-content">
-            <div class="toolbar">
-                <h2 style="font-size: 1.1rem; color: var(--text-heading);">Active & Inactive Portfolios</h2>
-                <button class="btn-primary" id="createNewPlanBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    Create Plan
+            <div class="toolbar-card">
+                <div class="toolbar-info">
+                    <h2>Active & Inactive Portfolios</h2>
+                    <p>Configure pricing, daily ROI yields, and durations.</p>
+                </div>
+                <button class="btn-primary" onclick="PlansController.openPlanModal()">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Create New Plan
                 </button>
             </div>
 
             <div class="plans-grid" id="plansContainer">
                 <div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">
-                    Loading portfolios...
+                    Loading portfolios from secure ledger...
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Plan Editor Modal -->
+    <!-- =======================================================================
+         PLAN EDITOR MODAL
+         ======================================================================= -->
     <div class="modal-overlay" id="planModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Create New Plan</h3>
-                <button class="close-modal" id="closeModal">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="modalTitle">Configure Plan</h3>
+                <button class="modal-close-btn" onclick="PlansController.closePlanModal()">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
+            
             <form id="planForm">
                 <input type="hidden" id="planId">
-                <div class="form-group">
-                    <label class="form-label">Plan Name</label>
-                    <input type="text" id="pName" class="form-input" placeholder="e.g. Alpha Portfolio" required>
+                
+                <div class="input-wrapper">
+                    <input type="text" id="pName" class="input-field" placeholder=" " required>
+                    <label class="floating-label">Plan Name (e.g. Sigma Alpha)</label>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Investment Price (RS)</label>
-                    <input type="number" id="pPrice" class="form-input" placeholder="5000" required>
+                
+                <div class="input-wrapper">
+                    <input type="number" id="pPrice" class="input-field font-mono" placeholder=" " required>
+                    <label class="floating-label">Principal Price (PKR)</label>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Daily Return (RS)</label>
-                    <input type="number" id="pDaily" class="form-input" placeholder="150" required>
+                
+                <div class="input-wrapper">
+                    <input type="number" id="pDaily" class="input-field font-mono" placeholder=" " required>
+                    <label class="floating-label">Daily Yield / ROI (PKR)</label>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Duration (Days)</label>
-                    <input type="number" id="pDuration" class="form-input" placeholder="30" required>
+                
+                <div class="input-wrapper">
+                    <input type="number" id="pDuration" class="input-field font-mono" placeholder=" " required>
+                    <label class="floating-label">Compounding Duration (Days)</label>
                 </div>
+
                 <div class="toggle-group">
-                    <div class="toggle-text">Status (Active = Visible to Users)</div>
+                    <span class="toggle-text">Status (Visible to users)</span>
                     <label class="switch">
                         <input type="checkbox" id="pStatus" checked>
                         <span class="slider"></span>
                     </label>
                 </div>
-                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;" id="savePlanBtn">
-                    Save Plan
+
+                <button type="submit" class="btn-modal-save" id="savePlanBtn">
+                    Commit Changes
                 </button>
             </form>
         </div>
     </div>
 
+    <!-- ==========================================================================
+         UNIFIED 5-BUTTON ADMIN MOBILE DOCK
+         ========================================================================== -->
+    <nav class="admin-mobile-dock">
+        <a href="dashboard.html" class="dock-btn">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Overview</span>
+        </a>
+
+        <a href="deposits.html" class="dock-btn">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+            <span>Deposits</span>
+            <span class="dock-badge" id="dockBadgeDeposits">0</span>
+        </a>
+
+        <a href="withdrawals.html" class="dock-center-action" aria-label="Withdrawals">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+        </a>
+
+        <a href="users.html" class="dock-btn">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+            <span>Users</span>
+        </a>
+
+        <button class="dock-btn active" onclick="PlansController.openMenuSheet()">
+            <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <!-- UNIFIED DRAWER SHEET FOR ALL OTHER MODULES -->
+    <div class="overlay" id="sheetAdminMenu">
+        <div class="sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <h3>Admin Operations Menu</h3>
+                <button class="sheet-close-btn" onclick="PlansController.closeMenuSheet()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="sheet-body">
+                <a href="plans.html" class="sheet-menu-link" style="border-color: var(--sigma-primary); background: white;">
+                    <div class="sheet-menu-left">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span>Plans & Portfolios</span>
+                    </div>
+                    &rarr;
+                </a>
+                <a href="wallet.html" class="sheet-menu-link">
+                    <div class="sheet-menu-left">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                        <span>Wallet Ledger & Balances</span>
+                    </div>
+                    &rarr;
+                </a>
+                <a href="roi.html" class="sheet-menu-link">
+                    <div class="sheet-menu-left">
+                        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        <span>Daily ROI Engine</span>
+                    </div>
+                    &rarr;
+                </a>
+                <a href="team.html" class="sheet-menu-link">
+                    <div class="sheet-menu-left">
+                        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                        <span>Team Tree Tracker</span>
+                    </div>
+                    &rarr;
+                </a>
+                <a href="tickets.html" class="sheet-menu-link">
+                    <div class="sheet-menu-left">
+                        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        <span>Support Desk (Chat)</span>
+                    </div>
+                    &rarr;
+                </a>
+                <a href="security.html" class="sheet-menu-link">
+                    <div class="sheet-menu-left">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Security & Admins</span>
+                    </div>
+                    &rarr;
+                </a>
+                <a href="settings.html" class="sheet-menu-link">
+                    <div class="sheet-menu-left">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <span>Global Settings</span>
+                    </div>
+                    &rarr;
+                </a>
+                <a href="content.html" class="sheet-menu-link">
+                    <div class="sheet-menu-left">
+                        <svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        <span>UI Configuration</span>
+                    </div>
+                    &rarr;
+                </a>
+
+                <div style="height: 1px; background: var(--border-light); margin: 6px 0;"></div>
+
+                <button onclick="PlansController.terminateSession()" class="sheet-menu-link" style="color: var(--sigma-danger); background: var(--sigma-danger-soft);">
+                    <div class="sheet-menu-left">
+                        <svg viewBox="0 0 24 24" style="stroke: var(--sigma-danger);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        <span>Sign Out of Terminal</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toastBox" style="position:fixed; top:24px; left:50%; transform:translate(-50%,-20px) scale(0.9); background:var(--sigma-primary); color:white; padding:12px 24px; border-radius:var(--radius-pill); font-weight:700; font-size:0.9rem; z-index:var(--z-toast); opacity:0; visibility:hidden; transition:0.3s;">
+        <span id="toastMsg">Success</span>
+    </div>
+
+    <!-- ==========================================================================
+         JAVASCRIPT CONTROLLER
+         ========================================================================== -->
     <script>
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-        let adminUser = null;
-        let allPlans = [];
+        const PlansController = (() => {
 
-        const authOverlay = document.getElementById('authOverlay');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const menuBtn = document.getElementById('menuBtn');
-        const sidebar = document.getElementById('sidebar');
-        const plansContainer = document.getElementById('plansContainer');
-        
-        // Modal elements
-        const planModal = document.getElementById('planModal');
-        const closeModal = document.getElementById('closeModal');
-        const createNewPlanBtn = document.getElementById('createNewPlanBtn');
-        const planForm = document.getElementById('planForm');
-        
-        // Form Inputs
-        const planId = document.getElementById('planId');
-        const pName = document.getElementById('pName');
-        const pPrice = document.getElementById('pPrice');
-        const pDaily = document.getElementById('pDaily');
-        const pDuration = document.getElementById('pDuration');
-        const pStatus = document.getElementById('pStatus');
-        const savePlanBtn = document.getElementById('savePlanBtn');
+            const db = firebase.firestore();
+            const auth = firebase.auth();
+            let adminUser = null;
+            let allPlans = [];
 
-        // Verify Admin Auth
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                try {
-                    const doc = await db.collection('users').doc(user.uid).get();
-                    if (doc.exists && (doc.data().role === 'admin' || doc.data().role === 'superadmin')) {
-                        adminUser = user;
-                        authOverlay.style.opacity = '0';
-                        setTimeout(() => authOverlay.style.display = 'none', 400);
-                        fetchPlans();
-                    } else {
-                        throw new Error("Unauthorized");
-                    }
-                } catch (e) {
-                    auth.signOut();
-                    window.location.replace('login.html');
-                }
-            } else {
-                window.location.replace('login.html');
-            }
-        });
-
-        // Fetch Plans
-        function fetchPlans() {
-            db.collection('plans').orderBy('price', 'asc').onSnapshot(snap => {
-                allPlans = [];
-                snap.forEach(doc => {
-                    allPlans.push({ id: doc.id, ...doc.data() });
-                });
-                renderPlans();
-            }, error => {
-                console.error("Error fetching plans:", error);
-                plansContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:red;">Failed to load plans. Please check permissions.</div>`;
-            });
-        }
-
-        // Render Plans
-        function renderPlans() {
-            if (allPlans.length === 0) {
-                plansContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">No plans found. Create one above.</div>`;
-                return;
-            }
-
-            let html = '';
-            allPlans.forEach(p => {
-                const total = p.dailyROI * p.durationDays;
-                const statusClass = p.status === 'active' ? '' : 'inactive';
-                const statusBadge = p.status === 'active' ? 
-                    `<span style="background:#ECFDF5; color:#059669; padding:4px 8px; border-radius:12px; font-size:0.75rem; font-weight:700;">Active</span>` : 
-                    `<span style="background:#F1F5F9; color:#64748B; padding:4px 8px; border-radius:12px; font-size:0.75rem; font-weight:700;">Inactive</span>`;
-
-                html += `
-                <div class="plan-card ${statusClass}">
-                    <div class="plan-header">
-                        <div>
-                            <div class="plan-name">${p.name}</div>
-                            <div style="margin-top:4px;">${statusBadge}</div>
-                        </div>
-                        <div class="plan-price">RS ${p.price}</div>
-                    </div>
-                    <div class="plan-detail">
-                        <span>Daily Return</span>
-                        <strong>RS ${p.dailyROI}</strong>
-                    </div>
-                    <div class="plan-detail">
-                        <span>Total Return</span>
-                        <strong>RS ${total}</strong>
-                    </div>
-                    <div class="plan-detail" style="border:none; margin-bottom:0;">
-                        <span>Duration</span>
-                        <strong>${p.durationDays} Days</strong>
-                    </div>
-                    
-                    <div class="plan-actions">
-                        <button class="btn-action edit" onclick="editPlan('${p.id}')">Edit Plan</button>
-                    </div>
-                </div>
-                `;
-            });
-            plansContainer.innerHTML = html;
-        }
-
-        // Open Modal for Create
-        createNewPlanBtn.addEventListener('click', () => {
-            planForm.reset();
-            planId.value = '';
-            pStatus.checked = true;
-            document.getElementById('modalTitle').textContent = 'Create New Plan';
-            planModal.classList.add('show');
-        });
-
-        // Open Modal for Edit
-        window.editPlan = (id) => {
-            const plan = allPlans.find(p => p.id === id);
-            if (!plan) return;
-
-            planId.value = plan.id;
-            pName.value = plan.name;
-            pPrice.value = plan.price;
-            pDaily.value = plan.dailyROI;
-            pDuration.value = plan.durationDays;
-            pStatus.checked = plan.status === 'active';
-
-            document.getElementById('modalTitle').textContent = 'Edit Plan';
-            planModal.classList.add('show');
-        };
-
-        // Close Modal
-        closeModal.addEventListener('click', () => {
-            planModal.classList.remove('show');
-        });
-
-        // Save Plan
-        planForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            savePlanBtn.disabled = true;
-            savePlanBtn.textContent = 'Saving...';
-
-            const payload = {
-                name: pName.value.trim(),
-                price: Number(pPrice.value),
-                dailyROI: Number(pDaily.value),
-                durationDays: Number(pDuration.value),
-                status: pStatus.checked ? 'active' : 'inactive',
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            const dom = {
+                authOverlay: document.getElementById('authOverlay'),
+                plansContainer: document.getElementById('plansContainer'),
+                planModal: document.getElementById('planModal'),
+                planForm: document.getElementById('planForm'),
+                menuSheet: document.getElementById('sheetAdminMenu'),
+                sideBadgeDeposits: document.getElementById('sideBadgeDeposits'),
+                dockBadgeDeposits: document.getElementById('dockBadgeDeposits'),
+                toastBox: document.getElementById('toastBox'),
+                toastMsg: document.getElementById('toastMsg')
             };
 
-            try {
-                if (planId.value) {
-                    // Update
-                    await db.collection('plans').doc(planId.value).update(payload);
-                } else {
-                    // Create
-                    payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection('plans').add(payload);
+            const inputs = {
+                id: document.getElementById('planId'),
+                name: document.getElementById('pName'),
+                price: document.getElementById('pPrice'),
+                daily: document.getElementById('pDaily'),
+                duration: document.getElementById('pDuration'),
+                status: document.getElementById('pStatus'),
+                btn: document.getElementById('savePlanBtn')
+            };
+
+            const toast = (msg) => {
+                dom.toastMsg.textContent = msg;
+                dom.toastBox.style.opacity = '1';
+                dom.toastBox.style.visibility = 'visible';
+                dom.toastBox.style.transform = 'translate(-50%, 0) scale(1)';
+                setTimeout(() => {
+                    dom.toastBox.style.opacity = '0';
+                    dom.toastBox.style.visibility = 'hidden';
+                    dom.toastBox.style.transform = 'translate(-50%, -20px) scale(0.9)';
+                }, 3000);
+            };
+
+            const openMenuSheet = () => {
+                dom.menuSheet.classList.add('show');
+                document.body.classList.add('locked');
+            };
+
+            const closeMenuSheet = () => {
+                dom.menuSheet.classList.remove('show');
+                document.body.classList.remove('locked');
+            };
+
+            const terminateSession = async () => {
+                await auth.signOut();
+                window.location.replace('login.html');
+            };
+
+            // Verify Auth
+            const verifyAdminAccess = () => {
+                auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        try {
+                            const userDoc = await db.collection('users').doc(user.uid).get();
+                            if (userDoc.exists) {
+                                const data = userDoc.data();
+                                const role = (data.role || '').toLowerCase();
+
+                                if (role === 'admin' || role === 'superadmin') {
+                                    adminUser = user;
+                                    dom.authOverlay.style.opacity = '0';
+                                    setTimeout(() => dom.authOverlay.style.display = 'none', 300);
+
+                                    bindRealtimePlans();
+                                    bindPendingBadge();
+                                    return;
+                                }
+                            }
+                            throw new Error("Unauthorized");
+                        } catch (e) {
+                            await auth.signOut();
+                            window.location.replace('login.html');
+                        }
+                    } else {
+                        window.location.replace('login.html');
+                    }
+                });
+            };
+
+            // Pending Deposits Badge
+            const bindPendingBadge = () => {
+                db.collection('payment_requests').where('status', '==', 'pending_verification').onSnapshot(snap => {
+                    const count = snap.size;
+                    if (count > 0) {
+                        dom.sideBadgeDeposits.style.display = 'inline-block';
+                        dom.sideBadgeDeposits.textContent = count;
+                        dom.dockBadgeDeposits.style.display = 'flex';
+                        dom.dockBadgeDeposits.textContent = count;
+                    } else {
+                        dom.sideBadgeDeposits.style.display = 'none';
+                        dom.dockBadgeDeposits.style.display = 'none';
+                    }
+                });
+            };
+
+            // Live Plans Data
+            const bindRealtimePlans = () => {
+                db.collection('plans').orderBy('price', 'asc').onSnapshot(snap => {
+                    allPlans = [];
+                    snap.forEach(doc => {
+                        allPlans.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderPlans();
+                }, error => {
+                    console.error("Error fetching plans:", error);
+                    dom.plansContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--sigma-danger);">Failed to securely fetch portfolios.</div>`;
+                });
+            };
+
+            const renderPlans = () => {
+                if (allPlans.length === 0) {
+                    dom.plansContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">No portfolios exist in the ledger. Create one to begin.</div>`;
+                    return;
                 }
-                planModal.classList.remove('show');
-            } catch (error) {
-                console.error("Error saving plan:", error);
-                alert("Failed to save plan. Please check your permissions.");
-            }
 
-            savePlanBtn.disabled = false;
-            savePlanBtn.textContent = 'Save Plan';
-        });
+                let html = '';
+                allPlans.forEach(p => {
+                    const total = Number(p.dailyROI) * Number(p.durationDays);
+                    const statusClass = p.status === 'active' ? '' : 'inactive';
+                    
+                    let statusBadge = '';
+                    if (p.status === 'active') {
+                        statusBadge = `<div class="badge-status" style="background:var(--sigma-accent-soft); color:var(--sigma-accent-dark); font-size:0.65rem; font-weight:800; padding:4px 10px; border-radius:99px; text-transform:uppercase;">Active</div>`;
+                    } else {
+                        statusBadge = `<div class="badge-status" style="background:var(--sigma-subtle); color:var(--text-muted); font-size:0.65rem; font-weight:800; padding:4px 10px; border-radius:99px; text-transform:uppercase;">Inactive</div>`;
+                    }
 
-        // Logout
-        logoutBtn.addEventListener('click', () => {
-            auth.signOut();
-        });
+                    html += `
+                    <div class="plan-card ${statusClass}">
+                        <div class="plan-header">
+                            <div class="plan-title-box">
+                                <h3>${p.name}</h3>
+                                ${statusBadge}
+                            </div>
+                            <div class="plan-price">
+                                Rs. ${Number(p.price).toLocaleString('en-PK')}
+                                <small>Principal</small>
+                            </div>
+                        </div>
 
-        // Mobile Menu
-        menuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-        });
+                        <div class="plan-metrics">
+                            <div class="metric-row">
+                                <span>Daily Yield</span>
+                                <strong class="font-mono">Rs. ${Number(p.dailyROI).toLocaleString('en-PK')}</strong>
+                            </div>
+                            <div class="metric-row">
+                                <span>Compounding Term</span>
+                                <strong class="font-mono">${p.durationDays} Days</strong>
+                            </div>
+                            <div class="metric-row total">
+                                <span>Total Gross Return</span>
+                                <strong class="font-mono">Rs. ${total.toLocaleString('en-PK')}</strong>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-edit-plan" onclick="PlansController.openPlanModal('${p.id}')">Configure Plan Details</button>
+                    </div>
+                    `;
+                });
+                dom.plansContainer.innerHTML = html;
+            };
+
+            const openPlanModal = (id = null) => {
+                dom.planForm.reset();
+                if (id) {
+                    const plan = allPlans.find(p => p.id === id);
+                    if (plan) {
+                        inputs.id.value = plan.id;
+                        inputs.name.value = plan.name;
+                        inputs.price.value = plan.price;
+                        inputs.daily.value = plan.dailyROI;
+                        inputs.duration.value = plan.durationDays;
+                        inputs.status.checked = plan.status === 'active';
+                        document.getElementById('modalTitle').textContent = 'Configure Portfolio';
+                    }
+                } else {
+                    inputs.id.value = '';
+                    inputs.status.checked = true;
+                    document.getElementById('modalTitle').textContent = 'Create New Portfolio';
+                }
+                
+                dom.planModal.classList.add('show');
+                document.body.classList.add('locked');
+            };
+
+            const closePlanModal = () => {
+                dom.planModal.classList.remove('show');
+                document.body.classList.remove('locked');
+            };
+
+            const submitPlan = async (e) => {
+                e.preventDefault();
+                inputs.btn.disabled = true;
+                inputs.btn.textContent = 'Processing...';
+
+                const payload = {
+                    name: inputs.name.value.trim(),
+                    price: Number(inputs.price.value),
+                    dailyROI: Number(inputs.daily.value),
+                    durationDays: Number(inputs.duration.value),
+                    status: inputs.status.checked ? 'active' : 'inactive',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                try {
+                    if (inputs.id.value) {
+                        await db.collection('plans').doc(inputs.id.value).update(payload);
+                        toast("Portfolio updated successfully.");
+                    } else {
+                        payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('plans').add(payload);
+                        toast("New portfolio created successfully.");
+                    }
+                    closePlanModal();
+                } catch (error) {
+                    console.error("Ledger Execution Error:", error);
+                    alert("Failed to commit changes. Please verify permissions.");
+                }
+
+                inputs.btn.disabled = false;
+                inputs.btn.textContent = 'Commit Changes';
+            };
+
+            const init = () => {
+                dom.menuSheet.addEventListener('click', e => {
+                    if (e.target === dom.menuSheet) closeMenuSheet();
+                });
+                dom.planModal.addEventListener('click', e => {
+                    if (e.target === dom.planModal) closePlanModal();
+                });
+                dom.planForm.addEventListener('submit', submitPlan);
+
+                verifyAdminAccess();
+            };
+
+            return {
+                init,
+                openMenuSheet,
+                closeMenuSheet,
+                terminateSession,
+                openPlanModal,
+                closePlanModal
+            };
+        })();
+
+        document.addEventListener('DOMContentLoaded', PlansController.init);
     </script>
 </body>
 </html>
-
