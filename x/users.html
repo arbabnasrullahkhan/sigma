@@ -1,0 +1,436 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sigma Admin | Users Management</title>
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="theme-color" content="#0B132B">
+
+    <link rel="shortcut icon" href="../assets/favicon.png" type="image/png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+
+    <style>
+        :root {
+            --sigma-primary: #0B132B;
+            --sigma-secondary: #1C2541;
+            --sigma-accent: #10B981;
+            --sigma-danger: #EF4444;
+            --sigma-surface: #FFFFFF;
+            --sigma-subtle: #F1F5F9;
+            --text-heading: #0F172A;
+            --text-body: #334155;
+            --text-muted: #64748B;
+            --input-border: #CBD5E1;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--sigma-subtle); color: var(--text-body); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* Loading Overlay */
+        #authOverlay {
+            position: fixed; inset: 0; background: var(--sigma-primary); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; transition: opacity 0.4s;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.2);
+            border-top-color: var(--sigma-accent); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Sidebar Navigation */
+        .admin-sidebar {
+            width: 260px; background: var(--sigma-primary); color: white; flex-shrink: 0;
+            display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0;
+            z-index: 100; transform: translateX(0); transition: transform 0.3s ease;
+        }
+        .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+        .sidebar-header img { width: 32px; height: 32px; background: white; border-radius: 8px; padding: 4px; }
+        .sidebar-header h2 { font-size: 1.1rem; margin:0; }
+        .nav-links { padding: 20px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow-y: auto; }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+            border-radius: var(--radius-md); color: rgba(255,255,255,0.7);
+            text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: var(--transition);
+        }
+        .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+        .nav-link.active { background: var(--sigma-accent); color: white; }
+        .nav-link svg { width: 20px; height: 20px; }
+        .logout-btn {
+            margin: 20px 12px; background: rgba(239, 68, 68, 0.1); color: #FCA5A5;
+            border: 1px solid rgba(239, 68, 68, 0.2); text-align: center; padding: 12px;
+            border-radius: var(--radius-md); cursor: pointer; font-weight: 700; transition: var(--transition);
+        }
+        .logout-btn:hover { background: var(--sigma-danger); color: white; }
+
+        /* Main Content */
+        .admin-main { flex: 1; margin-left: 260px; display: flex; flex-direction: column; min-height: 100vh; }
+        .topbar {
+            height: 70px; background: var(--sigma-surface); border-bottom: 1px solid var(--input-border);
+            display: flex; align-items: center; padding: 0 24px; justify-content: space-between;
+            position: sticky; top: 0; z-index: 90;
+        }
+        .topbar h1 { font-size: 1.25rem; margin: 0; }
+        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--text-heading); }
+        
+        .page-content { padding: 32px 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        /* Search & Filter Bar */
+        .toolbar {
+            display: flex; gap: 16px; margin-bottom: 24px; align-items: center; justify-content: space-between;
+        }
+        .search-box {
+            position: relative; max-width: 400px; width: 100%;
+        }
+        .search-box input {
+            width: 100%; padding: 12px 16px 12px 40px; border: 1px solid var(--input-border);
+            border-radius: var(--radius-md); font-size: 0.95rem; outline: none; transition: var(--transition);
+        }
+        .search-box input:focus { border-color: var(--sigma-accent); }
+        .search-box svg {
+            position: absolute; left: 14px; top: 14px; width: 18px; height: 18px; color: var(--text-muted);
+        }
+
+        /* Users Table */
+        .table-container {
+            background: var(--sigma-surface); border-radius: var(--radius-lg);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow-x: auto;
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 16px 24px; border-bottom: 1px solid var(--input-border); }
+        th { background: #F8FAFC; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        td { font-size: 0.95rem; font-weight: 500; }
+        tbody tr:hover { background: #F8FAFC; }
+        tbody tr:last-child td { border-bottom: none; }
+
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-avatar {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--sigma-subtle);
+            display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--sigma-primary);
+        }
+        .user-name { font-weight: 700; color: var(--text-heading); display: block; }
+        .user-email { font-size: 0.8rem; color: var(--text-muted); }
+
+        .badge {
+            padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+        }
+        .badge.active { background: #ECFDF5; color: #059669; }
+        .badge.suspended { background: #FEF2F2; color: #DC2626; }
+        .badge.admin { background: #EEF2FF; color: #4F46E5; }
+
+        .action-btn {
+            background: none; border: 1px solid var(--input-border); padding: 8px 12px;
+            border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            color: var(--text-body); transition: var(--transition); display: inline-block;
+        }
+        .action-btn:hover { background: var(--sigma-subtle); }
+        .action-btn.suspend { color: var(--sigma-danger); border-color: rgba(239, 68, 68, 0.3); }
+        .action-btn.suspend:hover { background: rgba(239, 68, 68, 0.1); }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000;
+            display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content {
+            background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg);
+            padding: 24px; transform: scale(0.95); transition: transform 0.3s;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h3 { font-size: 1.25rem; }
+        .close-modal { background: none; border: none; cursor: pointer; color: var(--text-muted); }
+
+        @media (max-width: 768px) {
+            .admin-sidebar { transform: translateX(-100%); }
+            .admin-sidebar.open { transform: translateX(0); }
+            .admin-main { margin-left: 0; }
+            .mobile-menu-btn { display: block; }
+            .page-content { padding: 20px 16px; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Auth Protection Overlay -->
+    <div id="authOverlay">
+        <div class="spinner"></div>
+        <h2>Authorizing Admin...</h2>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <svg viewBox="0 0 24 24" style="width: 28px; fill: none; stroke: var(--sigma-accent); stroke-width: 2;">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            <h2>Sigma Ops</h2>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Overview
+            </a>
+            <a href="users" class="nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                User Management
+            </a>
+            <a href="content" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                UI & Content Config
+            </a>
+        </div>
+        <button class="logout-btn" id="logoutBtn">Secure Logout</button>
+    </aside>
+
+    <!-- Main View -->
+    <main class="admin-main">
+        <header class="topbar">
+            <div style="display:flex; align-items:center; gap: 16px;">
+                <button class="mobile-menu-btn" id="menuBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <h1>User Management</h1>
+            </div>
+        </header>
+
+        <div class="page-content">
+            <div class="toolbar">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="searchInput" placeholder="Search by name, email, or UID...">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Balance</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="5" style="text-align:center; padding:32px;">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Action Modal -->
+    <div class="modal-overlay" id="actionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Manage User</h3>
+                <button class="close-modal" id="closeModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div id="modalBody">
+                <p><strong>Name:</strong> <span id="mName"></span></p>
+                <p><strong>Email:</strong> <span id="mEmail"></span></p>
+                <p><strong>UID:</strong> <span id="mUid" style="font-family: monospace; font-size:0.85rem;"></span></p>
+                
+                <div style="margin-top: 24px; display:flex; gap: 12px;">
+                    <button id="toggleStatusBtn" class="action-btn"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        let adminUser = null;
+        let allUsers = [];
+        let currentTargetUser = null;
+
+        const authOverlay = document.getElementById('authOverlay');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const searchInput = document.getElementById('searchInput');
+        
+        // Modal elements
+        const actionModal = document.getElementById('actionModal');
+        const closeModal = document.getElementById('closeModal');
+        const toggleStatusBtn = document.getElementById('toggleStatusBtn');
+
+        // Verify Admin Auth
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists && (doc.data().role === 'admin' || doc.data().role === 'superadmin')) {
+                        adminUser = user;
+                        authOverlay.style.opacity = '0';
+                        setTimeout(() => authOverlay.style.display = 'none', 400);
+                        fetchUsers();
+                    } else {
+                        throw new Error("Unauthorized");
+                    }
+                } catch (e) {
+                    auth.signOut();
+                    window.location.replace('login.html');
+                }
+            } else {
+                window.location.replace('login.html');
+            }
+        });
+
+        // Fetch Users
+        async function fetchUsers() {
+            try {
+                const snap = await db.collection('users').orderBy('fullName').get();
+                allUsers = [];
+                snap.forEach(doc => {
+                    allUsers.push({ uid: doc.id, ...doc.data() });
+                });
+                renderTable(allUsers);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+                usersTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Failed to load data. Ensure Firestore rules allow read access.</td></tr>`;
+            }
+        }
+
+        // Render Table
+        function renderTable(users) {
+            if (users.length === 0) {
+                usersTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:32px;">No users found.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            users.forEach(u => {
+                const initial = (u.fullName || '?').charAt(0).toUpperCase();
+                const bal = u.balance !== undefined ? parseFloat(u.balance).toFixed(2) : '0.00';
+                
+                let roleBadge = `<span class="badge ${u.role === 'admin' || u.role === 'superadmin' ? 'admin' : ''}">${u.role || 'user'}</span>`;
+                let statusBadge = `<span class="badge ${u.status === 'suspended' ? 'suspended' : 'active'}">${u.status === 'suspended' ? 'Suspended' : 'Active'}</span>`;
+
+                html += `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">${initial}</div>
+                            <div>
+                                <span class="user-name">${u.fullName || 'Unknown User'}</span>
+                                <span class="user-email">${u.email || 'No email provided'}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>$${bal}</td>
+                    <td>${roleBadge}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <button class="action-btn" onclick="openUserModal('${u.uid}')">Manage</button>
+                    </td>
+                </tr>
+                `;
+            });
+            usersTableBody.innerHTML = html;
+        }
+
+        // Search Filter
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allUsers.filter(u => 
+                (u.fullName || '').toLowerCase().includes(term) || 
+                (u.email || '').toLowerCase().includes(term) ||
+                (u.uid).toLowerCase().includes(term)
+            );
+            renderTable(filtered);
+        });
+
+        // Open Modal
+        window.openUserModal = (uid) => {
+            currentTargetUser = allUsers.find(u => u.uid === uid);
+            if (!currentTargetUser) return;
+
+            document.getElementById('mName').textContent = currentTargetUser.fullName;
+            document.getElementById('mEmail').textContent = currentTargetUser.email;
+            document.getElementById('mUid').textContent = currentTargetUser.uid;
+
+            if (currentTargetUser.status === 'suspended') {
+                toggleStatusBtn.textContent = 'Activate User Account';
+                toggleStatusBtn.className = 'action-btn';
+            } else {
+                toggleStatusBtn.textContent = 'Suspend User Account';
+                toggleStatusBtn.className = 'action-btn suspend';
+            }
+            
+            // Prevent self-suspension
+            if(currentTargetUser.uid === adminUser.uid) {
+                toggleStatusBtn.style.display = 'none';
+            } else {
+                toggleStatusBtn.style.display = 'block';
+            }
+
+            actionModal.classList.add('show');
+        };
+
+        // Close Modal
+        closeModal.addEventListener('click', () => {
+            actionModal.classList.remove('show');
+        });
+
+        // Toggle Status Action
+        toggleStatusBtn.addEventListener('click', async () => {
+            if (!currentTargetUser) return;
+            const isSuspended = currentTargetUser.status === 'suspended';
+            const newStatus = isSuspended ? 'active' : 'suspended';
+            
+            toggleStatusBtn.disabled = true;
+            toggleStatusBtn.textContent = 'Processing...';
+
+            try {
+                await db.collection('users').doc(currentTargetUser.uid).update({
+                    status: newStatus,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Update local array and re-render
+                currentTargetUser.status = newStatus;
+                renderTable(allUsers);
+                actionModal.classList.remove('show');
+            } catch (error) {
+                console.error("Failed to update status", error);
+                alert("Failed to update status. Check permissions.");
+            }
+            toggleStatusBtn.disabled = false;
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut();
+        });
+
+        // Mobile Menu
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+    </script>
+</body>
+</html>
+

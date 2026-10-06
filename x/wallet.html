@@ -1,0 +1,431 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sigma Admin | Wallet Ledger</title>
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="theme-color" content="#0B132B">
+
+    <link rel="shortcut icon" href="../assets/favicon.png" type="image/png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+
+    <style>
+        :root {
+            --sigma-primary: #0B132B;
+            --sigma-secondary: #1C2541;
+            --sigma-accent: #10B981;
+            --sigma-danger: #EF4444;
+            --sigma-surface: #FFFFFF;
+            --sigma-subtle: #F1F5F9;
+            --text-heading: #0F172A;
+            --text-body: #334155;
+            --text-muted: #64748B;
+            --input-border: #CBD5E1;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--sigma-subtle); color: var(--text-body); display: flex; min-height: 100vh; overflow-x: hidden; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Loading Overlay */
+        #authOverlay {
+            position: fixed; inset: 0; background: var(--sigma-primary); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; transition: opacity 0.4s;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.2);
+            border-top-color: var(--sigma-accent); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Sidebar Navigation */
+        .admin-sidebar {
+            width: 260px; background: var(--sigma-primary); color: white; flex-shrink: 0;
+            display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0;
+            z-index: 100; transform: translateX(0); transition: transform 0.3s ease;
+        }
+        .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+        .sidebar-header img { width: 32px; height: 32px; background: white; border-radius: 8px; padding: 4px; }
+        .sidebar-header h2 { font-size: 1.1rem; margin:0; }
+        .nav-links { padding: 20px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow-y: auto; }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+            border-radius: var(--radius-md); color: rgba(255,255,255,0.7);
+            text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: var(--transition);
+        }
+        .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+        .nav-link.active { background: var(--sigma-accent); color: white; }
+        .nav-link svg { width: 20px; height: 20px; }
+        .logout-btn {
+            margin: 20px 12px; background: rgba(239, 68, 68, 0.1); color: #FCA5A5;
+            border: 1px solid rgba(239, 68, 68, 0.2); text-align: center; padding: 12px;
+            border-radius: var(--radius-md); cursor: pointer; font-weight: 700; transition: var(--transition);
+        }
+        .logout-btn:hover { background: var(--sigma-danger); color: white; }
+
+        /* Main Content */
+        .admin-main { flex: 1; margin-left: 260px; display: flex; flex-direction: column; min-height: 100vh; }
+        .topbar {
+            height: 70px; background: var(--sigma-surface); border-bottom: 1px solid var(--input-border);
+            display: flex; align-items: center; padding: 0 24px; justify-content: space-between;
+            position: sticky; top: 0; z-index: 90;
+        }
+        .topbar h1 { font-size: 1.25rem; margin: 0; }
+        .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--text-heading); }
+        
+        .page-content { padding: 32px 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        /* Search Section */
+        .search-card {
+            background: var(--sigma-surface); border-radius: var(--radius-lg);
+            padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px;
+            border: 1px solid var(--input-border); display: flex; gap: 12px; align-items: center;
+        }
+        .search-input-wrapper { flex: 1; position: relative; }
+        .search-input-wrapper input {
+            width: 100%; padding: 16px 16px 16px 48px; border: 1px solid var(--input-border);
+            border-radius: var(--radius-md); font-size: 1rem; outline: none; transition: var(--transition);
+        }
+        .search-input-wrapper input:focus { border-color: var(--sigma-primary); }
+        .search-input-wrapper svg {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); width: 20px; height: 20px;
+        }
+        .btn-primary {
+            background: var(--sigma-primary); color: white; border: none; padding: 16px 24px;
+            border-radius: var(--radius-md); font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition);
+        }
+        .btn-primary:hover { background: var(--sigma-secondary); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* User Info Section */
+        #userInfoContainer { display: none; }
+        .user-header-card {
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
+            border-radius: var(--radius-lg); padding: 24px; color: white; margin-bottom: 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .user-header-left h2 { margin-bottom: 4px; font-size: 1.5rem; }
+        .user-header-left p { color: rgba(255,255,255,0.7); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace; }
+        
+        .balances-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+        .balance-card {
+            background: var(--sigma-surface); border-radius: var(--radius-lg); padding: 24px;
+            border: 1px solid var(--input-border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        .balance-title { font-size: 0.85rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
+        .balance-amount { font-size: 2.2rem; font-weight: 900; color: var(--text-heading); }
+        
+        /* Adjustment Form */
+        .adj-form { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; border-top: 1px dashed var(--input-border); padding-top: 16px; }
+        .adj-row { display: flex; gap: 8px; }
+        .adj-input {
+            flex: 1; padding: 12px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 1rem; outline: none;
+        }
+        .btn-add { background: #ECFDF5; color: #059669; border: 1px solid #10B981; padding: 12px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-add:hover { background: #10B981; color: white; }
+        
+        .btn-sub { background: #FEF2F2; color: #DC2626; border: 1px solid #EF4444; padding: 12px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-sub:hover { background: #EF4444; color: white; }
+
+        @media (max-width: 768px) {
+            .admin-sidebar { transform: translateX(-100%); }
+            .admin-sidebar.open { transform: translateX(0); }
+            .admin-main { margin-left: 0; }
+            .mobile-menu-btn { display: block; }
+            .page-content { padding: 20px 16px; }
+            .search-card { flex-direction: column; }
+            .btn-primary { width: 100%; }
+            .user-header-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .balances-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Auth Protection Overlay -->
+    <div id="authOverlay">
+        <div class="spinner"></div>
+        <h2>Authorizing Admin...</h2>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <svg viewBox="0 0 24 24" style="width: 28px; fill: none; stroke: var(--sigma-accent); stroke-width: 2;">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            <h2>Sigma Ops</h2>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Overview
+            </a>
+            <a href="users" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                User Management
+            </a>
+            <a href="plans" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                Plans & Portfolios
+            </a>
+            <a href="deposits" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                Deposits
+            </a>
+            <a href="withdrawals" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="23" x2="12" y2="1"></line><path d="M17 19H9.5a3.5 3.5 0 0 1 0-7h5a3.5 3.5 0 0 0 0-7H6"></path></svg>
+                Withdrawals
+            </a>
+            <a href="wallet" class="nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                Ledger / Wallet
+            </a>
+        </div>
+        <button class="logout-btn" id="logoutBtn">Secure Logout</button>
+    </aside>
+
+    <!-- Main View -->
+    <main class="admin-main">
+        <header class="topbar">
+            <div style="display:flex; align-items:center; gap: 16px;">
+                <button class="mobile-menu-btn" id="menuBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <h1>User Wallet Management</h1>
+            </div>
+        </header>
+
+        <div class="page-content">
+            <!-- Search -->
+            <div class="search-card">
+                <div class="search-input-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="searchInput" placeholder="Enter Exact User UID to view wallet...">
+                </div>
+                <button class="btn-primary" id="searchBtn">Find User</button>
+            </div>
+
+            <div id="searchError" style="color:var(--sigma-danger); display:none; margin-bottom: 24px; font-weight: 600;"></div>
+
+            <!-- User Info Container -->
+            <div id="userInfoContainer">
+                <div class="user-header-card">
+                    <div class="user-header-left">
+                        <h2 id="uName">Loading...</h2>
+                        <p id="uEmail">...</p>
+                        <p style="margin-top: 8px; opacity:0.8;">UID: <span id="uId"></span></p>
+                    </div>
+                </div>
+
+                <div class="balances-grid">
+                    <!-- Deposit Balance (balance) -->
+                    <div class="balance-card">
+                        <div class="balance-title">Deposit / Main Balance</div>
+                        <div class="balance-amount">RS <span id="uBal">0</span></div>
+                        
+                        <div class="adj-form">
+                            <label style="font-size:0.85rem; font-weight:600; color:var(--text-body);">Adjust Deposit Balance</label>
+                            <div class="adj-row">
+                                <input type="number" id="adjBalAmt" class="adj-input" placeholder="Amount (RS)">
+                            </div>
+                            <div class="adj-row" style="margin-top: 4px;">
+                                <button class="btn-add" onclick="adjustBalance('balance', 'add', 'adjBalAmt')">+ Add</button>
+                                <button class="btn-sub" onclick="adjustBalance('balance', 'sub', 'adjBalAmt')">- Deduct</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profit Balance (profitBalance) -->
+                    <div class="balance-card">
+                        <div class="balance-title">Profit / Withdrawal Balance</div>
+                        <div class="balance-amount" style="color: var(--sigma-accent);">RS <span id="uProfitBal">0</span></div>
+                        
+                        <div class="adj-form">
+                            <label style="font-size:0.85rem; font-weight:600; color:var(--text-body);">Adjust Profit Balance</label>
+                            <div class="adj-row">
+                                <input type="number" id="adjProfitAmt" class="adj-input" placeholder="Amount (RS)">
+                            </div>
+                            <div class="adj-row" style="margin-top: 4px;">
+                                <button class="btn-add" onclick="adjustBalance('profitBalance', 'add', 'adjProfitAmt')">+ Add ROI</button>
+                                <button class="btn-sub" onclick="adjustBalance('profitBalance', 'sub', 'adjProfitAmt')">- Deduct</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        let adminUser = null;
+        let activeUid = null;
+        let unsubscribeUser = null;
+
+        const authOverlay = document.getElementById('authOverlay');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        const searchBtn = document.getElementById('searchBtn');
+        const searchInput = document.getElementById('searchInput');
+        const searchError = document.getElementById('searchError');
+        const userInfoContainer = document.getElementById('userInfoContainer');
+
+        // Verify Admin Auth
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists && (doc.data().role === 'admin' || doc.data().role === 'superadmin')) {
+                        adminUser = user;
+                        authOverlay.style.opacity = '0';
+                        setTimeout(() => authOverlay.style.display = 'none', 400);
+                    } else {
+                        throw new Error("Unauthorized");
+                    }
+                } catch (e) {
+                    auth.signOut();
+                    window.location.replace('login.html');
+                }
+            } else {
+                window.location.replace('login.html');
+            }
+        });
+
+        // Search User
+        searchBtn.addEventListener('click', async () => {
+            const query = searchInput.value.trim();
+            if (!query) return;
+
+            searchBtn.disabled = true; searchBtn.textContent = 'Searching...';
+            searchError.style.display = 'none';
+            userInfoContainer.style.display = 'none';
+
+            if (unsubscribeUser) {
+                unsubscribeUser();
+                unsubscribeUser = null;
+            }
+
+            try {
+                // Try treating query as exact UID first
+                const doc = await db.collection('users').doc(query).get();
+                if (doc.exists) {
+                    activeUid = doc.id;
+                    listenToUser(activeUid);
+                } else {
+                    // Try email lookup if not UID
+                    const snap = await db.collection('users').where('email', '==', query).limit(1).get();
+                    if (!snap.empty) {
+                        activeUid = snap.docs[0].id;
+                        listenToUser(activeUid);
+                    } else {
+                        searchError.textContent = "User not found. Please provide an exact UID or Email.";
+                        searchError.style.display = 'block';
+                    }
+                }
+            } catch (e) {
+                searchError.textContent = "Error searching for user. " + e.message;
+                searchError.style.display = 'block';
+            }
+
+            searchBtn.disabled = false; searchBtn.textContent = 'Find User';
+        });
+
+        function listenToUser(uid) {
+            userInfoContainer.style.display = 'block';
+            
+            unsubscribeUser = db.collection('users').doc(uid).onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('uName').textContent = data.name || 'Unknown Name';
+                    document.getElementById('uEmail').textContent = data.email || 'No Email';
+                    document.getElementById('uId').textContent = uid;
+
+                    document.getElementById('uBal').textContent = (data.balance || 0).toLocaleString();
+                    document.getElementById('uProfitBal').textContent = (data.profitBalance || 0).toLocaleString();
+                } else {
+                    userInfoContainer.style.display = 'none';
+                    searchError.textContent = "User account was deleted or cannot be loaded.";
+                    searchError.style.display = 'block';
+                }
+            });
+        }
+
+        // Adjust Balance Function
+        window.adjustBalance = async (field, operation, inputId) => {
+            if (!activeUid) return;
+            
+            const amtStr = document.getElementById(inputId).value;
+            const amount = Number(amtStr);
+            if (!amount || amount <= 0) {
+                alert("Please enter a valid amount greater than 0.");
+                return;
+            }
+
+            const confirmMsg = `Are you sure you want to ${operation === 'add' ? 'ADD' : 'DEDUCT'} RS ${amount} to/from the user's ${field}?`;
+            if (!confirm(confirmMsg)) return;
+
+            const incrementVal = operation === 'add' ? amount : -amount;
+
+            try {
+                const batch = db.batch();
+                const userRef = db.collection('users').doc(activeUid);
+
+                // 1. Update user document
+                batch.update(userRef, {
+                    [field]: firebase.firestore.FieldValue.increment(incrementVal)
+                });
+
+                // 2. Add Ledger Transaction
+                const txRef = userRef.collection('transactions').doc();
+                batch.set(txRef, {
+                    type: operation === 'add' ? 'bonus' : 'adjustment_deduction',
+                    amount: amount,
+                    description: `Manual Admin Adjustment (${field})`,
+                    status: 'completed',
+                    referenceId: 'ADMIN-' + Date.now(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await batch.commit();
+                
+                // Clear input
+                document.getElementById(inputId).value = '';
+                
+                alert("Balance updated successfully!");
+
+            } catch (error) {
+                console.error("Balance adjustment failed:", error);
+                alert("Failed to update balance. Check permissions.");
+            }
+        };
+
+        // Logout
+        logoutBtn.addEventListener('click', () => { auth.signOut(); });
+        menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); });
+    </script>
+</body>
+</html>
+

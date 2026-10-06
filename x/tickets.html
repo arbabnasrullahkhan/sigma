@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sigma Admin | Support Tickets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <style>
+        :root { --p: #0B132B; --s: #1C2541; --a: #10B981; --bg: #F1F5F9; --txt: #334155; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+        body { background:var(--bg); color:var(--txt); display:flex; min-height:100vh; overflow-x: hidden; }
+        
+        .sidebar { 
+            width:260px; background:var(--p); color:white; padding:24px; flex-shrink:0; 
+            position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transition: transform 0.3s;
+        }
+        .sidebar a { display:block; color:rgba(255,255,255,0.7); text-decoration:none; padding:12px; margin-bottom:8px; border-radius:8px; font-weight:600; }
+        .sidebar a.active, .sidebar a:hover { background:var(--a); color:white; }
+        
+        .main { flex:1; margin-left: 260px; display: flex; flex-direction: column; min-height: 100vh; transition: 0.3s; }
+        
+        .topbar { background: white; padding: 16px 24px; display: flex; align-items: center; border-bottom: 1px solid #E2E8F0; }
+        .menu-btn { display: none; background: none; border: none; font-size: 24px; cursor: pointer; margin-right: 16px; }
+
+        .content { padding:24px; flex:1; display: flex; flex-direction: column; }
+        .card { background:white; border-radius:12px; box-shadow:0 2px 4px rgba(0,0,0,0.05); overflow: hidden; flex:1; display: flex; }
+        
+        .ticket-list-panel { width: 350px; border-right: 1px solid #E2E8F0; display: flex; flex-direction: column; }
+        .list-header { padding: 16px; border-bottom: 1px solid #E2E8F0; background: #F8FAFC; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .tickets-scroll { flex:1; overflow-y: auto; }
+        .t-item { padding: 16px; border-bottom: 1px solid #E2E8F0; cursor: pointer; transition: 0.2s; }
+        .t-item:hover { background: #F8FAFC; }
+        .t-item.active { background: #ECFDF5; border-left: 4px solid var(--a); }
+        .t-id { font-size: 0.75rem; color: #64748B; font-family: monospace; }
+        .t-sub { font-weight: 700; margin: 4px 0; font-size: 0.95rem; }
+        .t-prev { font-size: 0.8rem; color: #64748B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; font-weight: bold; }
+        .b-open { background: #FEF3C7; color: #D97706; }
+        .b-closed { background: #E2E8F0; color: #64748B; }
+
+        .chat-panel { flex:1; display: flex; flex-direction: column; background: #F8FAFC; }
+        .chat-header { padding: 16px; background: white; border-bottom: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center; }
+        .chat-msgs { flex:1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; line-height: 1.4; }
+        .msg.admin { background: var(--p); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .msg.user { background: white; border: 1px solid #E2E8F0; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .msg-time { font-size: 0.7rem; opacity: 0.7; margin-top: 4px; text-align: right; }
+        
+        .chat-input { padding: 16px; background: white; border-top: 1px solid #E2E8F0; display: flex; gap: 12px; }
+        .chat-input input { flex:1; padding: 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-size: 0.95rem; outline: none; }
+        .chat-input button { background: var(--a); color: white; border: none; padding: 0 24px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        
+        .btn-close-ticket { background: #EF4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+        .empty-chat { flex:1; display: flex; align-items: center; justify-content: center; color: #64748B; font-weight: 600; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .menu-btn { display: block; }
+            
+            .card { flex-direction: column; }
+            .ticket-list-panel { width: 100%; height: 35vh; border-right: none; border-bottom: 1px solid #E2E8F0; }
+            .chat-panel { height: 65vh; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <h2 style="margin-bottom: 24px;">Sigma Ops</h2>
+        <a href="dashboard">Overview</a>
+        <a href="users">Users</a>
+        <a href="plans">Plans</a>
+        <a href="deposits">Deposits</a>
+        <a href="withdrawals">Withdrawals</a>
+        <a href="wallet">Wallet</a>
+        <a href="team">Team Network</a>
+        <a href="tickets" class="active">Support Tickets</a>
+        <a href="security">Security</a>
+        <a href="settings">Settings</a>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-btn" id="menuBtn">â˜°</button>
+            <h1 style="font-size:1.25rem;">Support Tickets</h1>
+        </div>
+        <div class="content">
+            <div class="card">
+                <div class="ticket-list-panel">
+                    <div class="list-header">
+                        <span>Active Tickets</span>
+                    </div>
+                    <div class="tickets-scroll" id="ticketList">
+                        <div style="padding:16px; text-align:center; color:#64748B;">Loading tickets...</div>
+                    </div>
+                </div>
+                <div class="chat-panel" id="chatPanel" style="display:none;">
+                    <div class="chat-header">
+                        <div>
+                            <h3 id="cSub">Ticket Subject</h3>
+                            <div style="font-size:0.8rem; color:#64748B;">UID: <span id="cUid"></span></div>
+                        </div>
+                        <button class="btn-close-ticket" id="btnCloseTicket">Mark Resolved</button>
+                    </div>
+                    <div class="chat-msgs" id="chatMsgs"></div>
+                    <div class="chat-input" id="chatInputArea">
+                        <input type="text" id="replyInp" placeholder="Type a reply to the user...">
+                        <button id="replyBtn">Send</button>
+                    </div>
+                </div>
+                <div class="empty-chat" id="emptyChat">
+                    Select a ticket to view and reply.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const db = firebase.firestore();
+        let adminUser = null;
+        let allTickets = [];
+        let activeTicketId = null;
+        let chatUnsubscribe = null;
+
+        // Auth
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (doc.exists && (doc.data().role === 'admin' || doc.data().role === 'superadmin')) {
+                    adminUser = user;
+                    loadTickets();
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Mobile Menu
+        document.getElementById('menuBtn').onclick = () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        };
+
+        function loadTickets() {
+            db.collection('tickets').orderBy('updatedAt', 'desc').onSnapshot(snap => {
+                allTickets = [];
+                let html = '';
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    allTickets.push({ id: doc.id, ...d });
+                    const badge = d.status === 'open' ? `<span class="badge b-open">OPEN</span>` : `<span class="badge b-closed">CLOSED</span>`;
+                    const isActive = activeTicketId === doc.id ? 'active' : '';
+                    html += `
+                        <div class="t-item ${isActive}" onclick="openTicket('${doc.id}')" id="t_${doc.id}">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span class="t-id">#${doc.id.substring(0,6).toUpperCase()}</span>
+                                ${badge}
+                            </div>
+                            <div class="t-sub">${d.subject}</div>
+                            <div class="t-prev">${d.lastMessage || ''}</div>
+                        </div>
+                    `;
+                });
+                document.getElementById('ticketList').innerHTML = html || '<div style="padding:16px;text-align:center;">No tickets found.</div>';
+            });
+        }
+
+        window.openTicket = (tid) => {
+            if(activeTicketId) {
+                const el = document.getElementById(`t_${activeTicketId}`);
+                if(el) el.classList.remove('active');
+            }
+            activeTicketId = tid;
+            const t = allTickets.find(x => x.id === tid);
+            if(!t) return;
+
+            const el = document.getElementById(`t_${tid}`);
+            if(el) el.classList.add('active');
+
+            document.getElementById('emptyChat').style.display = 'none';
+            document.getElementById('chatPanel').style.display = 'flex';
+            
+            document.getElementById('cSub').textContent = t.subject;
+            document.getElementById('cUid').textContent = t.uid;
+
+            if(t.status === 'closed') {
+                document.getElementById('chatInputArea').style.display = 'none';
+                document.getElementById('btnCloseTicket').style.display = 'none';
+            } else {
+                document.getElementById('chatInputArea').style.display = 'flex';
+                document.getElementById('btnCloseTicket').style.display = 'block';
+            }
+
+            if(chatUnsubscribe) chatUnsubscribe();
+            
+            chatUnsubscribe = db.collection('tickets').doc(tid).collection('messages').orderBy('createdAt', 'asc').onSnapshot(snap => {
+                let html = '';
+                snap.forEach(doc => {
+                    const m = doc.data();
+                    // If sender is NOT the user who created ticket, it's admin.
+                    const isAdmin = m.senderId !== t.uid;
+                    const c = isAdmin ? 'admin' : 'user';
+                    const time = m.createdAt ? new Date(m.createdAt.toDate()).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '';
+                    html += `
+                        <div class="msg ${c}">
+                            <div>${m.text}</div>
+                            <div class="msg-time">${time} ${isAdmin ? '(Admin)' : ''}</div>
+                        </div>
+                    `;
+                });
+                const msgsDiv = document.getElementById('chatMsgs');
+                msgsDiv.innerHTML = html;
+                msgsDiv.scrollTop = msgsDiv.scrollHeight;
+            });
+        };
+
+        // Send Reply
+        document.getElementById('replyBtn').onclick = async () => {
+            const inp = document.getElementById('replyInp');
+            const txt = inp.value.trim();
+            if(!txt || !activeTicketId) return;
+
+            inp.value = '';
+            const tRef = db.collection('tickets').doc(activeTicketId);
+            const mRef = tRef.collection('messages').doc();
+            
+            const batch = db.batch();
+            batch.set(mRef, {
+                senderId: adminUser.uid, // Using Admin's UID
+                text: txt,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            batch.update(tRef, {
+                lastMessage: "Admin: " + txt,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                status: 'open' // ensure it remains open if replied
+            });
+            await batch.commit();
+        };
+
+        // Mark Resolved
+        document.getElementById('btnCloseTicket').onclick = async () => {
+            if(!activeTicketId) return;
+            if(confirm("Close this ticket?")) {
+                await db.collection('tickets').doc(activeTicketId).update({
+                    status: 'closed',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                document.getElementById('chatInputArea').style.display = 'none';
+                document.getElementById('btnCloseTicket').style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
+

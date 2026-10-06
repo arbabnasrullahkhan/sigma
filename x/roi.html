@@ -1,0 +1,330 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigma Ops | ROI Distribution</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sigma-primary: #0B132B;
+            --sigma-accent: #10B981;
+            --sigma-accent-dark: #059669;
+            --sigma-danger: #EF4444;
+            --sigma-surface: #1C2541;
+            --text-light: #F8FAFC;
+            --text-muted: #94A3B8;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { background: var(--sigma-primary); color: var(--text-light); display: flex; min-height: 100vh; }
+        
+        .admin-sidebar { 
+            width:260px; background: #080d1e; border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+        }
+        .admin-sidebar h2 { padding: 24px; font-size: 1.2rem; color: white; display: flex; align-items: center; gap: 12px; }
+        .nav-links { display: flex; flex-direction: column; gap: 4px; padding: 12px; overflow-y: auto; flex:1; }
+        .nav-link { 
+            color: rgba(255,255,255,0.7); text-decoration: none; padding: 12px 16px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: 0.2s;
+        }
+        .nav-link:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-link.active { background: var(--sigma-accent); color: white; }
+        
+        .admin-main { flex: 1; margin-left: 260px; padding: 32px; max-width: 1200px; display: flex; flex-direction: column; gap: 24px; }
+        
+        .topbar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 24px; }
+        .topbar h1 { font-size: 1.8rem; font-weight: 800; }
+        
+        .card { background: var(--sigma-surface); border-radius: 16px; padding: 24px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-title { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+        
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-box { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-box small { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
+        .stat-box b { display: block; font-size: 1.8rem; font-weight: 800; margin-top: 8px; color: var(--sigma-accent); }
+        
+        .btn-distribute { background: var(--sigma-accent); color: white; border: none; padding: 16px 24px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+        .btn-distribute:hover { background: var(--sigma-accent-dark); transform: translateY(-2px); }
+        .btn-distribute:disabled { background: #334155; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        
+        .log-container { background: rgba(0,0,0,0.4); border-radius: 12px; height: 300px; overflow-y: auto; padding: 16px; font-family: monospace; font-size: 0.9rem; color: #A7F3D0; margin-top: 16px; border: 1px solid rgba(255,255,255,0.05); }
+        .log-item { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+        .log-time { color: var(--text-muted); margin-right: 12px; }
+        .log-error { color: #FCA5A5; }
+        .log-success { color: #6EE7B7; }
+        .log-warning { color: #FCD34D; }
+        
+        /* Spinner */
+        .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-distribute.loading .spinner { display: block; }
+        .btn-distribute.loading span { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="sidebar-header" style="padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <svg viewBox="0 0 24 24" style="width: 28px; fill: none; stroke: var(--sigma-accent); stroke-width: 2;">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            <h2 style="margin:0; padding:0; font-size: 1.1rem; border:none;">Sigma Ops</h2>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard" class="nav-link">Overview</a>
+            <a href="users" class="nav-link">Users</a>
+            <a href="plans" class="nav-link">Plans</a>
+            <a href="roi" class="nav-link active">ROI Engine</a>
+            <a href="deposits" class="nav-link">Deposits</a>
+            <a href="withdrawals" class="nav-link">Withdrawals</a>
+            <a href="wallet" class="nav-link">Wallet</a>
+            <a href="team" class="nav-link">Team Network</a>
+            <a href="tickets" class="nav-link">Support Tickets</a>
+            <a href="security" class="nav-link">Security</a>
+            <a href="settings" class="nav-link">Settings</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <div class="topbar">
+            <h1>Automated ROI Engine</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg style="width:24px; height:24px; stroke:var(--sigma-accent); fill:none; stroke-width:2;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Daily Profit Distribution
+                </div>
+            </div>
+            
+            <p style="color: var(--text-muted); margin-bottom: 24px; line-height: 1.6;">
+                The ROI Engine scans all users in the database, checks if they have active investment plans, and automatically distributes the designated daily percentage to their `profitBalance`. 
+                Run this once every 24 hours.
+            </p>
+
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <small>Total Active Users</small>
+                    <b id="statUsers">...</b>
+                </div>
+                <div class="stat-box">
+                    <small>Total Plans Active</small>
+                    <b id="statPlans">...</b>
+                </div>
+                <div class="stat-box" style="border-color: var(--sigma-accent);">
+                    <small style="color: var(--sigma-accent);">Est. Payout Today</small>
+                    <b id="statEstPayout">...</b>
+                </div>
+            </div>
+
+            <button class="btn-distribute" id="btnRunROI">
+                <div class="spinner"></div>
+                <span>ðŸš€ Execute Daily ROI Distribution</span>
+            </button>
+            
+            <div style="margin-top: 16px; text-align: center; color: #FCD34D; font-size: 0.85rem; font-weight: 600;">
+                <svg style="width:14px;height:14px;stroke:currentColor;fill:none;vertical-align:middle;margin-right:4px;" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Warning: Once started, do not close this window until the process completes.
+            </div>
+
+            <div class="log-container" id="logContainer">
+                <div class="log-item"><span class="log-time">[SYSTEM]</span> Ready to begin calculation sequence...</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            
+            const btnRunROI = document.getElementById('btnRunROI');
+            const logContainer = document.getElementById('logContainer');
+            
+            const log = (msg, type = 'info') => {
+                const div = document.createElement('div');
+                div.className = 'log-item';
+                
+                const time = new Date().toLocaleTimeString();
+                let colorClass = 'log-success';
+                if(type === 'error') colorClass = 'log-error';
+                if(type === 'warning') colorClass = 'log-warning';
+                
+                div.innerHTML = `<span class="log-time">[${time}]</span> <span class="${colorClass}">${msg}</span>`;
+                logContainer.appendChild(div);
+                logContainer.scrollTop = logContainer.scrollHeight;
+            };
+
+            // Pre-calculate stats
+            const calculateEstimates = async () => {
+                try {
+                    log("Scanning database for active plans...", "warning");
+                    
+                    const usersSnapshot = await db.collection('users').get();
+                    let totalActiveUsers = 0;
+                    let totalActivePlans = 0;
+                    let totalEstPayout = 0;
+                    
+                    for (const userDoc of usersSnapshot.docs) {
+                        const uid = userDoc.id;
+                        
+                        // Check if user has active plans
+                        const plansSnap = await db.collection('users').doc(uid).collection('myPlans').where('status', '==', 'active').get();
+                        
+                        if (!plansSnap.empty) {
+                            totalActiveUsers++;
+                            totalActivePlans += plansSnap.size;
+                            
+                            plansSnap.forEach(planDoc => {
+                                const planData = planDoc.data();
+                                const investAmt = Number(planData.investedAmount || 0);
+                                const dailyPercent = Number(planData.dailyPercent || 0);
+                                
+                                if (investAmt > 0 && dailyPercent > 0) {
+                                    totalEstPayout += (investAmt * (dailyPercent / 100));
+                                }
+                            });
+                        }
+                    }
+                    
+                    document.getElementById('statUsers').textContent = totalActiveUsers;
+                    document.getElementById('statPlans').textContent = totalActivePlans;
+                    document.getElementById('statEstPayout').textContent = `Rs. ${totalEstPayout.toLocaleString('en-PK')}`;
+                    
+                    log(`Scan complete. Found ${totalActivePlans} active plans across ${totalActiveUsers} users.`);
+                    
+                } catch (err) {
+                    console.error(err);
+                    log(`Error scanning database: ${err.message}`, "error");
+                }
+            };
+
+            // Authentication Check & Init
+            auth.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (!userDoc.exists || (userDoc.data().role !== 'admin' && userDoc.data().role !== 'superadmin')) {
+                    alert("Unauthorized. Admin access required.");
+                    window.location.href = '../dash.html';
+                    return;
+                }
+                
+                calculateEstimates();
+            });
+
+            // Run ROI Distribution
+            btnRunROI.addEventListener('click', async () => {
+                if(!confirm("Are you sure you want to distribute daily ROI to all users? This cannot be undone!")) return;
+                
+                btnRunROI.disabled = true;
+                btnRunROI.classList.add('loading');
+                log("ðŸš€ INITIATING ROI DISTRIBUTION ALGORITHM...", "warning");
+                
+                try {
+                    const usersSnapshot = await db.collection('users').get();
+                    let usersProcessed = 0;
+                    let totalPayoutGenerated = 0;
+                    
+                    for (const userDoc of usersSnapshot.docs) {
+                        const uid = userDoc.id;
+                        const userData = userDoc.data();
+                        
+                        // Get user's active plans
+                        const plansSnap = await db.collection('users').doc(uid).collection('myPlans').where('status', '==', 'active').get();
+                        
+                        if (plansSnap.empty) continue; // Skip users with no active plans
+                        
+                        let userDailyProfit = 0;
+                        const batch = db.batch();
+                        
+                        plansSnap.forEach(planDoc => {
+                            const planId = planDoc.id;
+                            const planData = planDoc.data();
+                            
+                            const investAmt = Number(planData.investedAmount || 0);
+                            const dailyPercent = Number(planData.dailyPercent || 0);
+                            const daysPassed = Number(planData.daysPassed || 0);
+                            const duration = Number(planData.duration || 30);
+                            
+                            if (daysPassed < duration) {
+                                // Calculate profit for this plan
+                                const profit = (investAmt * (dailyPercent / 100));
+                                userDailyProfit += profit;
+                                
+                                // Update plan days passed and total earned
+                                batch.update(db.collection('users').doc(uid).collection('myPlans').doc(planId), {
+                                    daysPassed: firebase.firestore.FieldValue.increment(1),
+                                    totalEarned: firebase.firestore.FieldValue.increment(profit),
+                                    lastRoiDate: firebase.firestore.FieldValue.serverTimestamp()
+                                });
+                                
+                                // If today is the last day, mark plan as completed
+                                if (daysPassed + 1 >= duration) {
+                                    batch.update(db.collection('users').doc(uid).collection('myPlans').doc(planId), {
+                                        status: 'completed'
+                                    });
+                                }
+                            }
+                        });
+                        
+                        if (userDailyProfit > 0) {
+                            // 1. Add to user's profitBalance and total balance
+                            batch.update(db.collection('users').doc(uid), {
+                                profitBalance: firebase.firestore.FieldValue.increment(userDailyProfit),
+                                balance: firebase.firestore.FieldValue.increment(userDailyProfit)
+                            });
+                            
+                            // 2. Create Ledger Transaction for Profit
+                            const trxRef = db.collection('users').doc(uid).collection('transactions').doc();
+                            batch.set(trxRef, {
+                                type: 'profit',
+                                amount: userDailyProfit,
+                                currency: 'PKR',
+                                status: 'completed',
+                                referenceId: 'ROI-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+                                description: 'Daily Plan ROI Credit',
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            
+                            await batch.commit();
+                            
+                            log(`User ${userData.username || uid}: Credited Rs. ${userDailyProfit.toLocaleString('en-PK')}`);
+                            usersProcessed++;
+                            totalPayoutGenerated += userDailyProfit;
+                        }
+                    }
+                    
+                    log(`âœ… DISTRIBUTION COMPLETE! Processed ${usersProcessed} users. Total payout: Rs. ${totalPayoutGenerated.toLocaleString('en-PK')}`, "success");
+                    
+                    // Update stats
+                    calculateEstimates();
+                    
+                } catch (err) {
+                    console.error(err);
+                    log(`CRITICAL ERROR: ${err.message}`, "error");
+                } finally {
+                    btnRunROI.disabled = false;
+                    btnRunROI.classList.remove('loading');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

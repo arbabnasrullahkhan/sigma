@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigma Admin | Security & Roles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <style>
+        :root { --p: #0B132B; --a: #10B981; --bg: #F1F5F9; --txt: #334155; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+        body { background:var(--bg); color:var(--txt); display:flex; min-height:100vh; }
+        .sidebar { width:260px; background:var(--p); color:white; padding:24px; flex-shrink:0; }
+        .sidebar a { display:block; color:rgba(255,255,255,0.7); text-decoration:none; padding:12px; margin-bottom:8px; border-radius:8px; }
+        .sidebar a.active, .sidebar a:hover { background:var(--a); color:white; }
+        .main { flex:1; padding:32px; overflow-y:auto; }
+        .card { background:white; padding:24px; border-radius:12px; margin-bottom:24px; box-shadow:0 2px 4px rgba(0,0,0,0.05); }
+        input, button { padding:12px; border-radius:8px; border:1px solid #CBD5E1; }
+        button { background:var(--a); color:white; cursor:pointer; font-weight:bold; border:none; }
+        table { width:100%; border-collapse:collapse; margin-top:16px; }
+        th, td { padding:12px; border-bottom:1px solid #CBD5E1; text-align:left; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Sigma Ops</h2>
+        <div style="margin-top:24px;">
+            <a href="dashboard">Overview</a>
+            <a href="users">Users</a>
+            <a href="plans">Plans</a>
+            <a href="deposits">Deposits</a>
+            <a href="withdrawals">Withdrawals</a>
+            <a href="wallet">Wallet</a>
+            <a href="team">Team Network</a>
+            <a href="security" class="active">Security / Admins</a>
+            <a href="settings">Settings</a>
+        </div>
+    </div>
+    <div class="main">
+        <h1>Admin Role Management</h1>
+        <div class="card" style="margin-top:24px; display:flex; gap:12px;">
+            <input type="text" id="uidInput" placeholder="Enter UID to grant Admin role..." style="flex:1;">
+            <button id="grantBtn">Grant Admin Access</button>
+        </div>
+        <div class="card">
+            <h3>Current Admins</h3>
+            <table>
+                <thead><tr><th>User ID</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const db = firebase.firestore();
+        
+        function loadAdmins() {
+            db.collection('users').where('role', 'in', ['admin', 'superadmin']).onSnapshot(snap => {
+                let html = '';
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    html += `<tr>
+                        <td>${doc.id}</td>
+                        <td>${d.email || 'N/A'}</td>
+                        <td><strong>${d.role.toUpperCase()}</strong></td>
+                        <td>${d.role !== 'superadmin' ? `<button style="background:#EF4444;" onclick="revoke('${doc.id}')">Revoke</button>` : 'Superadmin'}</td>
+                    </tr>`;
+                });
+                document.getElementById('tbody').innerHTML = html;
+            });
+        }
+        
+        document.getElementById('grantBtn').onclick = async () => {
+            const uid = document.getElementById('uidInput').value.trim();
+            if(!uid) return;
+            await db.collection('users').doc(uid).update({ role: 'admin' });
+            document.getElementById('uidInput').value = '';
+            alert("Admin granted.");
+        };
+
+        window.revoke = async (uid) => {
+            if(confirm("Revoke admin?")) {
+                await db.collection('users').doc(uid).update({ role: 'user' });
+            }
+        };
+
+        loadAdmins();
+    </script>
+</body>
+</html>
+
