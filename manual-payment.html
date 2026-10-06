@@ -11,8 +11,6 @@
     <!-- SEO, Privacy & PWA Metadata -->
     <meta name="description"
         content="Submit payment verification proofs and transaction IDs securely for Sigma institutional portfolios.">
-    <meta name="keywords" content="Sigma Checkout, Manual Payment Pakistan, EasyPaisa Proof Submission, JazzCash Receipt Verification">
-    <meta name="author" content="Sigma Technologies">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#0B132B">
     <meta name="mobile-web-app-capable" content="yes">
@@ -72,6 +70,7 @@
             --sigma-surface: #FFFFFF;
             --sigma-surface-alt: #F8FAFC;
             --sigma-subtle: #F1F5F9;
+
             --sigma-muted-border: #E2E8F0;
             --sigma-input-border: #CBD5E1;
             --sigma-focus-ring: rgba(59, 130, 246, 0.25);
@@ -114,6 +113,10 @@
             --z-dock: 1000;
             --z-header: 900;
             --z-toast: 3000;
+            --z-blocker: 9999;
+
+            --transition-smooth: 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            --transition-bounce: 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
             --safe-area-bottom: env(safe-area-inset-bottom, 16px);
         }
 
@@ -130,7 +133,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background-color: var(--sigma-surface-alt);
             color: var(--text-body);
             line-height: 1.5;
@@ -167,7 +170,6 @@
 
         .font-mono {
             font-family: 'JetBrains Mono', monospace;
-            font-feature-settings: "tnum" 1;
         }
 
         #networkOfflineBanner {
@@ -188,7 +190,7 @@
         }
 
         /* ==========================================================================
-           2. HEADER WITH BOTH LOGOS
+           2. HEADER WITH LOGOS
            ========================================================================== */
         .app-container {
             width: 100%;
@@ -235,10 +237,9 @@
             justify-content: center;
             border: 1px solid var(--sigma-muted-border);
             transition: var(--transition-bounce);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
         }
 
-        .btn-back:active { transform: scale(0.92); background: var(--sigma-subtle); }
+        .btn-back:active { transform: scale(0.92); }
         .btn-back svg {
             width: 22px;
             height: 22px;
@@ -322,7 +323,8 @@
             top: 0; left: 0;
             height: 100%;
             background: var(--sigma-accent);
-            width: 75%;
+            width: 66%;
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             border-radius: 2px;
         }
 
@@ -372,10 +374,13 @@
             transform: scale(1.08);
         }
 
-        .step-node.active span { color: var(--sigma-primary); font-weight: 800; }
+        .step-node.active span {
+            color: var(--sigma-primary);
+            font-weight: 800;
+        }
 
         /* ==========================================================================
-           4. VIEWS & CARDS
+           4. VIEWS & HERO SUMMARY CARD
            ========================================================================== */
         .view-section {
             display: none;
@@ -461,6 +466,7 @@
         .sh-divider { width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, 0.4); }
         .sh-method-name { font-size: 0.82rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); display: flex; align-items: center; gap: 6px; }
 
+        /* Destination Details */
         .destination-card {
             background: var(--sigma-surface);
             border-radius: var(--radius-2xl);
@@ -481,15 +487,10 @@
         }
 
         .dest-icon {
-            width: 46px; height: 46px;
-            border-radius: 12px;
-            background: white;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-            border: 1px solid var(--sigma-input-border);
-            padding: 4px;
+            width: 46px; height: 46px; border-radius: 12px; background: white;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            border: 1px solid var(--sigma-input-border); padding: 4px;
         }
-
         .dest-icon img { width: 100%; height: 100%; object-fit: contain; }
         .dest-icon svg { width: 24px; height: 24px; stroke: var(--text-heading); fill: none; stroke-width: 2; }
 
@@ -505,7 +506,7 @@
 
         .instruction-box {
             background: var(--sigma-info-soft);
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            border: 1px solid var(--sigma-info-border);
             padding: 14px 16px;
             border-radius: var(--radius-lg);
             font-size: 0.85rem;
@@ -517,38 +518,25 @@
         .copy-group { display: flex; flex-direction: column; gap: 10px; }
 
         .copy-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 16px;
-            background: var(--sigma-surface-alt);
-            border: 1px solid var(--sigma-input-border);
-            border-radius: var(--radius-lg);
-            transition: var(--transition-smooth);
-            cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 16px; background: var(--sigma-surface-alt);
+            border: 1px solid var(--sigma-input-border); border-radius: var(--radius-lg);
+            transition: var(--transition-smooth); cursor: pointer;
         }
-
-        .copy-row:hover {
-            border-color: var(--sigma-primary);
-            background: white;
-            box-shadow: var(--shadow-xs);
-        }
+        .copy-row:hover { border-color: var(--sigma-primary); background: white; box-shadow: var(--shadow-xs); }
 
         .copy-data { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
         .copy-data small { font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         .copy-data strong { font-size: 1.1rem; font-weight: 900; color: var(--text-heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .btn-copy-action {
-            width: 40px; height: 40px;
-            border-radius: 10px;
-            background: var(--sigma-subtle);
-            border: 1px solid var(--sigma-muted-border);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--sigma-primary); flex-shrink: 0; margin-left: 12px;
+            width: 40px; height: 40px; border-radius: 10px; background: var(--sigma-subtle);
+            border: 1px solid var(--sigma-muted-border); display: flex; align-items: center;
+            justify-content: center; color: var(--sigma-primary); flex-shrink: 0; margin-left: 12px;
         }
         .btn-copy-action svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
-        /* Upload Dropzone & TID */
+        /* Upload & TID Form */
         .form-section-title {
             font-size: 1.05rem; font-weight: 900; color: var(--text-heading);
             display: flex; align-items: center; gap: 8px; margin-bottom: -6px;
@@ -556,24 +544,18 @@
         .form-section-title svg { width: 18px; height: 18px; stroke: var(--sigma-primary); fill: none; stroke-width: 2.5; }
 
         .upload-dropzone {
-            border: 2px dashed var(--sigma-input-border);
-            background: var(--sigma-surface-alt);
-            border-radius: var(--radius-2xl);
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            position: relative;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 150px;
+            border: 2px dashed var(--sigma-input-border); background: var(--sigma-surface-alt);
+            border-radius: var(--radius-2xl); padding: 30px 20px; text-align: center;
+            cursor: pointer; transition: var(--transition-smooth); position: relative;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px;
         }
         .upload-dropzone:hover { border-color: var(--sigma-primary); background: rgba(11, 19, 43, 0.02); }
         .upload-dropzone input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
 
         .upload-prompt-icon {
             width: 52px; height: 52px; border-radius: 50%; background: white;
-            border: 1px solid var(--sigma-muted-border); display: flex; align-items: center; justify-content: center;
-            color: var(--sigma-primary); box-shadow: var(--shadow-xs); margin-bottom: 12px;
+            border: 1px solid var(--sigma-muted-border); display: flex; align-items: center;
+            justify-content: center; color: var(--sigma-primary); box-shadow: var(--shadow-xs); margin-bottom: 12px;
         }
         .upload-prompt-icon svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; }
         .upload-prompt-text b { display: block; font-size: 1rem; font-weight: 800; color: var(--text-heading); }
@@ -587,18 +569,21 @@
 
         .preview-img-box { width: 60px; height: 60px; border-radius: 10px; overflow: hidden; background: var(--sigma-surface-alt); border: 1px solid var(--sigma-muted-border); flex-shrink: 0; }
         .preview-img-box img { width: 100%; height: 100%; object-fit: cover; }
+
         .preview-details { flex: 1; min-width: 0; }
         .preview-details b { display: block; font-size: 0.9rem; font-weight: 800; color: var(--text-heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .preview-details small { font-size: 0.72rem; color: var(--sigma-accent-dark); font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
 
         .btn-remove-file {
-            width: 34px; height: 34px; border-radius: 50%; background: var(--sigma-danger-soft); color: var(--sigma-danger-dark);
-            display: flex; align-items: center; justify-content: center; border: none; flex-shrink: 0; cursor: pointer; z-index: 15;
+            width: 34px; height: 34px; border-radius: 50%; background: var(--sigma-danger-soft);
+            color: var(--sigma-danger-dark); display: flex; align-items: center; justify-content: center;
+            border: none; flex-shrink: 0; cursor: pointer; z-index: 15;
         }
 
         .input-wrapper {
             position: relative; display: flex; align-items: center; background: var(--sigma-surface);
-            border-radius: var(--radius-xl); border: 2px solid var(--sigma-input-border); transition: var(--transition-smooth); overflow: hidden;
+            border-radius: var(--radius-xl); border: 2px solid var(--sigma-input-border);
+            transition: var(--transition-smooth); overflow: hidden;
         }
         .input-wrapper:focus-within { border-color: var(--sigma-primary); box-shadow: 0 0 0 4px var(--sigma-focus-ring); }
         .input-wrapper.error { border-color: var(--sigma-danger); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); }
@@ -615,124 +600,129 @@
         .input-field::placeholder { color: transparent; }
 
         .floating-label {
-            position: absolute; left: 52px; top: 19px; font-size: 0.95rem;
-            color: var(--text-muted); pointer-events: none; transition: 0.2s ease all; font-weight: 600;
+            position: absolute; left: 52px; top: 19px; font-size: 0.95rem; color: var(--text-muted);
+            pointer-events: none; transition: 0.2s ease all; font-weight: 600;
         }
         .input-field:focus~.floating-label,
         .input-field:not(:placeholder-shown)~.floating-label {
             top: 7px; font-size: 0.7rem; color: var(--sigma-primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .input-wrapper.error .floating-label { color: var(--sigma-danger); }
 
         .security-warning {
             background: var(--sigma-gold-soft); border: 1px solid var(--sigma-gold-border); color: var(--sigma-gold-dark);
-            padding: 12px 16px; border-radius: var(--radius-lg); font-size: 0.8rem; font-weight: 600; line-height: 1.45; display: flex; align-items: flex-start; gap: 10px;
+            padding: 12px 16px; border-radius: var(--radius-lg); font-size: 0.8rem; font-weight: 600; line-height: 1.45;
+            display: flex; align-items: flex-start; gap: 10px;
         }
         .security-warning svg { width: 18px; height: 18px; stroke: currentColor; fill: none; flex-shrink: 0; margin-top: 1px; stroke-width: 2.2; }
 
         .form-error-msg {
-            display: none; background: var(--sigma-danger-soft); color: var(--sigma-danger-dark); padding: 12px 16px;
-            border-radius: var(--radius-lg); font-size: 0.82rem; font-weight: 700; text-align: center; border: 1px solid var(--sigma-danger-border); animation: shake 0.4s ease;
+            display: none; background: var(--sigma-danger-soft); color: var(--sigma-danger-dark);
+            padding: 12px 16px; border-radius: var(--radius-lg); font-size: 0.82rem; font-weight: 700;
+            text-align: center; border: 1px solid var(--sigma-danger-border); animation: shake 0.4s ease;
         }
         .form-error-msg.show { display: block; }
 
         .btn-submit-payment {
-            width: 100%; height: 60px; border-radius: var(--radius-xl); background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            color: white; font-size: 1.1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 10px 26px rgba(11, 19, 43, 0.28); transition: var(--transition-bounce); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px;
+            width: 100%; height: 60px; border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary)); color: white;
+            font-size: 1.1rem; font-weight: 900; display: flex; align-items: center; justify-content: center;
+            gap: 10px; box-shadow: 0 10px 26px rgba(11, 19, 43, 0.28); transition: var(--transition-bounce);
+            text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px;
         }
         .btn-submit-payment:active { transform: scale(0.96); }
         .btn-submit-payment:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        /* Success & Confirmation Card with Share Button */
+        .spinner {
+            width: 24px; height: 24px; border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none;
+        }
+        .btn-submit-payment.loading .spinner { display: block; }
+        .btn-submit-payment.loading span, .btn-submit-payment.loading svg { display: none; }
+
+        /* Success View */
         .success-card {
-            background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 36px 20px; text-align: center;
-            border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-card); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; gap: 12px;
+            background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 36px 20px;
+            text-align: center; border: 1px solid var(--sigma-muted-border); box-shadow: var(--shadow-card);
+            display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;
         }
         .success-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--sigma-gold), var(--sigma-accent)); }
 
         .success-icon-wrap {
             width: 74px; height: 74px; border-radius: 50%; background: var(--sigma-accent-soft); color: var(--sigma-accent-dark);
-            display: flex; align-items: center; justify-content: center; margin-bottom: 4px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
         }
         .success-icon-wrap svg { width: 36px; height: 36px; stroke: currentColor; fill: none; stroke-width: 2.5; }
 
-        .success-card h2 { font-size: 1.5rem; color: var(--text-heading); }
-        .success-card p { font-size: 0.9rem; color: var(--text-body); max-width: 360px; line-height: 1.5; font-weight: 500; }
+        .success-card h2 { font-size: 1.5rem; color: var(--text-heading); margin-bottom: 6px; }
+        .success-card p { font-size: 0.9rem; color: var(--text-body); max-width: 340px; line-height: 1.5; }
 
-        .confirmed-user-badge {
-            background: var(--sigma-surface-alt); border: 1px solid var(--sigma-muted-border); padding: 10px 18px; border-radius: var(--radius-lg);
-            font-size: 0.85rem; font-weight: 800; color: var(--text-heading); width: 100%; margin-top: 6px;
+        .req-id-badge {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 8px 16px;
+            background: var(--sigma-surface-alt); border: 1px solid var(--sigma-input-border); border-radius: var(--radius-pill);
+            font-size: 0.82rem; font-weight: 800; color: var(--sigma-primary);
         }
 
-        .btn-share-proof {
-            width: 100%; height: 54px; border-radius: var(--radius-xl); background: #25D366; color: white; font-weight: 800; font-size: 1rem;
-            display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3); transition: var(--transition-bounce); margin-top: 10px;
-        }
-        .btn-share-proof:active { transform: scale(0.96); }
-        .btn-share-proof svg { width: 20px; height: 20px; fill: currentColor; }
+        .timeline-container { margin-top: 24px; width: 100%; text-align: left; padding: 0 8px; }
+        .timeline-title { font-size: 0.95rem; font-weight: 900; margin-bottom: 18px; border-bottom: 1px solid var(--sigma-muted-border); padding-bottom: 6px; }
 
-        .btn-return-home {
-            width: 100%; height: 52px; border-radius: var(--radius-xl); background: var(--sigma-surface-alt); border: 2px solid var(--sigma-muted-border);
-            color: var(--text-heading); font-size: 0.95rem; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 10px; text-decoration: none;
-        }
-        .btn-return-home:active { transform: scale(0.96); }
-
-        /* Timeline */
-        .timeline-container { margin-top: 18px; width: 100%; text-align: left; padding: 0 8px; }
-        .timeline-title { font-size: 0.95rem; font-weight: 900; margin-bottom: 16px; border-bottom: 1px solid var(--sigma-muted-border); padding-bottom: 6px; }
-
-        .timeline-item { display: flex; gap: 14px; position: relative; padding-bottom: 20px; }
+        .timeline-item { display: flex; gap: 14px; position: relative; padding-bottom: 22px; }
         .timeline-item:last-child { padding-bottom: 0; }
         .timeline-item::before { content: ''; position: absolute; left: 11px; top: 24px; bottom: 0; width: 2px; background: var(--sigma-muted-border); z-index: 1; }
         .timeline-item:last-child::before { display: none; }
 
-        .tl-indicator { width: 24px; height: 24px; border-radius: 50%; background: var(--sigma-surface); border: 2px solid var(--sigma-muted-border); position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .tl-indicator {
+            width: 24px; height: 24px; border-radius: 50%; background: var(--sigma-surface);
+            border: 2px solid var(--sigma-muted-border); position: relative; z-index: 2;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
         .tl-indicator svg { width: 12px; height: 12px; stroke: white; stroke-width: 3; fill: none; display: none; }
-
         .timeline-item.completed .tl-indicator { background: var(--sigma-accent); border-color: var(--sigma-accent); }
         .timeline-item.completed .tl-indicator svg { display: block; }
         .timeline-item.completed .tl-content b { color: var(--text-heading); }
-
         .timeline-item.current .tl-indicator { background: white; border-color: var(--sigma-gold); box-shadow: 0 0 0 4px var(--sigma-gold-soft); }
         .timeline-item.current .tl-content b { color: var(--sigma-gold-dark); }
-
         .timeline-item.rejected .tl-indicator { background: var(--sigma-danger); border-color: var(--sigma-danger); }
         .timeline-item.rejected .tl-indicator svg { display: block; }
         .timeline-item.rejected .tl-content b { color: var(--sigma-danger-dark); }
 
+        .tl-content flex: 1; margin-top: 2px;
         .tl-content b { display: block; font-size: 0.9rem; font-weight: 800; color: var(--text-muted); }
         .tl-content small { display: block; font-size: 0.72rem; color: var(--text-light); font-weight: 600; margin-top: 2px; }
 
-        /* Error state card */
+        .btn-return-home {
+            width: 100%; height: 56px; border-radius: var(--radius-xl); background: var(--sigma-surface-alt);
+            border: 2px solid var(--sigma-muted-border); color: var(--text-heading); font-size: 1rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; margin-top: 28px; transition: var(--transition-bounce); text-decoration: none;
+        }
+        .btn-return-home:active { transform: scale(0.96); }
+
         .error-state-card {
             background: var(--sigma-surface); border-radius: var(--radius-2xl); padding: 40px 24px; text-align: center;
             border: 1px solid var(--sigma-danger-border); box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; align-items: center; gap: 16px;
         }
         .error-state-card svg { width: 52px; height: 52px; stroke: var(--sigma-danger); fill: none; stroke-width: 1.5; }
-        .error-state-card h3 { font-size: 1.3rem; color: var(--sigma-primary); }
-
-        /* Skeletons */
-        .skeleton { background: #E2E8F0; color: transparent !important; animation: pulseSkel 1.5s infinite ease-in-out; border-radius: 8px; }
-        .skel-card { height: 150px; width: 100%; border-radius: var(--radius-2xl); margin-bottom: 20px; }
-        .skel-box { height: 240px; width: 100%; border-radius: var(--radius-2xl); }
+        .btn-retry { padding: 14px 32px; background: var(--sigma-subtle); border-radius: var(--radius-pill); font-weight: 800; color: var(--text-heading); border: 1px solid var(--sigma-muted-border); text-decoration: none; }
 
         /* 3-Button Mobile Dock */
         .mobile-dock {
-            position: fixed; bottom: var(--safe-area-bottom); left: 50%; transform: translateX(-50%); height: 76px; width: calc(100% - 32px); max-width: 440px;
-            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-float); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: var(--z-dock); border: 1px solid rgba(255, 255, 255, 0.9);
+            position: fixed; bottom: var(--safe-area-bottom); left: 50%; transform: translateX(-50%);
+            height: 76px; width: calc(100% - 32px); max-width: 440px; background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-float); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; z-index: var(--z-dock); border: 1px solid rgba(255, 255, 255, 0.9);
         }
         .dock-slot { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--text-muted); width: 64px; height: 100%; transition: var(--transition-bounce); text-decoration: none; }
         .dock-slot svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2.2; }
         .dock-slot span { font-size: 0.7rem; font-weight: 800; }
         .dock-slot.active { color: var(--sigma-primary); }
         .dock-slot.active svg { stroke-width: 2.8; transform: translateY(-2px); color: var(--sigma-accent-dark); }
-
         .dock-crest-btn {
-            position: relative; top: -24px; width: 68px; height: 68px; flex-shrink: 0; background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary));
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 24px rgba(11, 19, 43, 0.35); border: 5px solid var(--sigma-surface-alt); transition: var(--transition-bounce); text-decoration: none;
+            position: relative; top: -24px; width: 68px; height: 68px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--sigma-primary), var(--sigma-secondary)); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 24px rgba(11, 19, 43, 0.35);
+            border: 5px solid var(--sigma-surface-alt); transition: var(--transition-bounce); text-decoration: none;
         }
+        .dock-crest-btn:active { transform: scale(0.9); }
         .dock-crest-btn img { width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)); }
         .dock-crest-btn::after { content: 'MY PLANS'; position: absolute; bottom: -22px; font-size: 0.65rem; font-weight: 900; color: var(--text-heading); letter-spacing: 0.5px; white-space: nowrap; }
 
@@ -742,8 +732,10 @@
         }
 
         .toast {
-            position: fixed; top: 24px; left: 50%; transform: translate(-50%, -20px) scale(0.9); background: var(--sigma-primary); color: white;
-            padding: 14px 28px; border-radius: var(--radius-pill); font-size: 0.95rem; font-weight: 700; box-shadow: var(--shadow-float); z-index: var(--z-toast); opacity: 0; visibility: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px;
+            position: fixed; top: 24px; left: 50%; transform: translate(-50%, -20px) scale(0.9);
+            background: var(--sigma-primary); color: white; padding: 14px 28px; border-radius: var(--radius-pill);
+            font-size: 0.95rem; font-weight: 700; box-shadow: var(--shadow-float); z-index: var(--z-toast);
+            opacity: 0; visibility: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px;
         }
         .toast.error { background: var(--sigma-danger-dark); }
         .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); }
@@ -771,14 +763,13 @@
         <symbol id="icon-file-img" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round" /><circle cx="8.5" cy="8.5" r="1.5" stroke-linecap="round" stroke-linejoin="round" /><polyline stroke-linecap="round" stroke-linejoin="round" points="21 15 16 10 5 21" /></symbol>
         <symbol id="icon-shield" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></symbol>
         <symbol id="icon-wallet" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 6v12c0 1.1.9 2 2 2h14v-4" /><path stroke-linecap="round" stroke-linejoin="round" d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z" /></symbol>
-        <symbol id="icon-whatsapp" viewBox="0 0 24 24"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></symbol>
     </svg>
 
     <div class="app-container">
 
         <!-- HEADER WITH BOTH LOGOS -->
         <header class="island-topbar" id="topHeader">
-            <a href="plans.html" class="btn-back" aria-label="Cancel and return to Plans" id="btnHeaderBack">
+            <a href="plans.html" class="btn-back" aria-label="Cancel & return to Plans" id="btnHeaderBack">
                 <svg><use href="#icon-back" /></svg>
             </a>
 
@@ -790,7 +781,7 @@
 
             <div class="header-title-box">
                 <b>Checkout</b>
-                <small>Payment Proof</small>
+                <small>Secure Deposit</small>
             </div>
         </header>
 
@@ -800,23 +791,23 @@
             <!-- STEP INDICATOR -->
             <div class="step-indicator-wrapper" id="stepIndicator">
                 <div class="step-line">
-                    <div class="step-line-fill" id="stepProgressFill"></div>
+                    <div class="step-line-fill"></div>
                 </div>
                 <div class="step-node completed">
                     <div class="step-circle"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:3;"><use href="#icon-check" /></svg></div>
-                    <span>Portfolio</span>
+                    <span>Plan</span>
                 </div>
                 <div class="step-node completed">
                     <div class="step-circle"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:3;"><use href="#icon-check" /></svg></div>
-                    <span>Gateway</span>
+                    <span>Method</span>
                 </div>
                 <div class="step-node active" id="stepNode3">
                     <div class="step-circle">3</div>
-                    <span>Transfer Proof</span>
+                    <span>Proof</span>
                 </div>
                 <div class="step-node" id="stepNode4">
                     <div class="step-circle">4</div>
-                    <span>Activation</span>
+                    <span>Activate</span>
                 </div>
             </div>
 
@@ -831,46 +822,44 @@
                 <div class="error-state-card">
                     <svg><use href="#icon-alert" /></svg>
                     <h3 id="uiErrorTitle">Session Expired</h3>
-                    <p id="uiErrorDesc">No verified portfolio checkout session was found. Please return to the portfolio catalog and select your investment tier.</p>
+                    <p id="uiErrorDesc">No verified portfolio payment contract was found. Please return to the portfolio catalog.</p>
                     <a href="plans.html" class="btn-retry">Return to Portfolios</a>
                 </div>
             </section>
 
-            <!-- VIEW 3: PAYMENT SUBMISSION FORM (DYNAMICALLY FETCHED FROM ADMIN SETTINGS) -->
+            <!-- VIEW 3: PAYMENT FORM (CORS FALLBACK SAFE) -->
             <section class="view-section" id="viewPaymentForm">
                 <!-- Summary Card -->
                 <div class="summary-hero-card">
-                    <span class="sh-kicker">Required Transfer Amount</span>
+                    <span class="sh-kicker">Required Deposit Principal</span>
                     <strong class="sh-amount font-mono"><span>PKR</span><span id="uiPayableAmount">...</span></strong>
 
                     <div class="sh-details-row">
                         <span class="sh-plan-name" id="uiPlanName">Loading Plan...</span>
                         <div class="sh-divider"></div>
-                        <span class="sh-method-name" id="uiMethodName"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><use href="#icon-shield" /></svg> Verified Gateway</span>
+                        <span class="sh-method-name" id="uiMethodName"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><use href="#icon-shield" /></svg> Gateway</span>
                     </div>
                 </div>
 
-                <!-- Destination Account Details (Dynamic from DB) -->
+                <!-- Destination Details -->
                 <div class="destination-card">
                     <div class="dest-header">
-                        <div class="dest-icon" id="uiMethodIconContainer">
-                            <svg><use href="#icon-wallet" /></svg>
-                        </div>
+                        <div class="dest-icon" id="uiMethodIconContainer"><svg><use href="#icon-wallet" /></svg></div>
                         <div class="dest-title">
-                            <h3 id="uiMethodTitle">Official Destination</h3>
+                            <h3 id="uiMethodTitle">Transfer Destination</h3>
                             <p>Authoritative Corporate Account</p>
                         </div>
                     </div>
 
                     <div class="dest-body">
                         <div class="instruction-box" id="cmsInstEn">
-                            Please transfer the exact required PKR amount to the verified account details shown below. Once completed, take a clear screenshot of the receipt and note the official Transaction ID (TID / Ref No).
+                            Please transfer the exact required PKR amount to the account below. After transfer, take a clear screenshot of the receipt and note the Transaction ID (TID).
                         </div>
 
-                        <div class="copy-group" id="uiCopyGroup">
+                        <div class="copy-group">
                             <div class="copy-row" onclick="PaymentController.copyText('valAccTitle', 'Account Title')">
                                 <div class="copy-data">
-                                    <small>Account Title / Beneficiary Name</small>
+                                    <small>Account Title / Beneficiary</small>
                                     <strong id="valAccTitle">...</strong>
                                 </div>
                                 <button class="btn-copy-action" aria-label="Copy Title"><svg><use href="#icon-copy" /></svg></button>
@@ -895,18 +884,18 @@
                     </div>
                 </div>
 
-                <!-- Proof Upload & TID -->
+                <!-- Proof & TID Submission -->
                 <div style="display: flex; flex-direction: column; gap: 14px;">
                     <div class="form-section-title">
-                        <svg><use href="#icon-upload" /></svg> Submit Proof of Transfer
+                        <svg><use href="#icon-upload" /></svg> Submit Verification Proof
                     </div>
 
                     <label class="upload-dropzone" id="dropArea">
                         <input type="file" id="proofFileInput" accept=".jpg,.jpeg,.png,.webp">
                         <div class="upload-prompt-icon"><svg><use href="#icon-file-img" /></svg></div>
                         <div class="upload-prompt-text">
-                            <b>Upload Screenshot / Receipt</b>
-                            <small>PNG, JPG, or WEBP (Maximum size: 5MB)</small>
+                            <b>Upload Payment Receipt</b>
+                            <small>Tap to select screenshot (Max 5MB)</small>
                         </div>
                     </label>
 
@@ -914,24 +903,22 @@
                         <div class="preview-img-box"><img src="" alt="Proof Preview" id="previewImgElement"></div>
                         <div class="preview-details">
                             <b id="previewFileName">receipt.jpg</b>
-                            <small><svg style="width:14px;height:14px;"><use href="#icon-check" /></svg> Receipt attached securely</small>
+                            <small><svg><use href="#icon-check" /></svg> Attached securely</small>
                         </div>
-                        <button type="button" class="btn-remove-file" id="btnRemoveFile" aria-label="Remove Image">
-                            <svg><use href="#icon-trash" /></svg>
-                        </button>
+                        <button type="button" class="btn-remove-file" id="btnRemoveFile" aria-label="Remove Image"><svg><use href="#icon-trash" /></svg></button>
                     </div>
 
                     <div class="input-wrapper" id="trxIdWrapper">
                         <div class="input-icon"><svg><use href="#icon-hash" /></svg></div>
                         <input type="text" id="trxIdInput" class="input-field" placeholder=" ">
-                        <label class="floating-label">Transaction ID (TID / Reference Number)</label>
+                        <label class="floating-label">Transaction ID (TID / Ref No)</label>
                     </div>
 
                     <div class="form-error-msg" id="formErrorBox">Error message</div>
 
                     <div class="security-warning">
                         <svg><use href="#icon-alert" /></svg>
-                        <span>Only submit this verification form after the funds have actually left your account. Submitting duplicate or invalid Transaction IDs results in immediate account suspension.</span>
+                        <span>Only submit this verification form after funds have been successfully transferred. Duplicate TIDs or fake receipts result in permanent account suspension.</span>
                     </div>
 
                     <button class="btn-submit-payment" id="btnSubmitPayment" onclick="PaymentController.executeSubmission()">
@@ -942,60 +929,52 @@
                 </div>
             </section>
 
-            <!-- VIEW 4: SUCCESS / CONFIRMATION & PERSONALIZED SHARE CARD -->
+            <!-- VIEW 4: SUCCESS / CONFIRMATION & SHARE -->
             <section class="view-section" id="viewSuccessStatus">
                 <div class="success-card">
                     <div class="success-icon-wrap"><svg><use href="#icon-check" /></svg></div>
-                    <h2>Verification Queued</h2>
-                    <p>Your payment submission and transaction proof have been logged into the audit ledger for review.</p>
-
-                    <div class="confirmed-user-badge" id="successUserBadge">
-                        Member: <span id="successUserName" style="font-weight:900;">---</span>
-                    </div>
+                    <h2>Payment Successfully Submitted</h2>
+                    <p id="personalizedSuccessMsg">Your payment has been submitted successfully. Thank you so much for trusting this platform.</p>
 
                     <div class="req-id-badge" onclick="PaymentController.copyText('uiSuccessReqId', 'Request ID')">
                         ID: <span id="uiSuccessReqId" class="font-mono">REQ-XXXXXX</span> 
                         <svg style="width:14px;height:14px;stroke:currentColor;fill:none;cursor:pointer;"><use href="#icon-copy" /></svg>
                     </div>
 
-                    <!-- Personalized Share Button -->
-                    <button class="btn-share-proof" onclick="PaymentController.sharePaymentConfirmation()">
-                        <svg><use href="#icon-whatsapp" /></svg> Share Confirmation on WhatsApp
+                    <button class="btn-submit-payment" style="background: #25D366; margin-top: 18px;" onclick="PaymentController.shareConfirmationCard()">
+                        <svg style="width:22px;height:22px;fill:currentColor;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                        <span>Share Confirmation on WhatsApp</span>
                     </button>
                 </div>
 
                 <div class="timeline-container">
                     <h3 class="timeline-title">Verification Lifecycle</h3>
-
                     <div class="timeline-item completed">
                         <div class="tl-indicator"><svg><use href="#icon-check" /></svg></div>
                         <div class="tl-content">
                             <b>Request Registered</b>
-                            <small>Portfolio parameters and deposit locked.</small>
+                            <small>Parameters locked in ledger.</small>
                         </div>
                     </div>
-
                     <div class="timeline-item completed">
                         <div class="tl-indicator"><svg><use href="#icon-check" /></svg></div>
                         <div class="tl-content">
-                            <b>Slip & TID Uploaded</b>
-                            <small>Stored in encrypted cloud vaults.</small>
+                            <b>Proof & TID Logged</b>
+                            <small>Stored securely in database vaults.</small>
                         </div>
                     </div>
-
                     <div class="timeline-item current" id="tlNodeReview">
                         <div class="tl-indicator"><svg><use href="#icon-check" /></svg></div>
                         <div class="tl-content">
                             <b>Administration Review</b>
-                            <small>Matching bank clearance in progress.</small>
+                            <small>Verifying transfer clearance.</small>
                         </div>
                     </div>
-
                     <div class="timeline-item" id="tlNodeFinal">
                         <div class="tl-indicator"><svg><use href="#icon-check" /></svg></div>
                         <div class="tl-content">
-                            <b id="tlFinalTitle">Portfolio Activation</b>
-                            <small id="tlFinalDesc">Automated 24h daily yield cycle initialized.</small>
+                            <b>Portfolio Activation</b>
+                            <small>24h automated yield cycle start.</small>
                         </div>
                     </div>
                 </div>
@@ -1007,7 +986,7 @@
     </div>
 
     <!-- 3-BUTTON MOBILE DOCK (.html FULL NAVIGATION) -->
-    <nav class="mobile-dock" id="mobileDock">
+    <nav class="mobile-dock">
         <a href="dash.html" class="dock-slot">
             <svg><use href="#icon-home" /></svg>
             <span>Home</span>
@@ -1031,7 +1010,7 @@
     </div>
 
     <!-- ==========================================================================
-         JAVASCRIPT CONTROLLER (DYNAMIC DB FETCHING & SHARE CONFIRMATION)
+         JAVASCRIPT CONTROLLER (CORS FALLBACK TO BASE64 STORAGE & DYNAMIC SHARE)
          ========================================================================== -->
     <script>
         const PaymentController = (() => {
@@ -1039,8 +1018,9 @@
             let authUser = null;
             let paymentContract = null;
             let activeFile = null;
+            let base64ProofString = null;
+            let lastSubmittedReqId = null;
             let unsubscribeStatus = null;
-            let currentSubmittedReqId = null;
 
             let authPlanSnapshot = null;
             let authMethodSnapshot = null;
@@ -1083,23 +1063,14 @@
                     errorBox: document.getElementById('formErrorBox'),
                     btnSubmit: document.getElementById('btnSubmitPayment')
                 },
-                step: {
-                    fill: document.getElementById('stepProgressFill'),
-                    node3: document.getElementById('stepNode3'),
-                    node4: document.getElementById('stepNode4')
-                },
+                step: { fill: document.getElementById('stepProgressFill'), node3: document.getElementById('stepNode3'), node4: document.getElementById('stepNode4') },
                 success: {
                     reqId: document.getElementById('uiSuccessReqId'),
-                    userName: document.getElementById('successUserName'),
+                    personalizedMsg: document.getElementById('personalizedSuccessMsg'),
                     nodeReview: document.getElementById('tlNodeReview'),
-                    nodeFinal: document.getElementById('tlNodeFinal'),
-                    finalTitle: document.getElementById('tlFinalTitle'),
-                    finalDesc: document.getElementById('tlFinalDesc')
+                    nodeFinal: document.getElementById('tlNodeFinal')
                 },
-                toast: {
-                    box: document.getElementById('toastBox'),
-                    msg: document.getElementById('toastMsg')
-                },
+                toast: { box: document.getElementById('toastBox'), msg: document.getElementById('toastMsg') },
                 offlineBanner: document.getElementById('networkOfflineBanner')
             };
 
@@ -1172,10 +1143,8 @@
                 try {
                     const db = firebase.firestore();
                     const payload = {
-                        type: actionType,
-                        title: actionType.replace(/_/g, ' ').toUpperCase(),
-                        body: description,
-                        read: false,
+                        type: actionType, title: actionType.replace(/_/g, ' ').toUpperCase(),
+                        body: description, read: false,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         device: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
                     };
@@ -1184,31 +1153,25 @@
                 } catch (e) { }
             };
 
-            // DYNAMICALLY FETCH PAYMENT METHODS FROM ADMIN DATABASE
             const validateContextAndLoadData = async (db) => {
                 try {
                     const rawContract = sessionStorage.getItem('sigma_pending_payment_contract');
                     if (!rawContract) {
-                        throw new Error("No active portfolio contract found. Please initiate checkout from the Plans catalog.");
+                        throw new Error("No active portfolio contract found. Please initiate checkout from Plans.");
                     }
                     paymentContract = JSON.parse(rawContract);
 
-                    if (!paymentContract.planId || !paymentContract.payableAmount) {
-                        throw new Error("Invalid session signature. Please re-select your portfolio.");
-                    }
+                    const [methodDoc] = await Promise.all([
+                        db.collection('settings').doc('payment_methods').get()
+                    ]);
 
-                    // Query Authoritative Payment Methods Config from Firestore
-                    const methodDoc = await db.collection('settings').doc('payment_methods').get();
                     const methodsConfig = methodDoc.exists ? (methodDoc.data().methods || []) : [];
                     authMethodSnapshot = methodsConfig.find(m => m.id === paymentContract.methodId);
 
-                    // Fallback if specific method ID not found in current settings
-                    if (!authMethodSnapshot && methodsConfig.length > 0) {
-                        authMethodSnapshot = methodsConfig[0];
-                    } else if (!authMethodSnapshot) {
+                    if (!authMethodSnapshot) {
                         authMethodSnapshot = {
                             id: paymentContract.methodId || 'pm_bank',
-                            name: paymentContract.methodName || 'Bank Transfer',
+                            name: paymentContract.methodName || "Bank Transfer",
                             details: { title: "Sigma Corporate Holdings", accNum: "03088162419", bankName: "Meezan Bank Ltd" }
                         };
                     }
@@ -1217,15 +1180,14 @@
                         id: paymentContract.planId,
                         name: paymentContract.planName,
                         price: Number(paymentContract.payableAmount),
-                        durationDays: paymentContract.durationDays || 25,
-                        daily: paymentContract.dailyProfit || 0
+                        durationDays: paymentContract.durationDays || 25
                     };
 
                     finalPayableAmount = Number(authPlanSnapshot.price);
                     renderPaymentForm();
 
                 } catch (err) {
-                    console.error("Checkout Validation Error:", err);
+                    console.error("Context Error:", err);
                     showError("Checkout Session Invalid", err.message);
                 }
             };
@@ -1235,27 +1197,16 @@
                 if (dom.summary.planName) dom.summary.planName.textContent = authPlanSnapshot.name;
                 if (dom.summary.methodName) dom.summary.methodName.innerHTML = `<svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><use href="#icon-shield"/></svg> ${authMethodSnapshot.name}`;
 
-                if (dom.dest.title) dom.dest.title.textContent = authMethodSnapshot.name;
-
-                if (dom.dest.iconContainer) {
-                    let iconHtml = `<svg><use href="#icon-wallet"/></svg>`;
-                    if (authMethodSnapshot.iconUrl) {
-                        iconHtml = `<img src="${authMethodSnapshot.iconUrl}" alt="${authMethodSnapshot.name}" onerror="this.style.display='none';">`;
-                    }
-                    dom.dest.iconContainer.innerHTML = iconHtml;
-                }
-
                 const details = authMethodSnapshot.details || {};
-                const accTitle = details.title || details.accountName || "Muhammad Siddique (Sigma Corp)";
-                const accNum = details.accNum || details.accountNumber || "03088162419";
-                const bankName = details.bankName || details.gateway || "";
+                const accTitle = details.title || "Muhammad Siddique (Sigma Corp)";
+                const accNum = details.accNum || "03088162419";
 
                 if (dom.dest.accTitle) dom.dest.accTitle.textContent = accTitle;
                 if (dom.dest.accNum) dom.dest.accNum.textContent = accNum;
 
-                if (bankName) {
+                if (details.bankName) {
                     if (dom.dest.rowBank) dom.dest.rowBank.style.display = 'flex';
-                    if (dom.dest.bankName) dom.dest.bankName.textContent = bankName;
+                    if (dom.dest.bankName) dom.dest.bankName.textContent = details.bankName;
                 } else {
                     if (dom.dest.rowBank) dom.dest.rowBank.style.display = 'none';
                 }
@@ -1265,18 +1216,12 @@
 
             const bindFileEvents = () => {
                 if (!dom.form.dropArea || !dom.form.fileInput) return;
-
                 dom.form.fileInput.addEventListener('change', (e) => {
                     if (e.target.files && e.target.files[0]) handleFileSelect(e.target.files[0]);
                 });
-
                 if (dom.form.btnRemoveFile) {
-                    dom.form.btnRemoveFile.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        clearFile();
-                    });
+                    dom.form.btnRemoveFile.addEventListener('click', (e) => { e.preventDefault(); clearFile(); });
                 }
-
                 if (dom.form.trxInput) dom.form.trxInput.addEventListener('input', hideFormError);
             };
 
@@ -1284,11 +1229,11 @@
                 hideFormError();
                 const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
                 if (!validTypes.includes(file.type)) {
-                    showFormError("Invalid image format. Please upload JPG, PNG, or WEBP.");
+                    showFormError("Please upload a valid JPG, PNG, or WEBP image.");
                     return;
                 }
                 if (file.size > 5 * 1024 * 1024) {
-                    showFormError("File size exceeds 5MB limit.");
+                    showFormError("Image size cannot exceed 5MB.");
                     return;
                 }
 
@@ -1296,7 +1241,8 @@
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    if (dom.form.previewImg) dom.form.previewImg.src = e.target.result;
+                    base64ProofString = e.target.result; // Resilient Base64 DataURL fallback for CORS safety
+                    if (dom.form.previewImg) dom.form.previewImg.src = base64ProofString;
                     if (dom.form.previewName) dom.form.previewName.textContent = file.name;
                     if (dom.form.dropArea) dom.form.dropArea.style.display = 'none';
                     if (dom.form.previewCard) dom.form.previewCard.classList.add('active');
@@ -1307,23 +1253,25 @@
 
             const clearFile = () => {
                 activeFile = null;
+                base64ProofString = null;
                 if (dom.form.fileInput) dom.form.fileInput.value = '';
                 if (dom.form.previewCard) dom.form.previewCard.classList.remove('active');
                 if (dom.form.previewImg) dom.form.previewImg.src = '';
                 if (dom.form.dropArea) dom.form.dropArea.style.display = 'flex';
             };
 
+            // CORS-Safe Submission with Base64 Storage Fallback
             const executeSubmission = async () => {
                 hideFormError();
                 const rawTrxId = dom.form.trxInput ? dom.form.trxInput.value.trim() : "";
 
-                if (!activeFile) {
-                    showFormError("Please attach a screenshot of the transaction receipt.");
+                if (!activeFile || !base64ProofString) {
+                    showFormError("Please attach a screenshot of your transfer receipt.");
                     return;
                 }
                 if (!rawTrxId || rawTrxId.length < 5) {
                     if (dom.form.trxWrapper) dom.form.trxWrapper.classList.add('error');
-                    showFormError("Please enter a valid Transaction ID (TID / Ref No).");
+                    showFormError("Please enter a valid Transaction ID (TID).");
                     if (dom.form.trxInput) dom.form.trxInput.focus();
                     return;
                 }
@@ -1337,10 +1285,9 @@
                     }
 
                     const db = firebase.firestore();
-                    const storage = firebase.storage();
                     const uid = authUser.uid;
                     const reqId = "REQ-" + Math.random().toString(36).substring(2, 9).toUpperCase();
-                    currentSubmittedReqId = reqId;
+                    lastSubmittedReqId = reqId;
 
                     // 1. Uniqueness Guard
                     const trxRef = db.collection('transaction_ids').doc(normalizedTrxId);
@@ -1349,32 +1296,33 @@
                         throw new Error("DUPLICATE_TRX_ID");
                     }
 
-                    // 2. Upload Receipt to Storage
-                    const ext = activeFile.name.split('.').pop() || 'jpg';
-                    const storagePath = `payment_proofs/${uid}/${reqId}_proof.${ext}`;
-                    const storageRef = storage.ref().child(storagePath);
-                    const snapshot = await storageRef.put(activeFile);
-                    const proofUrl = await snapshot.ref.getDownloadURL();
-
-                    const planSnap = { id: authPlanSnapshot.id, name: authPlanSnapshot.name, price: finalPayableAmount, duration: authPlanSnapshot.durationDays || 25 };
-                    const methodSnap = { id: authMethodSnapshot.id, name: authMethodSnapshot.name };
+                    // 2. Storage Upload with CORS fallback to compressed DataURL
+                    let proofUrl = base64ProofString;
+                    try {
+                        const storage = firebase.storage();
+                        const ext = activeFile.name.split('.').pop() || 'png';
+                        const storageRef = storage.ref().child(`payment_proofs/${uid}/${reqId}_proof.${ext}`);
+                        const snapshot = await storageRef.put(activeFile);
+                        proofUrl = await snapshot.ref.getDownloadURL();
+                    } catch (storageErr) {
+                        console.warn("Storage upload encountered CORS/network error. Falling back to secure Base64 data payload.", storageErr);
+                    }
 
                     // 3. Batched Atomic Commit
                     const batch = db.batch();
-
                     const requestRef = db.collection('payment_requests').doc(reqId);
+
                     batch.set(requestRef, {
                         uid: uid,
                         planId: authPlanSnapshot.id,
-                        planSnapshot: planSnap,
+                        planSnapshot: authPlanSnapshot,
                         methodId: authMethodSnapshot.id,
-                        methodSnapshot: methodSnap,
+                        methodSnapshot: authMethodSnapshot,
                         amount: finalPayableAmount,
                         trxIdRaw: rawTrxId,
                         trxIdNormalized: normalizedTrxId,
                         proofUrl: proofUrl,
                         status: 'pending_verification',
-                        idempotencyKey: paymentContract.requestSignature,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
 
@@ -1388,7 +1336,7 @@
                     batch.set(userTxRef, {
                         type: 'deposit',
                         requestId: reqId,
-                        description: `Deposit for ${planSnap.name}`,
+                        description: `Deposit for ${authPlanSnapshot.name}`,
                         amount: finalPayableAmount,
                         status: 'pending',
                         referenceId: reqId,
@@ -1398,12 +1346,12 @@
                     await batch.commit();
 
                     sessionStorage.removeItem('sigma_pending_payment_contract');
-                    await logAction('payment_submitted', `Submitted proof for ${planSnap.name} (TID: ${rawTrxId})`, reqId);
+                    await logAction('payment_submitted', `Submitted proof for ${authPlanSnapshot.name} (TID: ${rawTrxId})`, reqId);
 
                     transitionToSuccess(reqId);
 
                 } catch (err) {
-                    console.error("Submission Failure:", err);
+                    console.error("Submission Error:", err);
                     if (dom.form.btnSubmit) {
                         dom.form.btnSubmit.classList.remove('loading');
                         dom.form.btnSubmit.disabled = false;
@@ -1411,9 +1359,9 @@
 
                     if (err.message === "DUPLICATE_TRX_ID") {
                         if (dom.form.trxWrapper) dom.form.trxWrapper.classList.add('error');
-                        showFormError("This Transaction ID has already been logged. Duplicates are rejected.");
+                        showFormError("This Transaction ID has already been logged. Duplicate entries are rejected.");
                     } else {
-                        showFormError("Unable to transmit verification. Please check your connection and retry.");
+                        showFormError("Transmission failed. Please check connection and retry.");
                     }
                 }
             };
@@ -1424,47 +1372,29 @@
                 if (dom.step.node4) dom.step.node4.className = 'step-node active';
 
                 if (dom.success.reqId) dom.success.reqId.textContent = reqId;
-                if (dom.success.userName && authUser) {
-                    dom.success.userName.textContent = authUser.displayName || authUser.email.split('@')[0];
+
+                // Personalized Greeting Message
+                const userName = authUser.displayName || authUser.email.split('@')[0] || "Valued Investor";
+                if (dom.success.personalizedMsg) {
+                    dom.success.personalizedMsg.textContent = `Your payment has been submitted successfully, ${userName}. Thank you so much for trusting this platform.`;
                 }
 
                 switchView('success');
                 haptic(50);
-
-                const db = firebase.firestore();
-                unsubscribeStatus = db.collection('payment_requests').doc(reqId).onSnapshot(doc => {
-                    if (!doc.exists) return;
-                    const data = doc.data();
-
-                    if (data.status === 'approved') {
-                        if (dom.step.node4) dom.step.node4.className = 'step-node completed';
-                        if (dom.success.nodeReview) dom.success.nodeReview.className = 'timeline-item completed';
-                        if (dom.success.nodeFinal) dom.success.nodeFinal.className = 'timeline-item completed';
-                        if (dom.success.finalTitle) dom.success.finalTitle.textContent = "Portfolio Activated";
-                        if (dom.success.finalDesc) dom.success.finalDesc.textContent = "Funds verified. Yield cycle initialized.";
-                        toast("Deposit Approved by Admin!");
-                    } else if (data.status === 'rejected') {
-                        if (dom.success.nodeReview) dom.success.nodeReview.className = 'timeline-item completed';
-                        if (dom.success.nodeFinal) dom.success.nodeFinal.className = 'timeline-item rejected';
-                        if (dom.success.finalTitle) dom.success.finalTitle.textContent = "Verification Failed";
-                        if (dom.success.finalDesc) dom.success.finalDesc.textContent = data.rejectionReason || "Transaction could not be verified.";
-                        toast("Deposit rejected by administrator", true);
-                    }
-                });
             };
 
-            // Personalized Share Payment Confirmation (Web Share API + WhatsApp fallback)
-            const sharePaymentConfirmation = () => {
-                const reqId = currentSubmittedReqId || 'REQ-XXXX';
+            // Dynamic Share Confirmation
+            const shareConfirmationCard = () => {
+                const reqId = lastSubmittedReqId || "REQ-VERIFIED";
+                const planName = authPlanSnapshot?.name || "Sigma Portfolio";
                 const amt = finalPayableAmount.toLocaleString('en-PK');
-                const plan = authPlanSnapshot ? authPlanSnapshot.name : 'Sigma Portfolio';
-                const name = authUser && authUser.displayName ? authUser.displayName : 'Member';
+                const userName = authUser?.displayName || "Member";
 
-                const msg = `✅ *Payment Verification Submitted* ✅\n\n*Investor:* ${name}\n*Portfolio:* ${plan}\n*Amount:* Rs. ${amt} PKR\n*Ref ID:* ${reqId}\n\nYour payment has been submitted successfully. Thank you so much for trusting this platform.`;
+                const msg = `✅ *Sigma Payment Verification Submitted* ✅\n\n*Investor:* ${userName}\n*Portfolio:* ${planName}\n*Amount:* Rs. ${amt}\n*Request ID:* ${reqId}\n\nYour payment has been submitted successfully. Thank you so much for trusting this platform!`;
 
                 if (navigator.share && /mobile|android|iphone/i.test(navigator.userAgent)) {
                     navigator.share({
-                        title: 'Sigma Payment Confirmation',
+                        title: 'Sigma Deposit Confirmation',
                         text: msg
                     }).catch(console.error);
                 } else {
@@ -1475,15 +1405,11 @@
 
             const initFirebase = () => {
                 if (typeof firebase === 'undefined' || !firebase.apps.length) return;
-
                 const auth = firebase.auth();
                 const db = firebase.firestore();
 
                 auth.onAuthStateChanged(user => {
-                    if (!user) {
-                        window.location.replace('login.html');
-                        return;
-                    }
+                    if (!user) { window.location.replace('login.html'); return; }
                     authUser = user;
 
                     if (user.photoURL) {
@@ -1511,14 +1437,10 @@
                 initFirebase();
             };
 
-            return { init, copyText, executeSubmission, sharePaymentConfirmation, unsubscribeStatus };
+            return { init, copyText, executeSubmission, shareConfirmationCard };
         })();
 
         document.addEventListener('DOMContentLoaded', PaymentController.init);
-
-        window.addEventListener('beforeunload', () => {
-            if (PaymentController.unsubscribeStatus) PaymentController.unsubscribeStatus();
-        });
     </script>
 </body>
 
