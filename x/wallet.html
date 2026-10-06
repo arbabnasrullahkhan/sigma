@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sigma Ops | Automated ROI Engine</title>
+    <title>Sigma Ops | Wallet Ledger & Balance Control</title>
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="theme-color" content="#FFFFFF">
 
@@ -323,98 +323,166 @@
             gap: 20px;
         }
 
-        .card {
+        /* Search Card */
+        .search-card {
             background: var(--sigma-surface);
-            border-radius: var(--radius-2xl);
-            padding: 28px 24px;
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input-wrapper input {
+            width: 100%;
+            padding: 14px 16px 14px 46px;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            background: var(--sigma-subtle);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-input-wrapper input:focus {
+            background: white;
+            border-color: var(--sigma-primary);
+        }
+
+        .search-input-wrapper svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .btn-primary {
+            background: var(--sigma-primary);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: var(--radius-lg);
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover { background: var(--sigma-secondary); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* User Wallet Info */
+        #userInfoContainer { display: none; }
+
+        .user-header-card {
+            background: linear-gradient(135deg, #0b132b 0%, #161c36 50%, #131b2e 100%);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(244, 114, 182, 0.2);
+        }
+
+        .user-header-left h2 { font-size: 1.35rem; color: white; margin-bottom: 4px; }
+        .user-header-left p { color: rgba(255,255,255,0.75); font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
+
+        .balances-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .balance-card {
+            background: var(--sigma-surface);
+            border-radius: var(--radius-xl);
+            padding: 20px;
             border: 1px solid var(--border-light);
             box-shadow: var(--shadow-subtle);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 14px;
         }
 
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-        }
-
-        .stat-box {
-            background: var(--sigma-surface-alt);
-            padding: 20px;
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--border-light);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .stat-box small {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            font-weight: 800;
+        .balance-title {
+            font-size: 0.72rem;
             text-transform: uppercase;
+            font-weight: 800;
+            color: var(--text-muted);
             letter-spacing: 0.5px;
         }
 
-        .stat-box b {
+        .balance-amount {
             font-size: 1.8rem;
             font-weight: 900;
-            color: var(--sigma-accent-dark);
+            color: var(--text-heading);
             font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -1px;
         }
 
-        .btn-distribute {
-            background: linear-gradient(135deg, var(--sigma-accent-dark), var(--sigma-accent));
-            color: white;
-            border: none;
-            padding: 16px 24px;
-            border-radius: var(--radius-xl);
-            font-weight: 900;
-            font-size: 1.05rem;
+        .adj-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-top: 1px dashed var(--border-light);
+            padding-top: 12px;
+        }
+
+        .adj-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--sigma-subtle);
+            outline: none;
+        }
+        .adj-input:focus { background: white; border-color: var(--sigma-primary); }
+
+        .adj-row { display: flex; gap: 8px; }
+
+        .btn-add {
+            flex: 1;
+            background: var(--sigma-accent-soft);
+            color: var(--sigma-accent-dark);
+            border: 1px solid var(--sigma-accent-border);
+            padding: 10px;
+            border-radius: var(--radius-md);
+            font-weight: 800;
+            font-size: 0.82rem;
             cursor: pointer;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
+        .btn-add:hover { background: var(--sigma-accent); color: white; }
 
-        .btn-distribute:hover { background: var(--sigma-accent-dark); }
-        .btn-distribute:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
-
-        .log-container {
-            background: #0F172A;
-            border-radius: var(--radius-lg);
-            height: 280px;
-            overflow-y: auto;
-            padding: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #A7F3D0;
-            border: 1px solid var(--border-light);
+        .btn-sub {
+            flex: 1;
+            background: var(--sigma-danger-soft);
+            color: var(--sigma-danger-dark);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 10px;
+            border-radius: var(--radius-md);
+            font-weight: 800;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: var(--transition);
         }
-
-        .log-item { margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed rgba(255,255,255,0.08); }
-        .log-time { color: #94A3B8; margin-right: 8px; }
-        .log-error { color: #FCA5A5; }
-        .log-success { color: #6EE7B7; }
-        .log-warning { color: #FCD34D; }
-
-        .spinner {
-            width: 20px; height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            display: none;
-        }
-        .btn-distribute.loading .spinner { display: block; }
-        .btn-distribute.loading span { display: none; }
+        .btn-sub:hover { background: var(--sigma-danger); color: white; }
 
         /* ==========================================================================
            4. UNIFIED 5-BUTTON ADMIN MOBILE DOCK
@@ -618,6 +686,7 @@
             .topbar-brand-mobile { display: flex; }
             .desktop-only { display: none; }
             .page-content { padding: 20px 16px; }
+            .balances-grid { grid-template-columns: 1fr; }
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -674,13 +743,13 @@
                     <span>Plans & Tiers</span>
                 </div>
             </a>
-            <a href="wallet.html" class="nav-link">
+            <a href="wallet.html" class="nav-link active">
                 <div class="nav-link-left">
                     <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
                     <span>Ledger & Wallet</span>
                 </div>
             </a>
-            <a href="roi.html" class="nav-link active">
+            <a href="roi.html" class="nav-link">
                 <div class="nav-link-left">
                     <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                     <span>ROI Engine</span>
@@ -718,7 +787,7 @@
             </a>
         </div>
 
-        <button class="sidebar-logout-btn" onclick="RoiAdminController.terminateSession()">
+        <button class="sidebar-logout-btn" onclick="WalletAdminController.terminateSession()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
             Secure Logout
         </button>
@@ -734,39 +803,71 @@
                     <img src="../assets/logo.png" alt="Sigma Logo" class="brand-logo-img">
                     <img src="../assets/textlogo.png" alt="Sigma" class="brand-text-img">
                 </div>
-                <h2 style="font-size: 1.15rem; font-weight: 800;" class="desktop-only">Automated ROI Distribution Engine</h2>
+                <h2 style="font-size: 1.15rem; font-weight: 800;" class="desktop-only">Wallet Ledger & Balance Control</h2>
             </div>
         </header>
 
         <div class="page-content">
-            <div class="card">
-                <h3 style="font-size: 1.25rem;">Daily Profit Distribution</h3>
-                <p style="font-size: 0.92rem; line-height: 1.6;">
-                    The ROI Engine scans all member accounts, detects active portfolios, and credits the calculated daily return directly to their withdrawable profit wallet with an immutable ledger entry.
-                </p>
+            <!-- Search Card -->
+            <div class="search-card">
+                <div class="search-input-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="searchInput" placeholder="Enter Exact User UID or Email...">
+                </div>
+                <button class="btn-primary" id="searchBtn" onclick="WalletAdminController.searchUser()">Find User</button>
+            </div>
 
-                <div class="stat-grid">
-                    <div class="stat-box">
-                        <small>Active Investors</small>
-                        <b id="statUsers" class="font-mono">...</b>
-                    </div>
-                    <div class="stat-box">
-                        <small>Active Portfolios</small>
-                        <b id="statPlans" class="font-mono">...</b>
-                    </div>
-                    <div class="stat-box" style="border-color: var(--sigma-accent);">
-                        <small style="color: var(--sigma-accent-dark);">Estimated Payout</small>
-                        <b id="statEstPayout" class="font-mono">...</b>
+            <div id="searchError" style="color:var(--sigma-danger); display:none; font-weight: 700; font-size: 0.9rem;"></div>
+
+            <!-- User Info & Balance Adjustment Container -->
+            <div id="userInfoContainer">
+                <div class="user-header-card">
+                    <div class="user-header-left">
+                        <h2 id="uName">Member Name</h2>
+                        <p id="uEmail">email@domain.com</p>
+                        <p style="margin-top: 6px; font-size: 0.8rem; opacity: 0.85;">UID: <span id="uId">---</span></p>
                     </div>
                 </div>
 
-                <button class="btn-distribute" id="btnRunROI" onclick="RoiAdminController.executeRoiDistribution()">
-                    <div class="spinner"></div>
-                    <span>Execute Daily ROI Distribution</span>
-                </button>
+                <div class="balances-grid">
+                    <!-- 1. Deposit Wallet -->
+                    <div class="balance-card">
+                        <div class="balance-title">Deposit / Main Balance</div>
+                        <div class="balance-amount font-mono" id="uBalDeposit">Rs. 0.00</div>
+                        <div class="adj-form">
+                            <input type="number" id="adjDepAmt" class="adj-input" placeholder="Amount (PKR)" min="1">
+                            <div class="adj-row">
+                                <button class="btn-add" onclick="WalletAdminController.adjustBalance('depositBalance', 'add', 'adjDepAmt')">+ Add</button>
+                                <button class="btn-sub" onclick="WalletAdminController.adjustBalance('depositBalance', 'sub', 'adjDepAmt')">- Deduct</button>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="log-container" id="logContainer">
-                    <div class="log-item"><span class="log-time">[SYSTEM]</span> Ready to execute profit distribution sequence...</div>
+                    <!-- 2. Profit Wallet -->
+                    <div class="balance-card">
+                        <div class="balance-title">Profit / ROI Wallet</div>
+                        <div class="balance-amount font-mono text-accent" id="uBalProfit">Rs. 0.00</div>
+                        <div class="adj-form">
+                            <input type="number" id="adjProfitAmt" class="adj-input" placeholder="Amount (PKR)" min="1">
+                            <div class="adj-row">
+                                <button class="btn-add" onclick="WalletAdminController.adjustBalance('profitBalance', 'add', 'adjProfitAmt')">+ Add</button>
+                                <button class="btn-sub" onclick="WalletAdminController.adjustBalance('profitBalance', 'sub', 'adjProfitAmt')">- Deduct</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Commission Wallet -->
+                    <div class="balance-card">
+                        <div class="balance-title">Commission Wallet</div>
+                        <div class="balance-amount font-mono text-gold" id="uBalComm" style="color: var(--sigma-gold-dark);">Rs. 0.00</div>
+                        <div class="adj-form">
+                            <input type="number" id="adjCommAmt" class="adj-input" placeholder="Amount (PKR)" min="1">
+                            <div class="adj-row">
+                                <button class="btn-add" onclick="WalletAdminController.adjustBalance('commissionBalance', 'add', 'adjCommAmt')">+ Add</button>
+                                <button class="btn-sub" onclick="WalletAdminController.adjustBalance('commissionBalance', 'sub', 'adjCommAmt')">- Deduct</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -796,7 +897,7 @@
             <span>Users</span>
         </a>
 
-        <button class="dock-btn" onclick="RoiAdminController.openMenuSheet()">
+        <button class="dock-btn" onclick="WalletAdminController.openMenuSheet()">
             <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             <span>Menu</span>
         </button>
@@ -808,7 +909,7 @@
             <div class="sheet-handle"></div>
             <div class="sheet-header">
                 <h3>Admin Operations Menu</h3>
-                <button class="sheet-close-btn" onclick="RoiAdminController.closeMenuSheet()">
+                <button class="sheet-close-btn" onclick="WalletAdminController.closeMenuSheet()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
@@ -820,16 +921,16 @@
                     </div>
                     &rarr;
                 </a>
-                <a href="wallet.html" class="sheet-menu-link">
+                <a href="wallet.html" class="sheet-menu-link" style="background: var(--sigma-primary); color: white;">
                     <div class="sheet-menu-left">
-                        <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                        <svg viewBox="0 0 24 24" style="stroke: var(--sigma-accent);"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
                         <span>Wallet Ledger & Balances</span>
                     </div>
                     &rarr;
                 </a>
-                <a href="roi.html" class="sheet-menu-link" style="background: var(--sigma-primary); color: white;">
+                <a href="roi.html" class="sheet-menu-link">
                     <div class="sheet-menu-left">
-                        <svg viewBox="0 0 24 24" style="stroke: var(--sigma-accent);"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                         <span>Daily ROI Engine</span>
                     </div>
                     &rarr;
@@ -872,7 +973,7 @@
 
                 <div style="height: 1px; background: var(--border-light); margin: 6px 0;"></div>
 
-                <button onclick="RoiAdminController.terminateSession()" class="sheet-menu-link" style="color: var(--sigma-danger); background: var(--sigma-danger-soft);">
+                <button onclick="WalletAdminController.terminateSession()" class="sheet-menu-link" style="color: var(--sigma-danger); background: var(--sigma-danger-soft);">
                     <div class="sheet-menu-left">
                         <svg viewBox="0 0 24 24" style="stroke: var(--sigma-danger);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
                         <span>Sign Out of Terminal</span>
@@ -883,24 +984,32 @@
     </div>
 
     <!-- =======================================================================
-         JAVASCRIPT CONTROLLER (ROI ENGINE & FIRESTORE BATCH CREDITING)
+         JAVASCRIPT CONTROLLER (FIRESTORE LEDGER ADJUSTMENT & AUTO UID PARSING)
          ======================================================================= -->
     <script>
-        const RoiAdminController = (() => {
+        const WalletAdminController = (() => {
 
             let adminUser = null;
+            let activeUid = null;
+            let unsubscribeUser = null;
+
             const db = firebase.firestore();
             const auth = firebase.auth();
 
             const dom = {
                 authOverlay: document.getElementById('authOverlay'),
+                searchInput: document.getElementById('searchInput'),
+                searchError: document.getElementById('searchError'),
+                userInfoContainer: document.getElementById('userInfoContainer'),
                 menuSheet: document.getElementById('sheetAdminMenu'),
                 dockBadgeDeposits: document.getElementById('dockBadgeDeposits'),
-                statUsers: document.getElementById('statUsers'),
-                statPlans: document.getElementById('statPlans'),
-                statEstPayout: document.getElementById('statEstPayout'),
-                btnRunROI: document.getElementById('btnRunROI'),
-                logContainer: document.getElementById('logContainer')
+
+                uName: document.getElementById('uName'),
+                uEmail: document.getElementById('uEmail'),
+                uId: document.getElementById('uId'),
+                uBalDeposit: document.getElementById('uBalDeposit'),
+                uBalProfit: document.getElementById('uBalProfit'),
+                uBalComm: document.getElementById('uBalComm')
             };
 
             const openMenuSheet = () => {
@@ -918,20 +1027,6 @@
                 window.location.replace('login.html');
             };
 
-            const logMsg = (msg, type = 'info') => {
-                if (!dom.logContainer) return;
-                const div = document.createElement('div');
-                div.className = 'log-item';
-                const time = new Date().toLocaleTimeString();
-                let colorClass = 'log-success';
-                if (type === 'error') colorClass = 'log-error';
-                if (type === 'warning') colorClass = 'log-warning';
-
-                div.innerHTML = `<span class="log-time">[${time}]</span> <span class="${colorClass}">${msg}</span>`;
-                dom.logContainer.appendChild(div);
-                dom.logContainer.scrollTop = dom.logContainer.scrollHeight;
-            };
-
             const verifyAdminAccess = () => {
                 auth.onAuthStateChanged(async (user) => {
                     if (user) {
@@ -947,7 +1042,14 @@
                                     setTimeout(() => dom.authOverlay.style.display = 'none', 300);
 
                                     bindPendingBadge();
-                                    calculateEstimates();
+
+                                    // Check if URL passed ?uid=XYZ
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    const passedUid = urlParams.get('uid');
+                                    if (passedUid) {
+                                        dom.searchInput.value = passedUid;
+                                        searchUser();
+                                    }
                                     return;
                                 }
                             }
@@ -974,102 +1076,107 @@
                 });
             };
 
-            const calculateEstimates = async () => {
+            const searchUser = async () => {
+                const query = dom.searchInput.value.trim();
+                if (!query) return;
+
+                dom.searchError.style.display = 'none';
+                dom.userInfoContainer.style.display = 'none';
+
+                if (unsubscribeUser) {
+                    unsubscribeUser();
+                    unsubscribeUser = null;
+                }
+
                 try {
-                    logMsg("Scanning user accounts for active investment cycles...", "warning");
-                    const usersSnapshot = await db.collection('users').get();
-                    let activeUsersCount = 0;
-                    let totalActivePlans = 0;
-                    let totalEstPayout = 0;
-
-                    for (const userDoc of usersSnapshot.docs) {
-                        const plansSnap = await db.collection('users').doc(userDoc.id).collection('active_plans')
-                            .where('status', '==', 'active').get();
-
-                        if (!plansSnap.empty) {
-                            activeUsersCount++;
-                            totalActivePlans += plansSnap.size;
-                            plansSnap.forEach(pDoc => {
-                                const pData = pDoc.data();
-                                totalEstPayout += Number(pData.dailyProfit || 0);
-                            });
-                        }
+                    // Try exact UID
+                    let targetUid = query;
+                    const doc = await db.collection('users').doc(targetUid).get();
+                    if (doc.exists) {
+                        activeUid = targetUid;
+                        listenToUser(activeUid);
+                        return;
                     }
 
-                    dom.statUsers.textContent = activeUsersCount;
-                    dom.statPlans.textContent = totalActivePlans;
-                    dom.statEstPayout.textContent = `Rs. ${totalEstPayout.toLocaleString('en-PK')}`;
+                    // Try Email lookup
+                    const snap = await db.collection('users').where('email', '==', query.toLowerCase()).limit(1).get();
+                    if (!snap.empty) {
+                        activeUid = snap.docs[0].id;
+                        listenToUser(activeUid);
+                        return;
+                    }
 
-                    logMsg(`Scan complete. Detected ${totalActivePlans} active portfolios across ${activeUsersCount} investors.`);
+                    dom.searchError.textContent = "User account not found. Please provide an exact UID or registered email.";
+                    dom.searchError.style.display = 'block';
+
                 } catch (e) {
-                    console.error("Estimate scan error:", e);
-                    logMsg(`Failed to calculate telemetry: ${e.message}`, "error");
+                    dom.searchError.textContent = "Error executing search: " + e.message;
+                    dom.searchError.style.display = 'block';
                 }
             };
 
-            const executeRoiDistribution = async () => {
-                if (!confirm("Are you sure you want to execute daily ROI distribution across all active portfolios? This will credit user profit wallets.")) return;
+            const listenToUser = (uid) => {
+                dom.userInfoContainer.style.display = 'block';
 
-                dom.btnRunROI.disabled = true;
-                dom.btnRunROI.classList.add('loading');
-                logMsg("🚀 INITIATING DAILY ROI DISTRIBUTION...", "warning");
+                unsubscribeUser = db.collection('users').doc(uid).onSnapshot(doc => {
+                    if (doc.exists) {
+                        const d = doc.data();
+                        dom.uName.textContent = d.fullName || d.username || 'Investor';
+                        dom.uEmail.textContent = d.email || 'No Email';
+                        dom.uId.textContent = uid;
+
+                        dom.uBalDeposit.textContent = "Rs. " + Number(d.depositBalance || d.balance || 0).toLocaleString('en-PK', { minimumFractionDigits: 2 });
+                        dom.uBalProfit.textContent = "Rs. " + Number(d.profitBalance || 0).toLocaleString('en-PK', { minimumFractionDigits: 2 });
+                        dom.uBalComm.textContent = "Rs. " + Number(d.commissionBalance || 0).toLocaleString('en-PK', { minimumFractionDigits: 2 });
+                    } else {
+                        dom.userInfoContainer.style.display = 'none';
+                        dom.searchError.textContent = "User document was deleted or unavailable.";
+                        dom.searchError.style.display = 'block';
+                    }
+                });
+            };
+
+            const adjustBalance = async (field, operation, inputId) => {
+                if (!activeUid) return;
+
+                const val = Number(document.getElementById(inputId).value);
+                if (!val || val <= 0) {
+                    alert("Please enter a valid numeric amount greater than zero.");
+                    return;
+                }
+
+                const actionTitle = operation === 'add' ? 'ADD' : 'DEDUCT';
+                const confirmed = confirm(`Are you sure you want to ${actionTitle} Rs. ${val} to/from this user's ${field}?`);
+                if (!confirmed) return;
+
+                const delta = operation === 'add' ? val : -val;
 
                 try {
-                    const usersSnapshot = await db.collection('users').get();
-                    let processedUsers = 0;
-                    let distributedTotal = 0;
+                    const batch = db.batch();
+                    const userRef = db.collection('users').doc(activeUid);
 
-                    for (const userDoc of usersSnapshot.docs) {
-                        const uid = userDoc.id;
-                        const plansSnap = await db.collection('users').doc(uid).collection('active_plans')
-                            .where('status', '==', 'active').get();
+                    batch.update(userRef, {
+                        [field]: firebase.firestore.FieldValue.increment(delta)
+                    });
 
-                        if (plansSnap.empty) continue;
+                    // Add Ledger Audit Record
+                    const txRef = userRef.collection('transactions').doc();
+                    batch.set(txRef, {
+                        type: operation === 'add' ? 'admin_credit' : 'admin_deduction',
+                        amount: val,
+                        description: `Admin manual adjustment (${field})`,
+                        status: 'completed',
+                        referenceId: 'ADM-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
 
-                        let userDailyYield = 0;
-                        const batch = db.batch();
-
-                        plansSnap.forEach(pDoc => {
-                            const pData = pDoc.data();
-                            const yieldAmt = Number(pData.dailyProfit || 0);
-                            if (yieldAmt > 0) {
-                                userDailyYield += yieldAmt;
-                            }
-                        });
-
-                        if (userDailyYield > 0) {
-                            const userRef = db.collection('users').doc(uid);
-                            batch.update(userRef, {
-                                profitBalance: firebase.firestore.FieldValue.increment(userDailyYield)
-                            });
-
-                            const txRef = userRef.collection('transactions').doc();
-                            batch.set(txRef, {
-                                type: 'profit',
-                                amount: userDailyYield,
-                                currency: 'PKR',
-                                status: 'completed',
-                                referenceId: 'ROI-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
-                                description: 'Daily Portfolio ROI Yield Credit',
-                                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                            });
-
-                            await batch.commit();
-                            logMsg(`Credited Rs. ${userDailyYield.toLocaleString('en-PK')} to user ${uid.substring(0, 6)}`);
-                            processedUsers++;
-                            distributedTotal += userDailyYield;
-                        }
-                    }
-
-                    logMsg(`✅ ROI DISTRIBUTION SUCCESSFUL! Credited ${processedUsers} users. Total disbursed: Rs. ${distributedTotal.toLocaleString('en-PK')}`, "success");
-                    calculateEstimates();
+                    await batch.commit();
+                    document.getElementById(inputId).value = '';
+                    alert("Wallet balance successfully adjusted!");
 
                 } catch (e) {
-                    console.error("ROI Execution Error:", e);
-                    logMsg(`CRITICAL EXECUTION ERROR: ${e.message}`, "error");
-                } finally {
-                    dom.btnRunROI.disabled = false;
-                    dom.btnRunROI.classList.remove('loading');
+                    console.error("Adjustment failed:", e);
+                    alert("Failed to update user wallet. Check permissions.");
                 }
             };
 
@@ -1077,19 +1184,21 @@
                 dom.menuSheet.addEventListener('click', e => {
                     if (e.target === dom.menuSheet) closeMenuSheet();
                 });
+
                 verifyAdminAccess();
             };
 
             return {
                 init,
-                executeRoiDistribution,
+                searchUser,
+                adjustBalance,
                 openMenuSheet,
                 closeMenuSheet,
                 terminateSession
             };
         })();
 
-        document.addEventListener('DOMContentLoaded', RoiAdminController.init);
+        document.addEventListener('DOMContentLoaded', WalletAdminController.init);
     </script>
 </body>
 
